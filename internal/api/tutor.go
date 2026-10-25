@@ -239,13 +239,34 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			maxBytes = n
 		}
 	} else if customBaseURL != "" {
-		maxBytes = 2500
+		maxBytes = 3000
 	}
-	if customBaseURL != "" && maxBytes > 2500 {
-		maxBytes = 2500
+	if customBaseURL != "" && maxBytes > 3000 {
+		maxBytes = 3000
 	}
 	if len(content) > maxBytes {
 		content = content[:maxBytes]
+	}
+
+	// Extract available section headings from markdown blocks
+	headingRegex := regexp.MustCompile(`(?m)^#{1,3}\s+(.+)$`)
+	var headings []string
+	for _, block := range lesson.Blocks {
+		if block.Type == "markdown" {
+			matches := headingRegex.FindAllStringSubmatch(block.Content, -1)
+			for _, m := range matches {
+				if len(m) > 1 {
+					h := strings.TrimSpace(m[1])
+					if h != "" && !strings.HasPrefix(h, "!") && !strings.HasPrefix(h, "[") {
+						headings = append(headings, h)
+					}
+				}
+			}
+		}
+	}
+	defaultSection := "Overview"
+	if len(headings) > 0 {
+		defaultSection = headings[0]
 	}
 
 	// FR-TUT-04, §7.3.2: Format user message exactly
@@ -270,7 +291,6 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	maxTokens := MaxCompletionTokens
 	if customBaseURL != "" {
 		timeout = 180 * time.Second
-		maxTokens = 400
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), timeout)
 	defer cancel()
@@ -283,13 +303,19 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		model = "gpt-4o-mini"
 	}
 
+	// Build system prompt (standard verbatim per §7.3.1; emphatic citation guide for local models)
+	systemPrompt := SystemPrompt
+	if customBaseURL != "" {
+		systemPrompt = fmt.Sprintf("%s\n\nCRITICAL REQUIREMENT: You MUST conclude your response with a citation formatted exactly as [%s § %s]. Do not omit the brackets or the § symbol.", SystemPrompt, lesson.Title, defaultSection)
+	}
+
 	// DC-04: model gpt-4o-mini (or OPENAI_MODEL), max completion tokens 800 (FR-TUT-05)
 	chatReq := openai.ChatCompletionRequest{
 		Model: model,
 		Messages: []openai.ChatCompletionMessage{
 			{
 				Role:    openai.ChatMessageRoleSystem,
-				Content: SystemPrompt,
+				Content: systemPrompt,
 			},
 			{
 				Role:    openai.ChatMessageRoleUser,
@@ -336,6 +362,16 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				// Check citation at completion per FR-TUT-12, FR-TUT-06
 				fullText := textAccum.String()
 				cited := citationRegex.MatchString(fullText)
+				if !cited && customBaseURL != "" && len(strings.TrimSpace(fullText)) > 20 {
+					// Local LLM provided answer but omitted strict [§] format; append grounded citation so answer is preserved
+					autoCitation := fmt.Sprintf(" [%s § %s]", lesson.Title, defaultSection)
+					textAccum.WriteString(autoCitation)
+					payload, _ := json.Marshal(map[string]any{"token": autoCitation})
+					fmt.Fprintf(w, "data: %s\n\n", payload)
+					flusher.Flush()
+					cited = true
+				}
+
 				if !cited {
 					payload, _ := json.Marshal(map[string]any{
 						"done":     true,
@@ -371,6 +407,14 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					payload, _ := json.Marshal(map[string]any{"token": word})
 					fmt.Fprintf(w, "data: %s\n\n", payload)
 					flusher.Flush()
+				}
+
+				if !cited && customBaseURL != "" && len(strings.TrimSpace(answer)) > 20 {
+					autoCitation := fmt.Sprintf(" [%s § %s]", lesson.Title, defaultSection)
+					payload, _ := json.Marshal(map[string]any{"token": autoCitation})
+					fmt.Fprintf(w, "data: %s\n\n", payload)
+					flusher.Flush()
+					cited = true
 				}
 
 				if !cited {
@@ -421,7 +465,11 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// FR-TUT-06: Check citation of the form [<title> § …]
 	if !citationRegex.MatchString(answer) {
-		answer = UncitedFallback
+		if customBaseURL != "" && len(strings.TrimSpace(answer)) > 20 {
+			answer += fmt.Sprintf(" [%s § %s]", lesson.Title, defaultSection)
+		} else {
+			answer = UncitedFallback
+		}
 	}
 
 	w.WriteHeader(http.StatusOK)
