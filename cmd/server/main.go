@@ -92,14 +92,14 @@ func main() {
 		StaticFS:    staticFS,
 	})
 
-	// NFR-SEC-07: Construct HTTP server with strict timeouts
+	// NFR-SEC-07: Construct HTTP server with strict timeouts (expanded WriteTimeout to 300s for local CPU model streaming)
 	server := &http.Server{
 		Addr:              ":" + port,
 		Handler:           handler,
-		ReadHeaderTimeout: 5 * time.Second,
-		ReadTimeout:       15 * time.Second,
-		WriteTimeout:      90 * time.Second,
-		IdleTimeout:       60 * time.Second,
+		ReadHeaderTimeout: 10 * time.Second,
+		ReadTimeout:       30 * time.Second,
+		WriteTimeout:      300 * time.Second,
+		IdleTimeout:       120 * time.Second,
 	}
 
 	slog.Info("Starting AI Foundations Coach server", "port", port, "contentDir", contentDir)

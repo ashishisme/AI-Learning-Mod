@@ -135,6 +135,10 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if customBaseURL == "" {
 		customBaseURL = os.Getenv("OPENAI_BASE_URL")
 	}
+	customBaseURL = strings.TrimRight(customBaseURL, "/")
+	if customBaseURL != "" && !strings.HasSuffix(customBaseURL, "/v1") && (strings.Contains(customBaseURL, "11434") || strings.Contains(customBaseURL, "localhost")) {
+		customBaseURL += "/v1"
+	}
 	customKey := strings.TrimSpace(r.Header.Get("X-AI-Key"))
 	if customKey == "" {
 		customKey = h.apiKey
@@ -327,6 +331,9 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// FR-TUT-11: Streaming Token Delivery via SSE
 	if isStream {
+		rc := http.NewResponseController(w)
+		_ = rc.SetWriteDeadline(time.Time{}) // Disable write timeout for SSE streaming
+
 		flusher, ok := w.(http.Flusher)
 		if ok {
 			w.Header().Set("Content-Type", "text/event-stream")
