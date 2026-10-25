@@ -5,11 +5,11 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 1.0.0 |
-| Status | Frozen for implementation |
+| Version | 1.1.0 |
+| Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
-| Supersedes | none |
+| Supersedes | 1.0.0 |
 
 **Rule.** Any behavioral change requires a spec amendment (§12) before
 code changes. Ambiguity in this spec is a defect to be reported, not
@@ -192,6 +192,16 @@ and open in a new tab with `rel="noreferrer"`.
 
 **FR-UI-09.** The UI shall render the attribution footer defined in
 §5.6 NFR-LIC-01 on every route.
+
+**FR-UI-10.** The UI shall adhere to intentional visual design principles
+(`frontend-design`, `impeccable`), presenting an authoritative technical
+aesthetic, balanced editorial typography, and comfortable reading measures
+(65–75ch for prose).
+
+**FR-UI-11.** The UI shall implement purposeful micro-interactions and
+smooth state transitions (progress fill easing, card hover elevation,
+active button feedback, and tutor assistant activity indicators) using
+Tailwind CSS transitions without exceeding the DC-06 dependency allowlist.
 
 ### 4.5 Progress — `FR-PRG-*`
 
@@ -460,6 +470,12 @@ dependency requires amendment.
 **DC-09.** No database, ORM, session store, or server-side state in v1.
 
 **DC-10.** No Python anywhere in the build or runtime.
+ 
+**DC-11.** Frontend design and motion skill enforcement: UI engineering
+shall apply the design craft rules in `frontend-design` and `impeccable`
+(craft-floor verification: contrast ≥4.5:1, single elevation declaration,
+custom browser selection/scrollbars, zero generic gradient text, and
+accessible touch/click targets).
 
 ---
 

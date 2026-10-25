@@ -26,6 +26,13 @@ is the source of truth.
    `reset --hard` on shared refs, `rm -rf` outside the repo, etc.).
 10. **Do not stage or commit** `.env*`, `public-content/`, `web/dist`,
     `web/node_modules`, or `bin/`. Never `git add -A` or `git add .`.
+11. **UI Craft & Motion Skills.** When implementing or refining frontend
+    components and pages, you MUST apply the design, typography, and motion
+    practices from the `frontend-design` and `impeccable` skills (`craft-floor`:
+    contrast ≥4.5:1, comfortable reading measure 65–75ch, purposeful CSS
+    micro-interactions, no generic card or kicker cliches, styled browser
+    surfaces). All animations shall use Tailwind CSS transitions/keyframes
+    without exceeding the DC-06 dependency allowlist.
 
 ## Completion checklist
 
