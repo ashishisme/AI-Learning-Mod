@@ -34,6 +34,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	}
 	tutorHandler := NewTutorHandler(cfg.OpenAIKey, cfg.ContentDir, cfg.ModelClient)
 	mux.Handle("POST /api/tutor", limiter.Middleware(tutorHandler))
+	mux.Handle("POST /api/tutor/stream", limiter.Middleware(tutorHandler))
 
 	// Static SPA assets serving with client-side fallback (if provided)
 	if cfg.StaticFS != nil {

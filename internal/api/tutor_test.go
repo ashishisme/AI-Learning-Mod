@@ -306,3 +306,67 @@ func (i *inspectingModelClient) CreateChatCompletion(ctx context.Context, req op
 	}
 	return i.mock.CreateChatCompletion(ctx, req)
 }
+
+// AC-33 (FR-TUT-11, FR-UI-12): POST /api/tutor with Accept: text/event-stream returns chunked SSE tokens and terminates with [DONE]
+func TestAC33_StreamingTutor(t *testing.T) {
+	contentDir := setupTestContent(t)
+
+	mockClient := &mockModelClient{
+		response: openai.ChatCompletionResponse{
+			Choices: []openai.ChatCompletionChoice{
+				{
+					Message: openai.ChatCompletionMessage{
+						Content: "According to [Lesson 1 Title § Overview], machine learning learns from data.",
+					},
+				},
+			},
+		},
+	}
+
+	router := NewRouter(RouterConfig{
+		ContentDir:  contentDir,
+		OpenAIKey:   "mock-key",
+		ModelClient: mockClient,
+	})
+
+	// 1. Test POST /api/tutor with Accept: text/event-stream
+	body := `{"lessonId":"lesson-1","question":"How does ML learn?"}`
+	req := httptest.NewRequest(http.MethodPost, "/api/tutor", strings.NewReader(body))
+	req.Header.Set("Accept", "text/event-stream")
+	rec := httptest.NewRecorder()
+
+	router.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d: %s", rec.Code, rec.Body.String())
+	}
+
+	ct := rec.Header().Get("Content-Type")
+	if !strings.HasPrefix(ct, "text/event-stream") {
+		t.Errorf("expected Content-Type text/event-stream, got %q", ct)
+	}
+
+	output := rec.Body.String()
+	if !strings.Contains(output, `data: {"token":`) {
+		t.Errorf("expected SSE token events in output: %s", output)
+	}
+	if !strings.Contains(output, `data: [DONE]`) {
+		t.Errorf("expected data: [DONE] termination in output: %s", output)
+	}
+	if !strings.Contains(output, `"cited":true`) {
+		t.Errorf("expected cited completion signal in output: %s", output)
+	}
+
+	// 2. Test alias route POST /api/tutor/stream
+	req2 := httptest.NewRequest(http.MethodPost, "/api/tutor/stream", strings.NewReader(body))
+	rec2 := httptest.NewRecorder()
+
+	router.ServeHTTP(rec2, req2)
+	if rec2.Code != http.StatusOK {
+		t.Fatalf("alias route /api/tutor/stream expected 200, got %d", rec2.Code)
+	}
+	if !strings.Contains(rec2.Body.String(), `data: [DONE]`) {
+		t.Errorf("/api/tutor/stream missing [DONE]")
+	}
+}
+

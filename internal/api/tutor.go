@@ -1,4 +1,4 @@
-// SPEC: FR-TUT-01, FR-TUT-02, FR-TUT-03, FR-TUT-04, FR-TUT-05, FR-TUT-06, FR-TUT-07, FR-TUT-08, FR-TUT-09, FR-TUT-10, NFR-SEC-01, NFR-SEC-02, NFR-AI-01, NFR-AI-02, NFR-AI-03, NFR-AI-04, DC-04
+// SPEC: FR-TUT-01, FR-TUT-02, FR-TUT-03, FR-TUT-04, FR-TUT-05, FR-TUT-06, FR-TUT-07, FR-TUT-08, FR-TUT-09, FR-TUT-10, FR-TUT-11, FR-TUT-12, NFR-SEC-01, NFR-SEC-02, NFR-AI-01, NFR-AI-02, NFR-AI-03, NFR-AI-04, DC-04
 package api
 
 import (
@@ -19,11 +19,11 @@ import (
 )
 
 const (
-	MaxRequestBodySize = 8 * 1024 // 8 KiB per NFR-SEC-02
-	MaxQuestionLength  = 500      // 500 chars per FR-TUT-07
-	MaxLessonBytes     = 12000    // 12 000 bytes per FR-TUT-02
-	MaxCompletionTokens = 800     // 800 tokens per FR-TUT-05
-	TutorTimeout       = 60 * time.Second // 60s per FR-TUT-09
+	MaxRequestBodySize  = 8 * 1024         // 8 KiB per NFR-SEC-02
+	MaxQuestionLength   = 500              // 500 chars per FR-TUT-07
+	MaxLessonBytes      = 12000            // 12 000 bytes per FR-TUT-02
+	MaxCompletionTokens = 800              // 800 tokens per FR-TUT-05
+	TutorTimeout        = 60 * time.Second // 60s per FR-TUT-09
 
 	// SystemPrompt defines the verbatim grounding & injection defense block (FR-TUT-03, §7.3.1, NFR-AI-01)
 	SystemPrompt = `You are a teaching assistant for Microsoft AI-For-Beginners.
@@ -53,8 +53,18 @@ type TutorResponse struct {
 	Error  string `json:"error,omitempty"`
 }
 
+type StreamReceiver interface {
+	Recv() (string, error)
+	Close()
+}
+
 type ModelClient interface {
 	CreateChatCompletion(ctx context.Context, req openai.ChatCompletionRequest) (openai.ChatCompletionResponse, error)
+}
+
+type StreamingModelClient interface {
+	ModelClient
+	CreateChatCompletionStream(ctx context.Context, req openai.ChatCompletionRequest) (StreamReceiver, error)
 }
 
 type TutorHandler struct {
@@ -74,13 +84,57 @@ func NewTutorHandler(apiKey, contentDir string, client ModelClient) *TutorHandle
 	}
 }
 
+type defaultOpenAIWrapper struct {
+	client *openai.Client
+}
+
+func (w *defaultOpenAIWrapper) CreateChatCompletion(ctx context.Context, req openai.ChatCompletionRequest) (openai.ChatCompletionResponse, error) {
+	return w.client.CreateChatCompletion(ctx, req)
+}
+
+func (w *defaultOpenAIWrapper) CreateChatCompletionStream(ctx context.Context, req openai.ChatCompletionRequest) (StreamReceiver, error) {
+	s, err := w.client.CreateChatCompletionStream(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return &openAIStreamWrapper{stream: s}, nil
+}
+
+type openAIStreamWrapper struct {
+	stream *openai.ChatCompletionStream
+}
+
+func (w *openAIStreamWrapper) Recv() (string, error) {
+	resp, err := w.stream.Recv()
+	if err != nil {
+		return "", err
+	}
+	if len(resp.Choices) > 0 {
+		return resp.Choices[0].Delta.Content, nil
+	}
+	return "", nil
+}
+
+func (w *openAIStreamWrapper) Close() {
+	_ = w.stream.Close()
+}
+
 func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	isStream := r.Header.Get("Accept") == "text/event-stream" || strings.HasSuffix(r.URL.Path, "/stream")
+
+	if !isStream {
+		w.Header().Set("Content-Type", "application/json")
+	}
 
 	// FR-TUT-08: If OPENAI_API_KEY is unset, return 503 {"error":"tutor disabled"}
 	if h.apiKey == "" && h.modelClient == nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		_ = json.NewEncoder(w).Encode(TutorResponse{Error: "tutor disabled"})
+		if isStream {
+			w.Header().Set("Content-Type", "text/event-stream")
+			fmt.Fprintf(w, "event: error\ndata: {\"error\":\"tutor disabled\"}\n\n")
+		} else {
+			_ = json.NewEncoder(w).Encode(TutorResponse{Error: "tutor disabled"})
+		}
 		return
 	}
 
@@ -168,7 +222,7 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Create client if not stubbed
 	client := h.modelClient
 	if client == nil {
-		client = openai.NewClient(h.apiKey)
+		client = &defaultOpenAIWrapper{client: openai.NewClient(h.apiKey)}
 	}
 
 	// Context with 60s timeout (FR-TUT-09)
@@ -191,6 +245,102 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		MaxTokens: MaxCompletionTokens,
 	}
 
+	// FR-TUT-11: Streaming Token Delivery via SSE
+	if isStream {
+		flusher, ok := w.(http.Flusher)
+		if ok {
+			w.Header().Set("Content-Type", "text/event-stream")
+			w.Header().Set("Cache-Control", "no-cache")
+			w.Header().Set("Connection", "keep-alive")
+			w.Header().Set("X-Accel-Buffering", "no")
+			w.WriteHeader(http.StatusOK)
+
+			if streamingClient, ok := client.(StreamingModelClient); ok {
+				streamer, err := streamingClient.CreateChatCompletionStream(ctx, chatReq)
+				if err != nil {
+					h.writeSSEError(w, flusher, ctx, err)
+					return
+				}
+				defer streamer.Close()
+
+				var textAccum strings.Builder
+				for {
+					token, err := streamer.Recv()
+					if errors.Is(err, io.EOF) {
+						break
+					}
+					if err != nil {
+						h.writeSSEError(w, flusher, ctx, err)
+						return
+					}
+					textAccum.WriteString(token)
+					payload, _ := json.Marshal(map[string]any{"token": token})
+					fmt.Fprintf(w, "data: %s\n\n", payload)
+					flusher.Flush()
+				}
+
+				// Check citation at completion per FR-TUT-12, FR-TUT-06
+				fullText := textAccum.String()
+				cited := citationRegex.MatchString(fullText)
+				if !cited {
+					payload, _ := json.Marshal(map[string]any{
+						"done":     true,
+						"cited":    false,
+						"fallback": UncitedFallback,
+					})
+					fmt.Fprintf(w, "data: %s\n\n", payload)
+				} else {
+					payload, _ := json.Marshal(map[string]any{
+						"done":  true,
+						"cited": true,
+					})
+					fmt.Fprintf(w, "data: %s\n\n", payload)
+				}
+				fmt.Fprintf(w, "data: [DONE]\n\n")
+				flusher.Flush()
+				return
+			}
+
+			// Fallback streaming via standard non-streaming client
+			resp, err := client.CreateChatCompletion(ctx, chatReq)
+			if err != nil {
+				h.writeSSEError(w, flusher, ctx, err)
+				return
+			}
+			if len(resp.Choices) > 0 {
+				answer := resp.Choices[0].Message.Content
+				cited := citationRegex.MatchString(answer)
+
+				// Stream word chunks
+				words := strings.SplitAfter(answer, " ")
+				for _, word := range words {
+					payload, _ := json.Marshal(map[string]any{"token": word})
+					fmt.Fprintf(w, "data: %s\n\n", payload)
+					flusher.Flush()
+				}
+
+				if !cited {
+					payload, _ := json.Marshal(map[string]any{
+						"done":     true,
+						"cited":    false,
+						"fallback": UncitedFallback,
+					})
+					fmt.Fprintf(w, "data: %s\n\n", payload)
+				} else {
+					payload, _ := json.Marshal(map[string]any{
+						"done":  true,
+						"cited": true,
+					})
+					fmt.Fprintf(w, "data: %s\n\n", payload)
+				}
+			}
+			fmt.Fprintf(w, "data: [DONE]\n\n")
+			flusher.Flush()
+			return
+		}
+	}
+
+	// Standard non-streaming JSON response
 	resp, err := client.CreateChatCompletion(ctx, chatReq)
 	if err != nil {
 		// Check for timeout
@@ -222,4 +372,15 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(TutorResponse{Answer: answer})
+}
+
+func (h *TutorHandler) writeSSEError(w http.ResponseWriter, flusher http.Flusher, ctx context.Context, err error) {
+	errType := "model provider error"
+	if errors.Is(ctx.Err(), context.DeadlineExceeded) || errors.Is(err, context.DeadlineExceeded) || strings.Contains(strings.ToLower(err.Error()), "timeout") || strings.Contains(strings.ToLower(err.Error()), "deadline") {
+		errType = "tutor timeout"
+	}
+	slog.Error("streaming tutor error", "error_class", fmt.Sprintf("%T", err))
+	payload, _ := json.Marshal(map[string]any{"error": errType})
+	fmt.Fprintf(w, "event: error\ndata: %s\n\n", payload)
+	flusher.Flush()
 }

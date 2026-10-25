@@ -76,6 +76,94 @@ export async function askTutor(lessonId: string, question: string): Promise<Tuto
   return res.json()
 }
 
+export interface TutorStreamEvent {
+  token?: string
+  done?: boolean
+  cited?: boolean
+  fallback?: string
+  error?: string
+}
+
+export async function askTutorStream(
+  lessonId: string,
+  question: string,
+  onToken: (token: string) => void,
+  onComplete: (fallback?: string) => void,
+  onError: (error: ApiError | Error) => void
+): Promise<() => void> {
+  const controller = new AbortController()
+
+  fetch('/api/tutor', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'text/event-stream',
+    },
+    body: JSON.stringify({ lessonId, question }),
+    signal: controller.signal,
+  })
+    .then(async (res) => {
+      if (!res.ok) {
+        const body = await res.json().catch(() => null)
+        throw new ApiError(res.status, body?.error || `Tutor error (${res.status})`, body)
+      }
+
+      if (!res.body) {
+        throw new Error('Streaming response body not supported')
+      }
+
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+
+        for (const line of lines) {
+          const trimmed = line.trim()
+          if (!trimmed || trimmed.startsWith(':')) continue
+
+          if (trimmed === 'data: [DONE]') {
+            onComplete()
+            return
+          }
+
+          if (trimmed.startsWith('data: ')) {
+            try {
+              const data: TutorStreamEvent = JSON.parse(trimmed.slice(6))
+              if (data.token) {
+                onToken(data.token)
+              }
+              if (data.done) {
+                if (!data.cited && data.fallback) {
+                  onComplete(data.fallback)
+                } else {
+                  onComplete()
+                }
+                return
+              }
+            } catch {
+              // Ignore partial JSON
+            }
+          }
+        }
+      }
+      onComplete()
+    })
+    .catch((err) => {
+      if (err.name !== 'AbortError') {
+        onError(err)
+      }
+    })
+
+  return () => controller.abort()
+}
+
 export async function fetchHealth(): Promise<{ ok: boolean }> {
   const res = await fetch('/api/health')
   if (!res.ok) {

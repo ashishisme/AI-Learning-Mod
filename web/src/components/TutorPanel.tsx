@@ -1,6 +1,6 @@
-// SPEC: FR-UI-03, FR-UI-07, NFR-SEC-05, AC-24
+// SPEC: FR-UI-03, FR-UI-07, FR-UI-12, NFR-SEC-05, AC-24
 import React, { useState } from 'react'
-import { askTutor, ApiError } from '../api'
+import { askTutorStream, ApiError } from '../api'
 
 interface TutorPanelProps {
   lessonId: string
@@ -10,6 +10,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [isStreaming, setIsStreaming] = useState(false)
   const [isOffline, setIsOffline] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -18,24 +19,37 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
     if (!question.trim() || loading || isOffline) return
 
     setLoading(true)
+    setIsStreaming(true)
+    setAnswer('')
     setErrorMessage(null)
 
-    try {
-      const resp = await askTutor(lessonId, question.trim())
-      setAnswer(resp.answer)
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 503) {
-        // FR-UI-07, AC-24: 503 renders "Tutor offline" and disables input
-        setIsOffline(true)
-        setErrorMessage(null)
-      } else {
-        // FR-UI-07: non-destructive inline error and re-enable input
-        const msg = err instanceof Error ? err.message : 'An unexpected error occurred'
-        setErrorMessage(msg)
+    await askTutorStream(
+      lessonId,
+      question.trim(),
+      (token) => {
+        setAnswer((prev) => (prev || '') + token)
+      },
+      (fallback) => {
+        if (fallback) {
+          setAnswer(fallback)
+        }
+        setLoading(false)
+        setIsStreaming(false)
+      },
+      (err) => {
+        setLoading(false)
+        setIsStreaming(false)
+        if (err instanceof ApiError && err.status === 503) {
+          // FR-UI-07, AC-24: 503 renders "Tutor offline" and disables input
+          setIsOffline(true)
+          setErrorMessage(null)
+        } else {
+          // FR-UI-07: non-destructive inline error and re-enable input
+          const msg = err instanceof Error ? err.message : 'An unexpected error occurred'
+          setErrorMessage(msg)
+        }
       }
-    } finally {
-      setLoading(false)
-    }
+    )
   }
 
   return (
@@ -102,13 +116,19 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
         </div>
       )}
 
-      {/* Answer Container (NFR-SEC-05: Plain Text only) */}
-      {answer && (
+      {/* Answer Container (NFR-SEC-05: Plain Text only, FR-UI-12: Progressive streaming) */}
+      {answer !== null && answer !== '' && (
         <div
           data-testid="tutor-answer"
           className="mb-6 p-5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm font-normal leading-relaxed whitespace-pre-wrap select-text"
         >
           {answer}
+          {isStreaming && (
+            <span
+              data-testid="streaming-cursor"
+              className="inline-block w-1.5 h-3.5 ml-1 bg-blue-600 animate-pulse align-middle"
+            />
+          )}
         </div>
       )}
 
