@@ -1,49 +1,227 @@
-# AI Foundations Coach
+# AI Foundations Coach v2.0
 
-A self-paced learning application for the [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners) curriculum featuring a grounded, citation-enforced AI tutor.
+[![Go Version](https://img.shields.io/badge/Go-1.23-00ADD8?style=flat-square&logo=go)](https://golang.org)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat-square&logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com)
+[![Specification Traceability](https://img.shields.io/badge/SPEC--001-v2.0.0-purple?style=flat-square)](spec/SPEC.md)
+[![Acceptance Status](https://img.shields.io/badge/Acceptance-37%2F37%20PASS-brightgreen?style=flat-square)](spec/ACCEPTANCE.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-## Attribution & Licensing
+A self-paced, interactive AI curriculum platform based on [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners), featuring a grounded, citation-enforced AI teaching assistant, real-time SSE token streaming, interactive comprehension quizzes, dark/light theme switching, and live upstream Git curriculum sync.
 
-Curriculum based on [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners) (MIT License). Not affiliated with Microsoft.
-This software is licensed under the [MIT License](LICENSE).
+---
 
-## Architecture & Design
+## 🌟 Highlights & Key Features
 
-Built to comply with `spec/SPEC.md` (SPEC-001 v1.0.0):
-- **Backend:** Go 1.23 standard library `net/http` router, strict security middleware, bounded-memory rate limiter, and grounded tutor service.
-- **Frontend:** React 18, Vite, TypeScript, Tailwind CSS, Zustand client-side `localStorage` progress tracking, and sanitized markdown renderer.
-- **Ingestion:** Go CLI tool generating static, normalized lesson bundles from the upstream repository.
+### 1. Grounded AI Teaching Assistant
+- **Strict Citation Enforcement:** Answers must explicitly cite `[Lesson Title § Section]` from the lesson material. Uncited or speculative claims are filtered out.
+- **Prompt Injection Defense:** Multi-layered system prompts protect curriculum context from manipulation (`NFR-AI-01`, `NFR-AI-03`).
+- **Real-Time Token Streaming:** Progressive Server-Sent Events (SSE) `text/event-stream` delivers tokens with low latency and live pulsing cursor (`FR-TUT-11`, `FR-UI-12`).
 
-## Upstream Curriculum Ingestion
+### 2. Dual AI Backend (Local-First or Cloud)
+- **100% Local Ollama Support:** Run completely offline with private, free local models like `llama3.2:1b`, `deepseek-r1`, or `phi3` on `http://localhost:11434`.
+- **Cloud LLM Support:** Full compatibility with OpenAI (`gpt-4o-mini`, `gpt-4o`) or any OpenAI-compatible API gateway (OmniRoute, vLLM, LM Studio).
+- **Adaptive Context Pruning:** Automatically trims prompt contexts to stay within model memory limits (`maxBytes` parameter).
 
-The curriculum artifacts in `public-content/` are reproducible build artifacts generated via:
+### 3. Interactive Comprehension Quiz Engine (`FR-QZ-01..04`)
+- **Instant Feedback:** Immediate option grading with detailed conceptual rationales.
+- **Grounded AI Hints:** "Get AI Hint" provides targeted conceptual clues via the tutor without revealing the answer.
+- **Scored Results Recap:** Accuracy scoring with a one-click action to mark the lesson completed in the student progress ledger.
 
+### 4. Color Theme Engine (`FR-UI-15`)
+- Seamless toggle between **Dark Mode**, **Light Mode**, and **System Preference**.
+- Tested for WCAG AA compliance with contrast ratios exceeding 4.5:1.
+- State persists in `localStorage["ai-foundations-theme"]` without page flicker.
+
+### 5. Curriculum Git Sync & Ingestion (`FR-ING-09`, `FR-SET-05`)
+- One-click upstream synchronization from `microsoft/AI-For-Beginners` directly from the Settings Drawer or CLI.
+- Automatically parses Markdown lessons, sanitizes HTML, updates `public-content/index.json`, and records the upstream commit SHA.
+
+### 6. Local-First Privacy & Zero Telemetry
+- All lesson progress (completed lessons, quiz progress) is stored strictly in client-side `localStorage`.
+- Zero tracking cookies, zero analytics scripts, and zero telemetry transmitted to servers (`NFR-SEC-01`, `FR-PRG-02`).
+- Content Security Policy (CSP), anti-clickjacking (`X-Frame-Options: DENY`), and strict MIME-type headers enforced on all HTTP responses.
+
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+graph TD
+    Client["Browser UI (React 18 + Vite + Zustand)"]
+    Server["Go 1.23 HTTP Server (cmd/server)"]
+    Content["Local Content Store (public-content/)"]
+    UpstreamGit["GitHub API (microsoft/AI-For-Beginners)"]
+    Ollama["Local Ollama Daemon (http://localhost:11434)"]
+    OpenAI["OpenAI / Custom Cloud API Gateway"]
+
+    Client -->|Static Assets & API Requests| Server
+    Server -->|Serve Lessons & Index| Content
+    Server -->|POST /api/ingest/sync| UpstreamGit
+    Server -->|Tutor Ingestion & Inquiries| Ollama
+    Server -->|Fallback or Cloud Mode| OpenAI
+```
+
+- **Backend:** Go 1.23 standard library `net/http` router, bounded in-memory sliding window rate limiter (10 req/min/IP), panic recovery middleware, and SSE streamer.
+- **Frontend:** React 18, Vite, TypeScript, Tailwind CSS, Zustand client-side storage, and a customized rehype/remark pipeline that strips scripts, iframe embeds, and dangerous HTML event handlers (`NFR-SEC-05`).
+- **Ingestion Pipeline:** Decoupled `internal/ingest` module supporting exponential egress backoff (AC-16) and absolute asset re-routing to `raw.githubusercontent.com`.
+
+---
+
+## 🚀 Quickstart Guide
+
+### Prerequisites
+- [Go 1.23+](https://go.dev/dl/)
+- [Node.js 18+](https://nodejs.org/) & `npm`
+- (Optional for Local AI) [Ollama](https://ollama.com/)
+- (Optional for Cloud AI) OpenAI API Key
+
+---
+
+### Option A: Running 100% Locally with Ollama (Recommended)
+
+1. **Start Ollama and pull a lightweight model:**
+   ```bash
+   ollama serve
+   # In another terminal:
+   ollama pull llama3.2:1b
+   ```
+
+2. **Configure environment:**
+   Create `.env` in the repository root:
+   ```env
+   PORT=8080
+   CONTENT_DIR=public-content
+   AI_BASE_URL=http://localhost:11434/v1
+   AI_MODEL=llama3.2:1b
+   AI_MAX_BYTES=1500
+   ```
+
+3. **Start the application:**
+   ```bash
+   # Terminal 1: Go Backend
+   export $(grep -v '^#' .env | xargs) && go run ./cmd/server
+
+   # Terminal 2: Web Dev Server
+   cd web
+   npm install
+   npm run dev
+   ```
+
+4. Open `http://localhost:5173` (or `http://localhost:8080` for the production bundle).
+
+---
+
+### Option B: Running with Cloud OpenAI
+
+1. **Configure environment:**
+   Create `.env`:
+   ```env
+   PORT=8080
+   CONTENT_DIR=public-content
+   OPENAI_API_KEY="sk-..."
+   AI_MODEL=gpt-4o-mini
+   ```
+
+2. **Start the Go server:**
+   ```bash
+   export $(grep -v '^#' .env | xargs) && go run ./cmd/server
+   ```
+
+---
+
+## 📥 Curriculum Ingestion
+
+The application reads pre-processed JSON lesson artifacts from `public-content/`.
+
+### 1. Via User Interface (Settings Drawer)
+1. Click the **⚙️ Settings** icon in the header.
+2. In the **Curriculum Sync** section, click **Sync Latest**.
+3. The server connects to GitHub, parses newest lessons, and updates the curriculum live.
+
+### 2. Via Ingestion CLI
 ```bash
 export GITHUB_TOKEN="<your-github-personal-access-token>"
 go run ./cmd/ingest
 ```
 
-### Pinned Upstream SHA
-- **Repository:** `microsoft/AI-For-Beginners`
-- **Pinned Commit SHA:** `392d0df1b2647cbee104942390551f1ed9e072c8`
+**Pinned Upstream Curriculum Version:**
+- Repository: `microsoft/AI-For-Beginners`
+- Pinned Commit SHA: `392d0df1b2647cbee104942390551f1ed9e072c8`
 
-## Running the Application
+---
 
-### Development
+## 📡 API Reference
 
+All backend endpoints are prefixed with `/api`. Responses strictly conform to JSON standards and include security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Content-Security-Policy`).
+
+| Endpoint | Method | Description |
+|---|---|---|
+| `/api/health` | `GET` | Exact status check returning `{"ok":true}` |
+| `/api/lessons` | `GET` | Returns curriculum index with pinned commit SHA and lesson metadata |
+| `/api/lessons/{id}` | `GET` | Returns lesson detail with parsed blocks (markdown, code, image, notebook) |
+| `/api/tutor` | `POST` | Ask grounded question. Supports JSON responses or SSE streaming with `Accept: text/event-stream` |
+| `/api/config/test` | `POST` | Validates AI endpoint latency and model availability |
+| `/api/ingest/sync` | `POST` | Triggers background Git curriculum ingestion |
+
+---
+
+## 🧪 Verification & Automated Testing
+
+This repository is governed by **SPEC-001 v2.0.0** and maintains a 100% passing traceability matrix in [spec/ACCEPTANCE.md](spec/ACCEPTANCE.md).
+
+### Run Go Unit & Security Tests
 ```bash
-# Backend
-go run ./cmd/server
+go test -v ./...
+```
+*Executes all 15 unit tests across `cmd/ingest` and `internal/api` verifying citation filtering, prompt injection defense, rate limiting, and panic recovery.*
 
-# Frontend
+### Run Playwright End-to-End Tests
+```bash
 cd web
-npm install
-npm run dev
+npm test
+```
+*Executes all 19 browser automated specs testing theme persistence, quiz interactions, lesson rendering, and settings configuration.*
+
+### Verify Static Code Quality & Security Rules
+```bash
+# 1. Verify no dangerouslySetInnerHTML in frontend:
+! grep -R "dangerouslySetInnerHTML" web/src
+
+# 2. Verify no debug or pprof profiling endpoints in production:
+! grep -R "net/http/pprof" internal cmd
+
+# 3. Verify clean git staging (no committed secrets or build outputs):
+! git ls-files | grep -E '^(\.env$|public-content|web/dist|web/node_modules|bin/)'
 ```
 
-### Production (Single Container)
+### Production Build Verification
+```bash
+go vet ./... && go build ./...
+cd web && npx tsc --noEmit && npm run build
+```
+
+---
+
+## 🐳 Docker Deployment
+
+The application compiles into a single multi-stage container running as an unprivileged non-root user (`UID 10001`):
 
 ```bash
-docker build -t ai-foundations-coach .
-docker run -p 8080:8080 -e OPENAI_API_KEY="..." ai-foundations-coach
+# Build production image
+docker build -t ai-foundations-coach:2.0.0 .
+
+# Run container
+docker run -p 8080:8080 \
+  -e AI_BASE_URL="http://host.docker.internal:11434/v1" \
+  -e AI_MODEL="llama3.2:1b" \
+  ai-foundations-coach:2.0.0
 ```
+
+---
+
+## 📄 Attribution & Licensing
+
+- Curriculum content is derived from [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners) under the [MIT License](https://github.com/microsoft/AI-For-Beginners/blob/main/LICENSE). This project is not affiliated with, sponsored by, or endorsed by Microsoft.
+- Application source code and architecture are released under the [MIT License](LICENSE).
