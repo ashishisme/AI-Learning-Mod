@@ -89,4 +89,69 @@ test.describe('Tutor Panel Acceptance', () => {
     await expect(answer).toBeVisible()
     await expect(answer).toContainText('According to [Lesson § Perceptrons], weights are learned.')
   })
+
+  test('FR-UI-07: handles non-fatal inline errors and keeps input enabled for retries', async ({ page }) => {
+    await page.route('**/api/lessons/retry-test', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          id: 'retry-test',
+          module: 'Test',
+          title: 'Retry Test Lesson',
+          order: 0,
+          path: 'lessons/test/README.md',
+          commitSha: '1234567890123456789012345678901234567890',
+          blocks: [{ type: 'markdown', content: 'Lesson content here.' }],
+        }),
+      })
+    })
+
+    // 1. First request returns 504 Gateway Timeout
+    let requestCount = 0
+    await page.route('**/api/tutor', async (route) => {
+      requestCount++
+      if (requestCount === 1) {
+        await route.fulfill({
+          status: 504,
+          contentType: 'application/json',
+          body: JSON.stringify({ error: 'tutor timeout' }),
+        })
+        return
+      }
+      // 2. Second request succeeds
+      await route.fulfill({
+        status: 200,
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+        },
+        body: 'data: {"token":"[Lesson § Retry] Recovered successfully."}\n\ndata: {"done":true,"cited":true}\n\ndata: [DONE]\n\n',
+      })
+    })
+
+    await page.goto('/lesson/retry-test')
+
+    const input = page.locator('[data-testid="tutor-input"]')
+    const submitBtn = page.locator('[data-testid="tutor-submit"]')
+
+    // Submit first question -> Expect inline error
+    await input.fill('First attempt')
+    await submitBtn.click()
+
+    const errorBox = page.locator('[data-testid="tutor-error"]')
+    await expect(errorBox).toBeVisible()
+    await expect(errorBox).toContainText('tutor timeout')
+
+    // Input remains enabled for retry per FR-UI-07
+    await expect(input).toBeEnabled()
+
+    // Submit second question -> Expect recovery
+    await input.fill('Second attempt')
+    await submitBtn.click()
+
+    const answer = page.locator('[data-testid="tutor-answer"]')
+    await expect(answer).toBeVisible()
+    await expect(answer).toContainText('Recovered successfully')
+  })
 })
