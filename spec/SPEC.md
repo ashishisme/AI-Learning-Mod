@@ -5,11 +5,11 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 1.2.0 |
+| Version | 1.3.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
-| Supersedes | 1.1.0 |
+| Supersedes | 1.2.0 |
 
 **Rule.** Any behavioral change requires a spec amendment (§12) before
 code changes. Ambiguity in this spec is a defect to be reported, not
@@ -216,7 +216,49 @@ Tailwind CSS transitions without exceeding the DC-06 dependency allowlist.
 rendering, displaying tokens in real time as they arrive from the SSE
 stream with an active typing indicator.
 
-### 4.5 Progress — `FR-PRG-*`
+**FR-UI-13.** `/` shall provide instant client-side keyword search and
+module category filtering across lesson titles, module names, and completion
+status.
+
+**FR-UI-14.** The UI shell shall provide a global Settings button in the
+header that triggers a slide-over Settings Drawer accessible on all routes.
+
+### 4.5 Settings & AI Configuration — `FR-SET-*`
+
+**FR-SET-01.** The Settings Drawer shall provide configuration controls for
+AI Provider (`local` / `openai` / `custom`), Base Endpoint URL, Model name,
+API Key, GitHub Token, and context size budget (`maxBytes`).
+
+**FR-SET-02.** Settings configuration shall be stored in browser `localStorage`
+under key `ai-foundations-settings` and loaded into the application state
+without requiring process or server restarts.
+
+**FR-SET-03.** The backend shall expose `POST /api/config/test` to validate
+AI endpoint connectivity, report round-trip latency in milliseconds, and list
+available models.
+
+**FR-SET-04.** `POST /api/tutor` and `POST /api/tutor/stream` shall accept
+optional request headers (`X-AI-Base-URL`, `X-AI-Model`, `X-AI-Key`,
+`X-AI-Max-Bytes`) allowing client settings to dynamically override server
+defaults for the duration of the request.
+
+### 4.6 Interactive Quiz Engine — `FR-QZ-*`
+
+**FR-QZ-01.** `/quiz/:id` shall render an interactive multiple-choice quiz
+corresponding to the lesson or module, including question text, choices, and
+question progress indicators.
+
+**FR-QZ-02.** Selecting an answer choice shall immediately display visual
+feedback (success/error styling) and reveal the explanation rationale.
+
+**FR-QZ-03.** The quiz view shall provide a "Hint from AI Tutor" button
+that requests a grounded conceptual hint from the Tutor without spoiling
+the answer.
+
+**FR-QZ-04.** Upon answering all questions, the quiz view shall present a
+scored recap with the option to retake the quiz or mark the lesson complete.
+
+### 4.7 Progress — `FR-PRG-*`
 
 **FR-PRG-01.** Completion state shall be stored in browser
 `localStorage` under key `ai-foundations-progress`.
@@ -227,7 +269,7 @@ transmitted to the server (see NFR-PRV-01).
 **FR-PRG-03.** `Home` shall derive `done / total` from the persisted
 state and the current index.
 
-### 4.6 Attribution — `FR-ATT-*`
+### 4.8 Attribution — `FR-ATT-*`
 
 **FR-ATT-01.** The application shall display the attribution string in
 §5.6 NFR-LIC-01 on every route.
@@ -500,9 +542,7 @@ Not implemented in v1; presence of code for these is a spec violation:
 - Cohorts, teachers, dashboards, admin UI.
 - Database, persistent tutor memory, retrieval across lessons.
 - Real notebook execution; only static render + Colab link.
-- Quiz content, scoring, or persistence.
 - Internationalization or translation.
-- Search, filtering, recommendation.
 - Persistent bi-directional WebSockets (SSE is used for tutor streaming).
 - Metrics, tracing, APM, analytics.
 - Automated end-to-end test suite beyond the AC suite in §10.
@@ -626,6 +666,17 @@ non-zero UID.
 **AC-33 (FR-TUT-11, FR-UI-12).** `POST /api/tutor` with
 `Accept: text/event-stream` returns `Content-Type: text/event-stream`
 streaming token chunks and terminates with `data: [DONE]`.
+
+**AC-34 (FR-SET-01, FR-SET-02, FR-SET-03, FR-SET-04, FR-UI-14).**
+The Settings Drawer opens globally, provides controls for AI endpoint, model,
+tokens, and context size, persists to `localStorage["ai-foundations-settings"]`,
+verifies connection latency via `POST /api/config/test`, and applies dynamic
+overrides to the AI Tutor.
+
+**AC-35 (FR-QZ-01, FR-QZ-02, FR-QZ-03, FR-QZ-04, FR-UI-13).**
+`/quiz/:id` renders an interactive multi-question quiz with immediate answer
+rationale feedback, AI Tutor hint integration, and a scored recap; `/` provides
+instant client-side search and module category filtering.
 
 ---
 
