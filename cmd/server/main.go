@@ -74,6 +74,15 @@ func main() {
 	if strings.ToLower(os.Getenv("MOCK_TUTOR")) == "true" || openAIKey == "mock" {
 		slog.Info("Running tutor in local demo simulation mode (MOCK_TUTOR=true)")
 		modelClient = &demoModelClient{}
+	} else if baseURL := os.Getenv("OPENAI_BASE_URL"); baseURL != "" {
+		model := os.Getenv("OPENAI_MODEL")
+		if model == "" {
+			model = "llama3.2:1b"
+		}
+		if openAIKey == "" {
+			openAIKey = "ollama"
+		}
+		slog.Info("Configured AI Tutor with local/custom LLM endpoint", "baseURL", baseURL, "model", model)
 	}
 
 	handler := api.NewRouter(api.RouterConfig{

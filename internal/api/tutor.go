@@ -12,6 +12,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -126,8 +127,9 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 	}
 
-	// FR-TUT-08: If OPENAI_API_KEY is unset, return 503 {"error":"tutor disabled"}
-	if h.apiKey == "" && h.modelClient == nil {
+	// FR-TUT-08: If OPENAI_API_KEY is unset and no baseURL/client provided, return 503 {"error":"tutor disabled"}
+	baseURL := os.Getenv("OPENAI_BASE_URL")
+	if h.apiKey == "" && h.modelClient == nil && baseURL == "" {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		if isStream {
 			w.Header().Set("Content-Type", "text/event-stream")
@@ -211,9 +213,19 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	content := sb.String()
 
-	// Truncate to 12 000 bytes per FR-TUT-02
-	if len(content) > MaxLessonBytes {
-		content = content[:MaxLessonBytes]
+	// Truncate to MaxLessonBytes per FR-TUT-02 (configurable via env for local small models)
+	maxBytes := MaxLessonBytes
+	if envMax := os.Getenv("TUTOR_MAX_LESSON_BYTES"); envMax != "" {
+		if n, err := strconv.Atoi(envMax); err == nil && n > 0 {
+			maxBytes = n
+		}
+	} else if os.Getenv("OPENAI_BASE_URL") != "" {
+		// When running with local CPU models (e.g. Ollama on low-power Intel CPU),
+		// limit to 1500 bytes so prompt eval completes within reasonable latency
+		maxBytes = 1500
+	}
+	if len(content) > maxBytes {
+		content = content[:maxBytes]
 	}
 
 	// FR-TUT-04, §7.3.2: Format user message exactly
@@ -222,16 +234,29 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Create client if not stubbed
 	client := h.modelClient
 	if client == nil {
-		client = &defaultOpenAIWrapper{client: openai.NewClient(h.apiKey)}
+		key := h.apiKey
+		if key == "" {
+			key = "ollama"
+		}
+		cfg := openai.DefaultConfig(key)
+		if customURL := os.Getenv("OPENAI_BASE_URL"); customURL != "" {
+			cfg.BaseURL = customURL
+		}
+		client = &defaultOpenAIWrapper{client: openai.NewClientWithConfig(cfg)}
 	}
 
 	// Context with 60s timeout (FR-TUT-09)
 	ctx, cancel := context.WithTimeout(r.Context(), TutorTimeout)
 	defer cancel()
 
-	// DC-04: model gpt-4o-mini, max completion tokens 800 (FR-TUT-05)
+	model := os.Getenv("OPENAI_MODEL")
+	if strings.TrimSpace(model) == "" {
+		model = "gpt-4o-mini"
+	}
+
+	// DC-04: model gpt-4o-mini (or OPENAI_MODEL), max completion tokens 800 (FR-TUT-05)
 	chatReq := openai.ChatCompletionRequest{
-		Model: "gpt-4o-mini",
+		Model: model,
 		Messages: []openai.ChatCompletionMessage{
 			{
 				Role:    openai.ChatMessageRoleSystem,
