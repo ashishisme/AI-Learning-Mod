@@ -1,4 +1,4 @@
-# Traceability Matrix — SPEC-001 v1.3.0
+# Traceability Matrix — SPEC-001 v2.0.0
 
 | AC | Requirement(s) | Test file | Status | Notes |
 |---|---|---|---|---|
@@ -37,3 +37,5 @@
 | AC-33 | FR-TUT-11, FR-UI-12 | `internal/api/tutor_test.go::TestAC33_StreamingTutor` | PASS | POST /api/tutor with Accept: text/event-stream returns chunked SSE tokens and [DONE] |
 | AC-34 | FR-SET-01..04, FR-UI-14 | `internal/api/config_test.go::TestAC34_ConfigTest`, `web/tests/settings.spec.ts::AC-34` | PASS | Settings drawer opens globally, configures AI/model/tokens, tests connection, overrides tutor |
 | AC-35 | FR-QZ-01..04, FR-UI-13 | `web/tests/quiz.spec.ts::AC-35`, `web/tests/home.spec.ts::AC-35` | PASS | Interactive quiz engine with immediate rationale, AI hint, scored recap; / search filtering |
+| AC-36 | FR-UI-15 | `web/tests/theme.spec.ts::AC-36` | — | Dark/Light theme toggle updates document class and persists in localStorage |
+| AC-37 | FR-ING-09, FR-SET-05 | `internal/api/ingest_sync_test.go::TestAC37_IngestSync`, `web/tests/sync.spec.ts::AC-37` | — | POST /api/ingest/sync executes curriculum sync from GitHub and settings UI shows live status |

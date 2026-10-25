@@ -5,11 +5,11 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 1.3.0 |
+| Version | 2.0.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
-| Supersedes | 1.2.0 |
+| Supersedes | 1.3.0 |
 
 **Rule.** Any behavioral change requires a spec amendment (§12) before
 code changes. Ambiguity in this spec is a defect to be reported, not
@@ -97,6 +97,11 @@ cannot be written. It shall not fall back to unauthenticated requests.
 
 **FR-ING-08.** Each lesson shall contain exactly one `markdown` block
 in v1 (§6.3).
+
+**FR-ING-09.** The system shall expose `POST /api/ingest/sync` allowing
+operators and the settings interface to trigger live curriculum synchronization
+from the upstream GitHub repository, refreshing local lesson artifacts and
+returning `{ "ok": true, "commitSha": "...", "lessonsCount": N }`.
 
 ### 4.2 Content serving — `FR-CNT-*`
 
@@ -223,6 +228,11 @@ status.
 **FR-UI-14.** The UI shell shall provide a global Settings button in the
 header that triggers a slide-over Settings Drawer accessible on all routes.
 
+**FR-UI-15.** The UI shall support Dark, Light, and System themes, applying
+the `.dark` class to `document.documentElement`, styling all components with
+accessible contrast ratios (WCAG ≥4.5:1), and persisting the choice in
+browser `localStorage["ai-foundations-theme"]`.
+
 ### 4.5 Settings & AI Configuration — `FR-SET-*`
 
 **FR-SET-01.** The Settings Drawer shall provide configuration controls for
@@ -241,6 +251,10 @@ available models.
 optional request headers (`X-AI-Base-URL`, `X-AI-Model`, `X-AI-Key`,
 `X-AI-Max-Bytes`) allowing client settings to dynamically override server
 defaults for the duration of the request.
+
+**FR-SET-05.** The Settings Drawer shall provide a "Sync Curriculum from Git"
+action that calls `POST /api/ingest/sync`, shows synchronization progress,
+displays the latest commit SHA, and refreshes the curriculum list.
 
 ### 4.6 Interactive Quiz Engine — `FR-QZ-*`
 
@@ -677,6 +691,16 @@ overrides to the AI Tutor.
 `/quiz/:id` renders an interactive multi-question quiz with immediate answer
 rationale feedback, AI Tutor hint integration, and a scored recap; `/` provides
 instant client-side search and module category filtering.
+
+**AC-36 (FR-UI-15).** The theme switcher toggles between Light and Dark
+modes, applies the `.dark` class to `document.documentElement`, updates
+colors across routes with contrast ≥4.5:1, and persists across reloads via
+`localStorage["ai-foundations-theme"]`.
+
+**AC-37 (FR-ING-09, FR-SET-05).** `POST /api/ingest/sync` triggers curriculum
+synchronization, re-runs ingestion, updates `public-content/index.json`, and
+the Settings Drawer sync button triggers the request, shows live state, and
+displays the updated commit SHA.
 
 ---
 
