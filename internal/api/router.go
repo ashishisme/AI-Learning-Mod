@@ -39,6 +39,10 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	// Config test handler (FR-SET-03)
 	mux.HandleFunc("POST /api/config/test", ConfigTestHandler)
 
+	// Ingest sync handler (FR-ING-09, FR-SET-05)
+	ingestSyncHandler := NewIngestSyncHandler(cfg.ContentDir)
+	mux.Handle("POST /api/ingest/sync", ingestSyncHandler)
+
 	// Static SPA assets serving with client-side fallback (if provided)
 	if cfg.StaticFS != nil {
 		fileServer := http.FileServer(http.FS(cfg.StaticFS))
