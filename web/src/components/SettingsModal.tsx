@@ -1,16 +1,19 @@
-// SPEC: FR-SET-01, FR-SET-02, FR-SET-03, FR-UI-14, NFR-SEC-01
+// SPEC: FR-SET-01, FR-SET-02, FR-SET-03, FR-SET-05, FR-UI-14, FR-UI-15, NFR-SEC-01
 import React, { useState } from 'react'
-import { useSettingsStore, AISettings } from '../store'
-import { testAIConfig, ConfigTestResult } from '../api'
+import { useSettingsStore, useThemeStore, AISettings } from '../store'
+import { testAIConfig, syncCurriculum, ConfigTestResult, IngestSyncResult } from '../api'
 
 export const SettingsModal: React.FC = () => {
   const { settings, isDrawerOpen, setDrawerOpen, updateSettings, resetDefaults } = useSettingsStore()
+  const { theme, setTheme } = useThemeStore()
 
   const [form, setForm] = useState<AISettings>(settings)
   const [showApiKey, setShowApiKey] = useState(false)
   const [showGitToken, setShowGitToken] = useState(false)
   const [testing, setTesting] = useState(false)
   const [testResult, setTestResult] = useState<ConfigTestResult | null>(null)
+  const [syncing, setSyncing] = useState(false)
+  const [syncResult, setSyncResult] = useState<IngestSyncResult | null>(null)
   const [saveToast, setSaveToast] = useState(false)
 
   // Keep form in sync when opening
@@ -18,6 +21,7 @@ export const SettingsModal: React.FC = () => {
     if (isDrawerOpen) {
       setForm(settings)
       setTestResult(null)
+      setSyncResult(null)
     }
   }, [isDrawerOpen, settings])
 
@@ -59,10 +63,6 @@ export const SettingsModal: React.FC = () => {
         apiKey: form.apiKey,
       })
       setTestResult(res)
-      if (res.models && res.models.length > 0 && !res.models.includes(form.model)) {
-        // Offer first discovered model if current is not in list
-        // form.model remains selectable
-      }
     } catch (err: any) {
       setTestResult({
         ok: false,
@@ -71,6 +71,23 @@ export const SettingsModal: React.FC = () => {
       })
     } finally {
       setTesting(false)
+    }
+  }
+
+  const handleSyncCurriculum = async () => {
+    setSyncing(true)
+    setSyncResult(null)
+    try {
+      const res = await syncCurriculum(form.githubToken)
+      setSyncResult(res)
+    } catch (err: any) {
+      setSyncResult({
+        ok: false,
+        durationMs: 0,
+        error: err.message || 'Sync failed',
+      })
+    } finally {
+      setSyncing(false)
     }
   }
 
@@ -91,7 +108,7 @@ export const SettingsModal: React.FC = () => {
       onClick={() => setDrawerOpen(false)}
     >
       <div
-        className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-slate-900/95 border border-slate-700/80 rounded-2xl p-6 shadow-2xl text-slate-100 flex flex-col gap-6"
+        className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-slate-900 border border-slate-700/80 rounded-2xl p-6 shadow-2xl text-slate-100 flex flex-col gap-6"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -100,7 +117,7 @@ export const SettingsModal: React.FC = () => {
             <span className="text-2xl">⚙️</span>
             <div>
               <h2 className="text-lg font-semibold text-slate-100">AI & Learning Settings</h2>
-              <p className="text-xs text-slate-400">Configure local Ollama, cloud endpoints, and tokens</p>
+              <p className="text-xs text-slate-400">Configure theme, local Ollama, cloud endpoints, and sync</p>
             </div>
           </div>
           <button
@@ -110,6 +127,106 @@ export const SettingsModal: React.FC = () => {
           >
             ✕
           </button>
+        </div>
+
+        {/* Theme Preference (FR-UI-15) */}
+        <div>
+          <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            Color Theme
+          </label>
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              id="theme-light-btn"
+              onClick={() => setTheme('light')}
+              className={`p-2.5 rounded-xl border text-xs font-medium flex items-center justify-center gap-2 transition ${
+                theme === 'light'
+                  ? 'border-indigo-500 bg-indigo-950/40 text-indigo-200'
+                  : 'border-slate-800 bg-slate-800/40 text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <span>☀️</span>
+              <span>Light</span>
+            </button>
+            <button
+              type="button"
+              id="theme-dark-btn"
+              onClick={() => setTheme('dark')}
+              className={`p-2.5 rounded-xl border text-xs font-medium flex items-center justify-center gap-2 transition ${
+                theme === 'dark'
+                  ? 'border-indigo-500 bg-indigo-950/40 text-indigo-200'
+                  : 'border-slate-800 bg-slate-800/40 text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <span>🌙</span>
+              <span>Dark</span>
+            </button>
+            <button
+              type="button"
+              id="theme-system-btn"
+              onClick={() => setTheme('system')}
+              className={`p-2.5 rounded-xl border text-xs font-medium flex items-center justify-center gap-2 transition ${
+                theme === 'system'
+                  ? 'border-indigo-500 bg-indigo-950/40 text-indigo-200'
+                  : 'border-slate-800 bg-slate-800/40 text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <span>🖥️</span>
+              <span>System</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Curriculum Git Sync (FR-ING-09, FR-SET-05) */}
+        <div className="p-4 rounded-xl border border-slate-800 bg-slate-800/30 flex flex-col gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="font-semibold text-xs text-slate-200 flex items-center gap-1.5">
+                <span>🔄</span> Curriculum Sync
+              </h3>
+              <p className="text-[11px] text-slate-400">
+                Pull newest lessons from upstream <span className="font-mono">microsoft/AI-For-Beginners</span>
+              </p>
+            </div>
+            <button
+              type="button"
+              id="sync-curriculum-btn"
+              onClick={handleSyncCurriculum}
+              disabled={syncing}
+              className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg shadow-sm transition disabled:opacity-50 flex items-center gap-1.5 self-start sm:self-auto"
+            >
+              {syncing ? (
+                <>
+                  <span className="animate-spin">⏳</span>
+                  <span>Syncing...</span>
+                </>
+              ) : (
+                <>
+                  <span>📥</span>
+                  <span>Sync Latest</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {syncResult && (
+            <div
+              data-testid={syncResult.ok ? 'sync-success-banner' : 'sync-error-banner'}
+              className={`p-2.5 rounded-lg border text-[11px] mt-1 ${
+                syncResult.ok
+                  ? 'border-emerald-500/40 bg-emerald-950/30 text-emerald-200'
+                  : 'border-rose-500/40 bg-rose-950/30 text-rose-200'
+              }`}
+            >
+              {syncResult.ok ? (
+                <span>
+                  ✓ Sync complete: Ingested {syncResult.lessonsCount ?? (syncResult as any).count ?? 0} lessons (Commit: <span className="font-mono">{syncResult.commitSha}</span>) in {syncResult.durationMs}ms
+                </span>
+              ) : (
+                <span>Sync error: {syncResult.error}</span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Provider Presets */}
@@ -172,7 +289,6 @@ export const SettingsModal: React.FC = () => {
               placeholder="e.g. http://localhost:11434/v1"
               className="w-full px-3 py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition font-mono"
             />
-            <p className="text-[11px] text-slate-500 mt-1">Default Ollama endpoint is http://localhost:11434/v1</p>
           </div>
 
           {/* Model Name */}
@@ -248,7 +364,7 @@ export const SettingsModal: React.FC = () => {
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="font-semibold text-slate-300">
-                GitHub Token (Ingestion)
+                GitHub Token (Ingestion Sync)
               </label>
               <button
                 type="button"
@@ -263,7 +379,7 @@ export const SettingsModal: React.FC = () => {
               id="settings-github-token"
               value={form.githubToken}
               onChange={(e) => setForm({ ...form, githubToken: e.target.value })}
-              placeholder="github_pat_... (optional for browser)"
+              placeholder="github_pat_... (for syncing curriculum)"
               className="w-full px-3 py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition font-mono"
             />
           </div>

@@ -79,23 +79,23 @@ export const Home: React.FC = () => {
       <div className="max-w-2xl mx-auto my-16 px-4">
         <div
           data-testid="ingest-required-message"
-          className="bg-white border border-amber-300/80 rounded-2xl p-8 shadow-sm"
+          className="bg-white dark:bg-slate-900 border border-amber-300/80 dark:border-amber-700/80 rounded-2xl p-8 shadow-sm"
         >
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-lg font-bold flex-shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 flex items-center justify-center text-lg font-bold flex-shrink-0">
               !
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-bold text-slate-900 mb-2">Content Ingestion Required</h2>
-              <p className="text-sm text-slate-600 mb-5 leading-relaxed">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">Content Ingestion Required</h2>
+              <p className="text-sm text-slate-600 dark:text-slate-300 mb-5 leading-relaxed">
                 The curriculum lessons have not been ingested yet. Please run the ingestion CLI command with your GitHub token to generate local lesson JSON artifacts:
               </p>
               <div className="relative group">
-                <code className="block bg-slate-900 text-slate-100 font-mono text-xs px-4 py-3 rounded-lg overflow-x-auto shadow-inner">
+                <code className="block bg-slate-900 dark:bg-slate-950 text-slate-100 font-mono text-xs px-4 py-3 rounded-lg overflow-x-auto shadow-inner border border-slate-800">
                   GITHUB_TOKEN=your_token go run ./cmd/ingest
                 </code>
               </div>
-              <p className="text-xs text-slate-500 mt-4">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-4">
                 Once the ingestion completes, refresh this page to begin your learning track. Please run ingest before continuing.
               </p>
             </div>
@@ -108,7 +108,7 @@ export const Home: React.FC = () => {
   if (errorMessage) {
     return (
       <div className="max-w-2xl mx-auto my-16 px-4">
-        <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-red-800">
+        <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-2xl p-6 text-red-800 dark:text-red-200">
           <h2 className="text-base font-bold mb-1">Failed to Connect</h2>
           <p className="text-sm">{errorMessage}</p>
         </div>
@@ -122,51 +122,52 @@ export const Home: React.FC = () => {
       <header className="mb-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs font-semibold mb-3">
               <span>✦ Comprehensive Self-Paced Track</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Artificial Intelligence Foundations
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-3">
+              <span>Artificial Intelligence Foundations</span>
+              <span className="text-xs sm:text-sm font-bold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700">v2.0</span>
             </h1>
           </div>
 
           {/* AI Status Badge */}
           <button
             onClick={() => setDrawerOpen(true)}
-            className="self-start md:self-auto flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 shadow-sm text-xs transition"
+            className="self-start md:self-auto flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm text-xs transition"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-semibold text-slate-700">Model:</span>
-            <span className="font-mono text-slate-600 font-medium">{settings.model}</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300">Model:</span>
+            <span className="font-mono text-slate-600 dark:text-slate-400 font-medium">{settings.model}</span>
             <span className="text-slate-400">⚙️</span>
           </button>
         </div>
 
-        <p className="text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed mb-6">
+        <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base max-w-3xl leading-relaxed mb-6">
           Explore machine learning, neural network architectures, computer vision, natural language transformers, and grounded AI tutoring.
         </p>
 
         {/* FR-UI-02, FR-PRG-03, AC-19: overall done / total summary */}
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm transition hover:shadow-md">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm transition hover:shadow-md">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-0.5">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-400 block mb-0.5">
                 Curriculum Mastery
               </span>
               <span
                 data-testid="progress-summary"
-                className="text-xl font-bold text-slate-900 tracking-tight"
+                className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-tight"
               >
                 {done} / {total} completed
               </span>
             </div>
-            <span className="text-sm font-semibold text-blue-600 bg-blue-50 px-3.5 py-1 rounded-full self-start sm:self-auto border border-blue-100">
+            <span className="text-sm font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-3.5 py-1 rounded-full self-start sm:self-auto border border-blue-100 dark:border-blue-900">
               {percentComplete}% finished
             </span>
           </div>
 
           {/* Animated progress track */}
-          <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
             <div
               className="bg-blue-600 h-2.5 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${percentComplete}%` }}
@@ -189,13 +190,13 @@ export const Home: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search lessons by title, topic, or keyword..."
-              className="w-full pl-10 pr-10 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition shadow-sm"
+              className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition shadow-sm"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 text-xs"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs"
               >
                 ✕
               </button>
@@ -207,8 +208,8 @@ export const Home: React.FC = () => {
               onClick={() => setSelectedModule('all')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
                 selectedModule === 'all'
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                  ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900'
+                  : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               All ({lessons.length})
@@ -218,7 +219,7 @@ export const Home: React.FC = () => {
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
                 selectedModule === 'completed'
                   ? 'bg-emerald-700 text-white'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                  : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               Completed ({done})
@@ -228,7 +229,7 @@ export const Home: React.FC = () => {
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
                 selectedModule === 'incomplete'
                   ? 'bg-amber-700 text-white'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                  : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               To Do ({total - done})
@@ -247,7 +248,7 @@ export const Home: React.FC = () => {
                 className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition ${
                   selectedModule === mod
                     ? 'bg-blue-600 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                 }`}
               >
                 {mod}
@@ -260,28 +261,28 @@ export const Home: React.FC = () => {
       {/* Lesson Index List */}
       <section aria-label="Curriculum Modules">
         {filteredLessons.length === 0 ? (
-          <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-sm">
-            <p className="text-sm font-semibold text-slate-700 mb-1">No lessons match your filter</p>
-            <p className="text-xs text-slate-500 mb-4">Try clearing the search query or selecting "All".</p>
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center shadow-sm">
+            <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">No lessons match your filter</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">Try clearing the search query or selecting "All".</p>
             <button
               onClick={() => {
                 setSearchQuery('')
                 setSelectedModule('all')
               }}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 rounded-lg transition"
+              className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 rounded-lg transition"
             >
               Reset Filters
             </button>
           </div>
         ) : (
-          <div className="bg-white border border-slate-200 rounded-2xl shadow-sm divide-y divide-slate-100 overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm divide-y divide-slate-100 dark:divide-slate-850 overflow-hidden">
             {filteredLessons.map((lesson, idx) => {
               const completed = !!completedLessons[lesson.id]
               return (
                 <div
                   key={lesson.id}
                   data-testid={`lesson-item-${lesson.id}`}
-                  className="group flex items-center justify-between p-4 sm:p-5 hover:bg-slate-50/80 transition-all duration-150"
+                  className="group flex items-center justify-between p-4 sm:p-5 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-all duration-150"
                 >
                   <div className="flex items-center gap-3.5 min-w-0 pr-4">
                     {/* FR-UI-02 completion indicator: ✅ / ⬜ */}
@@ -297,18 +298,18 @@ export const Home: React.FC = () => {
 
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-xs font-mono text-slate-400 font-medium">
+                        <span className="text-xs font-mono text-slate-400 dark:text-slate-400 font-medium">
                           {(idx + 1).toString().padStart(2, '0')}
                         </span>
                         {lesson.module && (
-                          <span className="inline-block text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                          <span className="inline-block text-[11px] font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
                             {lesson.module}
                           </span>
                         )}
                       </div>
                       <Link
                         to={`/lesson/${lesson.id}`}
-                        className="text-sm sm:text-base font-semibold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1"
+                        className="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1"
                       >
                         {lesson.title}
                       </Link>
@@ -320,7 +321,7 @@ export const Home: React.FC = () => {
                     <Link
                       to={`/quiz/${lesson.id}`}
                       data-testid={`quiz-link-${lesson.id}`}
-                      className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition"
+                      className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 rounded-lg transition"
                       title="Take interactive comprehension quiz"
                     >
                       <span>🎯</span>
@@ -330,7 +331,7 @@ export const Home: React.FC = () => {
                     {/* Open Lesson Link */}
                     <Link
                       to={`/lesson/${lesson.id}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 group-hover:bg-blue-600 group-hover:text-white rounded-lg transition-colors duration-150"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 group-hover:bg-blue-600 dark:group-hover:bg-blue-600 group-hover:text-white rounded-lg transition-colors duration-150"
                     >
                       <span>Open</span>
                       <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>

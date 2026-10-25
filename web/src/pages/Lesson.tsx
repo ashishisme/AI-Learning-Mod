@@ -68,7 +68,7 @@ export const Lesson: React.FC = () => {
         <Link
           to="/"
           data-testid="back-link"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-blue-600 transition group"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition group"
         >
           <span className="group-hover:-translate-x-0.5 transition-transform">&larr;</span>
           <span>Back to Curriculum</span>
@@ -82,12 +82,12 @@ export const Lesson: React.FC = () => {
       </div>
 
       {/* Lesson Header Bench */}
-      <header className="mb-8 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+      <header className="mb-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-5">
           <div className="flex-1">
             <h1
               data-testid="lesson-title"
-              className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight"
+              className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-tight"
             >
               {lesson.title}
             </h1>
@@ -125,8 +125,8 @@ export const Lesson: React.FC = () => {
               onClick={() => toggleLesson(lesson.id)}
               className={`inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg border active:scale-95 transition-all ${
                 isCompleted
-                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100 shadow-sm'
-                  : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50 shadow-sm'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 shadow-sm'
+                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm'
               }`}
             >
               <span>{isCompleted ? '✅' : '⬜'}</span>
@@ -139,7 +139,7 @@ export const Lesson: React.FC = () => {
       {/* Lesson Content Body (measured for technical reading comfort) */}
       <main
         data-testid="lesson-content"
-        className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-10 shadow-sm space-y-6 text-slate-800 leading-relaxed text-base"
+        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 shadow-sm space-y-6 text-slate-800 dark:text-slate-200 leading-relaxed text-base"
       >
         {lesson.blocks.map((block, idx) => (
           <MarkdownBlock key={idx} block={block} />

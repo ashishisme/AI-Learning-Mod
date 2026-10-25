@@ -35,7 +35,7 @@ interface MarkdownBlockProps {
 export const MarkdownBlock: React.FC<MarkdownBlockProps> = ({ block }) => {
   if (block.type === 'markdown') {
     return (
-      <div className="prose prose-slate max-w-none my-4">
+      <div className="prose prose-slate dark:prose-invert max-w-none my-4">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema], rehypeHighlight]}
@@ -48,7 +48,7 @@ export const MarkdownBlock: React.FC<MarkdownBlockProps> = ({ block }) => {
 
   if (block.type === 'code') {
     return (
-      <pre className="bg-slate-900 text-slate-100 p-4 rounded-lg overflow-x-auto my-4 text-sm font-mono">
+      <pre className="bg-slate-900 dark:bg-slate-950 text-slate-100 p-4 rounded-lg overflow-x-auto my-4 text-sm font-mono border border-slate-800">
         <code>{block.content}</code>
       </pre>
     )
@@ -60,17 +60,17 @@ export const MarkdownBlock: React.FC<MarkdownBlockProps> = ({ block }) => {
         <img
           src={block.src}
           alt={block.alt || ''}
-          className="max-w-full h-auto rounded-lg shadow-sm"
+          className="max-w-full h-auto rounded-lg shadow-sm border border-slate-150 dark:border-slate-800"
           loading="lazy"
         />
-        {block.alt && <figcaption className="text-sm text-slate-500 mt-1">{block.alt}</figcaption>}
+        {block.alt && <figcaption className="text-sm text-slate-500 dark:text-slate-400 mt-1">{block.alt}</figcaption>}
       </figure>
     )
   }
 
   if (block.type === 'notebook') {
     return (
-      <div className="p-4 my-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-900">
+      <div className="p-4 my-4 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-lg text-blue-900 dark:text-blue-200">
         <p className="font-semibold text-sm">Interactive Jupyter Notebook available</p>
       </div>
     )
@@ -80,7 +80,7 @@ export const MarkdownBlock: React.FC<MarkdownBlockProps> = ({ block }) => {
   return (
     <div
       data-testid="unknown-block"
-      className="p-4 my-4 bg-slate-100 border border-slate-200 rounded text-slate-500 text-sm italic"
+      className="p-4 my-4 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded text-slate-500 dark:text-slate-400 text-sm italic"
     >
       Content block ({block.type}) cannot be displayed
     </div>

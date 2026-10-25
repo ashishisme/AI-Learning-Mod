@@ -26,13 +26,13 @@ export const Quiz: React.FC = () => {
       <div className="max-w-xl mx-auto py-20 px-4 text-center">
         <div
           data-testid="quiz-placeholder"
-          className="bg-white border border-slate-200 rounded-3xl p-10 shadow-sm"
+          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-10 shadow-sm"
         >
-          <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold">
+          <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl font-bold">
             ?
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 mb-2">Quiz: {id}</h1>
-          <p className="text-slate-600 text-sm mb-8 leading-relaxed max-w-sm mx-auto">
+          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 mb-2">Quiz: {id}</h1>
+          <p className="text-slate-600 dark:text-slate-300 text-sm mb-8 leading-relaxed max-w-sm mx-auto">
             Quizzes are not yet available for this lesson. Please review the lesson material and check back soon!
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -46,7 +46,7 @@ export const Quiz: React.FC = () => {
             </Link>
             <Link
               to="/quiz/1-intro"
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-800 text-xs font-semibold rounded-xl transition-all"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-xl transition-all"
             >
               <span>Try Intro to AI Quiz</span>
               <span>&rarr;</span>
@@ -115,10 +115,10 @@ export const Quiz: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto py-10 px-4 sm:px-6" data-testid="quiz-interactive">
       {/* Quiz Top Navigation Bar */}
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200">
+      <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200 dark:border-slate-800">
         <Link
           to={`/lesson/${quiz.lessonId}`}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 transition"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
         >
           <span>&larr;</span>
           <span>Back to Lesson</span>
@@ -132,18 +132,18 @@ export const Quiz: React.FC = () => {
         /* Quiz Completed Recap Card */
         <div
           data-testid="quiz-recap-card"
-          className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-12 shadow-sm text-center animate-fade-in"
+          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 sm:p-12 shadow-sm text-center animate-fade-in"
         >
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center text-3xl shadow-sm">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-500 dark:text-amber-400 flex items-center justify-center text-3xl shadow-sm">
             🏆
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Quiz Completed!</h2>
-          <p className="text-slate-600 text-sm mb-6">
-            You completed the comprehension check for <span className="font-semibold text-slate-800">{quiz.title}</span>.
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">Quiz Completed!</h2>
+          <p className="text-slate-600 dark:text-slate-300 text-sm mb-6">
+            You completed the comprehension check for <span className="font-semibold text-slate-800 dark:text-slate-200">{quiz.title}</span>.
           </p>
 
-          <div className="inline-block bg-slate-50 border border-slate-200 rounded-2xl px-8 py-5 mb-8">
-            <div className="text-3xl font-extrabold text-blue-600 mb-1" data-testid="quiz-final-score">
+          <div className="inline-block bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-8 py-5 mb-8">
+            <div className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-1" data-testid="quiz-final-score">
               {correctCount} / {totalQuestions}
             </div>
             <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
@@ -154,7 +154,7 @@ export const Quiz: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={handleRetake}
-              className="w-full sm:w-auto px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition"
+              className="w-full sm:w-auto px-6 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl transition"
             >
               🔄 Retake Quiz
             </button>
@@ -174,10 +174,10 @@ export const Quiz: React.FC = () => {
         </div>
       ) : (
         /* Question Active View */
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-sm">
           {/* Header & Stepper */}
           <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
+            <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-1 rounded-full">
               Question {currentIdx + 1} of {totalQuestions}
             </span>
             <span className="text-xs font-medium text-slate-400">
@@ -186,7 +186,7 @@ export const Quiz: React.FC = () => {
           </div>
 
           {/* Stepper bar */}
-          <div className="w-full bg-slate-100 rounded-full h-1.5 mb-6 overflow-hidden">
+          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 mb-6 overflow-hidden">
             <div
               className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
               style={{ width: `${((currentIdx + 1) / totalQuestions) * 100}%` }}
@@ -196,7 +196,7 @@ export const Quiz: React.FC = () => {
           {/* Prompt */}
           <h2
             data-testid="question-prompt"
-            className="text-lg sm:text-xl font-bold text-slate-900 mb-6 leading-snug"
+            className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100 mb-6 leading-snug"
           >
             {currentQ.prompt}
           </h2>
@@ -207,14 +207,14 @@ export const Quiz: React.FC = () => {
               const isThisSelected = userChoice === optIdx
               const isThisCorrect = optIdx === currentQ.correctIndex
 
-              let btnStyle = 'border-slate-200 bg-white text-slate-800 hover:border-slate-300 hover:bg-slate-50'
+              let btnStyle = 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'
               if (hasAnswered) {
                 if (isThisCorrect) {
-                  btnStyle = 'border-emerald-500 bg-emerald-50 text-emerald-950 font-medium'
+                  btnStyle = 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-950 dark:text-emerald-100 font-medium'
                 } else if (isThisSelected) {
-                  btnStyle = 'border-rose-400 bg-rose-50 text-rose-950'
+                  btnStyle = 'border-rose-400 bg-rose-50 dark:bg-rose-950/50 text-rose-950 dark:text-rose-100'
                 } else {
-                  btnStyle = 'border-slate-200 bg-slate-50/50 text-slate-400 opacity-60'
+                  btnStyle = 'border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/60 text-slate-400 dark:text-slate-500 opacity-60'
                 }
               }
 
@@ -233,7 +233,7 @@ export const Quiz: React.FC = () => {
                         ? 'border-emerald-500 bg-emerald-500 text-white'
                         : hasAnswered && isThisSelected
                         ? 'border-rose-500 bg-rose-500 text-white'
-                        : 'border-slate-300 text-slate-600'
+                        : 'border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300'
                     }`}
                   >
                     {String.fromCharCode(65 + optIdx)}
@@ -250,8 +250,8 @@ export const Quiz: React.FC = () => {
               data-testid="answer-rationale"
               className={`p-4 rounded-2xl border text-xs leading-relaxed mb-6 animate-fade-in ${
                 isCorrect
-                  ? 'border-emerald-300 bg-emerald-50 text-emerald-900'
-                  : 'border-rose-200 bg-rose-50 text-rose-900'
+                  ? 'border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-200'
+                  : 'border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/50 text-rose-900 dark:text-rose-200'
               }`}
             >
               <div className="font-bold mb-1 flex items-center gap-1.5 text-sm">
@@ -265,9 +265,9 @@ export const Quiz: React.FC = () => {
           {hintText && (
             <div
               data-testid="tutor-hint-box"
-              className="p-4 rounded-2xl border border-indigo-200 bg-indigo-50/60 text-indigo-950 text-xs leading-relaxed mb-6 animate-fade-in"
+              className="p-4 rounded-2xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/60 dark:bg-indigo-950/50 text-indigo-950 dark:text-indigo-200 text-xs leading-relaxed mb-6 animate-fade-in"
             >
-              <div className="font-bold text-indigo-900 flex items-center gap-1.5 mb-1">
+              <div className="font-bold text-indigo-900 dark:text-indigo-200 flex items-center gap-1.5 mb-1">
                 <span>💡 AI Tutor Hint:</span>
               </div>
               <p>{hintText}</p>
@@ -275,13 +275,13 @@ export const Quiz: React.FC = () => {
           )}
 
           {/* Action Row */}
-          <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
               data-testid="ask-hint-btn"
               onClick={handleAskHint}
               disabled={hintLoading || hasAnswered}
-              className="px-3.5 py-2 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 disabled:opacity-50 rounded-xl transition flex items-center gap-1.5"
+              className="px-3.5 py-2 text-xs font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 disabled:opacity-50 rounded-xl transition flex items-center gap-1.5"
             >
               <span>{hintLoading ? '⏳ Thinking...' : '💡 Get AI Hint'}</span>
             </button>

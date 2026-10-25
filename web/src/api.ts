@@ -206,3 +206,27 @@ export async function fetchHealth(): Promise<{ ok: boolean }> {
   }
   return res.json()
 }
+
+export interface IngestSyncResult {
+  ok: boolean
+  commitSha?: string
+  lessonsCount?: number
+  durationMs: number
+  error?: string
+}
+
+export async function syncCurriculum(githubToken?: string): Promise<IngestSyncResult> {
+  const token = githubToken || useSettingsStore.getState().settings.githubToken
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  if (token) {
+    headers['X-GitHub-Token'] = token
+  }
+
+  const res = await fetch('/api/ingest/sync', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ githubToken: token }),
+  })
+  return res.json()
+}
+

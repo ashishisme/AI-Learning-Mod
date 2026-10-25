@@ -55,17 +55,17 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
   return (
     <aside
       data-testid="tutor-panel"
-      className="mt-10 bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 shadow-sm transition-all"
+      className="mt-10 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-7 shadow-sm transition-all"
       aria-label="AI Teaching Assistant"
     >
       {/* Panel Header */}
-      <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-100">
+      <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
+          <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm">
             AI
           </div>
           <div>
-            <h3 className="text-base font-bold text-slate-900 leading-none">
+            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 leading-none">
               Lesson Assistant
             </h3>
             <span className="text-[11px] text-slate-400 font-medium">
@@ -77,12 +77,12 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
         {isOffline ? (
           <span
             data-testid="tutor-offline-badge"
-            className="text-xs font-semibold px-2.5 py-1 rounded-full bg-red-50 text-red-700 border border-red-200"
+            className="text-xs font-semibold px-2.5 py-1 rounded-full bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800"
           >
             Tutor offline
           </span>
         ) : (
-          <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/60">
+          <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-200/60 dark:border-emerald-800">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             Online
           </span>
@@ -93,12 +93,12 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
       {isOffline && (
         <div
           data-testid="tutor-offline-message"
-          className="mb-5 p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-sm flex items-start gap-3"
+          className="mb-5 p-4 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 rounded-xl text-amber-900 dark:text-amber-200 text-sm flex items-start gap-3"
         >
           <span className="text-base leading-none">⚠️</span>
           <div>
             <p className="font-semibold mb-0.5">Tutor offline</p>
-            <p className="text-xs text-amber-700 leading-relaxed">
+            <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
               The AI Teaching Assistant service is currently unavailable or disabled. All other curriculum content remains fully accessible.
             </p>
           </div>
@@ -109,7 +109,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
       {errorMessage && (
         <div
           data-testid="tutor-error"
-          className="mb-5 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm flex items-start gap-2.5"
+          className="mb-5 p-4 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-300 text-sm flex items-start gap-2.5"
         >
           <span className="font-bold leading-none">!</span>
           <p className="text-xs leading-relaxed">{errorMessage}</p>
@@ -120,7 +120,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
       {answer !== null && answer !== '' && (
         <div
           data-testid="tutor-answer"
-          className="mb-6 p-5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm font-normal leading-relaxed whitespace-pre-wrap select-text"
+          className="mb-6 p-5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 text-sm font-normal leading-relaxed whitespace-pre-wrap select-text"
         >
           {answer}
           {isStreaming && (
@@ -134,7 +134,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
 
       {/* Question Form */}
       <form onSubmit={handleSubmit} className="space-y-3">
-        <label htmlFor="tutor-question" className="block text-xs font-semibold text-slate-700">
+        <label htmlFor="tutor-question" className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
           Have a question about this lesson?
         </label>
         <div className="flex flex-col sm:flex-row gap-2.5">
@@ -147,7 +147,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
             disabled={isOffline || loading}
             placeholder={isOffline ? 'Tutor is offline' : 'e.g. Can you explain the core perceptron formula?'}
             maxLength={500}
-            className="flex-1 px-4 py-2.5 border border-slate-300 rounded-xl text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed transition"
+            className="flex-1 px-4 py-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-850 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-500 disabled:cursor-not-allowed transition rounded-xl text-sm"
           />
           <button
             type="submit"

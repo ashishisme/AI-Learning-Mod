@@ -1,4 +1,4 @@
-// SPEC: FR-PRG-01, FR-PRG-02, FR-PRG-03, FR-SET-01, FR-SET-02, NFR-PRV-01, DC-01
+// SPEC: FR-PRG-01, FR-PRG-02, FR-PRG-03, FR-SET-01, FR-SET-02, FR-UI-15, NFR-PRV-01, DC-01
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
@@ -77,6 +77,43 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'ai-foundations-settings', // FR-SET-02 exact key
+    }
+  )
+)
+
+export type ThemeMode = 'light' | 'dark' | 'system'
+
+export interface ThemeState {
+  theme: ThemeMode
+  setTheme: (theme: ThemeMode) => void
+}
+
+export function applyThemeClass(theme: ThemeMode) {
+  if (typeof window === 'undefined') return
+  const isDark =
+    theme === 'dark' ||
+    (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  if (isDark) {
+    document.documentElement.classList.add('dark')
+  } else {
+    document.documentElement.classList.remove('dark')
+  }
+}
+
+export const useThemeStore = create<ThemeState>()(
+  persist(
+    (set) => ({
+      theme: 'system',
+      setTheme: (theme: ThemeMode) => {
+        applyThemeClass(theme)
+        set({ theme })
+      },
+    }),
+    {
+      name: 'ai-foundations-theme', // FR-UI-15 exact key
+      onRehydrateStorage: () => (state) => {
+        if (state) applyThemeClass(state.theme)
+      },
     }
   )
 )
