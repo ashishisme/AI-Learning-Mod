@@ -41,56 +41,83 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
   return (
     <aside
       data-testid="tutor-panel"
-      className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm my-8"
-      aria-label="AI Tutor"
+      className="mt-10 bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 shadow-sm transition-all"
+      aria-label="AI Teaching Assistant"
     >
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-          <span>🤖</span> AI Teaching Assistant
-        </h3>
-        {isOffline && (
+      {/* Panel Header */}
+      <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-100">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
+            AI
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-slate-900 leading-none">
+              Lesson Assistant
+            </h3>
+            <span className="text-[11px] text-slate-400 font-medium">
+              Grounded exclusively in this module
+            </span>
+          </div>
+        </div>
+
+        {isOffline ? (
           <span
             data-testid="tutor-offline-badge"
-            className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-red-100 text-red-800"
+            className="text-xs font-semibold px-2.5 py-1 rounded-full bg-red-50 text-red-700 border border-red-200"
           >
             Tutor offline
+          </span>
+        ) : (
+          <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/60">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            Online
           </span>
         )}
       </div>
 
+      {/* Offline Alert Box */}
       {isOffline && (
         <div
           data-testid="tutor-offline-message"
-          className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 text-sm"
+          className="mb-5 p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-sm flex items-start gap-3"
         >
-          Tutor offline
+          <span className="text-base leading-none">⚠️</span>
+          <div>
+            <p className="font-semibold mb-0.5">Tutor offline</p>
+            <p className="text-xs text-amber-700 leading-relaxed">
+              The AI Teaching Assistant service is currently unavailable or disabled. All other curriculum content remains fully accessible.
+            </p>
+          </div>
         </div>
       )}
 
+      {/* Inline Error Message */}
       {errorMessage && (
         <div
           data-testid="tutor-error"
-          className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm"
+          className="mb-5 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm flex items-start gap-2.5"
         >
-          {errorMessage}
+          <span className="font-bold leading-none">!</span>
+          <p className="text-xs leading-relaxed">{errorMessage}</p>
         </div>
       )}
 
-      {/* NFR-SEC-05: Tutor output rendered as plain text */}
+      {/* Answer Container (NFR-SEC-05: Plain Text only) */}
       {answer && (
         <div
           data-testid="tutor-answer"
-          className="mb-6 p-4 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 text-sm whitespace-pre-wrap leading-relaxed"
+          className="mb-6 p-5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm font-normal leading-relaxed whitespace-pre-wrap select-text"
         >
           {answer}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <label htmlFor="tutor-question" className="text-sm font-medium text-slate-700">
-          Ask a question about this lesson
+      {/* Question Form */}
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <label htmlFor="tutor-question" className="block text-xs font-semibold text-slate-700">
+          Have a question about this lesson?
         </label>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2.5">
           <input
             id="tutor-question"
             data-testid="tutor-input"
@@ -98,22 +125,30 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             disabled={isOffline || loading}
-            placeholder={isOffline ? 'Tutor is offline' : 'e.g. What is gradient descent?'}
+            placeholder={isOffline ? 'Tutor is offline' : 'e.g. Can you explain the core perceptron formula?'}
             maxLength={500}
-            className="flex-1 px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
+            className="flex-1 px-4 py-2.5 border border-slate-300 rounded-xl text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed transition"
           />
           <button
             type="submit"
             data-testid="tutor-submit"
             disabled={isOffline || loading || !question.trim()}
-            className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-semibold rounded-xl shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
           >
-            {loading ? 'Thinking...' : 'Ask'}
+            {loading ? (
+              <span className="inline-flex items-center gap-1.5">
+                <span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                Thinking...
+              </span>
+            ) : (
+              <span>Ask Tutor</span>
+            )}
           </button>
         </div>
-        <p className="text-xs text-slate-400">
-          Answers are strictly grounded in this lesson's text.
-        </p>
+        <div className="flex items-center justify-between text-[11px] text-slate-400">
+          <span>Responses include citations: [Lesson Title § Section]</span>
+          <span>{question.length}/500</span>
+        </div>
       </form>
     </aside>
   )
