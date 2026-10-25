@@ -2,6 +2,7 @@
 package main
 
 import (
+	"io/fs"
 	"log/slog"
 	"net/http"
 	"os"
@@ -24,9 +25,15 @@ func main() {
 
 	openAIKey := os.Getenv("OPENAI_API_KEY")
 
+	var staticFS fs.FS
+	if info, err := os.Stat("web/dist"); err == nil && info.IsDir() {
+		staticFS = os.DirFS("web/dist")
+	}
+
 	handler := api.NewRouter(api.RouterConfig{
 		ContentDir: contentDir,
 		OpenAIKey:  openAIKey,
+		StaticFS:   staticFS,
 	})
 
 	// NFR-SEC-07: Construct HTTP server with strict timeouts

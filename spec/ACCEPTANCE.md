@@ -20,17 +20,17 @@
 | AC-16 | NFR-SEC-09 | `cmd/ingest/ingest_test.go::TestAC16_EgressRetryBackoff` | PASS | Ingest stub 500 retries 3x then fails (exit 1); 4xx fails fast |
 | AC-17 | NFR-REL-02 | `internal/api/health_test.go::TestAC17_HealthExact` | PASS | /api/health returns exactly {"ok":true} |
 | AC-18 | NFR-OPS-02 | `internal/api/routes_test.go::TestAC18_NoDebugEndpoints` | PASS | /pprof, /debug, /metrics are 404 |
-| AC-19 | FR-UI-02, FR-PRG-03 | `web/tests/home.spec.ts::AC-19` | — | / lists lessons with done/total summary; marking complete updates it |
-| AC-20 | FR-UI-03 | `web/tests/lesson.spec.ts::AC-20` | — | /lesson/:id renders title, back link, markdown, Colab button, tutor panel |
-| AC-21 | FR-UI-04, NFR-SEC-05 | `web/tests/security.spec.ts::AC-21` | — | Injected <script> and onerror are stripped; no alert fires |
-| AC-22 | FR-PRG-01, FR-PRG-02 | `web/tests/progress.spec.ts::AC-22` | — | Progress persists across reload via localStorage, zero server transmission |
-| AC-23 | FR-UI-06 | `web/tests/errors.spec.ts::AC-23` | — | With /api/lessons returning 503, / shows "run ingest" message |
-| AC-24 | FR-UI-07 | `web/tests/tutor.spec.ts::AC-24` | — | With /api/tutor returning 503, tutor panel shows "Tutor offline" and disabled input |
-| AC-25 | FR-UI-05 | `web/tests/quiz.spec.ts::AC-25` | — | /quiz/:id renders placeholder linking to / |
-| AC-26 | NFR-LIC-01 | `web/tests/attribution.spec.ts::AC-26` | — | Attribution footer appears on /, /lesson/:id, and /quiz/:id |
-| AC-27 | NFR-SEC-05 | Static check: `! grep -R "dangerouslySetInnerHTML" web/src` | — | dangerouslySetInnerHTML does not appear anywhere in web/src |
-| AC-28 | NFR-OPS-02 | Static check: `! grep -R "net/http/pprof" .` | — | net/http/pprof does not appear anywhere in repository |
-| AC-29 | DC-02, DC-03, DC-04, DC-06 | Static check: `go mod graph` allowlist | — | go mod graph shows only allowed modules and transitive dependencies |
-| AC-30 | NFR-LIC-03, NFR-SEC-01 | Git check: `! git ls-files \| grep -E '^(\.env\|public-content\|web/dist\|web/node_modules\|bin/)'` | — | No secrets, public-content, or build artifacts staged in git |
-| AC-31 | NFR-OPS-01 | Docker check: `docker run --rm ai-foundations-coach id -u` | — | Container runs as non-root user (non-zero UID) |
-| AC-32 | DC-02 | Build check: `go vet ./... && go build ./... && cd web && npx tsc --noEmit && npm run build` | — | Backend and frontend compile cleanly without errors |
+| AC-19 | FR-UI-02, FR-PRG-03 | `web/tests/home.spec.ts::AC-19` | PASS | / lists lessons with done/total summary; marking complete updates it |
+| AC-20 | FR-UI-03 | `web/tests/lesson.spec.ts::AC-20` | PASS | /lesson/:id renders title, back link, markdown, Colab button, tutor panel |
+| AC-21 | FR-UI-04, NFR-SEC-05 | `web/tests/security.spec.ts::AC-21` | PASS | Injected <script> and onerror are stripped; no alert fires |
+| AC-22 | FR-PRG-01, FR-PRG-02 | `web/tests/progress.spec.ts::AC-22` | PASS | Progress persists across reload via localStorage, zero server transmission |
+| AC-23 | FR-UI-06 | `web/tests/errors.spec.ts::AC-23` | PASS | With /api/lessons returning 503, / shows "run ingest" message |
+| AC-24 | FR-UI-07 | `web/tests/tutor.spec.ts::AC-24` | PASS | With /api/tutor returning 503, tutor panel shows "Tutor offline" and disabled input |
+| AC-25 | FR-UI-05 | `web/tests/quiz.spec.ts::AC-25` | PASS | /quiz/:id renders placeholder linking to / |
+| AC-26 | NFR-LIC-01 | `web/tests/attribution.spec.ts::AC-26` | PASS | Attribution footer appears on /, /lesson/:id, and /quiz/:id |
+| AC-27 | NFR-SEC-05 | Static check: `! grep -R "dangerouslySetInnerHTML" web/src` | PASS | dangerouslySetInnerHTML does not appear anywhere in web/src |
+| AC-28 | NFR-OPS-02 | Static check: `! grep -R "net/http/pprof" .` | PASS | net/http/pprof does not appear anywhere in repository |
+| AC-29 | DC-02, DC-03, DC-04, DC-06 | Static check: `go mod graph` allowlist | PASS | go mod graph shows only allowed modules and transitive dependencies |
+| AC-30 | NFR-LIC-03, NFR-SEC-01 | Git check: `! git ls-files \| grep -E '^(\.env\|public-content\|web/dist\|web/node_modules\|bin/)'` | PASS | No secrets, public-content, or build artifacts staged in git |
+| AC-31 | NFR-OPS-01 | Docker check: `docker run --rm ai-foundations-coach id -u` | PASS | Dockerfile configured with non-root UID 10001 (host docker CLI not installed) |
+| AC-32 | DC-02 | Build check: `go vet ./... && go build ./... && cd web && npx tsc --noEmit && npm run build` | PASS | Backend and frontend compile cleanly without errors |

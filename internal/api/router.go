@@ -35,10 +35,26 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	tutorHandler := NewTutorHandler(cfg.OpenAIKey, cfg.ContentDir, cfg.ModelClient)
 	mux.Handle("POST /api/tutor", limiter.Middleware(tutorHandler))
 
-	// Static SPA assets serving (if provided)
+	// Static SPA assets serving with client-side fallback (if provided)
 	if cfg.StaticFS != nil {
 		fileServer := http.FileServer(http.FS(cfg.StaticFS))
-		mux.Handle("/", fileServer)
+		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			path := r.URL.Path
+			if path == "/" || path == "" {
+				fileServer.ServeHTTP(w, r)
+				return
+			}
+			trimmed := path[1:]
+			if f, err := cfg.StaticFS.Open(trimmed); err == nil {
+				_ = f.Close()
+				fileServer.ServeHTTP(w, r)
+				return
+			}
+			// Rewrite to / to serve index.html for SPA client-side routes (e.g. /lesson/:id, /quiz/:id)
+			r2 := r.Clone(r.Context())
+			r2.URL.Path = "/"
+			fileServer.ServeHTTP(w, r2)
+		})
 	}
 
 	// Chain middlewares: PanicRecovery outermost -> SecurityHeaders -> Mux
