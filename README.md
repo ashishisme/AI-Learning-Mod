@@ -25,7 +25,7 @@ go run ./cmd/ingest
 
 ### Pinned Upstream SHA
 - **Repository:** `microsoft/AI-For-Beginners`
-- **Pinned Commit SHA:** (Recorded upon first ingest run per §6.1 and NFR-LIC-03)
+- **Pinned Commit SHA:** `392d0df1b2647cbee104942390551f1ed9e072c8`
 
 ## Running the Application
 
