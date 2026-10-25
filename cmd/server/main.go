@@ -2,6 +2,8 @@
 package main
 
 import (
+	"context"
+	"io"
 	"io/fs"
 	"log/slog"
 	"net/http"
@@ -10,7 +12,45 @@ import (
 	"time"
 
 	"ai-foundations-coach/internal/api"
+	openai "github.com/sashabaranov/go-openai"
 )
+
+type demoStreamReceiver struct {
+	tokens []string
+	idx    int
+}
+
+func (d *demoStreamReceiver) Recv() (string, error) {
+	if d.idx >= len(d.tokens) {
+		return "", io.EOF
+	}
+	tok := d.tokens[d.idx]
+	d.idx++
+	time.Sleep(35 * time.Millisecond) // realistic streaming cadence
+	return tok, nil
+}
+
+func (d *demoStreamReceiver) Close() {}
+
+type demoModelClient struct{}
+
+func (d *demoModelClient) CreateChatCompletion(ctx context.Context, req openai.ChatCompletionRequest) (openai.ChatCompletionResponse, error) {
+	return openai.ChatCompletionResponse{
+		Choices: []openai.ChatCompletionChoice{
+			{
+				Message: openai.ChatCompletionMessage{
+					Content: "According to [Lesson § Architecture], machine learning models learn representation mappings directly from training datasets by iteratively optimizing loss functions.",
+				},
+			},
+		},
+	}, nil
+}
+
+func (d *demoModelClient) CreateChatCompletionStream(ctx context.Context, req openai.ChatCompletionRequest) (api.StreamReceiver, error) {
+	sample := "According to [Lesson § Core Concepts], biological neurons receive electrical pulses through dendrites, whereas artificial neurons compute weighted numerical sums passed through non-linear activation functions like ReLU and Sigmoid to predict targets."
+	words := strings.SplitAfter(sample, " ")
+	return &demoStreamReceiver{tokens: words}, nil
+}
 
 func main() {
 	port := os.Getenv("PORT")
@@ -30,10 +70,17 @@ func main() {
 		staticFS = os.DirFS("web/dist")
 	}
 
+	var modelClient api.ModelClient
+	if strings.ToLower(os.Getenv("MOCK_TUTOR")) == "true" || openAIKey == "mock" {
+		slog.Info("Running tutor in local demo simulation mode (MOCK_TUTOR=true)")
+		modelClient = &demoModelClient{}
+	}
+
 	handler := api.NewRouter(api.RouterConfig{
-		ContentDir: contentDir,
-		OpenAIKey:  openAIKey,
-		StaticFS:   staticFS,
+		ContentDir:  contentDir,
+		OpenAIKey:   openAIKey,
+		ModelClient: modelClient,
+		StaticFS:    staticFS,
 	})
 
 	// NFR-SEC-07: Construct HTTP server with strict timeouts
