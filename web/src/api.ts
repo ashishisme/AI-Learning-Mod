@@ -1,4 +1,6 @@
-// SPEC: FR-CNT-01, FR-CNT-02, FR-TUT-01, FR-TUT-07, FR-TUT-08, NFR-REL-01, NFR-REL-02
+// SPEC: FR-CNT-01, FR-CNT-02, FR-TUT-01, FR-TUT-07, FR-TUT-08, FR-SET-03, FR-SET-04, NFR-REL-01, NFR-REL-02
+import { useSettingsStore } from './store'
+
 export interface LessonMeta {
   id: string
   module: string
@@ -61,11 +63,22 @@ export async function fetchLesson(id: string): Promise<Lesson> {
   return res.json()
 }
 
+function getAIHeaders(): Record<string, string> {
+  const settings = useSettingsStore.getState().settings
+  const headers: Record<string, string> = {}
+  if (settings.baseUrl) headers['X-AI-Base-URL'] = settings.baseUrl
+  if (settings.model) headers['X-AI-Model'] = settings.model
+  if (settings.apiKey) headers['X-AI-Key'] = settings.apiKey
+  if (settings.maxBytes) headers['X-AI-Max-Bytes'] = String(settings.maxBytes)
+  return headers
+}
+
 export async function askTutor(lessonId: string, question: string): Promise<TutorResponse> {
   const res = await fetch('/api/tutor', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...getAIHeaders(),
     },
     body: JSON.stringify({ lessonId, question }),
   })
@@ -98,6 +111,7 @@ export async function askTutorStream(
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'text/event-stream',
+      ...getAIHeaders(),
     },
     body: JSON.stringify({ lessonId, question }),
     signal: controller.signal,
@@ -162,6 +176,27 @@ export async function askTutorStream(
     })
 
   return () => controller.abort()
+}
+
+export interface ConfigTestResult {
+  ok: boolean
+  latencyMs: number
+  error?: string
+  models?: string[]
+  activeModel?: string
+}
+
+export async function testAIConfig(config: { baseUrl: string; model: string; apiKey?: string }): Promise<ConfigTestResult> {
+  const res = await fetch('/api/config/test', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(config),
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => null)
+    throw new ApiError(res.status, body?.error || `Config test error (${res.status})`, body)
+  }
+  return res.json()
 }
 
 export async function fetchHealth(): Promise<{ ok: boolean }> {

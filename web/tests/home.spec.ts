@@ -62,4 +62,33 @@ test.describe('AC-19 Home Page', () => {
     // Summary updates to 1 / 2
     await expect(summary).toContainText('1 / 2')
   })
+
+  // SPEC: AC-35 (FR-UI-13): / provides instant client-side search filtering
+  test('AC-35: search input filters lesson items', async ({ page }) => {
+    await page.route('**/api/lessons', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          commitSha: '1234567890123456789012345678901234567890',
+          lessons: [
+            { id: 'lesson-1', module: 'Intro', title: 'Introduction to AI', order: 0, path: '', commitSha: '' },
+            { id: 'lesson-2', module: 'CV', title: 'Convolutional Networks', order: 1, path: '', commitSha: '' },
+          ],
+        }),
+      })
+    })
+
+    await page.goto('/')
+
+    const searchInput = page.locator('[data-testid="search-lessons-input"]')
+    await expect(searchInput).toBeVisible()
+
+    // Filter for "Convolutional"
+    await searchInput.fill('Convolutional')
+
+    await expect(page.locator('[data-testid="lesson-item-lesson-2"]')).toBeVisible()
+    await expect(page.locator('[data-testid="lesson-item-lesson-1"]')).not.toBeVisible()
+  })
 })
+

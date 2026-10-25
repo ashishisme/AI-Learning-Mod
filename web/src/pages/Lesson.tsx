@@ -94,6 +94,16 @@ export const Lesson: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5 flex-shrink-0">
+            {/* Interactive Quiz Button */}
+            <Link
+              to={`/quiz/${lesson.id}`}
+              data-testid="lesson-quiz-button"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
+            >
+              <span>🎯</span>
+              <span>Take Quiz</span>
+            </Link>
+
             {/* FR-UI-08: Colab button linking to colab with rel="noreferrer" */}
             {hasNotebook && (
               <a

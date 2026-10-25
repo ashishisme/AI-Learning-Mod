@@ -127,9 +127,18 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 	}
 
+	// FR-SET-04: Allow dynamic client overrides from settings drawer
+	customBaseURL := strings.TrimSpace(r.Header.Get("X-AI-Base-URL"))
+	if customBaseURL == "" {
+		customBaseURL = os.Getenv("OPENAI_BASE_URL")
+	}
+	customKey := strings.TrimSpace(r.Header.Get("X-AI-Key"))
+	if customKey == "" {
+		customKey = h.apiKey
+	}
+
 	// FR-TUT-08: If OPENAI_API_KEY is unset and no baseURL/client provided, return 503 {"error":"tutor disabled"}
-	baseURL := os.Getenv("OPENAI_BASE_URL")
-	if h.apiKey == "" && h.modelClient == nil && baseURL == "" {
+	if customKey == "" && h.modelClient == nil && customBaseURL == "" {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		if isStream {
 			w.Header().Set("Content-Type", "text/event-stream")
@@ -213,13 +222,17 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	content := sb.String()
 
-	// Truncate to MaxLessonBytes per FR-TUT-02 (configurable via env for local small models)
+	// Truncate to MaxLessonBytes per FR-TUT-02 (configurable via env/header for local small models)
 	maxBytes := MaxLessonBytes
-	if envMax := os.Getenv("TUTOR_MAX_LESSON_BYTES"); envMax != "" {
+	if headerMax := strings.TrimSpace(r.Header.Get("X-AI-Max-Bytes")); headerMax != "" {
+		if n, err := strconv.Atoi(headerMax); err == nil && n > 0 {
+			maxBytes = n
+		}
+	} else if envMax := os.Getenv("TUTOR_MAX_LESSON_BYTES"); envMax != "" {
 		if n, err := strconv.Atoi(envMax); err == nil && n > 0 {
 			maxBytes = n
 		}
-	} else if os.Getenv("OPENAI_BASE_URL") != "" {
+	} else if customBaseURL != "" {
 		// When running with local CPU models (e.g. Ollama on low-power Intel CPU),
 		// limit to 1500 bytes so prompt eval completes within reasonable latency
 		maxBytes = 1500
@@ -234,13 +247,13 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Create client if not stubbed
 	client := h.modelClient
 	if client == nil {
-		key := h.apiKey
+		key := customKey
 		if key == "" {
 			key = "ollama"
 		}
 		cfg := openai.DefaultConfig(key)
-		if customURL := os.Getenv("OPENAI_BASE_URL"); customURL != "" {
-			cfg.BaseURL = customURL
+		if customBaseURL != "" {
+			cfg.BaseURL = customBaseURL
 		}
 		client = &defaultOpenAIWrapper{client: openai.NewClientWithConfig(cfg)}
 	}
@@ -249,7 +262,10 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), TutorTimeout)
 	defer cancel()
 
-	model := os.Getenv("OPENAI_MODEL")
+	model := strings.TrimSpace(r.Header.Get("X-AI-Model"))
+	if model == "" {
+		model = os.Getenv("OPENAI_MODEL")
+	}
 	if strings.TrimSpace(model) == "" {
 		model = "gpt-4o-mini"
 	}

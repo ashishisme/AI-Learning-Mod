@@ -36,6 +36,9 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	mux.Handle("POST /api/tutor", limiter.Middleware(tutorHandler))
 	mux.Handle("POST /api/tutor/stream", limiter.Middleware(tutorHandler))
 
+	// Config test handler (FR-SET-03)
+	mux.HandleFunc("POST /api/config/test", ConfigTestHandler)
+
 	// Static SPA assets serving with client-side fallback (if provided)
 	if cfg.StaticFS != nil {
 		fileServer := http.FileServer(http.FS(cfg.StaticFS))

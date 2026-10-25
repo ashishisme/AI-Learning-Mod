@@ -1,4 +1,4 @@
-// SPEC: FR-PRG-01, FR-PRG-02, FR-PRG-03, NFR-PRV-01, DC-01
+// SPEC: FR-PRG-01, FR-PRG-02, FR-PRG-03, FR-SET-01, FR-SET-02, NFR-PRV-01, DC-01
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
@@ -35,6 +35,48 @@ export const useProgressStore = create<ProgressState>()(
     }),
     {
       name: 'ai-foundations-progress', // FR-PRG-01 exact key
+    }
+  )
+)
+
+export interface AISettings {
+  provider: 'local' | 'openai' | 'custom'
+  baseUrl: string
+  model: string
+  apiKey: string
+  githubToken: string
+  maxBytes: number
+}
+
+export interface SettingsState {
+  settings: AISettings
+  isDrawerOpen: boolean
+  setDrawerOpen: (open: boolean) => void
+  updateSettings: (partial: Partial<AISettings>) => void
+  resetDefaults: () => void
+}
+
+const defaultSettings: AISettings = {
+  provider: 'local',
+  baseUrl: 'http://localhost:11434/v1',
+  model: 'llama3.2:1b',
+  apiKey: '',
+  githubToken: '',
+  maxBytes: 1500,
+}
+
+export const useSettingsStore = create<SettingsState>()(
+  persist(
+    (set) => ({
+      settings: defaultSettings,
+      isDrawerOpen: false,
+      setDrawerOpen: (open: boolean) => set({ isDrawerOpen: open }),
+      updateSettings: (partial: Partial<AISettings>) =>
+        set((state) => ({ settings: { ...state.settings, ...partial } })),
+      resetDefaults: () => set({ settings: defaultSettings }),
+    }),
+    {
+      name: 'ai-foundations-settings', // FR-SET-02 exact key
     }
   )
 )
