@@ -1,6 +1,24 @@
 // SPEC: FR-UI-03, FR-UI-07, FR-UI-12, NFR-SEC-05, AC-24
 import React, { useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import { askTutorStream, ApiError } from '../api'
+
+const sanitizeSchema = {
+  ...defaultSchema,
+  tagNames: defaultSchema.tagNames?.filter(
+    (tag) => !['script', 'iframe', 'object', 'embed', 'form'].includes(tag)
+  ),
+  attributes: {
+    ...defaultSchema.attributes,
+    '*': (defaultSchema.attributes?.['*'] || []).filter(
+      (attr) => typeof attr === 'string' && !attr.toLowerCase().startsWith('on')
+    ),
+    a: ['href', 'title', 'target', 'rel'],
+  },
+}
 
 interface TutorPanelProps {
   lessonId: string
@@ -116,13 +134,18 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
         </div>
       )}
 
-      {/* Answer Container (NFR-SEC-05: Plain Text only, FR-UI-12: Progressive streaming) */}
+      {/* Answer Container (NFR-SEC-05: Sanitized AST Markdown, FR-UI-12: Progressive streaming) */}
       {answer !== null && answer !== '' && (
         <div
           data-testid="tutor-answer"
-          className="mb-6 p-5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 text-sm font-normal leading-relaxed whitespace-pre-wrap select-text"
+          className="mb-6 p-5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 text-sm font-normal leading-relaxed select-text prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-headings:my-2 prose-p:my-1.5 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:font-medium prose-a:underline hover:prose-a:text-blue-700"
         >
-          {answer}
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+          >
+            {answer}
+          </ReactMarkdown>
           {isStreaming && (
             <span
               data-testid="streaming-cursor"
@@ -147,7 +170,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
             disabled={isOffline || loading}
             placeholder={isOffline ? 'Tutor is offline' : 'e.g. Can you explain the core perceptron formula?'}
             maxLength={500}
-            className="flex-1 px-4 py-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-850 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-500 disabled:cursor-not-allowed transition rounded-xl text-sm"
+            className="flex-1 px-4 py-2.5 border border-slate-300 dark:border-slate-400 bg-white dark:bg-white text-slate-900 dark:text-slate-900 placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed transition rounded-xl text-sm font-medium shadow-2xs"
           />
           <button
             type="submit"

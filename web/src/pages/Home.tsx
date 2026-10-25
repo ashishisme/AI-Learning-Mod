@@ -275,7 +275,7 @@ export const Home: React.FC = () => {
             </button>
           </div>
         ) : (
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm divide-y divide-slate-100 dark:divide-slate-850 overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm divide-y divide-slate-100 dark:divide-slate-800 overflow-hidden">
             {filteredLessons.map((lesson, idx) => {
               const completed = !!completedLessons[lesson.id]
               return (
