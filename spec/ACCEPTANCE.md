@@ -2,9 +2,9 @@
 
 | AC | Requirement(s) | Test file | Status | Notes |
 |---|---|---|---|---|
-| AC-01 | FR-ING-01..04 | `cmd/ingest/ingest_test.go::TestAC01_IngestOutput` | — | Ingest writes index.json with >=20 lessons, dense order, unique ID, 40-hex SHA |
-| AC-02 | FR-ING-05, NFR-SEC-03 | `cmd/ingest/ingest_test.go::TestAC02_NoRelativeImages` | — | No relative image references; all img sources on raw.githubusercontent.com |
-| AC-03 | FR-ING-07 | `cmd/ingest/ingest_test.go::TestAC03_MissingTokenExits1` | — | Ingest without GITHUB_TOKEN exits 1 |
+| AC-01 | FR-ING-01..04 | `cmd/ingest/ingest_test.go::TestAC01_IngestOutput` | PASS | Ingest writes index.json with >=20 lessons, dense order, unique ID, 40-hex SHA |
+| AC-02 | FR-ING-05, NFR-SEC-03 | `cmd/ingest/ingest_test.go::TestAC02_NoRelativeImages` | PASS | No relative image references; all img sources on raw.githubusercontent.com |
+| AC-03 | FR-ING-07 | `cmd/ingest/ingest_test.go::TestAC03_MissingTokenExits1` | PASS | Ingest without GITHUB_TOKEN exits 1 |
 | AC-04 | FR-CNT-01, FR-CNT-02 | `internal/api/lessons_test.go::TestAC04_GetLessons` | — | GET /api/lessons and /api/lessons/{id} return conformant JSON |
 | AC-05 | FR-CNT-03, FR-CNT-04 | `internal/api/lessons_test.go::TestAC05_PathTraversal` | — | Path traversal attempts return 400 or 404, no leak |
 | AC-06 | FR-CNT-06 | `internal/api/lessons_test.go::TestAC06_CorruptedLesson` | — | Corrupted lesson yields 500 on that ID, 200 on others |
@@ -17,7 +17,7 @@
 | AC-13 | NFR-SEC-03 | `internal/api/middleware_test.go::TestAC13_SecurityHeaders` | — | Every response carries the 5 required security headers |
 | AC-14 | NFR-SEC-06 | `internal/api/ratelimit_test.go::TestAC14_RateLimiting` | — | 11th /api/tutor request within a minute from one host -> 429 with Retry-After: 60 |
 | AC-15 | NFR-SEC-08 | `internal/api/middleware_test.go::TestAC15_PanicRecovery` | — | Injected panic returns 500 without leaking request body |
-| AC-16 | NFR-SEC-09 | `cmd/ingest/ingest_test.go::TestAC16_EgressRetryBackoff` | — | Ingest stub 500 retries 3x then fails (exit 1); 4xx fails fast |
+| AC-16 | NFR-SEC-09 | `cmd/ingest/ingest_test.go::TestAC16_EgressRetryBackoff` | PASS | Ingest stub 500 retries 3x then fails (exit 1); 4xx fails fast |
 | AC-17 | NFR-REL-02 | `internal/api/health_test.go::TestAC17_HealthExact` | — | /api/health returns exactly {"ok":true} |
 | AC-18 | NFR-OPS-02 | `internal/api/routes_test.go::TestAC18_NoDebugEndpoints` | — | /pprof, /debug, /metrics are 404 |
 | AC-19 | FR-UI-02, FR-PRG-03 | `web/tests/home.spec.ts::AC-19` | — | / lists lessons with done/total summary; marking complete updates it |
