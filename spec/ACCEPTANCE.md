@@ -34,3 +34,4 @@
 | AC-30 | NFR-LIC-03, NFR-SEC-01 | Git check: `! git ls-files \| grep -E '^(\.env\|public-content\|web/dist\|web/node_modules\|bin/)'` | PASS | No secrets, public-content, or build artifacts staged in git |
 | AC-31 | NFR-OPS-01 | Docker check: `docker run --rm ai-foundations-coach id -u` | PASS | Dockerfile configured with non-root UID 10001 (host docker CLI not installed) |
 | AC-32 | DC-02 | Build check: `go vet ./... && go build ./... && cd web && npx tsc --noEmit && npm run build` | PASS | Backend and frontend compile cleanly without errors |
+| AC-33 | FR-TUT-11, FR-UI-12 | `internal/api/tutor_test.go::TestAC33_StreamingTutor` | — | POST /api/tutor with Accept: text/event-stream returns chunked SSE tokens and [DONE] |

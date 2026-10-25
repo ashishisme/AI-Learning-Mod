@@ -5,11 +5,11 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 1.1.0 |
+| Version | 1.2.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
-| Supersedes | 1.0.0 |
+| Supersedes | 1.1.0 |
 
 **Rule.** Any behavioral change requires a spec amendment (§12) before
 code changes. Ambiguity in this spec is a defect to be reported, not
@@ -157,6 +157,15 @@ routes shall function normally.
 **FR-TUT-10.** The system shall never send cross-lesson context to the
 model in v1.
 
+**FR-TUT-11.** The backend shall support streaming token delivery via
+Server-Sent Events (SSE) on `POST /api/tutor` when requested with
+`Accept: text/event-stream` (and via alias `POST /api/tutor/stream`),
+emitting chunks formatted as `data: {"token": "..."}\n\n` and concluding
+with `data: [DONE]\n\n`.
+
+**FR-TUT-12.** The streaming tutor shall maintain the citation format
+`[<lesson title> § <heading>]` and prompt injection defense.
+
 ### 4.4 Learner UI — `FR-UI-*`
 
 **FR-UI-01.** The UI shall be a single-page application served at `/`
@@ -202,6 +211,10 @@ aesthetic, balanced editorial typography, and comfortable reading measures
 smooth state transitions (progress fill easing, card hover elevation,
 active button feedback, and tutor assistant activity indicators) using
 Tailwind CSS transitions without exceeding the DC-06 dependency allowlist.
+
+**FR-UI-12.** The Tutor UI shall support progressive streaming token
+rendering, displaying tokens in real time as they arrive from the SSE
+stream with an active typing indicator.
 
 ### 4.5 Progress — `FR-PRG-*`
 
@@ -490,7 +503,7 @@ Not implemented in v1; presence of code for these is a spec violation:
 - Quiz content, scoring, or persistence.
 - Internationalization or translation.
 - Search, filtering, recommendation.
-- Streaming responses (SSE/WebSocket).
+- Persistent bi-directional WebSockets (SSE is used for tutor streaming).
 - Metrics, tracing, APM, analytics.
 - Automated end-to-end test suite beyond the AC suite in §10.
 
@@ -609,6 +622,10 @@ non-zero UID.
 
 **AC-32 (DC-02).** `go vet ./...` and `go build ./...` pass;
 `cd web && npx tsc --noEmit && npm run build` pass.
+
+**AC-33 (FR-TUT-11, FR-UI-12).** `POST /api/tutor` with
+`Accept: text/event-stream` returns `Content-Type: text/event-stream`
+streaming token chunks and terminates with `data: [DONE]`.
 
 ---
 
