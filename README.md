@@ -21,7 +21,7 @@ In **v3.0**, the repository adopts [GitHub Spec Kit](https://github.com/github/s
 graph TD
     Const[".specify/memory/constitution.md<br/>(Architectural Law & DC-01..11)"] --> Spec["spec/SPEC.md<br/>(Master Baseline Ground Truth)"]
     Spec --> Acc["spec/ACCEPTANCE.md<br/>(Regression Gate: AC-01..38)"]
-    SpecKit["GitHub Spec Kit Engine<br/>(.specify/)"] --> Skills["Agent Skills<br/>(.claude/skills/)"]
+    SpecKit["GitHub Spec Kit Engine<br/>(.specify/)"] --> Skills["Agent Skills<br/>(.agents/skills/)"]
     Skills --> Feat["New Features<br/>(Branches, Specs, Tasks)"]
     Feat --> Gate["3-Tier Quality Gate<br/>(15 Go Tests + 24 Playwright Tests + Vite Build)"]
 ```
@@ -34,8 +34,8 @@ The repository operates under a ratified project constitution that serves as bin
 - **Architecture Constraints (DC-01..11):** Go 1.23 stdlib `net/http` router only, React 18 + Vite SPA, zero database (static JSON storage), zero Python runtime, and a single-container deployment.
 - **Git Discipline (Rule 10):** Explicit file path staging (`git add <file>`); wildcard staging (`git add .`, `git add -A`) is strictly forbidden.
 
-### 2. Spec Kit Agent Skills (`.claude/skills/`)
-Pre-configured agent skills allow AI coding assistants to execute SDD workflows reproducibly:
+### 2. Spec Kit Agent Skills for Antigravity & Gemini (`.agents/skills/`)
+Configured specifically for **Antigravity** (`agy`) and Google **Gemini**, these native agent skills allow coding assistants to execute SDD workflows reproducibly:
 - `/speckit-specify`: Scaffolds formal specifications with user stories, functional requirements, and success metrics.
 - `/speckit-plan`: Synthesizes technical design plans validated against the Project Constitution.
 - `/speckit-tasks`: Decomposes plans into ordered, bite-sized tasks with explicit verification steps.
