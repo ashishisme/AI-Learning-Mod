@@ -72,3 +72,10 @@
 - Add comments or findings inline
 - Link to relevant resources or documentation
 - Items are numbered sequentially for easy reference
+
+## Verification Log (tasks.md Phases 1-2, 2026-10-27)
+
+- T001 `go test -v ./internal/api ./cmd/ingest`: 21 passed, 0 failed (baseline); 22 passed after adding `TestAC38_CustomProviderAutoCitation` (T008a).
+- T002 `cd web && npx playwright test`: 24 passed (baseline and after amendments).
+- T003 `cd web && npm run build`: succeeded (only a >500 kB chunk-size warning).
+- Phase 2 re-run after T004-T008a: all three gates green. `go mod tidy` moved `go-github` and `go-openai` to direct requirements.

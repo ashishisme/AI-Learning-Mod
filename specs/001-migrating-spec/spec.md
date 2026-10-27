@@ -63,7 +63,7 @@ As a learner, I want to test my comprehension of each lesson with an interactive
 
 ### User Story 4 - Local Learner State, Theme, and Configuration (Priority: P3)
 
-As a learner or operator, I want to toggle between light and dark modes, adjust AI tutor settings (API key, model endpoint, temperature) via a slide-out drawer, test connectivity, and have my progress saved locally without creating an external account.
+As a learner or operator, I want to toggle between light and dark modes, adjust AI tutor settings (provider, model endpoint, model, API key, token budget) via a slide-out drawer, test connectivity, and have my progress saved locally without creating an external account.
 
 **Why this priority**: Ensures privacy, offline resilience, and flexible configuration for different deployment environments.
 
@@ -95,7 +95,7 @@ As a learner or operator, I want to toggle between light and dark modes, adjust 
 - **FR-004**: System MUST validate and sanitize all rendered markdown preventing any script execution, unsafe links, or prototype injection (`FR-UI-04`, `NFR-SEC-05`).
 - **FR-005**: System MUST track lesson completion and preferences exclusively in client browser storage (`localStorage`) without requiring login or server-side databases (`FR-PRG-01` .. `FR-PRG-03`, `DC-09`).
 - **FR-006**: System MUST provide an interactive quiz experience (`/quiz/:id`) with immediate feedback and scored review (`FR-QZ-01` .. `FR-QZ-04`).
-- **FR-007**: System MUST offer a global Settings Drawer with model selection, token budget configuration, connection latency testing, and live curriculum sync trigger (`FR-SET-01` .. `FR-SET-05`).
+- **FR-007**: System MUST offer a global Settings Drawer with provider/model selection, token budget (`maxBytes`) configuration, connection latency testing, and live curriculum sync trigger (`FR-SET-01` .. `FR-SET-05`).
 - **FR-008**: System MUST support Light and Dark themes meeting WCAG 2.1 AA accessibility contrast standards (≥4.5:1) with seamless persistence (`FR-UI-15`, `DC-11`).
 
 ### Key Entities
