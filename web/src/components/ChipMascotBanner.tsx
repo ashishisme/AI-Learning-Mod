@@ -1,4 +1,5 @@
 import React from 'react'
+import { ChipVectorAvatar } from './ChipVectorAvatar'
 
 interface Props {
   greeting?: string
@@ -8,28 +9,34 @@ export const ChipMascotBanner: React.FC<Props> = ({
   greeting = "Hey there, Future Explorer! I'm Chip. Ever wonder how computers can spot your dog in a photo or beat grown-ups at chess? Let's crack the code together!",
 }) => {
   return (
-    <div className="relative overflow-hidden p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20 border-2 border-amber-200/80 dark:border-amber-800/40 shadow-sm mb-8">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-        {/* Animated Robot Avatar */}
-        <div className="relative flex-shrink-0 w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl border-2 border-amber-300 dark:border-amber-600 shadow-md flex items-center justify-center text-3xl select-none">
-          🤖
-          <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-amber-500"></span>
+    <div className="relative overflow-hidden p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-amber-50 via-orange-50 to-amber-100/60 dark:from-amber-950/40 dark:via-orange-950/20 dark:to-slate-900 border-2 border-amber-300 dark:border-amber-700/60 shadow-lg mb-8">
+      {/* Decorative background glow circle */}
+      <div className="absolute -top-12 -right-12 w-40 h-40 bg-amber-300/20 rounded-full blur-2xl pointer-events-none" />
+
+      <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-5">
+        {/* Animated Robot Vector Character */}
+        <div className="relative flex-shrink-0 w-20 h-20 bg-white/90 dark:bg-slate-800/90 rounded-2xl border-2 border-amber-300 dark:border-amber-500 shadow-md flex items-center justify-center">
+          <ChipVectorAvatar size={70} />
+          <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white dark:border-slate-800"></span>
           </span>
         </div>
 
         {/* Speech Bubble */}
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="font-bold text-amber-900 dark:text-amber-200 text-sm">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="font-extrabold text-amber-900 dark:text-amber-200 text-sm tracking-wide">
               Chip the Robot
             </span>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-amber-200/80 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300">
-              Your Guide
+            <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-amber-200/90 dark:bg-amber-800 text-amber-900 dark:text-amber-100 shadow-xs">
+              AI Guide
+            </span>
+            <span className="text-xs text-amber-600 dark:text-amber-400 font-semibold hidden md:inline">
+              ✨ Ready to explore
             </span>
           </div>
-          <p className="text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+          <p className="text-sm sm:text-base text-slate-800 dark:text-slate-100 leading-relaxed font-medium">
             "{greeting}"
           </p>
         </div>
