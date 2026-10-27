@@ -30,10 +30,8 @@ The repository follows a clean, single-binary architecture with Go backend servi
 │   │   ├── routes_test.go        # AC-18 (no /pprof, /debug, /metrics)
 │   │   ├── tutor.go              # /api/tutor endpoint (FR-TUT-*, AC-08..12)
 │   │   └── tutor_test.go
-│   ├── content/                  # Local content filesystem loader (FR-CNT-*)
-│   │   └── loader.go
-│   └── tutor/                    # Grounded tutor service (FR-TUT-*, DC-04)
-│       └── service.go
+│   └── ingest/                   # Ingestion library (FR-ING-*, DC-03)
+│       └── ingest.go
 ├── public-content/               # Generated lesson artifacts (gitignored, NFR-LIC-03)
 │   ├── index.json
 │   └── lessons/

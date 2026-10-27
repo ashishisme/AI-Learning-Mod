@@ -1,4 +1,4 @@
-// SPEC: AC-08, AC-09, AC-10, AC-11, AC-12
+// SPEC: AC-08, AC-09, AC-10, AC-11, AC-12, AC-38
 package api
 
 import (
@@ -370,3 +370,42 @@ func TestAC33_StreamingTutor(t *testing.T) {
 	}
 }
 
+
+// AC-38 (FR-TUT-13): With a custom base URL, an uncited streamed answer over 20 chars gets an appended citation; a short uncited answer still gets the FR-TUT-06 fallback.
+func TestAC38_CustomProviderAutoCitation(t *testing.T) {
+	contentDir := setupTestContent(t)
+
+	stream := func(answer string) string {
+		mockClient := &mockModelClient{
+			response: openai.ChatCompletionResponse{
+				Choices: []openai.ChatCompletionChoice{
+					{Message: openai.ChatCompletionMessage{Content: answer}},
+				},
+			},
+		}
+		router := NewRouter(RouterConfig{
+			ContentDir:  contentDir,
+			OpenAIKey:   "mock-key",
+			ModelClient: mockClient,
+		})
+		body := `{"lessonId":"lesson-1","question":"How does ML learn?"}`
+		req := httptest.NewRequest(http.MethodPost, "/api/tutor/stream", strings.NewReader(body))
+		req.Header.Set("X-AI-Base-URL", "http://localhost:11434")
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+		if rec.Code != http.StatusOK {
+			t.Fatalf("expected 200, got %d: %s", rec.Code, rec.Body.String())
+		}
+		return rec.Body.String()
+	}
+
+	long := stream("Machine learning learns patterns from example data.")
+	if !strings.Contains(long, `"cited":true`) || !strings.Contains(long, "Lesson 1 Title §") {
+		t.Errorf("expected appended citation and cited:true for long uncited answer: %s", long)
+	}
+
+	short := stream("No idea.")
+	if !strings.Contains(short, `"cited":false`) || !strings.Contains(short, "I couldn't find that in this lesson") {
+		t.Errorf("expected FR-TUT-06 fallback for short uncited answer: %s", short)
+	}
+}

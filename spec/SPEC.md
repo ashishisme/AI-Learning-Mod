@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.0.0 |
+| Version | 2.1.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -170,6 +170,14 @@ with `data: [DONE]\n\n`.
 
 **FR-TUT-12.** The streaming tutor shall maintain the citation format
 `[<lesson title> § <heading>]` and prompt injection defense.
+
+**FR-TUT-13.** When a custom provider base URL is configured and its
+streamed response is longer than 20 non-whitespace-trimmed characters but
+lacks a citation, the system may append ` [<lesson title> § <heading>]`
+(using the lesson's first heading, or `Overview` if none) instead of
+applying the FR-TUT-06 replacement. This exception does not apply to the
+default OpenAI provider, and short or empty responses still receive the
+FR-TUT-06 fallback.
 
 ### 4.4 Learner UI — `FR-UI-*`
 
@@ -464,6 +472,21 @@ Request body (≤8 KiB): `{ "lessonId": string, "question": string }`
 #### 7.1.4 `GET /api/health`
 - 200 → `{"ok":true}` (exactly)
 
+#### 7.1.5 `POST /api/tutor/stream`
+Alias of `POST /api/tutor` that always responds with SSE (FR-TUT-11).
+
+#### 7.1.6 `POST /api/config/test`
+Request body (≤4 KiB): `{ "baseUrl"?: string, "model"?: string, "apiKey"?: string }`
+- 200 → `{"ok":bool,"latencyMs":int,"error"?:string,"models"?:string[],"activeModel"?:string}`
+- 400 → invalid body
+- 405 → non-POST (FR-SET-03, FR-SET-04)
+
+#### 7.1.7 `POST /api/ingest/sync`
+Request body: `{ "githubToken"?: string }`. The token is used for the
+request only and is never persisted or logged.
+- 200 → `{"ok":bool,"commitSha"?:string,"lessonsCount"?:int,"durationMs":int,"error"?:string}`
+(FR-ING-09, FR-SET-05)
+
 ### 7.2 File formats
 - Lessons: one JSON file per lesson at `public-content/lessons/<id>.json`
 - Index: `public-content/index.json`
@@ -701,6 +724,12 @@ colors across routes with contrast ≥4.5:1, and persists across reloads via
 synchronization, re-runs ingestion, updates `public-content/index.json`, and
 the Settings Drawer sync button triggers the request, shows live state, and
 displays the updated commit SHA.
+
+**AC-38 (FR-TUT-13).** With a custom provider base URL, a streamed answer
+longer than 20 characters that lacks a citation has
+` [<lesson title> § <heading>]` appended and completes with `"cited":true`;
+a shorter uncited answer completes with `"cited":false` and the FR-TUT-06
+fallback. Covered by `TestAC38_CustomProviderAutoCitation`.
 
 ---
 

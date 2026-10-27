@@ -39,3 +39,4 @@
 | AC-35 | FR-QZ-01..04, FR-UI-13 | `web/tests/quiz.spec.ts::AC-35`, `web/tests/home.spec.ts::AC-35` | PASS | Interactive quiz engine with immediate rationale, AI hint, scored recap; / search filtering |
 | AC-36 | FR-UI-15 | `web/tests/theme.spec.ts::AC-36` | PASS | Dark/Light theme toggle updates document class and persists in localStorage |
 | AC-37 | FR-ING-09, FR-SET-05 | `internal/api/ingest_sync_test.go::TestAC37_IngestSync`, `web/tests/sync.spec.ts::AC-37` | PASS | POST /api/ingest/sync executes curriculum sync from GitHub and settings UI shows live status |
+| AC-38 | FR-TUT-13 | `internal/api/tutor_test.go::TestAC38_CustomProviderAutoCitation` | PASS | Custom-provider uncited long streamed answers get an appended citation; short ones get the FR-TUT-06 fallback |
