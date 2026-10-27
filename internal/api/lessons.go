@@ -96,7 +96,19 @@ func (h *LessonsHandler) GetLesson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	targetPath := filepath.Join(lessonsDir, id+".json")
+	mode := r.URL.Query().Get("mode")
+	var targetFile string
+	if mode == "junior" || mode == "plain-english" {
+		adaptiveCandidate := filepath.Join(lessonsDir, id+"."+mode+".json")
+		if _, err := os.Stat(adaptiveCandidate); err == nil {
+			targetFile = id + "." + mode + ".json"
+		}
+	}
+	if targetFile == "" {
+		targetFile = id + ".json"
+	}
+
+	targetPath := filepath.Join(lessonsDir, targetFile)
 	absTargetPath, err := filepath.Abs(targetPath)
 	if err != nil || !strings.HasPrefix(absTargetPath, absLessonsDir+string(filepath.Separator)) {
 		// Escaped directory -> 404 per FR-CNT-04

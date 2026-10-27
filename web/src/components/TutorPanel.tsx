@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import { askTutorStream, ApiError } from '../api'
+import { useAudienceModeStore } from '../store'
 
 const sanitizeSchema = {
   ...defaultSchema,
@@ -25,6 +26,7 @@ interface TutorPanelProps {
 }
 
 export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
+  const { mode: audienceMode } = useAudienceModeStore()
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -41,9 +43,16 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
     setAnswer('')
     setErrorMessage(null)
 
+    const promptToSend =
+      audienceMode === "junior"
+        ? `[Tone: Friendly explanation for a 10-year-old student with playful analogies]: ${question.trim()}`
+        : audienceMode === "plain-english"
+        ? `[Tone: Plain English everyday explanation for non-tech adults]: ${question.trim()}`
+        : question.trim()
+
     await askTutorStream(
       lessonId,
-      question.trim(),
+      promptToSend,
       (token) => {
         setAnswer((prev) => (prev || '') + token)
       },
@@ -84,10 +93,10 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
           </div>
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 leading-none">
-              Lesson Assistant
+              {audienceMode === "junior" ? "Chip the AI Robot 🤖" : audienceMode === "plain-english" ? "Plain English Assistant 💡" : "Lesson Assistant"}
             </h3>
             <span className="text-[11px] text-slate-400 font-medium">
-              Grounded exclusively in this module
+              {audienceMode === "junior" ? "Ask Chip anything! No question is too silly." : audienceMode === "plain-english" ? "Practical everyday answers without jargon" : "Grounded exclusively in this module"}
             </span>
           </div>
         </div>

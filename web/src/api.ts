@@ -230,3 +230,65 @@ export async function syncCurriculum(githubToken?: string): Promise<IngestSyncRe
   return res.json()
 }
 
+
+export interface AdaptiveSection {
+  id: string
+  heading: string
+  chipQuote?: string
+  analogy?: {
+    metaphorName: string
+    description: string
+  }
+  bodyMarkdown: string
+  diagram?: {
+    type: string
+    caption: string
+    content: string
+  }
+  interactiveWidget?: {
+    type: string
+    title: string
+    instruction: string
+    scenario: {
+      userPrompt: string
+      terminalA: string
+      terminalB: string
+      correctAnswer: string
+      explanation: string
+    }
+  }
+  jargonBuster?: Array<{
+    term: string
+    simpleExplanation: string
+  }>
+}
+
+export interface AdaptiveLessonPayload {
+  lessonId: string
+  mode: "junior" | "plain-english"
+  title: string
+  readingTimeMinutes?: number
+  mascot?: {
+    name: string
+    avatar: string
+    greeting: string
+  }
+  intro?: string
+  sections: AdaptiveSection[]
+  miniQuiz?: Array<{
+    question: string
+    options: string[]
+    correctIndex: number
+    praise?: string
+    explanation?: string
+  }>
+}
+
+export async function fetchAdaptiveLesson(id: string, mode: "junior" | "plain-english"): Promise<AdaptiveLessonPayload> {
+  const res = await fetch(`/api/lessons/${encodeURIComponent(id)}?mode=${encodeURIComponent(mode)}`)
+  if (!res.ok) {
+    const body = await res.json().catch(() => null)
+    throw new ApiError(res.status, body?.error || `Failed to fetch adaptive lesson (${res.status})`, body)
+  }
+  return res.json()
+}

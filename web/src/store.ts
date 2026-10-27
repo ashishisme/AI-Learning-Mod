@@ -117,3 +117,22 @@ export const useThemeStore = create<ThemeState>()(
     }
   )
 )
+
+export type AudienceMode = "standard" | "junior" | "plain-english"
+
+export interface AudienceModeState {
+  mode: AudienceMode
+  setMode: (mode: AudienceMode) => void
+}
+
+export const useAudienceModeStore = create<AudienceModeState>()(
+  persist(
+    (set) => ({
+      mode: "standard",
+      setMode: (mode: AudienceMode) => set({ mode }),
+    }),
+    {
+      name: "ai-foundations-audience-mode",
+    }
+  )
+)

@@ -1,19 +1,30 @@
-// SPEC: FR-UI-03, FR-UI-08, FR-PRG-01, FR-PRG-02, AC-20
+// SPEC: FR-UI-03, FR-UI-08, FR-PRG-01, FR-PRG-02, FR-ADAPT-01..05, AC-20
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { fetchLesson, Lesson as LessonData, ApiError } from '../api'
-import { useProgressStore } from '../store'
+import {
+  fetchLesson,
+  fetchAdaptiveLesson,
+  Lesson as LessonData,
+  AdaptiveLessonPayload,
+  ApiError,
+} from '../api'
+import { useProgressStore, useAudienceModeStore } from '../store'
 import { MarkdownBlock } from '../components/MarkdownBlock'
 import { TutorPanel } from '../components/TutorPanel'
+import { AudienceModeSelector } from '../components/AudienceModeSelector'
+import { AdaptiveLessonView } from '../components/AdaptiveLessonView'
 
 export const Lesson: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const [lesson, setLesson] = useState<LessonData | null>(null)
+  const [adaptivePayload, setAdaptivePayload] = useState<AdaptiveLessonPayload | null>(null)
   const [loading, setLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const { completedLessons, toggleLesson } = useProgressStore()
+  const { mode: audienceMode } = useAudienceModeStore()
 
+  // 1. Fetch canonical lesson metadata
   useEffect(() => {
     if (!id) return
     setLoading(true)
@@ -27,6 +38,23 @@ export const Lesson: React.FC = () => {
         setLoading(false)
       })
   }, [id])
+
+  // 2. Fetch adaptive payload when mode changes
+  useEffect(() => {
+    if (!id || audienceMode === 'standard') {
+      setAdaptivePayload(null)
+      return
+    }
+
+    fetchAdaptiveLesson(id, audienceMode)
+      .then((payload) => {
+        setAdaptivePayload(payload)
+      })
+      .catch((err) => {
+        console.warn('Could not load adaptive payload for mode:', audienceMode, err)
+        setAdaptivePayload(null)
+      })
+  }, [id, audienceMode])
 
   if (loading) {
     return (
@@ -61,10 +89,12 @@ export const Lesson: React.FC = () => {
     lesson.colabUrl ||
     `https://colab.research.google.com/github/microsoft/AI-For-Beginners/blob/main/${lesson.path.replace(/README\.md$/, 'lab.ipynb')}`
 
+  const isAdaptiveActive = audienceMode !== 'standard' && adaptivePayload !== null
+
   return (
     <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6">
       {/* Navigation Sub-bar */}
-      <div className="flex items-center justify-between gap-4 mb-6">
+      <div className="flex items-center justify-between gap-4 mb-4">
         <Link
           to="/"
           data-testid="back-link"
@@ -81,70 +111,81 @@ export const Lesson: React.FC = () => {
         )}
       </div>
 
-      {/* Lesson Header Bench */}
-      <header className="mb-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-5">
-          <div className="flex-1">
-            <h1
-              data-testid="lesson-title"
-              className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-tight"
-            >
-              {lesson.title}
-            </h1>
-          </div>
+      {/* Audience Mode Selector Toggle (FR-ADAPT-02) */}
+      <AudienceModeSelector className="mb-6" />
 
-          <div className="flex flex-wrap items-center gap-2.5 flex-shrink-0">
-            {/* Interactive Quiz Button */}
-            <Link
-              to={`/quiz/${lesson.id}`}
-              data-testid="lesson-quiz-button"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
-            >
-              <span>🎯</span>
-              <span>Take Quiz</span>
-            </Link>
-
-            {/* FR-UI-08: Colab button linking to colab with rel="noreferrer" */}
-            {hasNotebook && (
-              <a
-                href={colabLink}
-                target="_blank"
-                rel="noreferrer"
-                data-testid="colab-button"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
+      {/* Lesson Header Bench (Standard Mode) */}
+      {!isAdaptiveActive && (
+        <header className="mb-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-5">
+            <div className="flex-1">
+              <h1
+                data-testid="lesson-title"
+                className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-tight"
               >
-                <span>⚡</span>
-                <span>Open in Colab</span>
-              </a>
-            )}
+                {lesson.title}
+              </h1>
+            </div>
 
-            {/* FR-UI-03: Mark complete control bound to progress state */}
-            <button
-              type="button"
-              data-testid="mark-complete-button"
-              onClick={() => toggleLesson(lesson.id)}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg border active:scale-95 transition-all ${
-                isCompleted
-                  ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 shadow-sm'
-                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm'
-              }`}
-            >
-              <span>{isCompleted ? '✅' : '⬜'}</span>
-              <span>{isCompleted ? 'Completed' : 'Mark Complete'}</span>
-            </button>
+            <div className="flex flex-wrap items-center gap-2.5 flex-shrink-0">
+              <Link
+                to={`/quiz/${lesson.id}`}
+                data-testid="lesson-quiz-button"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
+              >
+                <span>🎯</span>
+                <span>Take Quiz</span>
+              </Link>
+
+              {hasNotebook && (
+                <a
+                  href={colabLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  data-testid="colab-button"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
+                >
+                  <span>⚡</span>
+                  <span>Open in Colab</span>
+                </a>
+              )}
+
+              <button
+                type="button"
+                data-testid="mark-complete-button"
+                onClick={() => toggleLesson(lesson.id)}
+                className={`inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg border active:scale-95 transition-all ${
+                  isCompleted
+                    ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 shadow-sm'
+                    : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm'
+                }`}
+              >
+                <span>{isCompleted ? '✅' : '⬜'}</span>
+                <span>{isCompleted ? 'Completed' : 'Mark Complete'}</span>
+              </button>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
+      )}
 
-      {/* Lesson Content Body (measured for technical reading comfort) */}
-      <main
-        data-testid="lesson-content"
-        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 shadow-sm space-y-6 text-slate-800 dark:text-slate-200 leading-relaxed text-base"
-      >
-        {lesson.blocks.map((block, idx) => (
-          <MarkdownBlock key={idx} block={block} />
-        ))}
-      </main>
+      {/* Main Content Area */}
+      {isAdaptiveActive ? (
+        <AdaptiveLessonView payload={adaptivePayload} />
+      ) : (
+        <main
+          data-testid="lesson-content"
+          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 shadow-sm space-y-6 text-slate-800 dark:text-slate-200 leading-relaxed text-base"
+        >
+          {audienceMode !== 'standard' && !adaptivePayload && (
+            <div className="p-3 mb-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 text-amber-800 dark:text-amber-300 text-xs font-medium">
+              ℹ️ Adaptive mode "{audienceMode}" is currently available for Lesson 1 (Pilot). Showing standard curriculum for this lesson.
+            </div>
+          )}
+          {lesson.blocks.map((block, idx) => (
+            <MarkdownBlock key={idx} block={block} />
+          ))}
+        </main>
+      )}
 
       {/* Grounded AI Teaching Assistant */}
       <TutorPanel lessonId={lesson.id} />

@@ -221,3 +221,49 @@ func TestAC07_EmptyContentDir(t *testing.T) {
 		t.Errorf("/api/health expected exact {\"ok\":true}, got %s", hRec.Body.String())
 	}
 }
+
+// SPEC: FR-ADAPT-01, FR-ADAPT-02 - Adaptive Audience Modes support
+func TestGetLesson_AdaptiveModes(t *testing.T) {
+	contentDir := setupTestContent(t)
+
+	// Write a mock junior payload for lesson-1
+	juniorData := `{"id":"lesson-1","mode":"junior","title":"Teaching Robots How to Think"}`
+	juniorPath := filepath.Join(contentDir, "lessons", "lesson-1.junior.json")
+	if err := os.WriteFile(juniorPath, []byte(juniorData), 0644); err != nil {
+		t.Fatalf("failed to write mock junior payload: %v", err)
+	}
+
+	router := NewRouter(RouterConfig{ContentDir: contentDir})
+
+	// Case 1: ?mode=junior returns the junior payload
+	req := httptest.NewRequest(http.MethodGet, "/api/lessons/lesson-1?mode=junior", nil)
+	rec := httptest.NewRecorder()
+	router.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", rec.Code)
+	}
+	var resp map[string]any
+	if err := json.Unmarshal(rec.Body.Bytes(), &resp); err != nil {
+		t.Fatalf("failed to parse json: %v", err)
+	}
+	if resp["mode"] != "junior" {
+		t.Errorf("expected mode junior, got %v", resp["mode"])
+	}
+
+	// Case 2: Fallback when mode payload does not exist (lesson-2?mode=junior returns canonical)
+	req2 := httptest.NewRequest(http.MethodGet, "/api/lessons/lesson-2?mode=junior", nil)
+	rec2 := httptest.NewRecorder()
+	router.ServeHTTP(rec2, req2)
+
+	if rec2.Code != http.StatusOK {
+		t.Fatalf("expected 200 for fallback, got %d", rec2.Code)
+	}
+	var resp2 map[string]any
+	if err := json.Unmarshal(rec2.Body.Bytes(), &resp2); err != nil {
+		t.Fatalf("failed to parse json: %v", err)
+	}
+	if resp2["title"] != "Lesson 2 Title" {
+		t.Errorf("expected canonical title Lesson 2, got %v", resp2["title"])
+	}
+}
