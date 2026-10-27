@@ -1,0 +1,4 @@
+# Python dependencies for Curriculum Quality & Readability Auditing
+textstat>=0.7.3
+requests>=2.31.0
+pyyaml>=6.0.1

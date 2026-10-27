@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test": "playwright test"
+    "test": "playwright test",
+    "check:deps": "../scripts/check-dependencies.sh"
   },
   "dependencies": {
     "mermaid": "^12.2.0",

@@ -118,9 +118,24 @@ graph TD
 
 ## 🚀 Quickstart Guide
 
+### Automated Dependency Check
+Anyone downloading or cloning this repository can verify all runtimes, modules, and plugins with a single command:
+```bash
+# Run pre-flight check
+./scripts/check-dependencies.sh
+
+# Or install missing dependencies automatically:
+./scripts/check-dependencies.sh --install
+
+# Or via npm from the web directory:
+npm --prefix web run check:deps
+```
+See [DEPENDENCIES.md](DEPENDENCIES.md) for detailed module specifications and plugin installation instructions.
+
 ### Prerequisites
 - [Go 1.23+](https://go.dev/dl/)
 - [Node.js 18+](https://nodejs.org/) & `npm`
+- (Optional for Readability Auditing) [Python 3.10+](https://python.org/) & `pip install -r scripts/requirements.txt`
 - (Optional for Local AI) [Ollama](https://ollama.com/)
 - (Optional for Cloud AI) OpenAI API Key
 
