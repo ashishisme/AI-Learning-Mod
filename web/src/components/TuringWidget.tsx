@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { speechService } from '../services/speechService'
 
 interface Scenario {
   userPrompt: string
@@ -24,8 +25,15 @@ export const TuringWidget: React.FC<Props> = ({
   const isRevealed = selected !== null
   const isCorrect = selected === scenario.correctAnswer
 
+  const handleSelect = (choice: string) => {
+    setSelected(choice)
+    const isWon = choice === scenario.correctAnswer
+    speechService.playChime(isWon ? 'success' : 'click')
+  }
+
   const handleReset = () => {
     setSelected(null)
+    speechService.playChime('click')
   }
 
   return (
@@ -89,7 +97,7 @@ export const TuringWidget: React.FC<Props> = ({
 
           {!isRevealed && (
             <button
-              onClick={() => setSelected('Terminal A')}
+              onClick={() => handleSelect('Terminal A')}
               className="mt-4 w-full py-2 px-3 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-blue-600 hover:text-white dark:bg-slate-700 dark:hover:bg-blue-600 text-slate-700 dark:text-slate-200 transition-colors shadow-sm"
             >
               👉 Vote: Terminal A is AI
@@ -131,7 +139,7 @@ export const TuringWidget: React.FC<Props> = ({
 
           {!isRevealed && (
             <button
-              onClick={() => setSelected('Terminal B')}
+              onClick={() => handleSelect('Terminal B')}
               className="mt-4 w-full py-2 px-3 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-blue-600 hover:text-white dark:bg-slate-700 dark:hover:bg-blue-600 text-slate-700 dark:text-slate-200 transition-colors shadow-sm"
             >
               👉 Vote: Terminal B is AI

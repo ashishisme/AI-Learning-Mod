@@ -136,3 +136,33 @@ export const useAudienceModeStore = create<AudienceModeState>()(
     }
   )
 )
+
+export interface AudioState {
+  activeTrackId: string | null
+  isPlaying: boolean
+  isMuted: boolean
+  speechRate: number
+  toggleMute: () => void
+  setSpeechRate: (rate: number) => void
+  setActiveTrack: (id: string | null, isPlaying: boolean) => void
+  stopAudio: () => void
+}
+
+export const useAudioStore = create<AudioState>()(
+  persist(
+    (set) => ({
+      activeTrackId: null,
+      isPlaying: false,
+      isMuted: false,
+      speechRate: 1.0,
+      toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
+      setSpeechRate: (rate: number) => set({ speechRate: rate }),
+      setActiveTrack: (id: string | null, isPlaying: boolean) =>
+        set({ activeTrackId: id, isPlaying }),
+      stopAudio: () => set({ activeTrackId: null, isPlaying: false }),
+    }),
+    {
+      name: 'ai-foundations-audio-settings',
+    }
+  )
+)

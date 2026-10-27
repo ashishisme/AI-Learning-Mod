@@ -7,6 +7,8 @@ import { ChipVectorAvatar } from './ChipVectorAvatar'
 import { TuringWidget } from './TuringWidget'
 import { MermaidRenderer } from './MermaidRenderer'
 import { VisualMetaphorCard } from './VisualMetaphorCard'
+import { AudioNarrationButton } from './AudioNarrationButton'
+import { speechService } from '../services/speechService'
 
 interface Props {
   payload: AdaptiveLessonPayload
@@ -19,6 +21,11 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
 
   const handleSelectQuizOption = (qIdx: number, optIdx: number) => {
     setQuizAnswers((prev) => ({ ...prev, [qIdx]: optIdx }))
+    const q = payload.miniQuiz?.[qIdx]
+    if (q) {
+      const isCorrect = optIdx === q.correctIndex
+      speechService.playChime(isCorrect ? 'success' : 'click')
+    }
   }
 
   return (
@@ -28,23 +35,31 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
         <ChipMascotBanner greeting={payload.mascot?.greeting} />
       ) : (
         payload.intro && (
-          <div className="p-6 rounded-3xl bg-gradient-to-r from-blue-50/90 to-indigo-50/70 dark:from-blue-950/40 dark:to-indigo-950/20 border-2 border-blue-200/90 dark:border-blue-800/50 text-slate-800 dark:text-slate-100 text-sm sm:text-base leading-relaxed font-medium shadow-sm flex items-start gap-3">
-            <span className="text-2xl flex-shrink-0">💡</span>
-            <div>
-              <span className="block font-bold text-xs uppercase tracking-wider text-blue-800 dark:text-blue-300 mb-1">
-                Course Guide Note
-              </span>
-              <p>{payload.intro}</p>
+          <div className="p-6 rounded-3xl bg-gradient-to-r from-blue-50/90 to-indigo-50/70 dark:from-blue-950/40 dark:to-indigo-950/20 border-2 border-blue-200/90 dark:border-blue-800/50 text-slate-800 dark:text-slate-100 text-sm sm:text-base leading-relaxed font-medium shadow-sm flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl flex-shrink-0">💡</span>
+              <div>
+                <span className="block font-bold text-xs uppercase tracking-wider text-blue-800 dark:text-blue-300 mb-1">
+                  Course Guide Note
+                </span>
+                <p>{payload.intro}</p>
+              </div>
             </div>
+            <AudioNarrationButton
+              id="intro-guide-note"
+              textToRead={payload.intro}
+              label="Listen"
+              variant="pill"
+            />
           </div>
         )
       )}
 
       {/* Lesson Header */}
-      <div className="border-b border-slate-200 dark:border-slate-800 pb-5">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/70 text-blue-700 dark:text-blue-300 shadow-xs">
-            {isJunior ? '🚀 Junior Explorer' : '💡 Plain English'}
+      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+        <div className="flex flex-wrap items-center gap-3 mb-3">
+          <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">
+            {isJunior ? '🌟 Junior AI Explorer' : '📘 Plain English Track'}
           </span>
           {payload.readingTimeMinutes && (
             <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
@@ -64,10 +79,18 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
             key={section.id || sIdx}
             className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md space-y-6"
           >
-            {/* Section Heading */}
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
-              {section.heading}
-            </h2>
+            {/* Section Heading + Audio Button */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+                {section.heading}
+              </h2>
+              <AudioNarrationButton
+                id={`section-${section.id || sIdx}`}
+                textToRead={`${section.heading}. ${section.chipQuote ? 'Chip says: ' + section.chipQuote + '. ' : ''}${section.bodyMarkdown}`}
+                label="Read section"
+                variant="pill"
+              />
+            </div>
 
             {/* Chip Quote if Junior Mode */}
             {isJunior && section.chipQuote && (

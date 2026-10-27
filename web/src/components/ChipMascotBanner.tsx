@@ -1,5 +1,6 @@
 import React from 'react'
 import { ChipVectorAvatar } from './ChipVectorAvatar'
+import { AudioNarrationButton } from './AudioNarrationButton'
 
 interface Props {
   greeting?: string
@@ -25,16 +26,25 @@ export const ChipMascotBanner: React.FC<Props> = ({
 
         {/* Speech Bubble */}
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="font-extrabold text-amber-900 dark:text-amber-200 text-sm tracking-wide">
-              Chip the Robot
-            </span>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-amber-200/90 dark:bg-amber-800 text-amber-900 dark:text-amber-100 shadow-xs">
-              AI Guide
-            </span>
-            <span className="text-xs text-amber-600 dark:text-amber-400 font-semibold hidden md:inline">
-              ✨ Ready to explore
-            </span>
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+            <div className="flex items-center gap-2">
+              <span className="font-extrabold text-amber-900 dark:text-amber-200 text-sm tracking-wide">
+                Chip the Robot
+              </span>
+              <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-amber-200/90 dark:bg-amber-800 text-amber-900 dark:text-amber-100 shadow-xs">
+                AI Guide
+              </span>
+              <span className="text-xs text-amber-600 dark:text-amber-400 font-semibold hidden md:inline">
+                ✨ Ready to explore
+              </span>
+            </div>
+
+            <AudioNarrationButton
+              id="chip-mascot-greeting"
+              textToRead={greeting}
+              label="Listen to Chip! 🔊"
+              variant="chip"
+            />
           </div>
           <p className="text-sm sm:text-base text-slate-800 dark:text-slate-100 leading-relaxed font-medium">
             "{greeting}"
