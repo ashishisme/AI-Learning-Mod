@@ -74,6 +74,13 @@ Configured specifically for **Antigravity** (`agy`) and Google **Gemini**, these
 - Tested for WCAG AA compliance with contrast ratios exceeding 4.5:1.
 - State persists in `localStorage["ai-foundations-theme"]` without page flicker.
 
+### 6. Adaptive Audience Modes (v3.1 In-Flight Pilot — `SPEC-002`)
+- **Multimodal Age & Tech-Literacy Tiers:** Decoupled projection layer over canonical curriculum without duplicating content files.
+- **Junior Explorer (Ages 8–14):** Guided by mascot **Chip the Robot**, featuring Grade 6 reading level, physical analogies, and vibrant diagrams.
+- **Plain English (Non-Tech Adults):** Jargon-free real-world workplace and home analogies with interactive "Jargon Buster" tooltips.
+- **Interactive Turing Test Widget:** Playable "Human or Bot?" dual-terminal guessing scenario embedded in Lesson 1.
+- **Specification Bundle:** Managed in `specs/002-adaptive-audience-modes/` (`spec.md`, `plan.md`, `tasks.md`, `1-intro.junior.json`, `1-intro.plain-english.json`).
+
 ### 5. Curriculum Git Sync & Ingestion (`FR-ING-09`, `FR-SET-05`)
 - One-click upstream synchronization from `microsoft/AI-For-Beginners` directly from the Settings Drawer or CLI.
 - Automatically parses Markdown lessons, sanitizes HTML, updates `public-content/index.json`, and records the upstream commit SHA.
