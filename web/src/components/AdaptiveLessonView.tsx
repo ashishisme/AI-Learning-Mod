@@ -5,6 +5,7 @@ import { AdaptiveLessonPayload } from '../api'
 import { ChipMascotBanner } from './ChipMascotBanner'
 import { ChipVectorAvatar } from './ChipVectorAvatar'
 import { TuringWidget } from './TuringWidget'
+import { ExpertSystemWidget } from './ExpertSystemWidget'
 import { MermaidRenderer } from './MermaidRenderer'
 import { VisualMetaphorCard } from './VisualMetaphorCard'
 import { AudioNarrationButton } from './AudioNarrationButton'
@@ -157,6 +158,11 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                   instruction={section.interactiveWidget.instruction}
                   scenario={section.interactiveWidget.scenario}
                 />
+              )}
+
+              {/* Embedded Interactive Expert System Simulator */}
+              {section.interactiveWidget && section.interactiveWidget.type === 'expert-system-sim' && (
+                <ExpertSystemWidget />
               )}
 
               {/* Jargon Buster List */}

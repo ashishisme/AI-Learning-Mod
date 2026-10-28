@@ -1,0 +1,107 @@
+{
+  "lessonId": "2-symbolic",
+  "mode": "junior",
+  "title": "The Giant Book of If-Then Rules 📜",
+  "readingTimeMinutes": 6,
+  "mascot": {
+    "name": "Chip",
+    "avatar": "🤖",
+    "greeting": "Welcome back, Detective! Today we are travelling back in time to meet Symbolic AI—the clever rule-books that gave robots their first brains!"
+  },
+  "sections": [
+    {
+      "id": "what-is-symbolic-ai",
+      "heading": "1. Meet Symbolic AI: Computers That Love Recipes",
+      "chipQuote": "Imagine cooking pancakes. You don't guess—you follow a clear recipe step-by-step. Symbolic AI is like a master chef following strict recipes!",
+      "analogy": {
+        "metaphorName": "The Choose-Your-Own-Adventure Book",
+        "description": "Have you ever read a book that says: 'If you want to open the treasure chest, turn to page 40. If you want to run away, turn to page 12'? That is exactly how early AI thought—by hopping from one rule to the next!"
+      },
+      "bodyMarkdown": "Before computers learned by looking at photos, scientists built **Symbolic AI**. Instead of training on millions of examples, humans wrote down clear **symbols** (like words and numbers) and linked them with rules like:\n\n* **IF** it is raining, **THEN** grab an umbrella.\n* **IF** the traffic light is red, **THEN** press the brakes.\n\nBecause every single step is written down, Symbolic AI is 100% explainable. It never has to guess or make things up!",
+      "jargonBuster": [
+        {
+          "term": "Symbolic AI",
+          "simpleExplanation": "AI that solves puzzles by following human-written rules and symbols instead of guessing from data."
+        },
+        {
+          "term": "Knowledge Base",
+          "simpleExplanation": "A digital library storing all the facts and rules the computer knows."
+        }
+      ]
+    },
+    {
+      "id": "expert-systems",
+      "heading": "2. The Doctor in the Computer (Expert Systems)",
+      "chipQuote": "Back in the 1970s, scientists built a program named MYCIN. It asked doctors questions and diagnosed sick patients using hundreds of rules!",
+      "analogy": {
+        "metaphorName": "The 20 Questions Wizard",
+        "description": "Think of the 20 Questions game. 'Is it an animal?' Yes. 'Does it bark?' Yes. 'Is it a dog?' Bingo! By asking smart yes-or-no questions, the computer zeroes in on the exact right answer."
+      },
+      "bodyMarkdown": "An **Expert System** has two main parts:\n\n1. **The Knowledge Base**: A digital notebook packed with expert wisdom from real human doctors, engineers, or pilots.\n2. **The Inference Engine**: The computer's brain that looks at what is happening right now, matches it against the notebook, and figures out what to do next!",
+      "diagram": {
+        "type": "mermaid",
+        "caption": "How an Expert System Works: Facts + Rules = Smart Answer",
+        "content": "graph LR\n    Facts[\"🔍 Current Facts<br/>(Sensors, Symptoms)\"] --> Engine[\"⚙️ Inference Engine<br/>(Matching Logic)\"]\n    Rules[\"📚 Knowledge Base<br/>(If-Then Rules)\"] --> Engine\n    Engine --> Answer[\"💡 Smart Diagnosis<br/>(100% Explainable!)\"]"
+      },
+      "jargonBuster": [
+        {
+          "term": "Inference Engine",
+          "simpleExplanation": "The problem-solving engine that tests your facts against the knowledge base rules."
+        },
+        {
+          "term": "Forward Chaining",
+          "simpleExplanation": "Starting with facts you know and following the rules forward to reach a new conclusion."
+        }
+      ]
+    },
+    {
+      "id": "interactive-rover-demo",
+      "heading": "3. The Mars Rover Rescue Mission",
+      "chipQuote": "Space rovers millions of miles away on Mars can't wait for Earth to answer every text. They use rule-based Expert Systems to stay alive!",
+      "analogy": {
+        "metaphorName": "The Spaceship Auto-Pilot",
+        "description": "When a dust storm hits Mars, the rover checks its sensor memory. If solar panels lose sun and the battery drops, the rule tells it to go to sleep and conserve warmth."
+      },
+      "bodyMarkdown": "Play with the live simulation below! Flip the sensor switches in working memory and watch the **Inference Engine** fire the matching rules in real time.",
+      "interactiveWidget": {
+        "type": "expert-system-sim",
+        "title": "🚀 Interactive Simulation: The Mars Rover Expert System"
+      }
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What are the two core components of every Expert System?",
+      "options": [
+        "A video camera and a microphone",
+        "A Knowledge Base (rules) and an Inference Engine (reasoning)",
+        "A battery pack and a rocket booster"
+      ],
+      "correctIndex": 1,
+      "praise": "Spot on, explorer! The Knowledge Base holds the facts, and the Inference Engine solves the puzzle!",
+      "explanation": "Expert systems separate the knowledge base (the rules) from the inference engine (the reasoning algorithm)."
+    },
+    {
+      "question": "Why is Symbolic AI considered '100% explainable'?",
+      "options": [
+        "Because you can trace every single If-Then rule that led to the final decision",
+        "Because it speaks with a human voice",
+        "Because it only runs on solar power"
+      ],
+      "correctIndex": 0,
+      "praise": "Brilliant! You can always open the rule book and see exactly why the computer made its choice!",
+      "explanation": "Unlike deep neural networks which are black boxes, symbolic rule systems can show you the exact chain of logic."
+    },
+    {
+      "question": "What is Forward Chaining in an expert system?",
+      "options": [
+        "Walking forward while typing on a laptop",
+        "Starting with known facts and applying rules forward to deduce new conclusions",
+        "Connecting two robots together with a metal chain"
+      ],
+      "correctIndex": 1,
+      "praise": "Awesome deductive work! Facts lead to rules, which lead to discoveries!",
+      "explanation": "Forward chaining starts with the known facts and iterates through rules until a goal or diagnosis is reached."
+    }
+  ]
+}

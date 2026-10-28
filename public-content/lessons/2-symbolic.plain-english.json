@@ -1,0 +1,104 @@
+{
+  "lessonId": "2-symbolic",
+  "mode": "plain-english",
+  "title": "Knowledge Representation & Expert Systems",
+  "readingTimeMinutes": 7,
+  "intro": "Before modern machine learning began analyzing vast datasets, artificial intelligence relied on explicit knowledge engineering: capturing human expertise as logical rules and structured facts that anyone can audit.",
+  "sections": [
+    {
+      "id": "symbolic-foundations",
+      "heading": "1. Symbolic AI: Building Logic from Explicit Rules",
+      "analogy": {
+        "metaphorName": "Tax Preparation Software",
+        "description": "When you file taxes with TurboTax, the program doesn't guess or predict numbers using statistics. It walks you through a precise flowchart of tax laws: 'If you bought solar panels AND are a homeowner, apply a 30% credit.' Every deduction is explainable and verifiable."
+      },
+      "bodyMarkdown": "**Symbolic AI** (also called Classical AI or Good Old-Fashioned AI) is based on the idea that human thinking can be modeled using symbols (words, entities, concepts) and rules that manipulate them.\n\nInstead of training on millions of examples to discover hidden patterns, human domain experts explicitly program the knowledge into the system. This makes symbolic systems deterministic, mathematically rigorous, and fully transparent.",
+      "jargonBuster": [
+        {
+          "term": "Symbolic AI",
+          "simpleExplanation": "An approach to artificial intelligence based on explicit rules and human-readable symbols rather than statistics."
+        },
+        {
+          "term": "Deterministic",
+          "simpleExplanation": "An algorithm that always gives the exact same output for the same input every single time."
+        }
+      ]
+    },
+    {
+      "id": "expert-system-architecture",
+      "heading": "2. Inside an Expert System: Knowledge Base vs Inference Engine",
+      "analogy": {
+        "metaphorName": "Hospital Triage Guidelines",
+        "description": "In an emergency room, the medical knowledge protocol (the handbook of symptoms and diseases) is kept separate from the triage nurse who applies those rules to incoming patients."
+      },
+      "bodyMarkdown": "In the 1970s and 1980s, computer scientists built **Expert Systems** designed to replicate the decision-making ability of human specialists. A clean expert system always separates two elements:\n\n1. **The Knowledge Base**: The repository of domain-specific facts and production rules (`IF condition THEN action`).\n2. **The Inference Engine**: The domain-independent reasoning module that determines which rules apply to current observed facts.\n\nBecause the rules are decoupled from the code, doctors or engineers can update medical rules without changing the underlying software engine.",
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Decoupled Architecture: Knowledge Base + Inference Engine",
+        "content": "graph TD\n    Facts[\"📋 Working Memory<br/>(Observed Symptoms / Inputs)\"] --> Engine[\"⚙️ Inference Engine<br/>(Pattern Matcher & Reasoner)\"]\n    KB[\"📚 Knowledge Base<br/>(If-Then Production Rules)\"] --> Engine\n    Engine --> Output[\"✅ Verified Conclusion & Audit Trail\"]"
+      },
+      "jargonBuster": [
+        {
+          "term": "Knowledge Base",
+          "simpleExplanation": "The collection of factual statements and If-Then rules defining human expertise in a subject."
+        },
+        {
+          "term": "Inference Engine",
+          "simpleExplanation": "The software algorithm that matches incoming observations against rules to draw valid conclusions."
+        },
+        {
+          "term": "Forward Chaining",
+          "simpleExplanation": "Data-driven reasoning starting from observed facts and chaining through rules toward a goal."
+        }
+      ]
+    },
+    {
+      "id": "interactive-diagnostic-sim",
+      "heading": "3. Interactive Simulation: Forward Chaining Diagnostic Engine",
+      "analogy": {
+        "metaphorName": "Automotive Diagnostic Computer",
+        "description": "When a mechanic plugs an OBD-II scanner into your vehicle, the onboard computer evaluates sensor thresholds to identify why the Check Engine light illuminated."
+      },
+      "bodyMarkdown": "Explore the simulation below to see an inference engine in action. Toggle sensor inputs in working memory to observe which production rules match and trigger in real time.",
+      "interactiveWidget": {
+        "type": "expert-system-sim",
+        "title": "🚀 Interactive Simulation: The Mars Rover Expert System"
+      }
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What is the primary advantage of decoupling the Knowledge Base from the Inference Engine?",
+      "options": [
+        "Domain specialists can update rules without rewriting the core reasoning software",
+        "It makes the program run 100 times faster than compiled C code",
+        "It allows the computer to run without electricity"
+      ],
+      "correctIndex": 0,
+      "praise": "Excellent! Separating rules from reasoning allows experts to maintain the knowledge base independently.",
+      "explanation": "Decoupling ensures that domain knowledge can be maintained, verified, and expanded without touching the core engine algorithms."
+    },
+    {
+      "question": "Which of the following best describes Forward Chaining?",
+      "options": [
+        "Starting with known observations and applying rules forward to deduce conclusions",
+        "Guessing an outcome and working backward to justify it",
+        "Connecting physical computers together with networking cables"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly right! Forward chaining is data-driven reasoning moving from facts to conclusions.",
+      "explanation": "Forward chaining is a bottom-up, data-driven inference method that triggers matching rules until no further deductions can be made."
+    },
+    {
+      "question": "Why is Symbolic AI still widely used in flight control and healthcare systems today?",
+      "options": [
+        "Because it is 100% explainable, deterministic, and leaves a complete audit trail",
+        "Because neural networks are illegal in airplanes",
+        "Because modern computers cannot run machine learning models"
+      ],
+      "correctIndex": 0,
+      "praise": "Spot on! When human safety is on the line, having a verifiable audit trail of rules is indispensable.",
+      "explanation": "Symbolic rule-based logic is essential in mission-critical applications where every single automated decision must be provably verifiable."
+    }
+  ]
+}
