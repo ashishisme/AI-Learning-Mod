@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { useSettingsStore, useThemeStore, AISettings } from '../store'
 import { testAIConfig, syncCurriculum, ConfigTestResult, IngestSyncResult } from '../api'
+import pkg from '../../package.json'
 
 export const SettingsModal: React.FC = () => {
   const { settings, isDrawerOpen, setDrawerOpen, updateSettings, resetDefaults } = useSettingsStore()
@@ -456,6 +457,20 @@ export const SettingsModal: React.FC = () => {
             )}
           </div>
         )}
+
+        {/* Version & Build Information (Auto-derived from package.json) */}
+        <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between text-xs" data-testid="settings-version-info">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+            <span className="font-semibold text-slate-300">AI Foundations Coach</span>
+            <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800/60 font-bold">
+              v{pkg.version}
+            </span>
+          </div>
+          <div className="text-[10px] text-slate-400 font-mono">
+            Build: {new Date().toISOString().slice(0, 10)}
+          </div>
+        </div>
 
         {/* Action Buttons */}
         <div className="flex items-center justify-between pt-2 border-t border-slate-800">

@@ -125,9 +125,8 @@ export const Home: React.FC = () => {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs font-semibold mb-3">
               <span>✦ Comprehensive Self-Paced Track</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-3">
-              <span>Artificial Intelligence Foundations</span>
-              <span className="text-xs sm:text-sm font-bold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700">v2.0</span>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+              Artificial Intelligence Foundations
             </h1>
           </div>
 
