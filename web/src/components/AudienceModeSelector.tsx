@@ -1,5 +1,6 @@
 import React from 'react'
 import { AudienceMode, useAudienceModeStore } from '../store'
+import { VoicePersonaSelector } from './VoicePersonaSelector'
 
 interface Props {
   className?: string
@@ -25,30 +26,35 @@ export const AudienceModeSelector: React.FC<Props> = ({ className = '' }) => {
         </span>
       </div>
 
-      <div
-        role="tablist"
-        aria-label="Reading presentation mode"
-        className="inline-flex p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs font-medium"
-      >
-        {options.map((opt) => {
-          const isActive = mode === opt.id
-          return (
-            <button
-              key={opt.id}
-              role="tab"
-              aria-selected={isActive}
-              onClick={() => setMode(opt.id)}
-              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-                isActive
-                  ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-300 shadow-sm font-semibold'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <span>{opt.icon}</span>
-              <span>{opt.label}</span>
-            </button>
-          )
-        })}
+      <div className="flex flex-wrap items-center gap-2.5">
+        <div
+          role="tablist"
+          aria-label="Reading presentation mode"
+          className="inline-flex p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs font-medium"
+        >
+          {options.map((opt) => {
+            const isActive = mode === opt.id
+            return (
+              <button
+                key={opt.id}
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => setMode(opt.id)}
+                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                  isActive
+                    ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-300 shadow-sm font-semibold'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <span>{opt.icon}</span>
+                <span>{opt.label}</span>
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Audio Studio Persona Control */}
+        <VoicePersonaSelector />
       </div>
     </div>
   )

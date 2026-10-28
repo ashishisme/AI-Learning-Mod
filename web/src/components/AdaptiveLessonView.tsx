@@ -9,6 +9,7 @@ import { MermaidRenderer } from './MermaidRenderer'
 import { VisualMetaphorCard } from './VisualMetaphorCard'
 import { AudioNarrationButton } from './AudioNarrationButton'
 import { speechService } from '../services/speechService'
+import { useAudioStore } from '../store'
 
 interface Props {
   payload: AdaptiveLessonPayload
@@ -16,6 +17,7 @@ interface Props {
 
 export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({})
+  const { activeTrackId, currentSentence, isPlaying } = useAudioStore()
 
   const isJunior = payload.mode === 'junior'
 
@@ -74,92 +76,115 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
 
       {/* Sections */}
       <div className="space-y-12">
-        {payload.sections.map((section, sIdx) => (
-          <article
-            key={section.id || sIdx}
-            className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md space-y-6"
-          >
-            {/* Section Heading + Audio Button */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800">
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
-                {section.heading}
-              </h2>
-              <AudioNarrationButton
-                id={`section-${section.id || sIdx}`}
-                textToRead={`${section.heading}. ${section.chipQuote ? 'Chip says: ' + section.chipQuote + '. ' : ''}${section.bodyMarkdown}`}
-                label="Read section"
-                variant="pill"
-              />
-            </div>
+        {payload.sections.map((section, sIdx) => {
+          const sectionTrackId = `section-${section.id || sIdx}`
+          const isThisSectionPlaying = isPlaying && activeTrackId === sectionTrackId
 
-            {/* Chip Quote if Junior Mode */}
-            {isJunior && section.chipQuote && (
-              <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-amber-50/90 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 text-xs sm:text-sm text-amber-900 dark:text-amber-100 font-medium shadow-xs">
-                <div className="w-10 h-10 flex-shrink-0 bg-white dark:bg-slate-800 rounded-xl border border-amber-300 dark:border-amber-600 flex items-center justify-center shadow-xs">
-                  <ChipVectorAvatar size={34} />
-                </div>
-                <p className="italic leading-relaxed">"{section.chipQuote}"</p>
+          return (
+            <article
+              key={section.id || sIdx}
+              className={`p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 space-y-6 shadow-md ${
+                isThisSectionPlaying
+                  ? 'border-blue-400 dark:border-blue-500 ring-2 ring-blue-300/40 dark:ring-blue-700/40'
+                  : 'border-slate-200/90 dark:border-slate-800'
+              }`}
+            >
+              {/* Section Heading + Audio Button */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800">
+                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+                  {section.heading}
+                </h2>
+                <AudioNarrationButton
+                  id={sectionTrackId}
+                  textToRead={`${section.heading}. ${section.chipQuote ? 'Chip says: ' + section.chipQuote + '. ' : ''}${section.bodyMarkdown}`}
+                  label="Read section"
+                  variant="pill"
+                />
               </div>
-            )}
 
-            {/* Visual Metaphor Illustration Card */}
-            {section.analogy && (
-              <VisualMetaphorCard
-                metaphorName={section.analogy.metaphorName}
-                description={section.analogy.description}
-                isJunior={isJunior}
-              />
-            )}
-
-            {/* Body Markdown Content */}
-            <div className="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-200 text-sm sm:text-base leading-relaxed">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {section.bodyMarkdown}
-              </ReactMarkdown>
-            </div>
-
-            {/* Rendered Visual Diagram (Mermaid SVG Graphic) */}
-            {section.diagram && section.diagram.content && (
-              <MermaidRenderer
-                chart={section.diagram.content}
-                caption={section.diagram.caption}
-              />
-            )}
-
-            {/* Embedded Interactive Turing Widget */}
-            {section.interactiveWidget && section.interactiveWidget.type === 'turing-guess-game' && (
-              <TuringWidget
-                title={section.interactiveWidget.title}
-                instruction={section.interactiveWidget.instruction}
-                scenario={section.interactiveWidget.scenario}
-              />
-            )}
-
-            {/* Jargon Buster List */}
-            {section.jargonBuster && section.jargonBuster.length > 0 && (
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80">
-                <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2.5">
-                  💡 Jargon Buster
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {section.jargonBuster.map((jb, jIdx) => (
-                    <div
-                      key={jIdx}
-                      className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 text-xs shadow-2xs"
-                    >
-                      <strong className="text-slate-900 dark:text-white block font-semibold mb-1 text-sm">
-                        {jb.term}
-                      </strong>
-                      <span className="text-slate-600 dark:text-slate-300 leading-normal">
-                        {jb.simpleExplanation}
-                      </span>
-                    </div>
-                  ))}
+              {/* Active Karaoke Spoken Sentence Indicator */}
+              {isThisSectionPlaying && currentSentence && (
+                <div className="p-3 rounded-xl bg-blue-50/90 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/60 text-xs text-blue-900 dark:text-blue-200 font-medium flex items-center gap-2 animate-fadeIn shadow-2xs">
+                  <span className="flex h-2 w-2 relative flex-shrink-0">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                  </span>
+                  <span className="font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider text-[10px] flex-shrink-0">
+                    Speaking:
+                  </span>
+                  <span className="italic line-clamp-2">"{currentSentence}"</span>
                 </div>
+              )}
+
+              {/* Chip Quote if Junior Mode */}
+              {isJunior && section.chipQuote && (
+                <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-amber-50/90 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 text-xs sm:text-sm text-amber-900 dark:text-amber-100 font-medium shadow-xs">
+                  <div className="w-10 h-10 flex-shrink-0 bg-white dark:bg-slate-800 rounded-xl border border-amber-300 dark:border-amber-600 flex items-center justify-center shadow-xs">
+                    <ChipVectorAvatar size={34} />
+                  </div>
+                  <p className="italic leading-relaxed">"{section.chipQuote}"</p>
+                </div>
+              )}
+
+              {/* Visual Metaphor Illustration Card */}
+              {section.analogy && (
+                <VisualMetaphorCard
+                  metaphorName={section.analogy.metaphorName}
+                  description={section.analogy.description}
+                  isJunior={isJunior}
+                />
+              )}
+
+              {/* Body Markdown Content */}
+              <div className="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-200 text-sm sm:text-base leading-relaxed">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {section.bodyMarkdown}
+                </ReactMarkdown>
               </div>
-            )}
-          </article>
-        ))}
+
+              {/* Rendered Visual Diagram (Mermaid SVG Graphic) */}
+              {section.diagram && section.diagram.content && (
+                <MermaidRenderer
+                  chart={section.diagram.content}
+                  caption={section.diagram.caption}
+                />
+              )}
+
+              {/* Embedded Interactive Turing Widget */}
+              {section.interactiveWidget && section.interactiveWidget.type === 'turing-guess-game' && (
+                <TuringWidget
+                  title={section.interactiveWidget.title}
+                  instruction={section.interactiveWidget.instruction}
+                  scenario={section.interactiveWidget.scenario}
+                />
+              )}
+
+              {/* Jargon Buster List */}
+              {section.jargonBuster && section.jargonBuster.length > 0 && (
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80">
+                  <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2.5">
+                    💡 Jargon Buster
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {section.jargonBuster.map((jb, jIdx) => (
+                      <div
+                        key={jIdx}
+                        className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 text-xs shadow-2xs"
+                      >
+                        <strong className="text-slate-900 dark:text-white block font-semibold mb-1 text-sm">
+                          {jb.term}
+                        </strong>
+                        <span className="text-slate-600 dark:text-slate-300 leading-normal">
+                          {jb.simpleExplanation}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </article>
+          )
+        })}
       </div>
 
       {/* Mini-Quiz Section */}

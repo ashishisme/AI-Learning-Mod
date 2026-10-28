@@ -137,14 +137,20 @@ export const useAudienceModeStore = create<AudienceModeState>()(
   )
 )
 
+export type VoicePersonaId = 'chip' | 'nova' | 'alan'
+
 export interface AudioState {
   activeTrackId: string | null
   isPlaying: boolean
   isMuted: boolean
   speechRate: number
+  persona: VoicePersonaId
+  currentSentence: string | null
   toggleMute: () => void
   setSpeechRate: (rate: number) => void
+  setPersona: (persona: VoicePersonaId) => void
   setActiveTrack: (id: string | null, isPlaying: boolean) => void
+  setCurrentSentence: (sentence: string | null) => void
   stopAudio: () => void
 }
 
@@ -155,11 +161,15 @@ export const useAudioStore = create<AudioState>()(
       isPlaying: false,
       isMuted: false,
       speechRate: 1.0,
+      persona: 'chip',
+      currentSentence: null,
       toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
       setSpeechRate: (rate: number) => set({ speechRate: rate }),
+      setPersona: (persona: VoicePersonaId) => set({ persona }),
       setActiveTrack: (id: string | null, isPlaying: boolean) =>
         set({ activeTrackId: id, isPlaying }),
-      stopAudio: () => set({ activeTrackId: null, isPlaying: false }),
+      setCurrentSentence: (sentence: string | null) => set({ currentSentence: sentence }),
+      stopAudio: () => set({ activeTrackId: null, isPlaying: false, currentSentence: null }),
     }),
     {
       name: 'ai-foundations-audio-settings',

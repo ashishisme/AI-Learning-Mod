@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { useAudioStore, useAudienceModeStore } from '../store';
-import { speechService } from '../services/speechService';
+import { useAudioStore, useAudienceModeStore, VoicePersonaId } from '../store';
+import { speechService, VOICE_PERSONAS } from '../services/speechService';
 
 interface AudioNarrationButtonProps {
   id: string;
@@ -17,7 +17,17 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
   size = 'sm',
   variant = 'subtle',
 }) => {
-  const { activeTrackId, isPlaying, isMuted, speechRate, setActiveTrack, stopAudio } = useAudioStore();
+  const {
+    activeTrackId,
+    isPlaying,
+    isMuted,
+    speechRate,
+    persona,
+    setActiveTrack,
+    setCurrentSentence,
+    stopAudio,
+  } = useAudioStore();
+
   const { mode: audienceMode } = useAudienceModeStore();
 
   const isCurrentActive = activeTrackId === id && isPlaying;
@@ -33,18 +43,18 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
       return;
     }
 
-    // Set voice personality parameters based on mode
-    let pitch = 1.0;
-    let rate = speechRate;
+    // Determine voice persona: explicit override or mode default
+    let effectivePersona: VoicePersonaId = persona || 'chip';
+    if (!persona) {
+      if (audienceMode === 'junior') effectivePersona = 'chip';
+      else if (audienceMode === 'plain-english') effectivePersona = 'nova';
+      else effectivePersona = 'alan';
+    }
 
-    if (audienceMode === 'junior') {
-      pitch = 1.35; // Cheerful robot voice
-      rate = speechRate * 1.05;
+    const personaConfig = VOICE_PERSONAS[effectivePersona] || VOICE_PERSONAS.chip;
+
+    if (effectivePersona === 'chip') {
       speechService.playChime('robot');
-    } else if (audienceMode === 'plain-english') {
-      pitch = 1.0;
-      rate = speechRate * 0.95; // Measured, clear pace
-      speechService.playChime('click');
     } else {
       speechService.playChime('click');
     }
@@ -52,8 +62,12 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
     setActiveTrack(id, true);
 
     speechService.speak(textToRead, {
-      pitch,
-      rate,
+      personaId: effectivePersona,
+      pitch: personaConfig.pitch,
+      rate: speechRate * personaConfig.rate,
+      onSentenceStart: (sentence) => {
+        setCurrentSentence(sentence);
+      },
       onStart: () => {
         setActiveTrack(id, true);
       },
@@ -86,10 +100,10 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
       <button
         onClick={handleToggle}
         aria-label={isCurrentActive ? `Stop listening to Chip` : `Listen to Chip`}
-        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full font-bold text-xs shadow-sm transition-all duration-200 ${
+        className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full font-bold text-xs shadow-sm transition-all duration-200 ${
           isCurrentActive
             ? 'bg-amber-500 text-white shadow-amber-500/40 animate-pulse ring-2 ring-amber-300'
-            : 'bg-amber-100 hover:bg-amber-200 text-amber-800 dark:bg-amber-950/60 dark:hover:bg-amber-900/80 dark:text-amber-200'
+            : 'bg-amber-100 hover:bg-amber-200 text-amber-900 dark:bg-amber-950/60 dark:hover:bg-amber-900/80 dark:text-amber-200'
         }`}
       >
         <span className="text-base">{isCurrentActive ? '⏹️' : '🔊'}</span>
@@ -110,14 +124,20 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
       <button
         onClick={handleToggle}
         aria-label={isCurrentActive ? `Stop reading section` : label}
-        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
           isCurrentActive
-            ? 'bg-blue-600 text-white ring-2 ring-blue-300'
+            ? 'bg-blue-600 text-white ring-2 ring-blue-300 shadow-sm'
             : 'bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200'
         }`}
       >
         <span>{isCurrentActive ? '⏹' : '🔊'}</span>
         <span>{isCurrentActive ? 'Stop' : label}</span>
+        {isCurrentActive && (
+          <span className="flex gap-0.5 items-center ml-1">
+            <span className="w-0.5 h-2.5 bg-white rounded-full animate-pulse" />
+            <span className="w-0.5 h-3 bg-white rounded-full animate-pulse" style={{ animationDelay: '100ms' }} />
+          </span>
+        )}
       </button>
     );
   }

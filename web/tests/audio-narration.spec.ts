@@ -108,3 +108,25 @@ test.describe('Audio Narration & Multi-Modal Sound Effects (SPEC-004)', () => {
     await expect(page.locator('text=Awesome job, explorer!')).toBeVisible()
   })
 })
+
+  test('AC-AUD-04: Audio Studio Voice Persona selector allows switching narrators', async ({ page }) => {
+    await page.goto('/lesson/1-intro')
+
+    // Voice studio trigger button is visible
+    const voiceBtn = page.locator('button[aria-label="Voice Studio Settings"]')
+    await expect(voiceBtn).toBeVisible()
+
+    // Open settings popover
+    await voiceBtn.click()
+
+    // Assert all 3 curated personas are selectable
+    await expect(page.locator('text=Nova the Storyteller')).toBeVisible()
+    await expect(page.locator('text=Prof. Alan')).toBeVisible()
+    await expect(page.locator('text=Chip the Companion')).toBeVisible()
+
+    // Select Nova
+    await page.locator('button', { hasText: 'Nova the Storyteller' }).click()
+
+    // Voice trigger button updates to Nova
+    await expect(page.locator('button[aria-label="Voice Studio Settings"]')).toContainText('Nova')
+  })
