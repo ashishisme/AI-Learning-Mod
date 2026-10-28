@@ -1,0 +1,132 @@
+{
+  "lessonId": "5-nlp",
+  "mode": "junior",
+  "title": "Teaching Computers How to Talk \ud83d\udcac",
+  "readingTimeMinutes": 6,
+  "mascot": {
+    "name": "Chip",
+    "avatar": "\ud83e\udd16",
+    "greeting": "Beep boop! Words are human magic. Today we teach computers how to read stories, talk like friends, and solve word riddles!"
+  },
+  "sections": [
+    {
+      "id": "word-tokens",
+      "heading": "1. Slicing Words: The Secret Tokens",
+      "chipQuote": "Computers do not speak English or Spanish. They speak numbers! So we must chop every sentence into tiny word puzzle pieces called tokens.",
+      "analogy": {
+        "metaphorName": "The Scrabble Tile Bag",
+        "description": "Imagine pulling letter tiles out of a game bag. You line them up to make words. When you type to an AI, it chops your sentence into little tile pieces called tokens and hands each tile a secret number tag!"
+      },
+      "bodyMarkdown": "Computers do not understand letters the way humans do. To read a story, an AI chops sentences into small pieces called **tokens**.\n\nA token can be a full word like `kitten` or a small piece like `ing` in `jumping`.\n\nEvery single token gets a unique ID number in a huge computer dictionary:\n* `cat` might be `#452`\n* `sleeps` might be `#8910`\n* `sun` might be `#314`\n\nOnce sentences turn into ID numbers, computers can do fast math with them!",
+      "jargonBuster": [
+        {
+          "term": "Token",
+          "simpleExplanation": "A single word or piece of a word that a computer turns into a number."
+        },
+        {
+          "term": "NLP",
+          "simpleExplanation": "Natural Language Processing: Teaching computers to read, speak, and understand human words."
+        }
+      ]
+    },
+    {
+      "id": "word-embeddings",
+      "heading": "2. The Word Constellation: Embeddings",
+      "chipQuote": "What if words lived in a giant star map? Words that mean similar things float close together, like best friends sitting at the same lunch table!",
+      "analogy": {
+        "metaphorName": "The Star Map of Words",
+        "description": "Imagine looking up at the night sky. In one constellation, you see 'Dog', 'Puppy', and 'Kitten' shining close together. Far away in another constellation, you see 'Toaster' and 'Microwave'. That map is called an embedding space!"
+      },
+      "bodyMarkdown": "If we only gave words random numbers, the computer would never know that `puppy` and `dog` are related!\n\nSo scientists created **Word Embeddings**. They give every word coordinates in space\u2014just like a GPS map:\n* `Dog` and `Puppy` get coordinates right next to each other.\n* `Apple` and `Banana` sit together in the fruit neighborhood.\n\nEven cooler, you can do real math with words: `King - Man + Woman = Queen`! Try our live Word Math Lab below!",
+      "interactiveWidget": {
+        "type": "vector-math-sim",
+        "title": "Interactive Word Vector Space & Math Lab",
+        "instruction": "Click the formula buttons below to test how vector coordinates let computers solve word analogies."
+      },
+      "jargonBuster": [
+        {
+          "term": "Embedding",
+          "simpleExplanation": "A list of coordinates that places a word on a map based on its meaning."
+        },
+        {
+          "term": "Vector",
+          "simpleExplanation": "An arrow or coordinate pointing to a word's exact spot in the map."
+        }
+      ]
+    },
+    {
+      "id": "predict-next-word",
+      "heading": "3. The Next Word Game: How Chatbots Talk",
+      "chipQuote": "Chatbots do not memorize entire books. They play a super-fast guessing game: What is the most likely next word?",
+      "analogy": {
+        "metaphorName": "The Story Chain Game",
+        "description": "Have you ever played the game where you and a friend make a story by adding one word at a time? Modern AI does the exact same thing billions of times every second!"
+      },
+      "bodyMarkdown": "How do tools like ChatGPT write stories and help with homework?\n\nThey use a powerful brain called a **Transformer**. It reads the words you typed, looks back at the context, and calculates probabilities for the next word:\n* If the sentence is `The fluffy kitten drinks...`, what comes next?\n* The AI checks its training: `milk` is 85% likely, `water` is 10%, and `pizza` is 0.01%!\n\nBy picking the best next words one by one, the AI forms smart, helpful sentences!",
+      "jargonBuster": [
+        {
+          "term": "Transformer",
+          "simpleExplanation": "A modern AI model that pays attention to all words in a sentence at the same time."
+        },
+        {
+          "term": "Language Model",
+          "simpleExplanation": "An AI system trained on vast text to predict words and generate sentences."
+        }
+      ]
+    },
+    {
+      "id": "real-world-nlp",
+      "heading": "4. Language AI in Everyday Life!",
+      "chipQuote": "From translating signs when you travel to chatting with game characters, language AI connects the world!",
+      "analogy": {
+        "metaphorName": "The Universal Translator",
+        "description": "Just like futuristic science fiction stories, today you can speak into a phone and hear your voice come out in Japanese, French, or Hindi in seconds!"
+      },
+      "bodyMarkdown": "Language AI powers tools all around us:\n\n* \ud83c\udf10 **Instant Translation:** Speak into your phone and read signs in over 100 languages.\n* \ud83d\udee1\ufe0f **Spam Detectors:** Protects your inbox by reading messages and catching tricky junk mail.\n* \ud83c\udfa7 **Voice Helpers:** Understands questions you ask smart speakers and reads out answers.\n* \ud83d\udcdd **Writing Helpers:** Fixes spelling mistakes and suggests clearer words for your school essays.\n\nLanguage AI helps everyone share ideas and talk across different languages!",
+      "jargonBuster": [
+        {
+          "term": "Machine Translation",
+          "simpleExplanation": "Using computers to translate text or speech from one language into another."
+        }
+      ]
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What is a 'token' when a computer reads human language?",
+      "options": [
+        "A gold coin used to buy arcade games",
+        "A chopped-up piece of a word or sentence turned into a number",
+        "A plastic toy inside a board game",
+        "A password for your email account"
+      ],
+      "correctIndex": 1,
+      "praise": "Awesome job, explorer! You understand tokenization!",
+      "explanation": "A token is a word or piece of a word that the computer converts into a number ID to do math!"
+    },
+    {
+      "question": "In word embedding vector space, where do similar words like 'Dog' and 'Puppy' sit?",
+      "options": [
+        "On opposite ends of the universe",
+        "Close together on the map because they share meaning",
+        "In completely random spots every time you run the code",
+        "Inside the computer's recycle bin"
+      ],
+      "correctIndex": 1,
+      "praise": "Spot on! That is the secret of word embeddings!",
+      "explanation": "Word embeddings map words with similar meanings close together in coordinate space!"
+    },
+    {
+      "question": "What classic vector math riddle proves that word embeddings capture relationships?",
+      "options": [
+        "King - Man + Woman = Queen",
+        "Tree + Cloud = Airplane",
+        "Shoe - Foot = Pizza",
+        "Book + Bed = Banana"
+      ],
+      "correctIndex": 0,
+      "praise": "Superstar answer! The classic King - Man + Woman = Queen vector formula!",
+      "explanation": "Subtracting 'Man' from 'King' isolates the royal role, and adding 'Woman' points straight to 'Queen'!"
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "lessonId": "5-nlp",
+  "mode": "plain-english",
+  "title": "Natural Language Processing in Plain English: From Words to Meaning",
+  "readingTimeMinutes": 6,
+  "mascot": {
+    "name": "Nova",
+    "avatar": "\ud83c\udf99\ufe0f",
+    "greeting": "Welcome! Today we will break down Natural Language Processing\u2014how software interprets human speech and text."
+  },
+  "sections": [
+    {
+      "id": "tokenization-foundations",
+      "heading": "1. From Words to Numbers: Tokenization",
+      "analogy": {
+        "metaphorName": "The Universal Index",
+        "description": "Machines cannot process emotions or grammar rules directly. They begin by breaking text into indexed vocabulary units called tokens."
+      },
+      "bodyMarkdown": "Computers do not read sentences as thoughts. They only read numbers. So the first step is **tokenization**.\n\nA tokenizer splits text into small units called **tokens**. These can be words or small pieces like `run` and `ing`. Each piece gets a number code in a big lookup list.\n\nOnce text turns into numbers, math models can count words, check order, and find patterns fast.",
+      "jargonBuster": [
+        {
+          "term": "Token",
+          "simpleExplanation": "The basic atomic unit of text (word or subword) that an algorithm processes."
+        },
+        {
+          "term": "Vocabulary",
+          "simpleExplanation": "The complete reference dictionary of known tokens recognized by a model."
+        }
+      ]
+    },
+    {
+      "id": "semantic-embeddings",
+      "heading": "2. Word Embeddings: Mapping Meaning to Geometry",
+      "analogy": {
+        "metaphorName": "The Multi-Dimensional Map",
+        "description": "Rather than treating words as isolated labels, embeddings place each term into a coordinate space where semantic similarity translates into physical proximity."
+      },
+      "bodyMarkdown": "Simple number codes do not show meaning. The number for `dog` is no closer to `puppy` than to `desk`.\n\nTo fix this, models use **Word Embeddings**. Each word gets a spot on a map\u2014a list of numbers called a vector:\n* Words with close meanings sit right next to each other.\n* Map lines capture ideas like gender, age, and style.\n\nThis makes word math work: `King - Man + Woman = Queen`. Test this idea in the tool below!",
+      "interactiveWidget": {
+        "type": "vector-math-sim",
+        "title": "Interactive Word Vector Space & Math Lab",
+        "instruction": "Select word analogies to see how vector subtraction and addition unlock semantic concepts."
+      },
+      "jargonBuster": [
+        {
+          "term": "Vector",
+          "simpleExplanation": "A coordinate array defining a point and direction in mathematical space."
+        },
+        {
+          "term": "Cosine Similarity",
+          "simpleExplanation": "A metric measuring how closely two word vectors point in the same direction."
+        }
+      ]
+    },
+    {
+      "id": "sequence-attention",
+      "heading": "3. Sequence and Attention: Understanding Context",
+      "analogy": {
+        "metaphorName": "The Spotlight Mechanism",
+        "description": "When you read a long sentence, your mind links pronouns back to earlier nouns. The attention mechanism does the same by spotlighting relevant terms across the text."
+      },
+      "bodyMarkdown": "Word meaning changes with context. Think of the word `bank` in `river bank` versus `piggy bank`.\n\nEarly models read one word at a time in order. They forgot old words fast. Modern systems use the **Transformer** with **attention**:\n* It looks at all words in a sentence at once.\n* It draws mental lines between words that belong together, even across long paragraphs.\n\nThis helps models answer questions and write clear paragraphs.",
+      "jargonBuster": [
+        {
+          "term": "Attention Mechanism",
+          "simpleExplanation": "A mathematical technique allowing models to focus dynamically on key words in context."
+        },
+        {
+          "term": "Transformer",
+          "simpleExplanation": "The foundational deep learning architecture behind modern large language models."
+        }
+      ]
+    },
+    {
+      "id": "nlp-production",
+      "heading": "4. Enterprise Applications: Search, Summarization, and Chat",
+      "analogy": {
+        "metaphorName": "The Automated Analyst",
+        "description": "NLP tools analyze millions of customer queries, documents, and records in seconds, turning unstructured text into clear answers."
+      },
+      "bodyMarkdown": "Language AI powers tools millions use every day:\n\n* **Smart Search:** Finds pages by ideas instead of exact word matches.\n* **Tone Checks:** Reads customer reviews to see if people feel happy or upset.\n* **Fast Summaries:** Shrinks long reports into short, clear bullet points.\n* **Help Chatbots:** Answers questions for shoppers and travelers around the clock.\n\nBy turning words into math, language models help humans read, write, and find facts faster.",
+      "jargonBuster": [
+        {
+          "term": "Sentiment Analysis",
+          "simpleExplanation": "Classifying text tone as positive, negative, or neutral based on word choice."
+        },
+        {
+          "term": "Semantic Search",
+          "simpleExplanation": "Searching by underlying meaning rather than strict keyword string matching."
+        }
+      ]
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What is the primary function of tokenization in Natural Language Processing?",
+      "options": [
+        "To encrypt databases for security",
+        "To split raw text into standardized numerical units that models can process",
+        "To delete unnecessary punctuation permanently",
+        "To play automated voice clips"
+      ],
+      "correctIndex": 1,
+      "praise": "Correct! Tokenization converts text strings into discrete numerical tokens.",
+      "explanation": "Tokenization converts raw character strings into integer sequences mapped against a model vocabulary."
+    },
+    {
+      "question": "Why are word embeddings superior to basic sequential integer IDs?",
+      "options": [
+        "They make files take up zero storage",
+        "They encode semantic relationships and similarity into spatial vector distances",
+        "They only work on English words",
+        "They prevent spelling mistakes entirely"
+      ],
+      "correctIndex": 1,
+      "praise": "Spot on! That is the core advantage of embedding spaces.",
+      "explanation": "Word embeddings map semantic similarity into geometric proximity, enabling vector arithmetic and contextual modeling."
+    },
+    {
+      "question": "What does the self-attention mechanism in modern transformers accomplish?",
+      "options": [
+        "It speeds up monitor refresh rates",
+        "It evaluates relationships between all words in a sequence simultaneously",
+        "It deletes nouns from the sentence",
+        "It replaces the need for any training data"
+      ],
+      "correctIndex": 1,
+      "praise": "Precisely right! Self-attention links words across arbitrary distances.",
+      "explanation": "Self-attention computes weights between all tokens simultaneously, allowing the model to interpret pronouns, context, and dependencies accurately."
+    }
+  ]
+}
