@@ -6,6 +6,7 @@ import { ChipMascotBanner } from './ChipMascotBanner'
 import { ChipVectorAvatar } from './ChipVectorAvatar'
 import { TuringWidget } from './TuringWidget'
 import { ExpertSystemWidget } from './ExpertSystemWidget'
+import { PerceptronWidget } from './PerceptronWidget'
 import { MermaidRenderer } from './MermaidRenderer'
 import { VisualMetaphorCard } from './VisualMetaphorCard'
 import { AudioNarrationButton } from './AudioNarrationButton'
@@ -163,6 +164,11 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
               {/* Embedded Interactive Expert System Simulator */}
               {section.interactiveWidget && section.interactiveWidget.type === 'expert-system-sim' && (
                 <ExpertSystemWidget />
+              )}
+
+              {/* Embedded Interactive Perceptron Playground */}
+              {section.interactiveWidget && section.interactiveWidget.type === 'perceptron-sim' && (
+                <PerceptronWidget />
               )}
 
               {/* Jargon Buster List */}

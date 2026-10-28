@@ -1,0 +1,107 @@
+{
+  "lessonId": "3-neuralnetworks",
+  "mode": "junior",
+  "title": "Connecting the Brain's Spark Plugs ⚡",
+  "readingTimeMinutes": 6,
+  "mascot": {
+    "name": "Chip",
+    "avatar": "🤖",
+    "greeting": "Beep boop! Today we are looking inside our own heads to discover the amazing bio-superpower that inspired modern AI: Neural Networks!"
+  },
+  "sections": [
+    {
+      "id": "meet-the-neuron",
+      "heading": "1. Brain Cells vs Computer Cells (Meet the Neuron!)",
+      "chipQuote": "Your brain has about 86 billion tiny cells called neurons. When you see a cute kitten, millions of them spark together like a holiday light show!",
+      "analogy": {
+        "metaphorName": "The Two-Key Treasure Box",
+        "description": "Imagine a treasure chest that only pops open if two pirate captains turn their keys at the very same second. A neuron is just like that: it waits for enough electric signals to arrive before it decides to fire its own spark!"
+      },
+      "bodyMarkdown": "Every animal brain is made of **neurons**. A biological neuron has tiny branches called **dendrites** that catch signals, a center nucleus that adds them up, and a wire called an **axon** that sends the signal to its neighbors.\n\nScientists asked: *Can we build a computer program that acts like a single neuron?* In 1957, Frank Rosenblatt created the **Perceptron**—the very first artificial brain cell!",
+      "jargonBuster": [
+        {
+          "term": "Neuron",
+          "simpleExplanation": "A tiny brain cell that passes electrical signals to help you think, see, and move."
+        },
+        {
+          "term": "Perceptron",
+          "simpleExplanation": "The simplest artificial neuron: a math formula that adds up clues and decides whether to fire."
+        }
+      ]
+    },
+    {
+      "id": "weights-and-bias",
+      "heading": "2. The Magic Knobs: Weights and Bias",
+      "chipQuote": "When learning to ride a bike, you don't read a manual—you wobble, adjust your balance, and try again until you nail it!",
+      "analogy": {
+        "metaphorName": "The Soundboard Mixer",
+        "description": "Picture a DJ mixing music with sliding faders. If the bass is too loud, they slide it down. If the vocals are too quiet, they slide them up. In AI, these sliders are called weights!"
+      },
+      "bodyMarkdown": "How does an artificial neuron learn? Through two secrets:\n\n* **Weights**: How much attention the neuron pays to each clue. If spotting an apple, sweetness gets a BIG weight, but whether it has a sticker gets zero weight!\n* **Bias**: The neuron's stubbornness threshold. How strong must the evidence be before it yells 'YES!'?\n\nBy practicing over and over, the computer nudges each weight up or down until its guesses are spot-on.",
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Inside a Perceptron: Inputs × Weights + Bias = Fired or Dormant",
+        "content": "graph LR\n    X1[\"Input 1: Sweetness (x1)\"] -->|Weight w1| Sum[\"➕ Adder Nucleus<br/>(Sum = x1·w1 + x2·w2 + b)\"]\n    X2[\"Input 2: Roundness (x2)\"] -->|Weight w2| Sum\n    Bias[\"🎛️ Bias (b)\"] --> Sum\n    Sum --> Gate{\"Threshold: Sum ≥ 0?\"}\n    Gate -->|YES| Fire[\"⚡ Output: FIRED! (Apple 🍎)\"]\n    Gate -->|NO| Sleep[\"💤 Output: DORMANT (Lemon 🍋)\"]"
+      },
+      "jargonBuster": [
+        {
+          "term": "Weight",
+          "simpleExplanation": "A multiplier that controls how important an input is to the neuron's decision."
+        },
+        {
+          "term": "Bias",
+          "simpleExplanation": "A threshold adjustment that makes the neuron easier or harder to activate."
+        }
+      ]
+    },
+    {
+      "id": "interactive-perceptron-demo",
+      "heading": "3. Train Your Own Neuron: The Fruit Classifier",
+      "chipQuote": "Time to become an AI Trainer! Grab the sliders below and tune your neuron until it accurately spots sweet apples and sour lemons!",
+      "analogy": {
+        "metaphorName": "The Fruit Stand Inspector",
+        "description": "An apple is sweet and round. A lemon is sour and oval. Adjust the dials so your artificial neuron fires green for apples and red for lemons!"
+      },
+      "bodyMarkdown": "Test different fruits and tweak the synaptic weights below. Watch the total weighted sum change in real time!",
+      "interactiveWidget": {
+        "type": "perceptron-sim",
+        "title": "⚡ Interactive Simulation: The Fruit Sorting Perceptron"
+      }
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What does a 'Weight' do in an artificial neuron?",
+      "options": [
+        "It weighs the physical computer on a scale",
+        "It decides how important a specific input clue is to the final answer",
+        "It slows down internet connection speeds"
+      ],
+      "correctIndex": 1,
+      "praise": "Spot on, explorer! Weights tell the neuron which clues to pay attention to!",
+      "explanation": "Weights scale incoming signals: higher weights mean that input has a stronger influence on whether the neuron fires."
+    },
+    {
+      "question": "What is the 'Bias' in a perceptron?",
+      "options": [
+        "A threshold adjustment that shifts the firing line",
+        "A bad mood inside the computer",
+        "A broken keyboard button"
+      ],
+      "correctIndex": 0,
+      "praise": "Brilliant! The bias sets the baseline hurdle before the neuron fires!",
+      "explanation": "Bias acts as a flexible threshold, allowing the model to shift its activation boundary independently of inputs."
+    },
+    {
+      "question": "Who created the very first artificial neuron (The Perceptron) in 1957?",
+      "options": [
+        "Frank Rosenblatt",
+        "Albert Einstein",
+        "Isaac Newton"
+      ],
+      "correctIndex": 0,
+      "praise": "Awesome history knowledge! Frank Rosenblatt designed the pioneering Perceptron at Cornell University!",
+      "explanation": "Frank Rosenblatt developed the Perceptron algorithm in 1957, establishing the foundation for modern deep learning."
+    }
+  ]
+}

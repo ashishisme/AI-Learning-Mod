@@ -1,0 +1,104 @@
+{
+  "lessonId": "3-neuralnetworks",
+  "mode": "plain-english",
+  "title": "Introduction to Neural Networks & Perceptrons",
+  "readingTimeMinutes": 7,
+  "intro": "Neural networks are computational models loosely inspired by biological brains. Rather than executing rigid If-Then rules, neural networks learn by calibrating numerical weights across interconnected nodes.",
+  "sections": [
+    {
+      "id": "biological-inspiration",
+      "heading": "1. From Biology to Math: The Rosenblatt Perceptron",
+      "analogy": {
+        "metaphorName": "The Weighted Committee Vote",
+        "description": "Imagine a corporate committee deciding whether to fund a new project. Each board member votes yes (1) or no (0), but some members carry higher voting weight based on expertise. If the combined weighted score exceeds the budget threshold, the proposal is approved."
+      },
+      "bodyMarkdown": "In biological brains, a **neuron** receives chemical signals through dendrites. If the cumulative electrical charge in the cell body surpasses an action potential threshold, an electric pulse travels down the axon to trigger downstream cells.\n\nIn 1957, Cornell psychologist **Frank Rosenblatt** translated this biological mechanism into mathematics, inventing the **Perceptron**—the fundamental building block of modern deep learning.",
+      "jargonBuster": [
+        {
+          "term": "Perceptron",
+          "simpleExplanation": "The simplest mathematical model of a neuron, calculating a weighted sum of inputs and applying a threshold."
+        },
+        {
+          "term": "Action Potential",
+          "simpleExplanation": "The electrical threshold in a neuron that must be crossed before it fires an outgoing signal."
+        }
+      ]
+    },
+    {
+      "id": "weights-bias-activation",
+      "heading": "2. Mathematical Foundations: Inputs, Weights, Bias & Activation",
+      "analogy": {
+        "metaphorName": "The Audio Mixing Board",
+        "description": "An audio engineer adjusts individual slider faders (weights) for guitars, vocals, and drums, and sets an overall master gain knob (bias) to prevent clipping. When the master output crosses the decibel gate, the sound broadcasts to the arena."
+      },
+      "bodyMarkdown": "A perceptron computes an output through four concise steps:\n\n1. **Inputs ($x_i$)**: The raw numerical features (e.g., sweetness, roundness, temperature).\n2. **Weights ($w_i$)**: Adjustable multipliers representing the significance of each input.\n3. **Bias ($b$)**: A baseline offset that shifts the activation threshold.\n4. **Activation Function**: A mathematical gate. If the weighted sum $\\sum (w_i x_i) + b \\ge 0$, the neuron outputs $+1$; otherwise it outputs $0$ (or $-1$).",
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Perceptron Architecture: Linear Combination & Threshold Step",
+        "content": "graph LR\n    X1[\"Input x1\"] -->|Weight w1| Sum[\"➕ Linear Combination<br/>z = ∑(wi·xi) + b\"]\n    X2[\"Input x2\"] -->|Weight w2| Sum\n    Bias[\"Bias b\"] --> Sum\n    Sum --> Act[\"📈 Activation Gate<br/>f(z) ≥ 0\"]\n    Act --> Out[\"💡 Binary Output (0 or 1)\"]"
+      },
+      "jargonBuster": [
+        {
+          "term": "Synaptic Weight",
+          "simpleExplanation": "The strength of a connection between two nodes, adjusted during machine learning training."
+        },
+        {
+          "term": "Activation Function",
+          "simpleExplanation": "A function that transforms the neuron's weighted sum into an outgoing output signal."
+        },
+        {
+          "term": "Linear Separability",
+          "simpleExplanation": "A classification problem where two classes can be divided by a single straight line or plane."
+        }
+      ]
+    },
+    {
+      "id": "interactive-perceptron-playground",
+      "heading": "3. Interactive Simulation: Tuning a Binary Classifier",
+      "analogy": {
+        "metaphorName": "Calibrating a Sensor Threshold",
+        "description": "Think of setting an automatic thermostat: you adjust sensitivity dials so the heater kicks on only when the combined temperature and humidity drop below your comfort line."
+      },
+      "bodyMarkdown": "Experiment with the live single-neuron simulator below. Select fruit presets and adjust weights $w_1, w_2$ and bias $b$ to see how the decision boundary shifts.",
+      "interactiveWidget": {
+        "type": "perceptron-sim",
+        "title": "⚡ Interactive Simulation: The Fruit Sorting Perceptron"
+      }
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "In a perceptron, what does the 'Weighted Sum' represent?",
+      "options": [
+        "The linear combination of inputs multiplied by their corresponding weights plus bias",
+        "The total weight of the computer hardware",
+        "The number of rows in the SQL database"
+      ],
+      "correctIndex": 0,
+      "praise": "Outstanding! The weighted sum z = ∑(wi·xi) + b is the core linear equation of a perceptron.",
+      "explanation": "Every input feature is scaled by its synaptic weight and aggregated together with the threshold bias."
+    },
+    {
+      "question": "What is the historical limitation of a single-layer perceptron discovered by Minsky and Papert?",
+      "options": [
+        "It can only solve linearly separable problems and cannot learn the XOR function",
+        "It can only run on magnetic tape drives",
+        "It requires internet access to compute math"
+      ],
+      "correctIndex": 0,
+      "praise": "Spot on! The XOR limitation caused the first 'AI Winter' until multi-layer neural networks were developed!",
+      "explanation": "A single perceptron can only draw straight decision lines. Overcoming the XOR problem required multi-layer networks with non-linear activations."
+    },
+    {
+      "question": "How does a neural network 'learn' during the training process?",
+      "options": [
+        "By iteratively adjusting its weights and biases to minimize prediction errors",
+        "By memorizing the entire internet into RAM",
+        "By printing receipts after every calculation"
+      ],
+      "correctIndex": 0,
+      "praise": "Brilliant! Algorithms like gradient descent nudge weights incrementally to reduce error!",
+      "explanation": "Learning in neural networks consists of optimizing connection weights through error backpropagation."
+    }
+  ]
+}
