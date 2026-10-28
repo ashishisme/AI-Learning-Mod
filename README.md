@@ -266,6 +266,34 @@ cd web && npx tsc --noEmit && npm run build
 
 ---
 
+## 🌟 Release v3.1.0-rc1: Full Curriculum Adaptive Expansion & Audio Studio 2.0
+
+Version **v3.1.0-rc1** introduces full multi-audience adaptive curriculum scaling, interactive simulations, and multimodal audio intelligence:
+
+### 1. 3-Tier Adaptive Learning Across All 6 Lessons
+Every curriculum module provides three purpose-built learning experiences:
+* **Standard (Beginner):** Comprehensive academic fundamentals from Microsoft AI-For-Beginners.
+* **Kids Mode (8–14):** Guided by **Chip the Robot 🤖**, featuring visual metaphors, gamified story chains, and Flesch-Kincaid Grade 4–6 cognitive pacing.
+* **Plain English:** Hosted by **Nova 🎙️**, providing executive analogies, intuitive intuition pumps, and jargon-free business explanations.
+
+### 2. Tailored Interactive Simulators
+Each lesson embeds a hands-on mathematical simulation widget directly into the reading flow:
+* **Lesson 1 (Introduction):** Turing Test Scenario Guessing Game
+* **Lesson 2 (Symbolic AI):** Mars Rover Expert System Forward Chaining Diagnostics
+* **Lesson 3 (Neural Networks):** Single-Neuron Fruit Sorter with dynamic weights ($w_1, w_2$) & bias ($b$)
+* **Lesson 4 (Computer Vision):** 3×3 Convolution Matrix Kernel Lab (Sobel vertical/horizontal, sharpen, blur)
+* **Lesson 5 (NLP & Embeddings):** 2D Word2Vec Coordinate Space & Analogy Solver (`King - Man + Woman = Queen`)
+* **Lesson 6 (Ethical AI):** AI Fairness Auditor & EEOC 80% Disparate Impact Disparity Ratio Checker
+
+### 3. Audio Studio 2.0 & Multimodal Voice
+* **Asynchronous Voice Discovery:** Automatic ranking of local neural TTS voices (Apple Natural, Google US, Microsoft Neural).
+* **3 Dedicated Personas:** Chip 🤖 (expressive & upbeat), Nova 🎙️ (warm & clear), Prof. Alan 🎓 (calm & authoritative).
+* **Sentence-by-Sentence Karaoke Tracking:** Glowing real-time sentence highlight synchronized with audio playback.
+* **Speech-to-Text Voice Microphone:** "Talk to Chip" speech recognition in the AI Teaching Assistant panel.
+* **One-Click Term Pronunciations:** Audio badges for technical terms across all Jargon Buster cards.
+
+---
+
 ## 🐳 Docker Deployment
 
 The application compiles into a single multi-stage container running as an unprivileged non-root user (`UID 10001`):
