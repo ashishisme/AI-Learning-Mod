@@ -7,6 +7,7 @@ import { ChipVectorAvatar } from './ChipVectorAvatar'
 import { TuringWidget } from './TuringWidget'
 import { ExpertSystemWidget } from './ExpertSystemWidget'
 import { PerceptronWidget } from './PerceptronWidget'
+import { ConvolutionWidget } from './ConvolutionWidget'
 import { MermaidRenderer } from './MermaidRenderer'
 import { VisualMetaphorCard } from './VisualMetaphorCard'
 import { AudioNarrationButton } from './AudioNarrationButton'
@@ -169,6 +170,11 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
               {/* Embedded Interactive Perceptron Playground */}
               {section.interactiveWidget && section.interactiveWidget.type === 'perceptron-sim' && (
                 <PerceptronWidget />
+              )}
+
+              {/* Embedded Interactive Convolution Simulator */}
+              {section.interactiveWidget && section.interactiveWidget.type === 'convolution-sim' && (
+                <ConvolutionWidget />
               )}
 
               {/* Jargon Buster List */}

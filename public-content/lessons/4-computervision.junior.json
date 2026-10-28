@@ -1,0 +1,132 @@
+{
+  "lessonId": "4-computervision",
+  "mode": "junior",
+  "title": "Robot Eyes: How Computers Learn to See \ud83d\udc41\ufe0f",
+  "readingTimeMinutes": 6,
+  "mascot": {
+    "name": "Chip",
+    "avatar": "\ud83e\udd16",
+    "greeting": "Beep boop! Today we give computers robot eyes. Grab your spy glass. Let's learn how AI sees the world!"
+  },
+  "sections": [
+    {
+      "id": "pixels-grid",
+      "heading": "1. Tiny Squares: The Pixel Secret",
+      "chipQuote": "To a computer, a kitten photo is not fluffy fur yet. It is a giant sheet of graph paper covered in math numbers!",
+      "analogy": {
+        "metaphorName": "The Giant Paint-by-Numbers Board",
+        "description": "Imagine a wall-sized coloring board where each square has a secret number from 0 to 255. Zero is pitch black, 255 is glowing white, and numbers in between are gray. That is exactly what a computer camera sees!"
+      },
+      "bodyMarkdown": "Look very close at a phone screen. Every single picture is built from millions of tiny colored dots called **pixels**.\n\nA computer reads pictures as rows and columns of numbers:\n* **Black pixels** are numbered **0**.\n* **White pixels** are numbered **255**.\n* **Gray pixels** sit in between, like **128**.\n\nFor color pictures, each dot has three numbers: **Red, Green, and Blue** (RGB). The screen mixes them like paint to make every color in the rainbow!",
+      "jargonBuster": [
+        {
+          "term": "Pixel",
+          "simpleExplanation": "A tiny picture element on a screen, like one single square on graph paper."
+        },
+        {
+          "term": "RGB",
+          "simpleExplanation": "Red, Green, and Blue light mixed together to paint every color on your display."
+        }
+      ]
+    },
+    {
+      "id": "convolutions-filter",
+      "heading": "2. The Magic Sliding Window: Convolutions",
+      "chipQuote": "Hold a magnifying glass over a photo and slide it across. When you hit a sharp line, your lens lights up bright!",
+      "analogy": {
+        "metaphorName": "The Detective's Filter Lens",
+        "description": "Imagine holding a small 3x3 cardboard frame with tinted glass over a drawing. As you slide it across the page, it highlights borders and hides smooth areas. That moving frame is called a convolution filter!"
+      },
+      "bodyMarkdown": "How does an AI spot ears or wheels inside millions of numbers? It uses a clever math trick called **convolution**!\n\nIt takes a small 3-by-3 grid of numbers called a **kernel** and slides it over the image, dot by dot:\n1. It multiplies the small grid numbers by the image pixels.\n2. It adds all the math answers into one new number.\n3. When it slides across a sharp edge, the numbers jump high and light up!\n\nTry our Filter Lab below! Click different lenses to watch the AI catch vertical walls, horizontal lines, and outlines instantly.",
+      "interactiveWidget": {
+        "type": "convolution-sim",
+        "title": "Interactive Convolution & Filter Lab",
+        "instruction": "Select filter presets below to observe how kernel matrix arithmetic extracts edge features from a pixel grid."
+      },
+      "jargonBuster": [
+        {
+          "term": "Convolution",
+          "simpleExplanation": "Sliding a small math window across an image to spot lines, corners, and edges."
+        },
+        {
+          "term": "Kernel",
+          "simpleExplanation": "The small 3x3 grid of weights inside the sliding window that acts like special glasses for the AI."
+        }
+      ]
+    },
+    {
+      "id": "deep-cnn-blocks",
+      "heading": "3. From Lines to Whiskers: Vision Brains (CNNs)",
+      "chipQuote": "Vision AI is like building with LEGO bricks. Small lines make shapes, and shapes make complete cats!",
+      "analogy": {
+        "metaphorName": "The LEGO Pyramid of Sight",
+        "description": "On the bottom floor, the AI spots tiny edge lines. On the second floor, it snaps lines together to build circles and ears. On the top floor, it puts everything together and shouts: 'That is a puppy!'"
+      },
+      "bodyMarkdown": "A single filter only catches simple lines. But when engineers stack many filter layers together into a **Convolutional Neural Network** (CNN), amazing things happen!\n\n* **First Layer:** Finds simple straight lines, angles, and color edges.\n* **Middle Layer:** Assembles lines into shapes like wheels, curves, and textures.\n* **Deep Layer:** Combines shapes into full objects like cars, bicycles, or smiling faces!\n\nEach layer builds on top of the last layer, learning more complex ideas step by step.",
+      "jargonBuster": [
+        {
+          "term": "CNN",
+          "simpleExplanation": "An artificial brain designed to read images layer by layer from lines to objects."
+        },
+        {
+          "term": "Feature Map",
+          "simpleExplanation": "The new picture created after sliding a filter to highlight edges."
+        }
+      ]
+    },
+    {
+      "id": "real-world-vision",
+      "heading": "4. Robot Eyes in the Real World!",
+      "chipQuote": "Robot eyes are helping people all over planet Earth\u2014from keeping drivers safe to helping doctors heal patients!",
+      "analogy": {
+        "metaphorName": "The Tireless Spotter",
+        "description": "Human eyes get sleepy after staring at a screen for hours. Robot eyes never get tired: they can scan millions of photos every second without missing a clue!"
+      },
+      "bodyMarkdown": "Where do we use computer vision today? Almost everywhere you look!\n\n* \ud83d\ude97 **Self-Driving Cars:** Cameras spot stop signs, lane lines, and pedestrians to steer safely.\n* \ud83d\udcf1 **Face Unlock:** Phone cameras check your unique face features in a split second.\n* \ud83e\ude7a **Doctor Assistants:** AI scans medical photos to help doctors spot illness early.\n* \ud83c\udf3e **Smart Drones:** Drones fly over farm fields and spot thirsty crops before they dry up.\n\nGiving computers the gift of sight helps humans solve big challenges with speed and care!",
+      "jargonBuster": [
+        {
+          "term": "Object Detection",
+          "simpleExplanation": "When an AI draws a colored box around an item and names what it sees."
+        }
+      ]
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What is every digital picture made of inside a computer?",
+      "options": [
+        "Tiny drops of wet ink",
+        "A giant grid of numbers called pixels",
+        "Little paper drawings glued together",
+        "Spools of magnetic tape"
+      ],
+      "correctIndex": 1,
+      "praise": "Awesome job, explorer! You nailed it!",
+      "explanation": "Digital pictures are grids of numbers called pixels. Dark areas have low numbers and bright areas have high numbers!"
+    },
+    {
+      "question": "What does a 3x3 convolution filter do when it slides across an image?",
+      "options": [
+        "It deletes half the photo to save memory",
+        "It prints the picture on paper",
+        "It multiplies nearby pixels by weights to highlight edges and shapes",
+        "It plays sound effects for the picture"
+      ],
+      "correctIndex": 2,
+      "praise": "Spot on! Brilliant detective work!",
+      "explanation": "The sliding filter multiplies nearby pixel numbers by weights to spot lines, corners, and edges!"
+    },
+    {
+      "question": "In a deep vision neural network (CNN), what does the earliest first layer look for?",
+      "options": [
+        "Simple lines, corners, and edges",
+        "Complete cats and dogs",
+        "The person's full name and address",
+        "The date the photo was taken"
+      ],
+      "correctIndex": 0,
+      "praise": "Superstar answer! You understand deep learning!",
+      "explanation": "Early layers find simple edges and lines. Later layers combine them into shapes, ears, and complete objects!"
+    }
+  ]
+}

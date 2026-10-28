@@ -1,0 +1,132 @@
+{
+  "lessonId": "4-computervision",
+  "mode": "plain-english",
+  "title": "Computer Vision in Plain English: From Pixels to Recognition",
+  "readingTimeMinutes": 6,
+  "mascot": {
+    "name": "Nova",
+    "avatar": "\ud83c\udf99\ufe0f",
+    "greeting": "Welcome! Today we will break down Computer Vision\u2014how software interprets visual media from raw pixels to self-driving awareness."
+  },
+  "sections": [
+    {
+      "id": "digital-mosaic",
+      "heading": "1. The Digital Mosaic: How Computers Store Images",
+      "analogy": {
+        "metaphorName": "The Number Matrix",
+        "description": "People recognize faces and scenes fast. Software must do the same work using grids of numbers. By sliding math lenses across these numbers, AI turns raw light into lines, shapes, and recognizable items."
+      },
+      "bodyMarkdown": "Every digital image is a flat grid of tiny dots called **pixels**.\n\n* In gray photos, each pixel holds a number from **0 (black)** to **255 (white)**.\n* In color photos, each dot stores three numbers: **Red, Green, and Blue** (RGB).\n\nWhen code opens a photo, it sees a table of numbers. It does not know depth, shape, or meaning yet. It must find patterns in those numbers first.",
+      "jargonBuster": [
+        {
+          "term": "Pixel",
+          "simpleExplanation": "The smallest single dot in a digital photo."
+        },
+        {
+          "term": "RGB",
+          "simpleExplanation": "Red, Green, and Blue light values mixed to make any screen color."
+        }
+      ]
+    },
+    {
+      "id": "convolution-filters",
+      "heading": "2. Finding Features with Sliding Filters",
+      "analogy": {
+        "metaphorName": "The Moving Math Filter",
+        "description": "Looking at one pixel at a time does not reveal an image. Sliding a small window over neighbors reveals patterns, edges, and texture."
+      },
+      "bodyMarkdown": "Looking at one pixel at a time does not help. So vision models use **convolutions**.\n\nA convolution slides a small 3x3 grid, called a **filter** or kernel, over the whole picture:\n1. It multiplies the small grid numbers by the image pixels.\n2. It adds those results into one new number called a **feature map**.\n3. Different filter numbers catch different things, like sharp edges or flat lines.\n\nTry the filter tool below! Click different presets to see how it spots vertical and horizontal edges across the grid.",
+      "interactiveWidget": {
+        "type": "convolution-sim",
+        "title": "Interactive Convolution & Filter Lab",
+        "instruction": "Select filter presets to observe how kernel matrix arithmetic extracts edge features from a pixel grid."
+      },
+      "jargonBuster": [
+        {
+          "term": "Kernel / Filter",
+          "simpleExplanation": "A small 3x3 grid of numbers used to spot visual details."
+        },
+        {
+          "term": "Feature Map",
+          "simpleExplanation": "The new grid that lights up wherever the filter found a pattern."
+        }
+      ]
+    },
+    {
+      "id": "cnn-hierarchy",
+      "heading": "3. The Deep Hierarchy: Inside Vision Networks (CNNs)",
+      "analogy": {
+        "metaphorName": "The Visual Ladder",
+        "description": "Early layers spot basic lines. Middle layers build curves and shapes. Late layers recognize complete entities like vehicles and human faces."
+      },
+      "bodyMarkdown": "Modern vision models stack many filter layers in a row. This creates a neat **visual ladder**:\n\n* **Early Layers:** Spot simple things like lines, corners, and bright spots.\n* **Middle Layers:** Combine lines into shapes like wheels, curves, and textures.\n* **Late Layers:** Put shapes together into full objects like cars, dogs, or faces.\n\nNext, **pooling steps** shrink the picture size. This cuts down on math work. It also helps the model spot objects even if they move slightly to the left or right.",
+      "jargonBuster": [
+        {
+          "term": "CNN",
+          "simpleExplanation": "A deep network built specifically to scan images layer by layer."
+        },
+        {
+          "term": "Pooling",
+          "simpleExplanation": "A shrinking step that keeps the strongest points and cuts down compute time."
+        }
+      ]
+    },
+    {
+      "id": "practical-impact",
+      "heading": "4. Real-World Uses: Cars, Phones, and Clinics",
+      "analogy": {
+        "metaphorName": "Active Observation",
+        "description": "Vision AI turns passive recording cameras into active, real-time analytical tools across transport, healthcare, and manufacturing."
+      },
+      "bodyMarkdown": "Computer vision powers tools people use every single day:\n\n* **Object Detection:** Finds multiple things in a scene and draws boxes around them.\n* **Semantic Segmentation:** Colors every single pixel to show road, car, or sidewalk.\n* **Factory Quality:** Fast cameras spot broken parts on assembly lines in milliseconds.\n* **Health Scans:** Helps doctors spot illness in X-ray and MRI scans earlier.\n\nFrom self-driving cars to farm drones, vision models turn basic cameras into active helpers.",
+      "jargonBuster": [
+        {
+          "term": "Object Detection",
+          "simpleExplanation": "Drawing labeled boxes around items found in a photo."
+        },
+        {
+          "term": "Semantic Segmentation",
+          "simpleExplanation": "Marking each pixel with the exact kind of object it belongs to."
+        }
+      ]
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "How does an algorithm initially perceive a digital image?",
+      "options": [
+        "As an intuitive psychological concept",
+        "As a two-dimensional grid or matrix of numerical pixel intensities",
+        "As compressed audio waves",
+        "As human handwritten notes"
+      ],
+      "correctIndex": 1,
+      "praise": "Correct! Excellent comprehension.",
+      "explanation": "Images are processed as numerical matrices representing grayscale or RGB pixel values."
+    },
+    {
+      "question": "What is the primary function of a convolutional kernel filter?",
+      "options": [
+        "To erase image metadata",
+        "To slide over pixels and highlight localized features like edges and contours",
+        "To increase monitor refresh rates",
+        "To encrypt files for cloud storage"
+      ],
+      "correctIndex": 1,
+      "praise": "Spot on! That is the core mechanism of convolution.",
+      "explanation": "Convolutional kernels perform localized matrix math to extract feature maps representing lines, edges, and textures."
+    },
+    {
+      "question": "In a deep Convolutional Neural Network (CNN), what is the role of early versus late layers?",
+      "options": [
+        "Early layers identify complete objects; late layers break them into single pixels",
+        "Early layers detect simple edges and lines; late layers synthesize those into full objects",
+        "Early layers predict future stock prices; late layers store passwords",
+        "There is no difference in representation between layers"
+      ],
+      "correctIndex": 1,
+      "praise": "Precisely right! You have grasped hierarchical feature learning.",
+      "explanation": "CNNs build a hierarchical abstraction: early layers identify basic edges and textures, while deeper layers assemble them into complex objects."
+    }
+  ]
+}
