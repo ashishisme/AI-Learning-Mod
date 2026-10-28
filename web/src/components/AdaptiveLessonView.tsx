@@ -9,6 +9,7 @@ import { ExpertSystemWidget } from './ExpertSystemWidget'
 import { PerceptronWidget } from './PerceptronWidget'
 import { ConvolutionWidget } from './ConvolutionWidget'
 import { VectorMathWidget } from './VectorMathWidget'
+import { BiasDetectiveWidget } from './BiasDetectiveWidget'
 import { MermaidRenderer } from './MermaidRenderer'
 import { VisualMetaphorCard } from './VisualMetaphorCard'
 import { AudioNarrationButton } from './AudioNarrationButton'
@@ -181,6 +182,11 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
               {/* Embedded Interactive Vector Math Simulator */}
               {section.interactiveWidget && section.interactiveWidget.type === 'vector-math-sim' && (
                 <VectorMathWidget />
+              )}
+
+              {/* Embedded Interactive Bias Detective Simulator */}
+              {section.interactiveWidget && section.interactiveWidget.type === 'bias-detective-sim' && (
+                <BiasDetectiveWidget />
               )}
 
               {/* Jargon Buster List */}

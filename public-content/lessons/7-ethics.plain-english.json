@@ -1,0 +1,132 @@
+{
+  "lessonId": "7-ethics",
+  "mode": "plain-english",
+  "title": "Ethical and Responsible AI in Plain English",
+  "readingTimeMinutes": 6,
+  "mascot": {
+    "name": "Nova",
+    "avatar": "\ud83c\udf99\ufe0f",
+    "greeting": "Welcome! Today we explore Ethical and Responsible AI\u2014ensuring intelligent software remains fair, safe, and accountable to society."
+  },
+  "sections": [
+    {
+      "id": "mirror-problem",
+      "heading": "1. The Mirror Problem: Data Bias in Machine Learning",
+      "analogy": {
+        "metaphorName": "The Distorted Mirror",
+        "description": "AI models lack independent morals or malice. They act as mathematical mirrors that reflect and magnify whatever patterns exist in their training data."
+      },
+      "bodyMarkdown": "Machine learning models learn strictly from past data. When past data holds human biases, the model copies those gaps as fact.\n\nFor example, if past records show fewer female engineering hires due to social patterns, an uncorrected model will dock female applicants.\n\nThis is known as **algorithmic bias**. It is not caused by bad intent, but by training on one-sided data.",
+      "jargonBuster": [
+        {
+          "term": "Algorithmic Bias",
+          "simpleExplanation": "Systematic and repeatable errors in an AI system that create unfair outcomes for certain groups."
+        },
+        {
+          "term": "Training Data Skew",
+          "simpleExplanation": "An imbalance in dataset composition where some demographics are heavily over- or under-represented."
+        }
+      ]
+    },
+    {
+      "id": "fairness-audits",
+      "heading": "2. Auditing for Fairness: Disparate Impact and Parity",
+      "analogy": {
+        "metaphorName": "The Calibrated Scale",
+        "description": "Just as scales in commerce must be certified for accuracy, AI models in production must be audited to ensure equal treatment across demographics."
+      },
+      "bodyMarkdown": "To stop discrimination, engineers check code with clear fairness scores.\n\nA key benchmark is the **Disparate Impact Ratio**, often set by the legal 80% rule: the pass rate for any group must be at least 80% of the top group rate.\n\nEngineers fix gaps by balancing datasets and resetting score thresholds. Test the fairness tool below to see this live.",
+      "interactiveWidget": {
+        "type": "bias-detective-sim",
+        "title": "Interactive Bias Detective: AI Fairness Auditor",
+        "instruction": "Switch between raw historical models and mitigated models to observe disparate impact metrics."
+      },
+      "jargonBuster": [
+        {
+          "term": "Disparate Impact",
+          "simpleExplanation": "A condition where an apparently neutral policy or model produces disproportionately adverse outcomes for a protected group."
+        },
+        {
+          "term": "Demographic Parity",
+          "simpleExplanation": "A fairness criterion requiring that decision outcomes are independent of protected attributes."
+        }
+      ]
+    },
+    {
+      "id": "explainability-blackbox",
+      "heading": "3. Transparency & The Black Box Problem",
+      "analogy": {
+        "metaphorName": "The Glass Engine",
+        "description": "Users need to see the moving parts inside high-stakes systems rather than trusting an opaque black box blindly."
+      },
+      "bodyMarkdown": "Deep networks hold millions of weights, earning them the label **black box models**.\n\nWhen code declines a loan or flags health risk, people need clear answers. Tools like SHAP show which facts drove the choice.\n\nClear answers build trust, help fix bugs, and meet consumer rights rules.",
+      "jargonBuster": [
+        {
+          "term": "Explainable AI (XAI)",
+          "simpleExplanation": "Methods allowing human experts to understand how and why an AI model reached a specific output."
+        },
+        {
+          "term": "Black Box Model",
+          "simpleExplanation": "A complex model whose internal decision pathways are difficult or impossible for humans to trace directly."
+        }
+      ]
+    },
+    {
+      "id": "governance-accountability",
+      "heading": "4. Governance: Human-in-the-Loop and Accountability",
+      "analogy": {
+        "metaphorName": "The Dual Key Safeguard",
+        "description": "High-impact decisions require both algorithmic speed and human moral oversight to prevent unchecked errors."
+      },
+      "bodyMarkdown": "Who is responsible when an AI makes a bad mistake? Software cannot go to court.\n\nResponsible AI rules call for a **Human-in-the-Loop** for big choices. Algorithms give scores and tips, while qualified people make the final call.\n\nPairing machine speed with human judgment keeps tech safe and fair.",
+      "jargonBuster": [
+        {
+          "term": "Human-in-the-Loop",
+          "simpleExplanation": "An operational design where critical machine predictions must be verified by a human expert."
+        },
+        {
+          "term": "Accountability",
+          "simpleExplanation": "The ethical and legal obligation of individuals and organizations to justify and answer for system behavior."
+        }
+      ]
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What is the primary root cause of bias in machine learning models?",
+      "options": [
+        "Physical wear and tear on server hard drives",
+        "Historical data that reflects societal prejudices or demographic imbalances",
+        "Using excessive internet bandwidth during training",
+        "Writing software in modern programming languages"
+      ],
+      "correctIndex": 1,
+      "praise": "Correct! Machine learning algorithms mirror patterns in their training data.",
+      "explanation": "Models learn patterns directly from training data; historical biases or skewed samples result in biased predictions."
+    },
+    {
+      "question": "What does the Disparate Impact Ratio measure in algorithmic fairness?",
+      "options": [
+        "Network latency across cloud data centers",
+        "The ratio of selection rates between protected demographic groups and benchmark groups",
+        "The total electrical power consumption of a neural network",
+        "The number of files saved on an external disk"
+      ],
+      "correctIndex": 1,
+      "praise": "Spot on! That is the standard definition used in legal and technical audits.",
+      "explanation": "Disparate impact compares the selection rate of a protected class against the highest selection rate to detect systemic disparity."
+    },
+    {
+      "question": "Why is the 'Human-in-the-Loop' model essential in high-stakes AI applications?",
+      "options": [
+        "To save electricity in server rooms",
+        "To ensure moral judgment, legal accountability, and error prevention in critical decisions",
+        "Because computers are incapable of performing arithmetic",
+        "To slow down competitor software systems"
+      ],
+      "correctIndex": 1,
+      "praise": "Exactly right! Human oversight preserves accountability and safety.",
+      "explanation": "Human-in-the-loop ensures that compassionate human oversight retains final authority and accountability on consequential decisions."
+    }
+  ]
+}

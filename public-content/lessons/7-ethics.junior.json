@@ -1,0 +1,132 @@
+{
+  "lessonId": "7-ethics",
+  "mode": "junior",
+  "title": "Superpowers with a Moral Compass: AI Ethics \ud83e\udded",
+  "readingTimeMinutes": 6,
+  "mascot": {
+    "name": "Chip",
+    "avatar": "\ud83e\udd16",
+    "greeting": "Beep boop! Having superpowers is awesome, but keeping them fair and kind is even more important. Let us explore AI ethics together!"
+  },
+  "sections": [
+    {
+      "id": "magic-mirror",
+      "heading": "1. The Magic Mirror: Why Data Matters",
+      "chipQuote": "An AI does not have its own good or bad intentions. It is a math mirror reflecting whatever data we feed it!",
+      "analogy": {
+        "metaphorName": "The Cake Recipe Mix-up",
+        "description": "If a baker only practices baking with salt instead of sugar, their cakes will taste salty every single time. An AI is just like that baker: if we feed it unfair data from the past, it learns unfair habits!"
+      },
+      "bodyMarkdown": "AI models do not make up thoughts. They learn by studying past human notes.\n\nIf the data we give them has unfair habits from history, the computer copies them. This is called **AI bias**.\n\nImagine an AI that reads job resumes. If it was only shown resumes from one group of people in the past, it might skip great people from other groups. That is why engineers must be data detectives!",
+      "jargonBuster": [
+        {
+          "term": "Ethics",
+          "simpleExplanation": "Rules and values that help us decide what is fair, honest, and kind."
+        },
+        {
+          "term": "AI Bias",
+          "simpleExplanation": "When an AI makes unfair choices because its training data was one-sided."
+        }
+      ]
+    },
+    {
+      "id": "bias-detective",
+      "heading": "2. The Bias Detective: Auditing for Fairness",
+      "chipQuote": "We do not just hope an AI is fair. We test it with math checklists to make sure everyone gets an equal chance!",
+      "analogy": {
+        "metaphorName": "The School Playground Referee",
+        "description": "Imagine a referee who checks that both teams get equal turns on the soccer field. An AI fairness auditor checks that every group of people gets equal, fair chances."
+      },
+      "bodyMarkdown": "How do we fix one-sided data?\n\n1. **Balance the Dataset:** We make sure training examples include boys, girls, different cultures, and ages equally.\n2. **Run Fairness Checks:** We test the software on thousands of practice cases to measure approval rates.\n3. **Tune the Dials:** We adjust settings so no group is left behind.\n\nTry our Bias Detective tool below! See what happens when training data is skewed, and how turning on fairness audits balances the scores.",
+      "interactiveWidget": {
+        "type": "bias-detective-sim",
+        "title": "Interactive Bias Detective: AI Fairness Auditor",
+        "instruction": "Toggle between the Raw Historical Model and the Audited & Mitigated model to inspect candidate selection parity."
+      },
+      "jargonBuster": [
+        {
+          "term": "Fairness Audit",
+          "simpleExplanation": "Testing an AI system to verify that it treats all groups of people with equal care."
+        },
+        {
+          "term": "Parity",
+          "simpleExplanation": "Equality: Making sure acceptance or error rates are balanced across groups."
+        }
+      ]
+    },
+    {
+      "id": "human-in-loop",
+      "heading": "3. Human Co-Pilots: Who Holds the Wheel?",
+      "chipQuote": "Computers calculate fast, but humans have wisdom, kindness, and empathy. The human must always remain the captain!",
+      "analogy": {
+        "metaphorName": "The Airplane Autopilot",
+        "description": "Airplanes have autopilot systems to hold steady speed in calm skies. But real pilots always sit in the cockpit to handle stormy weather, tricky landings, and safety checks!"
+      },
+      "bodyMarkdown": "Should an AI make a big life choice on its own?\n\nResponsible AI experts say **no**! For big choices\u2014like hospital care or school admissions\u2014we always keep a **Human-in-the-Loop**:\n* The AI acts as a fast helper that spots clues.\n* A caring human makes the final call and takes responsibility.\n\nThis keeps tech safe, warm, and fair.",
+      "jargonBuster": [
+        {
+          "term": "Human-in-the-Loop",
+          "simpleExplanation": "A safety design where a human expert reviews and approves AI recommendations."
+        },
+        {
+          "term": "Accountability",
+          "simpleExplanation": "Being responsible for the outcomes and actions of a technology."
+        }
+      ]
+    },
+    {
+      "id": "guardrails-future",
+      "heading": "4. Building a Bright and Safe AI Future!",
+      "chipQuote": "When we build technology with kindness and clear rules, it can help cure diseases, explore the stars, and protect nature!",
+      "analogy": {
+        "metaphorName": "The Guardrails on the Mountain Road",
+        "description": "Guardrails do not stop cars from going fast\u2014they keep cars from sliding off the edge into danger. Ethical AI rules are safety guardrails for the whole world!"
+      },
+      "bodyMarkdown": "To keep AI safe as it grows smarter, creators follow six clear rules:\n\n* \u2696\ufe0f **Fairness:** Treat every person with equal respect.\n* \ud83d\udee1\ufe0f **Safety:** Test systems heavily so they do no harm.\n* \ud83d\udd12 **Privacy:** Keep private personal info safe.\n* \ud83c\udf0d **Inclusiveness:** Help people of all walks of life.\n* \ud83d\udd0d **Transparency:** Explain clearly how answers are made.\n* \ud83e\udd1d **Accountability:** Real humans stand behind the results.\n\nWith these rules, AI becomes a great tool for human good!",
+      "jargonBuster": [
+        {
+          "term": "Transparency",
+          "simpleExplanation": "Being open and honest about how an AI works and when it is being used."
+        }
+      ]
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "Why can an AI system sometimes make unfair or biased decisions?",
+      "options": [
+        "Because it has evil feelings inside its wires",
+        "Because its historical training data contained unbalanced or biased human examples",
+        "Because the computer ran out of battery power",
+        "Because it gets dizzy reading too fast"
+      ],
+      "correctIndex": 1,
+      "praise": "Awesome job, explorer! You understand the data mirror!",
+      "explanation": "An AI learns patterns from its training data. If historical data is skewed or unfair, the model copies those biases!"
+    },
+    {
+      "question": "What is the 'Human-in-the-Loop' safety principle in responsible AI?",
+      "options": [
+        "Keeping a human inside a computer case",
+        "Ensuring a real human expert reviews and takes responsibility for important AI decisions",
+        "Only letting people type on keyboards with one hand",
+        "Deleting all AI software every evening"
+      ],
+      "correctIndex": 1,
+      "praise": "Spot on! Brilliant understanding of accountability!",
+      "explanation": "Human-in-the-loop ensures that compassionate human experts make the final call on important decisions!"
+    },
+    {
+      "question": "What is one way data scientists audit an AI system for fairness?",
+      "options": [
+        "They paint the computer blue",
+        "They measure selection and error rates across diverse groups to ensure equal parity",
+        "They turn off the monitor while the test runs",
+        "They guess randomly"
+      ],
+      "correctIndex": 1,
+      "praise": "Superstar answer! You are a certified AI Ethics Detective!",
+      "explanation": "Fairness audits verify that acceptance rates, accuracy, and error rates are balanced and fair across all groups!"
+    }
+  ]
+}
