@@ -1,157 +1,80 @@
-# AI Foundations Coach v3.0
+# AI Foundations Coach
 
 [![Go Version](https://img.shields.io/badge/Go-1.23-00ADD8?style=flat-square&logo=go)](https://golang.org)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat-square&logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com)
-[![GitHub Spec Kit](https://img.shields.io/badge/GitHub%20Spec%20Kit-v3.0.0-blueviolet?style=flat-square&logo=github)](.specify/)
-[![Specification Traceability](https://img.shields.io/badge/SPEC--001-v3.0.0-purple?style=flat-square)](spec/SPEC.md)
-[![Acceptance Status](https://img.shields.io/badge/Acceptance-38%2F38%20PASS-brightgreen?style=flat-square)](spec/ACCEPTANCE.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-A self-paced, interactive AI curriculum platform based on [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners), engineered with **Spec-Driven Development (SDD)** via **GitHub Spec Kit**. It features a grounded, citation-enforced AI teaching assistant, real-time SSE token streaming, interactive comprehension quizzes across all 6 curriculum modules, dark/light theme switching, and live upstream Git curriculum sync.
-
----
-
-## 📐 Spec-Driven Development & GitHub Spec Kit Integration
-
-In **v3.0**, the repository adopts [GitHub Spec Kit](https://github.com/github/spec-kit) (`specify init`) to formalize Spec-Driven Development across human developers and autonomous AI coding agents.
-
-```mermaid
-graph TD
-    Const[".specify/memory/constitution.md<br/>(Architectural Law & DC-01..11)"] --> Spec["spec/SPEC.md<br/>(Master Baseline Ground Truth)"]
-    Spec --> Acc["spec/ACCEPTANCE.md<br/>(Regression Gate: AC-01..38)"]
-    SpecKit["GitHub Spec Kit Engine<br/>(.specify/)"] --> Skills["Agent Skills<br/>(.agents/skills/)"]
-    Skills --> Feat["New Features<br/>(Branches, Specs, Tasks)"]
-    Feat --> Gate["3-Tier Quality Gate<br/>(15 Go Tests + 24 Playwright Tests + Vite Build)"]
-```
-
-### 1. Project Constitution (`.specify/memory/constitution.md`)
-The repository operates under a ratified project constitution that serves as binding law for all code generation:
-- **Master Spec Ground Truth:** `spec/SPEC.md` and `spec/ACCEPTANCE.md` form the immutable baseline. No feature or refactor may break baseline requirements without formal amendment.
-- **Strict AI Grounding:** Tutor responses must cite `[<lesson title> § <heading>]` or emit the standard fallback.
-- **Zero Timeout SSE Streaming:** Streaming responses must use zero-write-deadline controllers (`http.ResponseController`) to prevent socket drops on local LLMs.
-- **Architecture Constraints (DC-01..11):** Go 1.23 stdlib `net/http` router only, React 18 + Vite SPA, zero database (static JSON storage), zero Python runtime, and a single-container deployment.
-- **Git Discipline (Rule 10):** Explicit file path staging (`git add <file>`); wildcard staging (`git add .`, `git add -A`) is strictly forbidden.
-
-### 2. Spec Kit Agent Skills for Antigravity & Gemini (`.agents/skills/`)
-Configured specifically for **Antigravity** (`agy`) and Google **Gemini**, these native agent skills allow coding assistants to execute SDD workflows reproducibly:
-- `/speckit-specify`: Scaffolds formal specifications with user stories, functional requirements, and success metrics.
-- `/speckit-plan`: Synthesizes technical design plans validated against the Project Constitution.
-- `/speckit-tasks`: Decomposes plans into ordered, bite-sized tasks with explicit verification steps.
-- `/speckit-implement`: Guides phased code execution with checkpoint validation.
-- `/speckit-checklist`: Evaluates deliverables against strict acceptance criteria.
-- `/speckit-constitution`: Reviews, updates, and ratifies constitutional rules.
-
-### 3. Workflow Automation Scripts (`.specify/scripts/bash/`)
-- `create-new-feature.sh`: Initializes a new feature branch and scaffolds specification templates.
-- `setup-plan.sh`: Validates prerequisite specs and sets up technical planning documents.
-- `setup-tasks.sh`: Generates dependency-ordered task files from approved plans.
-- `check-prerequisites.sh`: Verifies required tooling, branch state, and constitutional alignment.
+A self-paced, multimodal artificial intelligence curriculum platform derived from [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners). Learn artificial intelligence from fundamental concepts to deep neural networks, computer vision, natural language processing, and ethical AI with **3 adaptive audience modes**, **hands-on interactive simulators**, **Audio Studio 2.0 narration**, and a grounded **AI teaching assistant** that runs completely offline with local models or in the cloud.
 
 ---
 
 ## 🌟 Highlights & Key Features
 
-### 1. Grounded AI Teaching Assistant
-- **Strict Citation Enforcement:** Answers must explicitly cite `[Lesson Title § Section]` from lesson content. Uncited or speculative claims are filtered out.
-- **Prompt Injection Defense:** Multi-layered system prompts protect curriculum context from manipulation (`NFR-AI-01`, `NFR-AI-03`).
-- **Resilient Real-Time Token Streaming:** Server-Sent Events (`text/event-stream`) with zero-write-deadline socket handling ensure streaming never times out during heavy local model inference (`FR-TUT-11`, `FR-UI-12`).
+### 1. 🎚️ 3-Tier Adaptive Learning Modes
+Every curriculum module provides three purpose-built learning experiences accessible via a single click:
+* **Standard (Beginner):** Complete academic foundations derived from Microsoft AI-For-Beginners.
+* **Kids Mode (Ages 8–14):** Guided by **Chip the Robot 🤖**, featuring toy block models, everyday physical metaphors, gamified quizzes, and Flesch-Kincaid Grade 4–6 cognitive pacing.
+* **Plain English:** Hosted by **Nova 🎙️**, providing executive analogies, workplace intuition, and jargon-free explanations for non-technical professionals.
 
-### 2. Dual AI Backend (Local-First or Cloud)
-- **100% Local Ollama Support:** Run completely offline with private, free local models like `llama3.2:1b`, `deepseek-r1`, or `phi3` on `http://localhost:11434`.
-- **Cloud LLM Support:** Full compatibility with OpenAI (`gpt-4o-mini`, `gpt-4o`) or any OpenAI-compatible API gateway (OmniRoute, vLLM, LM Studio).
-- **Adaptive Context Pruning:** Automatically trims prompt contexts to stay within model memory limits (`maxBytes` parameter).
+### 2. 🕹️ 6 Embedded Interactive Simulators
+Each lesson embeds a hands-on mathematical simulation widget directly into the reading flow:
+* **Lesson 1 (Introduction):** *Turing Test Scenario Game* — evaluate conversational dialogues to guess whether a human or bot wrote them.
+* **Lesson 2 (Symbolic AI):** *Mars Rover Expert System* — toggle sensor telemetry (dust storm, low battery, rock obstacle) and watch forward-chaining rules trigger emergency responses in real time.
+* **Lesson 3 (Neural Networks):** *Perceptron Fruit Sorter* — drag weight sliders ($w_1, w_2$) and bias ($b$) to classify sweet apples versus sour lemons with a live threshold activation meter.
+* **Lesson 4 (Computer Vision):** *3×3 Convolution Filter Matrix Lab* — slide Sobel, sharpen, blur, and outline kernels across a 6×6 pixel grid to inspect feature extraction math live.
+* **Lesson 5 (NLP & Embeddings):** *Word2Vec Semantic Space & Math Lab* — solve word vector analogies like `King - Man + Woman = Queen` and `Paris - France + Japan = Tokyo` on an interactive 2D coordinate map.
+* **Lesson 6 (Ethical AI):** *AI Bias Detective* — adjust training dataset skew and toggle fairness mitigations to audit candidate selection against the EEOC 80% Disparate Impact rule.
 
-### 3. Extended Comprehension Quiz Engine (`FR-QZ-01..04`)
-- **Complete Module Coverage:** 4 rich comprehension questions per lesson across all 6 curriculum modules (24 questions total).
-- **Instant Feedback:** Immediate option grading with detailed conceptual rationales.
-- **Grounded AI Hints:** "Get AI Hint" provides targeted conceptual clues via the tutor without revealing answers.
-- **Scored Results Recap:** Accuracy scoring with a one-click action to mark lessons completed in the progress ledger.
+### 3. 🎙️ Audio Studio 2.0 & Multi-Modal Voice
+* **Asynchronous Neural Voice Discovery:** Automatically ranks and prioritizes high-fidelity local TTS voices (Apple Natural, Google US, Microsoft Neural).
+* **3 Dedicated Personas:**
+  - 🤖 **Chip the Robot:** Expressive, upbeat, and encouraging for young learners.
+  - 🎙️ **Nova:** Calm, warm, and conversational for adult professionals.
+  - 🎓 **Prof. Alan:** Measured, authoritative, and academic for standard lectures.
+* **Glowing Karaoke Sentence Tracker:** Real-time visual highlight synchronized sentence-by-sentence with audio playback.
+* **Speech-to-Text "Talk to Chip":** Tap the 🎙️ microphone icon in the AI Teaching Assistant panel to speak questions aloud.
+* **Jargon Buster Pronunciation Badges:** One-click 🔊 audio buttons beside every technical term in lesson glossary cards.
 
-### 4. Color Theme Engine (`FR-UI-15`)
-- Seamless toggle between **Dark Mode**, **Light Mode**, and **System Preference**.
-- Tested for WCAG AA compliance with contrast ratios exceeding 4.5:1.
-- State persists in `localStorage["ai-foundations-theme"]` without page flicker.
+### 4. 🤖 Grounded AI Teaching Assistant
+* **Strict Citation Enforcement:** All tutor answers cite `[Lesson Title § Section]`. Uncited assertions or speculative hallucinations are strictly filtered out.
+* **Prompt Injection Defense:** Multi-layered system prompts protect lesson contexts from override or manipulation.
+* **Real-Time Token Streaming:** Server-Sent Events (`text/event-stream`) deliver smooth, progressive token streaming with zero-write-deadline socket handling.
 
-### 6. Adaptive Audience Modes (v3.1 In-Flight Pilot — `SPEC-002`)
-- **Multimodal Age & Tech-Literacy Tiers:** Decoupled projection layer over canonical curriculum without duplicating content files.
-- **Junior Explorer (Ages 8–14):** Guided by mascot **Chip the Robot**, featuring Grade 6 reading level, physical analogies, and vibrant diagrams.
-- **Plain English (Non-Tech Adults):** Jargon-free real-world workplace and home analogies with interactive "Jargon Buster" tooltips.
-- **Interactive Turing Test Widget:** Playable "Human or Bot?" dual-terminal guessing scenario embedded in Lesson 1.
-- **Specification Bundle:** Managed in `specs/002-adaptive-audience-modes/` (`spec.md`, `plan.md`, `tasks.md`, `1-intro.junior.json`, `1-intro.plain-english.json`).
+### 5. 🧠 Dual AI Backends (Local-First or Cloud)
+* **100% Local & Offline (Ollama):** Run completely private with local models like `llama3.2:1b`, `deepseek-r1`, or `phi3` on `http://localhost:11434`.
+* **Cloud LLM Support:** Full compatibility with OpenAI (`gpt-4o-mini`, `gpt-4o`) or any OpenAI-compatible API gateway (OmniRoute, vLLM, LM Studio).
+* **Demo Simulation Mode:** Run out-of-the-box with `MOCK_TUTOR=true` without needing any API keys or local LLM setup.
 
-### 5. Curriculum Git Sync & Ingestion (`FR-ING-09`, `FR-SET-05`)
-- One-click upstream synchronization from `microsoft/AI-For-Beginners` directly from the Settings Drawer or CLI.
-- Automatically parses Markdown lessons, sanitizes HTML, updates `public-content/index.json`, and records the upstream commit SHA.
-
-### 6. Local-First Privacy & Zero Telemetry
-- All lesson progress (completed lessons, quiz scores) is stored strictly in client-side `localStorage`.
-- Zero tracking cookies, zero analytics scripts, and zero telemetry transmitted to servers (`NFR-SEC-01`, `FR-PRG-02`).
-- Content Security Policy (CSP), anti-clickjacking (`X-Frame-Options: DENY`), and strict MIME-type headers enforced on all HTTP responses.
-
----
-
-## 🏗️ System Architecture
-
-```mermaid
-graph TD
-    Client["Browser UI (React 18 + Vite + Zustand)"]
-    Server["Go 1.23 HTTP Server (cmd/server)"]
-    Content["Local Content Store (public-content/)"]
-    UpstreamGit["GitHub API (microsoft/AI-For-Beginners)"]
-    Ollama["Local Ollama Daemon (http://localhost:11434)"]
-    OpenAI["OpenAI / Custom Cloud API Gateway"]
-
-    Client -->|Static Assets & API Requests| Server
-    Server -->|Serve Lessons & Index| Content
-    Server -->|POST /api/ingest/sync| UpstreamGit
-    Server -->|Tutor Ingestion & Inquiries| Ollama
-    Server -->|Fallback or Cloud Mode| OpenAI
-```
-
-- **Backend:** Go 1.23 standard library `net/http` router, bounded in-memory sliding window rate limiter (10 req/min/IP), panic recovery middleware, and SSE streamer with non-blocking write deadlines.
-- **Frontend:** React 18, Vite, TypeScript, Tailwind CSS, Zustand client-side storage, and a customized rehype/remark pipeline that strips scripts, iframe embeds, and dangerous HTML event handlers (`NFR-SEC-05`).
-- **Ingestion Pipeline:** Decoupled `internal/ingest` module supporting exponential egress backoff (AC-16) and absolute asset re-routing to `raw.githubusercontent.com`.
+### 6. 🔒 Local-First Privacy & Zero Telemetry
+* All progress, quiz scores, and settings persist strictly in browser `localStorage`.
+* Zero tracking cookies, zero analytics scripts, and zero server telemetry.
+* Strict Content Security Policy (CSP), anti-clickjacking headers, and HTML sanitization enforced on all endpoints.
 
 ---
 
-## 🚀 Quickstart Guide
+## 🚀 Quickstart Guide (Local Development)
 
-### Automated Dependency Check
-Anyone downloading or cloning this repository can verify all runtimes, modules, and plugins with a single command:
+### 1. Automated Dependency Check
+Verify all runtimes, modules, and plugins before starting:
 ```bash
-# Run pre-flight check
 ./scripts/check-dependencies.sh
-
-# Or install missing dependencies automatically:
-./scripts/check-dependencies.sh --install
-
-# Or via npm from the web directory:
-npm --prefix web run check:deps
 ```
-See [DEPENDENCIES.md](DEPENDENCIES.md) for detailed module specifications and plugin installation instructions.
-
-### Prerequisites
-- [Go 1.23+](https://go.dev/dl/)
-- [Node.js 18+](https://nodejs.org/) & `npm`
-- (Optional for Readability Auditing) [Python 3.10+](https://python.org/) & `pip install -r scripts/requirements.txt`
-- (Optional for Local AI) [Ollama](https://ollama.com/)
-- (Optional for Cloud AI) OpenAI API Key
+*(To auto-install missing dependencies, run `./scripts/check-dependencies.sh --install`)*
 
 ---
 
-### Option A: Running 100% Locally with Ollama (Recommended)
+### Option A: Local Ollama (Recommended — Free & Private)
 
-1. **Start Ollama and pull a lightweight model:**
+1. **Install and run Ollama:**
    ```bash
    ollama serve
-   # In another terminal:
+   # In a separate terminal, pull a lightweight model:
    ollama pull llama3.2:1b
    ```
 
-2. **Configure environment:**
-   Create `.env` in the repository root:
+2. **Configure `.env` in the repository root:**
    ```env
    PORT=8080
    CONTENT_DIR=public-content
@@ -162,7 +85,7 @@ See [DEPENDENCIES.md](DEPENDENCIES.md) for detailed module specifications and pl
 
 3. **Start the application:**
    ```bash
-   # Terminal 1: Go Backend
+   # Terminal 1: Go Backend Server
    export $(grep -v '^#' .env | xargs) && go run ./cmd/server
 
    # Terminal 2: Web Dev Server
@@ -171,14 +94,13 @@ See [DEPENDENCIES.md](DEPENDENCIES.md) for detailed module specifications and pl
    npm run dev
    ```
 
-4. Open `http://localhost:5173` (or `http://localhost:8080` for the production bundle).
+4. Open **http://localhost:3000** in your browser!
 
 ---
 
-### Option B: Running with Cloud OpenAI
+### Option B: Cloud OpenAI
 
-1. **Configure environment:**
-   Create `.env`:
+1. **Configure `.env`:**
    ```env
    PORT=8080
    CONTENT_DIR=public-content
@@ -186,132 +108,125 @@ See [DEPENDENCIES.md](DEPENDENCIES.md) for detailed module specifications and pl
    AI_MODEL=gpt-4o-mini
    ```
 
-2. **Start the Go server:**
+2. **Start the server:**
    ```bash
    export $(grep -v '^#' .env | xargs) && go run ./cmd/server
    ```
 
 ---
 
-## 📥 Curriculum Ingestion
+### Option C: Instant Demo Simulation Mode (Zero Setup)
 
-The application reads pre-processed JSON lesson artifacts from `public-content/`.
-
-### 1. Via User Interface (Settings Drawer)
-1. Click the **⚙️ Settings** icon in the header.
-2. In the **Curriculum Sync** section, click **Sync Latest**.
-3. The server connects to GitHub, parses newest lessons, and updates the curriculum live.
-
-### 2. Via Ingestion CLI
+Run immediately without any LLM installed or API key:
 ```bash
-export GITHUB_TOKEN="<your-github-personal-access-token>"
-go run ./cmd/ingest
-```
+# Terminal 1: Backend with mock simulation enabled
+PORT=8080 CONTENT_DIR=public-content MOCK_TUTOR=true go run ./cmd/server
 
-**Pinned Upstream Curriculum Version:**
-- Repository: `microsoft/AI-For-Beginners`
-- Pinned Commit SHA: `392d0df1b2647cbee104942390551f1ed9e072c8`
-
----
-
-## 📡 API Reference
-
-All backend endpoints are prefixed with `/api`. Responses strictly conform to JSON standards and include security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Content-Security-Policy`).
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/api/health` | `GET` | Exact status check returning `{"ok":true}` |
-| `/api/lessons` | `GET` | Returns curriculum index with pinned commit SHA and lesson metadata |
-| `/api/lessons/{id}` | `GET` | Returns lesson detail with parsed blocks (markdown, code, image, notebook) |
-| `/api/tutor` | `POST` | Ask grounded question. Supports JSON responses or SSE streaming with `Accept: text/event-stream` |
-| `/api/config/test` | `POST` | Validates AI endpoint latency and model availability |
-| `/api/ingest/sync` | `POST` | Triggers background Git curriculum ingestion |
-
----
-
-## 🧪 Verification & Automated Testing
-
-This repository is governed by **SPEC-001 v3.0.0** and maintains a 100% passing traceability matrix in [spec/ACCEPTANCE.md](spec/ACCEPTANCE.md) and [.specify/memory/constitution.md](.specify/memory/constitution.md).
-
-### Run Go Unit & Security Tests
-```bash
-go test -v ./...
-```
-*Executes all 15 unit tests across `cmd/ingest` and `internal/api` verifying citation filtering, prompt injection defense, rate limiting, and panic recovery.*
-
-### Run Playwright End-to-End Tests
-```bash
-cd web
-npm test
-```
-*Executes all 24 browser automated tests covering the extended 6-module quiz engine, theme persistence, settings configuration, and lesson navigation.*
-
-### Verify Static Code Quality & Security Rules
-```bash
-# 1. Verify no dangerouslySetInnerHTML in frontend:
-! grep -R "dangerouslySetInnerHTML" web/src
-
-# 2. Verify no debug or pprof profiling endpoints in production:
-! grep -R "net/http/pprof" internal cmd
-
-# 3. Verify clean git staging (no committed secrets or build outputs):
-! git ls-files | grep -E '^(\.env$|public-content|web/dist|web/node_modules|bin/)'
-```
-
-### Production Build Verification
-```bash
-go vet ./... && go build ./...
-cd web && npx tsc --noEmit && npm run build
+# Terminal 2: Frontend
+npm --prefix web run dev
 ```
 
 ---
 
-## 🌟 Release v3.1.0-rc1: Full Curriculum Adaptive Expansion & Audio Studio 2.0
+## 🐳 How to Deploy
 
-Version **v3.1.0-rc1** introduces full multi-audience adaptive curriculum scaling, interactive simulations, and multimodal audio intelligence:
-
-### 1. 3-Tier Adaptive Learning Across All 6 Lessons
-Every curriculum module provides three purpose-built learning experiences:
-* **Standard (Beginner):** Comprehensive academic fundamentals from Microsoft AI-For-Beginners.
-* **Kids Mode (8–14):** Guided by **Chip the Robot 🤖**, featuring visual metaphors, gamified story chains, and Flesch-Kincaid Grade 4–6 cognitive pacing.
-* **Plain English:** Hosted by **Nova 🎙️**, providing executive analogies, intuitive intuition pumps, and jargon-free business explanations.
-
-### 2. Tailored Interactive Simulators
-Each lesson embeds a hands-on mathematical simulation widget directly into the reading flow:
-* **Lesson 1 (Introduction):** Turing Test Scenario Guessing Game
-* **Lesson 2 (Symbolic AI):** Mars Rover Expert System Forward Chaining Diagnostics
-* **Lesson 3 (Neural Networks):** Single-Neuron Fruit Sorter with dynamic weights ($w_1, w_2$) & bias ($b$)
-* **Lesson 4 (Computer Vision):** 3×3 Convolution Matrix Kernel Lab (Sobel vertical/horizontal, sharpen, blur)
-* **Lesson 5 (NLP & Embeddings):** 2D Word2Vec Coordinate Space & Analogy Solver (`King - Man + Woman = Queen`)
-* **Lesson 6 (Ethical AI):** AI Fairness Auditor & EEOC 80% Disparate Impact Disparity Ratio Checker
-
-### 3. Audio Studio 2.0 & Multimodal Voice
-* **Asynchronous Voice Discovery:** Automatic ranking of local neural TTS voices (Apple Natural, Google US, Microsoft Neural).
-* **3 Dedicated Personas:** Chip 🤖 (expressive & upbeat), Nova 🎙️ (warm & clear), Prof. Alan 🎓 (calm & authoritative).
-* **Sentence-by-Sentence Karaoke Tracking:** Glowing real-time sentence highlight synchronized with audio playback.
-* **Speech-to-Text Voice Microphone:** "Talk to Chip" speech recognition in the AI Teaching Assistant panel.
-* **One-Click Term Pronunciations:** Audio badges for technical terms across all Jargon Buster cards.
-
----
-
-## 🐳 Docker Deployment
-
-The application compiles into a single multi-stage container running as an unprivileged non-root user (`UID 10001`):
+### 1. Docker Deployment (Single Multi-Stage Container)
+The application compiles into an optimized non-root container (`UID 10001`):
 
 ```bash
 # Build production image
-docker build -t ai-foundations-coach:3.0.0 .
+docker build -t ai-foundations-coach .
 
-# Run container
+# Run container with local Ollama or cloud OpenAI:
 docker run -p 8080:8080 \
   -e AI_BASE_URL="http://host.docker.internal:11434/v1" \
   -e AI_MODEL="llama3.2:1b" \
-  ai-foundations-coach:3.0.0
+  ai-foundations-coach
+```
+Access the application at **http://localhost:8080**.
+
+---
+
+### 2. Standalone Binary Deployment
+Build the self-contained Go server and static distribution bundle:
+
+```bash
+# 1. Build frontend distribution
+npm --prefix web run build
+
+# 2. Compile Go backend binary
+go build -o bin/server ./cmd/server
+
+# 3. Run production binary
+./bin/server
+```
+The Go server automatically serves the compiled frontend assets from `web/dist/` on port `8080`.
+
+---
+
+### 3. Environment Variables Reference
+
+| Variable | Default | Description |
+|---|---|---|
+| `PORT` | `8080` | Port for the HTTP backend server |
+| `CONTENT_DIR` | `public-content` | Path to curriculum JSON lessons |
+| `AI_BASE_URL` | `http://localhost:11434/v1` | URL for the OpenAI-compatible or Ollama API |
+| `AI_MODEL` | `llama3.2:1b` | Default LLM model identifier |
+| `OPENAI_API_KEY` | *(empty)* | API key for OpenAI (leave blank for local Ollama) |
+| `MOCK_TUTOR` | `false` | When `true`, simulates grounded AI tutor responses offline |
+| `AI_MAX_BYTES` | `4000` | Truncation budget for curriculum context passed to the LLM |
+
+---
+
+## 📖 How to Use the Application
+
+1. **Browse Lessons:**
+   From the home dashboard, select any of the 6 core modules:
+   - Module 1: Introduction to Artificial Intelligence
+   - Module 2: Symbolic AI & Knowledge Systems
+   - Module 3: Neural Networks & Perceptrons
+   - Module 4: Computer Vision & Convolutions
+   - Module 5: Natural Language Processing & Embeddings
+   - Module 6: Ethical and Responsible AI
+
+2. **Switch Audience Modes:**
+   At the top of any lesson, click between **Standard**, **Kids (8–14)**, or **Plain English**. The explanations, metaphors, and visual representations adjust instantly without page reload.
+
+3. **Interact with Simulators:**
+   Engage with the embedded interactive widgets (Fruit sorter, Mars Rover diagnostic system, Convolution filter lab, Word2Vec scatter plot, or Bias Detective) to develop physical intuition for the mathematical concepts.
+
+4. **Listen with Audio Studio 2.0:**
+   Open the **Audio Studio Settings** bar in the top right to select your preferred narrator persona (**Chip 🤖**, **Nova 🎙️**, or **Prof. Alan 🎓**), adjust reading speed, and follow along with live karaoke tracking.
+
+5. **Chat with the AI Teaching Assistant:**
+   Scroll to the bottom of any lesson:
+   - Type a question or click the **🎙️ microphone icon** to speak your question aloud.
+   - The assistant streams grounded explanations cited with exact section references.
+   - Click **🔊 Read Answer Aloud** to hear the response spoken.
+
+6. **Settings & Dynamic Build Info:**
+   Click the **Model / Settings button ⚙️** in the top navigation to configure your AI model, adjust context budgets, test connection latency, or inspect the dynamic application version and build date.
+
+---
+
+## 📐 Spec-Driven Development (SDD)
+
+This repository is developed following strict **Spec-Driven Development** governed by [GitHub Spec Kit](https://github.com/github/spec-kit) and the project constitution (`.specify/memory/constitution.md`). Every feature is designed, ratified, and tested before release.
+
+> For complete details on constitutional constraints (DC-01..11), agent skills, and verification gates, see **[SPEC_DRIVEN_DEVELOPMENT.md](SPEC_DRIVEN_DEVELOPMENT.md)**.
+
+### Run Verification Test Suite
+```bash
+# Go unit tests
+go test ./...
+
+# End-to-end browser regression suite
+cd web && npm test
 ```
 
 ---
 
 ## 📄 Attribution & Licensing
 
-- Curriculum content is derived from [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners) under the [MIT License](https://github.com/microsoft/AI-For-Beginners/blob/main/LICENSE). This project is not affiliated with, sponsored by, or endorsed by Microsoft.
-- Application source code and architecture are released under the [MIT License](LICENSE).
+- Curriculum content is derived from [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners) under the [MIT License](https://github.com/microsoft/AI-For-Beginners/blob/main/LICENSE). This project is independent and not affiliated with, sponsored by, or endorsed by Microsoft.
+- Application source code, simulators, and architecture are released under the [MIT License](LICENSE).
