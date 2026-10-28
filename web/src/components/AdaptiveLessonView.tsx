@@ -201,9 +201,20 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                         key={jIdx}
                         className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 text-xs shadow-2xs"
                       >
-                        <strong className="text-slate-900 dark:text-white block font-semibold mb-1 text-sm">
-                          {jb.term}
-                        </strong>
+                        <div className="flex items-center justify-between mb-1">
+                          <strong className="text-slate-900 dark:text-white font-semibold text-sm">
+                            {jb.term}
+                          </strong>
+                          <button
+                            type="button"
+                            onClick={() => speechService.speak(jb.term)}
+                            title={`Hear pronunciation for ${jb.term}`}
+                            className="p-1 rounded-md text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 transition-colors text-xs"
+                            aria-label={`Pronounce ${jb.term}`}
+                          >
+                            🔊
+                          </button>
+                        </div>
                         <span className="text-slate-600 dark:text-slate-300 leading-normal">
                           {jb.simpleExplanation}
                         </span>

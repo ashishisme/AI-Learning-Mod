@@ -1,11 +1,12 @@
-// SPEC: FR-UI-03, FR-UI-07, FR-UI-12, NFR-SEC-05, AC-24
-import React, { useState } from 'react'
+// SPEC: FR-UI-03, FR-UI-07, FR-UI-12, NFR-SEC-05, AC-24, SPEC-005 (Audio & Speech Tutor)
+import React, { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import { askTutorStream, ApiError } from '../api'
 import { useAudienceModeStore } from '../store'
+import { speechService } from '../services/speechService'
 
 const sanitizeSchema = {
   ...defaultSchema,
@@ -33,6 +34,66 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
   const [isStreaming, setIsStreaming] = useState(false)
   const [isOffline, setIsOffline] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [isListening, setIsListening] = useState(false)
+  const [speechSupported, setSpeechSupported] = useState(false)
+  const [isReadingAnswer, setIsReadingAnswer] = useState(false)
+
+  useEffect(() => {
+    // Check Web Speech API availability
+    const SpeechRecognition =
+      (window as unknown as { SpeechRecognition?: any }).SpeechRecognition ||
+      (window as unknown as { webkitSpeechRecognition?: any }).webkitSpeechRecognition
+    if (SpeechRecognition) {
+      setSpeechSupported(true)
+    }
+  }, [])
+
+  const toggleSpeechRecognition = () => {
+    const SpeechRecognition =
+      (window as unknown as { SpeechRecognition?: any }).SpeechRecognition ||
+      (window as unknown as { webkitSpeechRecognition?: any }).webkitSpeechRecognition
+
+    if (!SpeechRecognition) return
+
+    if (isListening) {
+      setIsListening(false)
+      return
+    }
+
+    try {
+      const recognition = new SpeechRecognition()
+      recognition.continuous = false
+      recognition.interimResults = false
+      recognition.lang = 'en-US'
+
+      recognition.onstart = () => setIsListening(true)
+      recognition.onend = () => setIsListening(false)
+      recognition.onerror = () => setIsListening(false)
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript
+        if (transcript) {
+          setQuestion((prev) => (prev ? `${prev} ${transcript}` : transcript))
+        }
+        setIsListening(false)
+      }
+
+      recognition.start()
+    } catch (e) {
+      console.warn('Speech recognition start failed', e)
+      setIsListening(false)
+    }
+  }
+
+  const toggleReadAnswer = () => {
+    if (!answer) return
+    if (isReadingAnswer) {
+      speechService.stop()
+      setIsReadingAnswer(false)
+    } else {
+      setIsReadingAnswer(true)
+      speechService.speak(answer, { onEnd: () => setIsReadingAnswer(false), onError: () => setIsReadingAnswer(false) })
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -42,6 +103,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
     setIsStreaming(true)
     setAnswer('')
     setErrorMessage(null)
+    setIsReadingAnswer(false)
 
     const promptToSend =
       audienceMode === "junior"
@@ -67,11 +129,9 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
         setLoading(false)
         setIsStreaming(false)
         if (err instanceof ApiError && err.status === 503) {
-          // FR-UI-07, AC-24: 503 renders "Tutor offline" and disables input
           setIsOffline(true)
           setErrorMessage(null)
         } else {
-          // FR-UI-07: non-destructive inline error and re-enable input
           const msg = err instanceof Error ? err.message : 'An unexpected error occurred'
           setErrorMessage(msg)
         }
@@ -143,23 +203,38 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
         </div>
       )}
 
-      {/* Answer Container (NFR-SEC-05: Sanitized AST Markdown, FR-UI-12: Progressive streaming) */}
+      {/* Answer Container with Listen Button */}
       {answer !== null && answer !== '' && (
-        <div
-          data-testid="tutor-answer"
-          className="mb-6 p-5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 text-sm font-normal leading-relaxed select-text prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-headings:my-2 prose-p:my-1.5 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:font-medium prose-a:underline hover:prose-a:text-blue-700"
-        >
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+        <div className="mb-6 relative">
+          <div
+            data-testid="tutor-answer"
+            className="p-5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 text-sm font-normal leading-relaxed select-text prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-headings:my-2 prose-p:my-1.5 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:font-medium prose-a:underline hover:prose-a:text-blue-700"
           >
-            {answer}
-          </ReactMarkdown>
-          {isStreaming && (
-            <span
-              data-testid="streaming-cursor"
-              className="inline-block w-1.5 h-3.5 ml-1 bg-blue-600 animate-pulse align-middle"
-            />
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+            >
+              {answer}
+            </ReactMarkdown>
+            {isStreaming && (
+              <span
+                data-testid="streaming-cursor"
+                className="inline-block w-1.5 h-3.5 ml-1 bg-blue-600 animate-pulse align-middle"
+              />
+            )}
+          </div>
+
+          {!isStreaming && (
+            <div className="mt-2 flex justify-end">
+              <button
+                type="button"
+                onClick={toggleReadAnswer}
+                data-testid="tutor-read-answer-btn"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs font-medium transition-colors"
+              >
+                <span>{isReadingAnswer ? '⏹️ Stop Reading' : '🔊 Read Answer Aloud'}</span>
+              </button>
+            </div>
           )}
         </div>
       )}
@@ -170,17 +245,36 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
           Have a question about this lesson?
         </label>
         <div className="flex flex-col sm:flex-row gap-2.5">
-          <input
-            id="tutor-question"
-            data-testid="tutor-input"
-            type="text"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            disabled={isOffline || loading}
-            placeholder={isOffline ? 'Tutor is offline' : 'e.g. Can you explain the core perceptron formula?'}
-            maxLength={500}
-            className="flex-1 px-4 py-2.5 border border-slate-300 dark:border-slate-400 bg-white dark:bg-white text-slate-900 dark:text-slate-900 placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed transition rounded-xl text-sm font-medium shadow-2xs"
-          />
+          <div className="relative flex-1">
+            <input
+              id="tutor-question"
+              data-testid="tutor-input"
+              type="text"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              disabled={isOffline || loading}
+              placeholder={isOffline ? 'Tutor is offline' : 'e.g. Can you explain the core concepts simply?'}
+              maxLength={500}
+              className="w-full px-4 py-2.5 pr-11 border border-slate-300 dark:border-slate-400 bg-white dark:bg-white text-slate-900 dark:text-slate-900 placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed transition rounded-xl text-sm font-medium shadow-2xs"
+            />
+            {/* Mic / Talk to Chip Button */}
+            {speechSupported && !isOffline && (
+              <button
+                type="button"
+                onClick={toggleSpeechRecognition}
+                data-testid="tutor-mic-btn"
+                title={isListening ? 'Listening... click to stop' : 'Talk to Chip (Voice Input)'}
+                className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-colors ${
+                  isListening
+                    ? 'bg-rose-500 text-white animate-pulse'
+                    : 'text-slate-400 hover:text-blue-600 dark:hover:text-blue-400'
+                }`}
+              >
+                <span className="text-sm">🎙️</span>
+              </button>
+            )}
+          </div>
+
           <button
             type="submit"
             data-testid="tutor-submit"
@@ -198,7 +292,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
           </button>
         </div>
         <div className="flex items-center justify-between text-[11px] text-slate-400">
-          <span>Responses include citations: [Lesson Title § Section]</span>
+          <span>{isListening ? '🎙️ Listening to your voice...' : 'Responses include citations: [Lesson Title § Section]'}</span>
           <span>{question.length}/500</span>
         </div>
       </form>
