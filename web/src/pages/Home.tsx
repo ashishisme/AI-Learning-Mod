@@ -127,7 +127,7 @@ export const Home: React.FC = () => {
             </div>
             <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-3">
               <span>Artificial Intelligence Foundations</span>
-              <span className="text-xs sm:text-sm font-bold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700">v2.0</span>
+              <span className="text-xs sm:text-sm font-bold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700">v3</span>
             </h1>
           </div>
 

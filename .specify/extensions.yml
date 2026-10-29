@@ -1,0 +1,77 @@
+# Spec Kit Extensions Configuration
+# This file registers installed extensions and their hooks
+
+extensions:
+  git:
+    enabled: true
+    description: "Git branching and auto-commit workflow"
+
+hooks:
+  before_specify:
+    - extension: git
+      command: speckit.git.feature
+      optional: false
+      description: "Create feature branch before specification"
+
+  after_specify:
+    - extension: git
+      command: speckit.git.commit
+      optional: true
+      description: "Auto-commit after specification"
+      enabled: false
+
+  before_plan:
+    - extension: git
+      command: speckit.git.commit
+      optional: true
+      description: "Auto-commit before planning"
+      enabled: false
+
+  after_plan:
+    - extension: git
+      command: speckit.git.commit
+      optional: true
+      description: "Auto-commit after planning"
+      enabled: false
+
+  before_tasks:
+    - extension: git
+      command: speckit.git.commit
+      optional: true
+      description: "Auto-commit before task generation"
+      enabled: false
+
+  after_tasks:
+    - extension: git
+      command: speckit.git.commit
+      optional: true
+      description: "Auto-commit after task generation"
+      enabled: false
+
+  before_implement:
+    - extension: git
+      command: speckit.git.commit
+      optional: true
+      description: "Auto-commit before implementation"
+      enabled: false
+
+  after_implement:
+    - extension: git
+      command: speckit.git.commit
+      optional: true
+      description: "Auto-commit after implementation"
+      enabled: false
+
+  before_clarify:
+    - extension: git
+      command: speckit.git.commit
+      optional: true
+      description: "Auto-commit before clarification"
+      enabled: false
+
+  after_clarify:
+    - extension: git
+      command: speckit.git.commit
+      optional: true
+      description: "Auto-commit after clarification"
+      enabled: false
