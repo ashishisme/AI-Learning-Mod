@@ -5,10 +5,11 @@ import { useThemeStore } from '../store'
 interface Props {
   chart: string
   caption?: string
+  alt?: string // SPEC-006 FR-REV-03
   className?: string
 }
 
-export const MermaidRenderer: React.FC<Props> = ({ chart, caption, className = '' }) => {
+export const MermaidRenderer: React.FC<Props> = ({ chart, caption, alt, className = '' }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [svgContent, setSvgContent] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
@@ -29,7 +30,7 @@ export const MermaidRenderer: React.FC<Props> = ({ chart, caption, className = '
         mermaid.initialize({
           startOnLoad: false,
           theme: isDark ? 'dark' : 'neutral',
-          securityLevel: 'loose',
+          securityLevel: 'strict', // SPEC-006: lesson content can come from ingest; never allow script/HTML in diagrams
           fontFamily: 'Inter, system-ui, sans-serif',
           themeVariables: {
             fontSize: '13px',
@@ -62,13 +63,13 @@ export const MermaidRenderer: React.FC<Props> = ({ chart, caption, className = '
   }, [chart, theme, uniqueId])
 
   return (
-    <figure className={`my-6 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm ${className}`}>
+    <figure aria-label={alt} className={`my-6 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm ${className}`}>
       {caption && (
         <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 flex items-center justify-between">
           <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
             📊 {caption}
           </span>
-          <span className="text-[11px] font-medium text-slate-400">Interactive Diagram</span>
+          <span className="text-[11px] font-medium text-slate-400">Diagram</span>
         </div>
       )}
 
@@ -80,6 +81,8 @@ export const MermaidRenderer: React.FC<Props> = ({ chart, caption, className = '
         ) : svgContent ? (
           <div
             ref={containerRef}
+            role="img"
+            aria-label={alt || caption}
             className="w-full flex justify-center [&_svg]:max-w-full [&_svg]:h-auto transition-all"
             dangerouslySetInnerHTML={{ __html: svgContent }}
           />

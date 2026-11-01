@@ -241,14 +241,24 @@ export interface AdaptiveSection {
   }
   bodyMarkdown: string
   diagram?: {
-    type: string
+    type: string // "mermaid" | "stepper" | "svg" | "scene-card"
     caption: string
     content: string
+    alt?: string // SPEC-006 FR-REV-03: required in content, describes what the picture teaches
+    steps?: string[] // for type "stepper"
   }
+  realWorld?: string // SPEC-006 FR-REV-14: "Where you'll see this" (plain-english)
   interactiveWidget?: {
     type: string
     title: string
     instruction: string
+    // SPEC-006 FR-REV-04, FR-REV-10, FR-REV-11
+    goal?: string
+    scaffold?: 'guided' | 'standard'
+    predictionPrompt?: string
+    hints?: string[]
+    successMessage?: string
+    allowFreePlay?: boolean
     scenario: {
       userPrompt: string
       terminalA: string
@@ -263,6 +273,15 @@ export interface AdaptiveSection {
   }>
 }
 
+export interface ChoiceQuestion {
+  question?: string
+  prompt?: string
+  options: string[]
+  correctIndex: number
+  explanation?: string
+  fromLesson?: string
+}
+
 export interface AdaptiveLessonPayload {
   lessonId: string
   mode: "junior" | "plain-english"
@@ -275,6 +294,8 @@ export interface AdaptiveLessonPayload {
   }
   intro?: string
   sections: AdaptiveSection[]
+  teachBack?: ChoiceQuestion // SPEC-006 FR-REV-12
+  recall?: ChoiceQuestion[] // SPEC-006 FR-REV-13
   miniQuiz?: Array<{
     question: string
     options: string[]

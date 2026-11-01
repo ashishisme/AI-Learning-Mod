@@ -37,6 +37,15 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
   const [isListening, setIsListening] = useState(false)
   const [speechSupported, setSpeechSupported] = useState(false)
   const [isReadingAnswer, setIsReadingAnswer] = useState(false)
+  // SPEC-006 FR-REV-22: microphone is off until an adult confirms. Stored only for this browser tab session.
+  const [micConsent, setMicConsent] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem('ai-coach-mic-consent') === 'yes'
+    } catch {
+      return false
+    }
+  })
+  const [showMicConsent, setShowMicConsent] = useState(false)
 
   useEffect(() => {
     // Check Web Speech API availability
@@ -54,6 +63,11 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
       (window as unknown as { webkitSpeechRecognition?: any }).webkitSpeechRecognition
 
     if (!SpeechRecognition) return
+
+    if (!micConsent) {
+      setShowMicConsent(true)
+      return
+    }
 
     if (isListening) {
       setIsListening(false)
@@ -82,6 +96,16 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
       console.warn('Speech recognition start failed', e)
       setIsListening(false)
     }
+  }
+
+  const confirmMic = () => {
+    try {
+      sessionStorage.setItem('ai-coach-mic-consent', 'yes')
+    } catch {
+      /* storage may be unavailable; consent then lasts until reload */
+    }
+    setMicConsent(true)
+    setShowMicConsent(false)
   }
 
   const toggleReadAnswer = () => {
@@ -291,6 +315,37 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
             )}
           </button>
         </div>
+        {showMicConsent && (
+          <div
+            role="alertdialog"
+            aria-label="Microphone permission for a grown-up"
+            data-testid="mic-consent"
+            className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-950 space-y-2"
+          >
+            <p className="font-semibold">Grown-up check 🎙️</p>
+            <p>
+              Voice input uses your browser's speech recognition. Depending on the browser, your voice may be sent to the
+              browser company's servers to turn it into text. This app does not record or save your voice.
+            </p>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={confirmMic}
+                data-testid="mic-consent-accept"
+                className="px-3 py-1.5 rounded-lg bg-amber-600 text-white font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+              >
+                I am an adult, turn it on
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowMicConsent(false)}
+                className="px-3 py-1.5 rounded-lg font-medium hover:bg-amber-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+              >
+                No thanks
+              </button>
+            </div>
+          </div>
+        )}
         <div className="flex items-center justify-between text-[11px] text-slate-400">
           <span>{isListening ? '🎙️ Listening to your voice...' : 'Responses include citations: [Lesson Title § Section]'}</span>
           <span>{question.length}/500</span>

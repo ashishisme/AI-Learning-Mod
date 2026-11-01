@@ -310,7 +310,7 @@ export const PerceptronWidget: React.FC = () => {
             </div>
 
             {/* Kid Explanation Score Bar */}
-            <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs space-y-1.5 font-sans">
+            <div data-math="true" className="p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs space-y-1.5 font-sans">
               <div className="text-slate-400">Total Fruit Delight Score:</div>
               <div className="text-base sm:text-lg font-black flex items-center gap-2">
                 <span className={isFired ? 'text-emerald-400' : 'text-rose-400'}>

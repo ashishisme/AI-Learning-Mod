@@ -14,7 +14,10 @@ import { MermaidRenderer } from './MermaidRenderer'
 import { VisualMetaphorCard } from './VisualMetaphorCard'
 import { AudioNarrationButton } from './AudioNarrationButton'
 import { speechService } from '../services/speechService'
-import { useAudioStore } from '../store'
+import { useAudioStore, useProgressStore } from '../store'
+import { StepperDiagram } from './StepperDiagram'
+import { WidgetFrame } from './WidgetFrame'
+import { ChoiceCard } from './ChoiceCard'
 
 interface Props {
   payload: AdaptiveLessonPayload
@@ -25,6 +28,9 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
   const { activeTrackId, currentSentence, isPlaying } = useAudioStore()
 
   const isJunior = payload.mode === 'junior'
+  const completedLessons = useProgressStore((st) => st.completedLessons)
+  // SPEC-006 FR-REV-13: warm-up questions about lessons the learner has already completed
+  const recallQuestions = (payload.recall ?? []).filter((q) => q.fromLesson && completedLessons[q.fromLesson])
 
   const handleSelectQuizOption = (qIdx: number, optIdx: number) => {
     setQuizAnswers((prev) => ({ ...prev, [qIdx]: optIdx }))
@@ -61,6 +67,17 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
           </div>
         )
       )}
+
+      {/* Spaced recall warm-up (only after the earlier lesson was completed) */}
+      {recallQuestions.map((q, i) => (
+        <ChoiceCard
+          key={`recall-${i}`}
+          testId="recall-card"
+          heading="Warm-up: do you remember?"
+          emoji="🧠"
+          question={q}
+        />
+      ))}
 
       {/* Lesson Header */}
       <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
@@ -147,46 +164,77 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                 </ReactMarkdown>
               </div>
 
-              {/* Rendered Visual Diagram (Mermaid SVG Graphic) */}
-              {section.diagram && section.diagram.content && (
+              {/* Visual diagram: stepper (junior) or Mermaid SVG, always with alt text */}
+              {section.diagram && section.diagram.type === 'stepper' && section.diagram.steps && (
+                <StepperDiagram
+                  caption={section.diagram.caption}
+                  alt={section.diagram.alt}
+                  steps={section.diagram.steps}
+                />
+              )}
+              {section.diagram && section.diagram.type !== 'stepper' && section.diagram.content && (
                 <MermaidRenderer
                   chart={section.diagram.content}
                   caption={section.diagram.caption}
+                  alt={section.diagram.alt}
                 />
               )}
 
-              {/* Embedded Interactive Turing Widget */}
-              {section.interactiveWidget && section.interactiveWidget.type === 'turing-guess-game' && (
-                <TuringWidget
-                  title={section.interactiveWidget.title}
-                  instruction={section.interactiveWidget.instruction}
-                  scenario={section.interactiveWidget.scenario}
-                />
+              {section.interactiveWidget && (
+                <WidgetFrame
+                  goal={section.interactiveWidget.goal}
+                  scaffold={section.interactiveWidget.scaffold}
+                  predictionPrompt={section.interactiveWidget.predictionPrompt}
+                  hints={section.interactiveWidget.hints}
+                  successMessage={section.interactiveWidget.successMessage}
+                  allowFreePlay={section.interactiveWidget.allowFreePlay}
+                  isJunior={isJunior}
+                >
+                {/* Embedded Interactive Turing Widget */}
+                {section.interactiveWidget && section.interactiveWidget.type === 'turing-guess-game' && (
+                  <TuringWidget
+                    title={section.interactiveWidget.title}
+                    instruction={section.interactiveWidget.instruction}
+                    scenario={section.interactiveWidget.scenario}
+                  />
+                )}
+
+                  {/* Embedded Interactive Expert System Simulator */}
+                {section.interactiveWidget && section.interactiveWidget.type === 'expert-system-sim' && (
+                  <ExpertSystemWidget />
+                )}
+
+                  {/* Embedded Interactive Perceptron Playground */}
+                {section.interactiveWidget && section.interactiveWidget.type === 'perceptron-sim' && (
+                  <PerceptronWidget />
+                )}
+
+                  {/* Embedded Interactive Convolution Simulator */}
+                {section.interactiveWidget && section.interactiveWidget.type === 'convolution-sim' && (
+                  <ConvolutionWidget />
+                )}
+
+                  {/* Embedded Interactive Vector Math Simulator */}
+                {section.interactiveWidget && section.interactiveWidget.type === 'vector-math-sim' && (
+                  <VectorMathWidget />
+                )}
+
+                  {/* Embedded Interactive Bias Detective Simulator */}
+                {section.interactiveWidget && section.interactiveWidget.type === 'bias-detective-sim' && (
+                  <BiasDetectiveWidget />
+                )}
+                </WidgetFrame>
               )}
 
-              {/* Embedded Interactive Expert System Simulator */}
-              {section.interactiveWidget && section.interactiveWidget.type === 'expert-system-sim' && (
-                <ExpertSystemWidget />
-              )}
-
-              {/* Embedded Interactive Perceptron Playground */}
-              {section.interactiveWidget && section.interactiveWidget.type === 'perceptron-sim' && (
-                <PerceptronWidget />
-              )}
-
-              {/* Embedded Interactive Convolution Simulator */}
-              {section.interactiveWidget && section.interactiveWidget.type === 'convolution-sim' && (
-                <ConvolutionWidget />
-              )}
-
-              {/* Embedded Interactive Vector Math Simulator */}
-              {section.interactiveWidget && section.interactiveWidget.type === 'vector-math-sim' && (
-                <VectorMathWidget />
-              )}
-
-              {/* Embedded Interactive Bias Detective Simulator */}
-              {section.interactiveWidget && section.interactiveWidget.type === 'bias-detective-sim' && (
-                <BiasDetectiveWidget />
+              {/* Where you'll see this (plain-english) */}
+              {!isJunior && section.realWorld && (
+                <p
+                  data-testid="real-world"
+                  className="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/60 text-sm text-emerald-950 dark:text-emerald-100"
+                >
+                  <span className="font-bold">Where you'll see this: </span>
+                  {section.realWorld}
+                </p>
               )}
 
               {/* Jargon Buster List */}
@@ -227,6 +275,16 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
           )
         })}
       </div>
+
+      {/* Teach-it-back (SPEC-006 FR-REV-12) */}
+      {payload.teachBack && (
+        <ChoiceCard
+          testId="teach-back"
+          heading={isJunior ? 'Teach it back to Chip' : 'Teach it back'}
+          emoji="🗣️"
+          question={payload.teachBack}
+        />
+      )}
 
       {/* Mini-Quiz Section */}
       {payload.miniQuiz && payload.miniQuiz.length > 0 && (

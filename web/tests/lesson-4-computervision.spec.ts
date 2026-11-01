@@ -28,6 +28,9 @@ test.describe('Lesson 4: Computer Vision & Convolutions (SPEC-005)', () => {
     // Switch to Kids Mode
     await page.locator('button[role="tab"]', { hasText: 'Kids (8–14)' }).click()
 
+    // SPEC-006: widgets start with a prediction step; take the free-play path
+    await page.locator('[data-testid="widget-skip-predict"]').click()
+
     // Locate convolution simulation
     const widget = page.locator('[data-testid="convolution-widget"]')
     await expect(widget).toBeVisible()
@@ -48,7 +51,9 @@ test.describe('Lesson 4: Computer Vision & Convolutions (SPEC-005)', () => {
     await expect(sharpenBtn).toBeVisible()
     await sharpenBtn.click()
 
-    // Verify calculation box
+    // Guided scaffold hides the math until asked (SPEC-006)
+    await expect(page.locator('text=Output Pixel Value =')).toBeHidden()
+    await page.locator('[data-testid="widget-show-math"]').click()
     await expect(page.locator('text=Output Pixel Value =')).toBeVisible()
   })
 

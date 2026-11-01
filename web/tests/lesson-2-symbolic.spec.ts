@@ -28,6 +28,9 @@ test.describe('Lesson 2: Symbolic AI & Expert Systems (SPEC-005)', () => {
     // Switch to Kids Mode
     await page.locator('button[role="tab"]', { hasText: 'Kids (8–14)' }).click()
 
+    // SPEC-006: widgets start with a prediction step; take the free-play path
+    await page.locator('[data-testid="widget-skip-predict"]').click()
+
     // Locate simulation widget
     await expect(page.locator('text=The Mars Rover Expert System')).toBeVisible()
 

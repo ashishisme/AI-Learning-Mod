@@ -28,6 +28,9 @@ test.describe('Lesson 6 (7-ethics): Ethical and Responsible AI (SPEC-005)', () =
     // Switch to Kids Mode
     await page.locator('button[role="tab"]', { hasText: 'Kids (8–14)' }).click()
 
+    // SPEC-006: widgets start with a prediction step; take the free-play path
+    await page.locator('[data-testid="widget-skip-predict"]').click()
+
     // Locate bias detective simulation
     const widget = page.locator('[data-testid="bias-detective-widget"]')
     await expect(widget).toBeVisible()

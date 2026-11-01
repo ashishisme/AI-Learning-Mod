@@ -326,7 +326,7 @@ export const ConvolutionWidget: React.FC = () => {
         </div>
 
         {/* 2. Kernel Matrix (3x3) & Live Calculation */}
-        <div className="flex flex-col items-center bg-slate-950/80 p-5 rounded-2xl border border-cyan-500/30 shadow-md">
+        <div data-math="true" className="flex flex-col items-center bg-slate-950/80 p-5 rounded-2xl border border-cyan-500/30 shadow-md">
           <span className="text-xs font-extrabold text-cyan-300 mb-3">2. Robot Lens Weights (3×3)</span>
 
           <div className="grid grid-cols-3 gap-1.5 bg-slate-900 p-2.5 rounded-xl border border-cyan-500/40 shadow-inner">

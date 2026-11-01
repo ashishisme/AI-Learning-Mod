@@ -51,6 +51,9 @@ test.describe('Adaptive Audience Modes (Kids 8-14 & Plain English)', () => {
     // Verify Physical Metaphor Card
     await expect(page.getByText('Everyday Metaphor: The Martian Puppy')).toBeVisible()
 
+    // SPEC-006: widgets start with a prediction step; take the free-play path
+    await page.locator('[data-testid="widget-skip-predict"]').click()
+
     // Verify Interactive Turing Widget Mini-Game
     const widget = page.getByText('Mini-Game: Can You Spot the Bot?')
     await expect(widget).toBeVisible()
@@ -90,7 +93,7 @@ test.describe('Adaptive Audience Modes (Kids 8-14 & Plain English)', () => {
 
     // Verify Jargon Buster
     await expect(page.getByText('Jargon Buster')).toBeVisible()
-    await expect(page.locator('strong', { hasText: 'Probabilistic' })).toBeVisible()
+    await expect(page.locator('strong', { hasText: 'Training Data' })).toBeVisible()
   })
 
   test('AC-ADAPT-04: Audience mode choice persists across page reloads in localStorage', async ({ page }) => {

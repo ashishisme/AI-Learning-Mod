@@ -46,3 +46,20 @@
 .animate-pulse-subtle {
   animation: pulseSubtle 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* SPEC-006 FR-REV-08: respect reduced-motion preference everywhere */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* SPEC-006 FR-REV: guided scaffold hides technical panels until "Show me the math" */
+.scaffold-guided:not(.show-math) [data-math] {
+  display: none;
+}
