@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { useSettingsStore, useThemeStore, AISettings } from '../store'
 import { testAIConfig, syncCurriculum, ConfigTestResult, IngestSyncResult } from '../api'
 import pkg from '../../package.json'
+import { formatBuild } from '../buildInfo'
 
 export const SettingsModal: React.FC = () => {
   const { settings, isDrawerOpen, setDrawerOpen, updateSettings, resetDefaults } = useSettingsStore()
@@ -500,8 +501,8 @@ export const SettingsModal: React.FC = () => {
               v{pkg.version}
             </span>
           </div>
-          <div className="text-[10px] text-slate-400 font-mono">
-            Build: {new Date().toISOString().slice(0, 10)}
+          <div className="text-[10px] text-slate-400 font-mono" data-testid="settings-build-info">
+            {formatBuild()}
           </div>
         </div>
 
