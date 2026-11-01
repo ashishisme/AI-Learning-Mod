@@ -45,3 +45,4 @@
 - Zero compilation errors (`go test ./...` and `npm run build`).
 - Single-click start and stop workflow verified.
 - Help modal accessible on mobile and desktop viewports.
+

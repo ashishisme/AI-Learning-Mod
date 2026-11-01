@@ -13,3 +13,4 @@
   - Mount audio trigger in Lesson 1 Kids Mode header.
 - [x] **Task 4: Quality Gate Pass**
   - Validate bundle build and unit tests.
+

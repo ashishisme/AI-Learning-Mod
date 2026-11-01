@@ -16,3 +16,4 @@
 ## 2. Quality & Verification Gates
 - Vite bundle verification (`npx tsc --noEmit && npm run build`).
 - Verify no visual regressions or layout shift.
+

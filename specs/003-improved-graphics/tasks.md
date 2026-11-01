@@ -17,3 +17,4 @@
 - [x] **Task 4: Retro Terminal Styling**
   - Add scanlines, glow text, and CRT monitor bezel to Turing Test mini-game.
   - Verification: Playwright e2e test passing.
+

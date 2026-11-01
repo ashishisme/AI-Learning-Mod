@@ -31,3 +31,4 @@
 1. Go test suite: `go test -v ./...`
 2. Frontend build: `cd web && npx tsc --noEmit && npm run build`
 3. Git hygiene: verify no `.app.pids`, `.web.pid`, `logs/`, or `server` binary tracked in git.
+

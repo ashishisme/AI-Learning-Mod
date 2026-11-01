@@ -134,3 +134,4 @@ Executes all automated Playwright tests covering all 6 curriculum modules, 3 ada
   - `specs/004-interactive-audio/`: Interactive audio narration & Web Speech integration (SPEC-004).
   - `specs/005-curriculum-audio-expansion/`: Full Curriculum Expansion (Lessons 1–6), Audio Studio 2.0 & interactive simulators (SPEC-005).
   - `specs/006-app-onboarding-and-release-3.2/`: In-app Help modal, 1-click startup automation, freeware attribution & 3.2.0-GA release (SPEC-006).
+  - `specs/007-cloud-deployment-strategies/`: Cloud deployment engineering, Terraform IaC, CI/CD, and multi-tier cost modeling (SPEC-007).

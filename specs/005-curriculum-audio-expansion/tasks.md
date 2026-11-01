@@ -20,3 +20,4 @@
 - [x] **Phase 5: Automated Test Suite & Quality Gates**
   - 15 Go backend tests passing.
   - 24 Playwright E2E browser tests passing.
+

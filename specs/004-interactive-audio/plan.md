@@ -19,3 +19,4 @@
 ## 2. Verification
 - Manual verification of speech synthesis and chime triggers.
 - Unit and UI test suites.
+
