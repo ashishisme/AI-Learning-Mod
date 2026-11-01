@@ -13,7 +13,7 @@ No `NEEDS CLARIFICATION` items remain. Owner decisions already taken (data store
 ## R2. Password storage
 
 - **Decision**: PBKDF2-HMAC-SHA256, 200,000 iterations, 16-byte random salt, 32-byte output, encoded `pbkdf2-sha256$<iter>$<salt>$<hash>`; verify with `subtle.ConstantTimeCompare`; iteration count read from the stored string so it can be raised later; unknown Beta IDs verify against a fixed dummy hash.
-- **Rationale**: `golang.org/x/crypto` (bcrypt/scrypt/argon2) is not in `go.sum` or the module cache, and Go 1.23 has no `crypto/pbkdf2` (added in 1.24). PBKDF2 is ~20 lines over `crypto/hmac`, is FIPS-accepted, and passwords here are machine-generated with ~42 bits of entropy, so the work factor matters less than for human-chosen passwords.
+- **Rationale (at planning time)**: `golang.org/x/crypto` (bcrypt/scrypt/argon2) was not in `go.sum` or the module cache, and Go 1.23 had no `crypto/pbkdf2` (added in 1.24). PBKDF2 is ~20 lines over `crypto/hmac`, is FIPS-accepted, and passwords here are machine-generated with ~42 bits of entropy, so the work factor matters less than for human-chosen passwords. The project moved to Go 1.27.3 on 2026-11-02; the tested in-package hash implementation remains to preserve stored-hash behavior.
 - **Alternatives**: upgrade to Go 1.24 for stdlib `pbkdf2` (toolchain change outside this feature's scope); plain salted SHA-256 (too fast); adding `x/crypto` (new dependency, excluded by the owner's constraints).
 - **Verification**: RFC 7914 §11 vectors (`passwd`/`salt`/1 iteration/64 bytes, and `Password`/`NaCl`/80000/64) hard-coded in a test; vectors cross-checked once with Python's `hashlib.pbkdf2_hmac` at authoring time (not committed).
 

@@ -6,7 +6,7 @@ This is a validation guide. It does not contain implementation.
 
 ## Prerequisites
 
-- Go 1.23, Node 20, `npm --prefix web ci`, Playwright browsers installed.
+- Go 1.27.3, Node 20, `npm --prefix web ci`, Playwright browsers installed.
 - Constitution 2.1.0 applied. For the feedback scenarios, amendment 2 (2.2.0) ratified.
 
 ## 1. Automated gates
@@ -76,3 +76,32 @@ Logs (`logs/server.log`) must contain no passwords, tokens or cookies.
 ## 5. Deployment note
 
 The file store is for one instance with a persistent volume. Do not run it on ephemeral storage or with more than one instance until the managed store adapter exists.
+
+## Results (local real-server walkthrough, 2026-11-02)
+
+Started `go run ./cmd/devidp` on `127.0.0.1:9100` and `go run ./cmd/server` on `127.0.0.1:8089` with authentication and a temporary state file. A headless Chromium browser completed the OIDC redirect; subsequent requests used separate browser contexts and the live server. No credential values were printed.
+
+| Scenario | Result | What was checked |
+| --- | --- | --- |
+| 1 | PASS | Signed-out admin screen; `GET /api/lessons` returned 401 |
+| 2 | PASS | Fake OIDC sign-in returned to the admin console; initial seat count was zero |
+| 3 | PASS | Admin created three invites; seats rose to three; a later UI pass downloaded invite CSV |
+| 4 | PARTIAL | Fresh browser activated an invite, loaded lessons and enabled “I've saved it” after Copy; the exact IST expiry display was not checked against the clock |
+| 5 | PASS | Reusing the invite returned 409 |
+| 6 | PASS | Logout denied lesson access; clearing progress removed the browser key; credentials signed in from a second browser |
+| 7 | PASS | Ten wrong passwords caused the next correct attempt to return 429 |
+| 8 | PASS | Revoking the account ended its session and freed a seat |
+| 9 | PASS | Reissue invalidated the old password, accepted the new one and preserved expiry |
+| 10 | PASS | A test account's file expiry was set to yesterday while stopped; login returned `account_expired`; admin extension restored login |
+| 11 | PASS | With `SEAT_CAP=5`, a six-invite request returned 409 and created no seats |
+| 12 | PASS | Hosted runtime reported tutor off; an authenticated tutor request returned 503 `tutor disabled` |
+| 13 | PASS | With `MOCK_TUTOR=true` and a $0.002 ceiling, the third long question returned “The tutor is resting until tomorrow.” |
+| 14 | PARTIAL | Live usage endpoint reported series and the real Usage tab rendered; one-minute freshness was not timed |
+| 15 | PASS | Live Users table had last seen, devices and active-now columns; group/status filtering returned matching accounts |
+| 16 | PARTIAL | Live Costs tab showed estimated AI spend and “not connected” hosting; month projection after day 3 was not checked against a real-server clock |
+| 17 | PASS | Rule check refused a phone number without storing it; a clean item appeared only after AI audit; a school-name item was withheld and its text erased; auditor outage kept new text hidden; aging waiting items eight days and restarting deleted them |
+| 18 | PASS | The sixth feedback submission within an hour returned 429 |
+| 19 | PARTIAL | Live admin API marked read/resolved, exported CSV, deleted the item and recorded all three audit actions; UI confirmation was covered by mocked browser tests only |
+| 20 | PASS | Restart retained accounts, invite seats, feedback held counts and AI spend tally |
+
+T099 remains open until the partial and unrun scenarios are exercised end to end.

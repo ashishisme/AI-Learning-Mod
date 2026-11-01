@@ -19,9 +19,9 @@ Approach, in one paragraph: a new `internal/auth` package holds all domain logic
 
 ## Technical Context
 
-**Language/Version**: Go 1.23.2 (backend), TypeScript 5 + React 18 + Vite (frontend)
+**Language/Version**: Go 1.27.3 (backend; upgraded 2026-11-02), TypeScript 5 + React 18 + Vite (frontend)
 
-**Primary Dependencies**: Go standard library only (`net/http`, `crypto/*`, `encoding/json`). Frontend: existing React, React Router, Zustand. **No new modules.** `golang.org/x/crypto` is not in `go.sum` and Go 1.23 has no `crypto/pbkdf2`, so PBKDF2-HMAC-SHA256 is implemented in-package and pinned by RFC 7914 test vectors.
+**Primary Dependencies**: Go standard library only (`net/http`, `crypto/*`, `encoding/json`). Frontend: existing React, React Router, Zustand. **No new modules.** PBKDF2-HMAC-SHA256 remains implemented in-package and pinned by RFC 7914 test vectors; the toolchain upgrade does not change stored password hashes.
 
 **Storage**: `auth.Store` interface (transactional). Implementation now: JSON file, in-memory working copy, mutex-serialised transactions, atomic write (temp file + rename). Managed serverless adapter: later, behind the same interface (DC-09 amended).
 

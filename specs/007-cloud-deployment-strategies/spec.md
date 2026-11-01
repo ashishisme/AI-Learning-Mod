@@ -24,7 +24,7 @@ This specification establishes the technical deployment architecture, container 
 
 1. **Multi-Stage Build Pipeline:**
    - Stage 1: `node:20-alpine` builds the Vite SPA.
-   - Stage 2: `golang:1.23-alpine` compiles the static Go server (`CGO_ENABLED=0`, `-ldflags="-w -s -extldflags '-static'"`).
+   - Stage 2: `golang:1.27.3-alpine3.24` compiles the static Go server (`CGO_ENABLED=0`, `-ldflags="-w -s -extldflags '-static'"`).
    - Stage 3: `alpine:3.20` serves as the runtime container with package managers purged (`rm -rf /sbin/apk /etc/apk`).
 2. **Asset Co-Location:**
    - `COPY --from=frontend-builder /app/web/dist ./web/dist`

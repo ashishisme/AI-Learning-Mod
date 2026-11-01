@@ -8,7 +8,7 @@
 - [x] **Task 1: Technical & Financial Cost Architecture**
   - Formulate mathematical cost models for 1K, 10K, 100K, and 1M MAU.
   - Document executive and engineering deployment specifications (`spec.md` & artifact).
-- [ ] **Task 2: Dockerfile Modernization**
+- [x] **Task 2: Dockerfile Modernization** (verified 2026-11-02; image build still pending Task 5)
   - Add `COPY --chown=appuser:appgroup public-content ./public-content` to `Dockerfile`.
   - Add `HEALTHCHECK` directive for `/api/health`.
 - [ ] **Task 3: GitHub Actions Deployment Workflow**
