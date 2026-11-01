@@ -30,3 +30,13 @@ Thumbs.db
 *.code-workspace
 .vscode/
 .idea/
+
+# Runtime files and logs
+.app.pids
+.web.pid
+logs/
+nohup.out
+web/nohup.out
+server
+web/*.tsbuildinfo
+

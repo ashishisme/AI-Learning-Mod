@@ -6,10 +6,12 @@ import { Lesson } from './pages/Lesson'
 import { Quiz } from './pages/Quiz'
 import { Attribution } from './components/Attribution'
 import { SettingsModal } from './components/SettingsModal'
-import { useSettingsStore, useThemeStore, applyThemeClass } from './store'
+import { HelpModal } from './components/HelpModal'
+import { useSettingsStore, useHelpStore, useThemeStore, applyThemeClass } from './store'
 
 export const App: React.FC = () => {
   const { setDrawerOpen, settings } = useSettingsStore()
+  const { setHelpOpen } = useHelpStore()
   const { theme, setTheme } = useThemeStore()
 
   // Apply theme class on mount
@@ -59,6 +61,18 @@ export const App: React.FC = () => {
               {theme === 'dark' ? '🌙' : '☀️'}
             </button>
 
+            {/* Help & Getting Started Trigger */}
+            <button
+              id="open-help-btn"
+              data-testid="open-help-btn"
+              onClick={() => setHelpOpen(true)}
+              aria-label="Open help and user guide"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-xs transition"
+            >
+              <span className="text-sm">❓</span>
+              <span className="font-semibold hidden sm:inline">Help</span>
+            </button>
+
             {/* FR-UI-14, AC-34: Global Settings Drawer Trigger */}
             <button
               id="open-settings-btn"
@@ -87,6 +101,9 @@ export const App: React.FC = () => {
           <Route path="/quiz/:id" element={<Quiz />} />
         </Routes>
       </main>
+
+      {/* Help & User Guide Modal */}
+      <HelpModal />
 
       {/* Global Settings Modal Drawer (FR-SET-01, FR-SET-02, FR-SET-05) */}
       <SettingsModal />

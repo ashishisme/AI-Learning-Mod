@@ -128,7 +128,9 @@ Executes all automated Playwright tests covering all 6 curriculum modules, 3 ada
 - **Acceptance Criteria & Matrix:** [`spec/ACCEPTANCE.md`](spec/ACCEPTANCE.md)
 - **Project Constitution:** [`.specify/memory/constitution.md`](.specify/memory/constitution.md)
 - **Feature Specs:**
-  - `specs/001-migrating-spec/`: Spec Kit bootstrap and SDD foundation.
-  - `specs/002-adaptive-audience-modes/`: 3-tier adaptive audience mode architecture.
-  - `specs/spec-improved-graphics.md`: Vector mascots, visual metaphors, and dynamic SVG rendering.
-  - `specs/spec-v3.1-curriculum-audio-expansion.md`: Audio Studio 2.0, voice personas, and interactive simulators across all lessons.
+  - `specs/001-migrating-spec/`: Spec Kit bootstrap and SDD foundation (SPEC-001).
+  - `specs/002-adaptive-audience-modes/`: 3-tier adaptive audience mode architecture (SPEC-002).
+  - `specs/003-improved-graphics/`: Vector mascots, visual metaphors, and dynamic SVG rendering (SPEC-003).
+  - `specs/004-interactive-audio/`: Interactive audio narration & Web Speech integration (SPEC-004).
+  - `specs/005-curriculum-audio-expansion/`: Full Curriculum Expansion (Lessons 1–6), Audio Studio 2.0 & interactive simulators (SPEC-005).
+  - `specs/006-app-onboarding-and-release-3.2/`: In-app Help modal, 1-click startup automation, freeware attribution & 3.2.0-GA release (SPEC-006).

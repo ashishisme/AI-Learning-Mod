@@ -178,3 +178,14 @@ export const useAudioStore = create<AudioState>()(
     }
   )
 )
+
+export interface HelpState {
+  isHelpOpen: boolean
+  setHelpOpen: (open: boolean) => void
+}
+
+export const useHelpStore = create<HelpState>((set) => ({
+  isHelpOpen: false,
+  setHelpOpen: (open: boolean) => set({ isHelpOpen: open }),
+}))
+

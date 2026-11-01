@@ -56,8 +56,26 @@ Each lesson embeds a hands-on mathematical simulation widget directly into the r
 
 ## 🚀 Quickstart Guide (Local Development)
 
-### 1. Automated Dependency Check
-Verify all runtimes, modules, and plugins before starting:
+### 1-Click Startup (Recommended)
+You can start both the Go backend and Vite frontend dev servers with a single command:
+
+```bash
+# 1. Start both servers in background with auto-healthcheck:
+./start.sh
+
+# 2. Open in your browser:
+# http://localhost:3000
+
+# 3. Stop both servers at any time:
+./stop.sh
+```
+
+*(Server logs are written to `logs/server.log` and frontend logs to `logs/web.log`)*
+
+---
+
+### Automated Dependency Check
+Verify all runtimes, modules, and plugins before manual setup:
 ```bash
 ./scripts/check-dependencies.sh
 ```
@@ -180,32 +198,46 @@ The Go server automatically serves the compiled frontend assets from `web/dist/`
 
 ## 📖 How to Use the Application
 
+> 📘 **Full Visual Walkthrough:** For complete screenshots, tips, and step-by-step guides for young learners, see **[APP_USAGE.md](APP_USAGE.md)**.
+
 1. **Browse Lessons:**
    From the home dashboard, select any of the 6 core modules:
-   - Module 1: Introduction to Artificial Intelligence
-   - Module 2: Symbolic AI & Knowledge Systems
-   - Module 3: Neural Networks & Perceptrons
-   - Module 4: Computer Vision & Convolutions
-   - Module 5: Natural Language Processing & Embeddings
-   - Module 6: Ethical and Responsible AI
+   - **Module 1:** Introduction to Artificial Intelligence
+   - **Module 2:** Symbolic AI & Knowledge Systems
+   - **Module 3:** Neural Networks & Perceptrons
+   - **Module 4:** Computer Vision & Convolutions
+   - **Module 5:** Natural Language Processing & Embeddings
+   - **Module 6:** Ethical and Responsible AI
 
 2. **Switch Audience Modes:**
    At the top of any lesson, click between **Standard**, **Kids (8–14)**, or **Plain English**. The explanations, metaphors, and visual representations adjust instantly without page reload.
 
-3. **Interact with Simulators:**
-   Engage with the embedded interactive widgets (Fruit sorter, Mars Rover diagnostic system, Convolution filter lab, Word2Vec scatter plot, or Bias Detective) to develop physical intuition for the mathematical concepts.
+3. **Interact with Kid-Friendly Simulators:**
+   Engage with the embedded interactive widgets to develop physical intuition:
+   - **Lesson 1:** *The Turing Test Stage* — Vote on mystery dialogues and pull open the velvet curtain to spot the bot (`🤖` vs `🧑‍💻`).
+   - **Lesson 2:** *Mars Rover Live Lab* — Sweep dust off solar panels, swivel the antenna to Earth, and watch forward-chaining rules diagnose emergencies.
+   - **Lesson 3:** *Sparky the Brain Cell* — Drop fruit onto the conveyor scale and tune Sparky's sweetness/roundness dials until his lightbulb fires (`💡`).
+   - **Lesson 4:** *Robot Magic Sunglasses* — Pick pixel drawings (Cat `🐱`, Rocket `🚀`) and slide 3×3 edge filters across the pixel canvas.
+   - **Lesson 5:** *Word Constellations* — Calculate analogies (`King - Man + Woman = Queen`) across an interactive deep space galaxy map.
+   - **Lesson 6:** *The AI Fairness See-Saw* — Audit Space Academy applicant data and watch the see-saw balance scale level out as bias mitigation is applied.
 
 4. **Listen with Audio Studio 2.0:**
    Open the **Audio Studio Settings** bar in the top right to select your preferred narrator persona (**Chip 🤖**, **Nova 🎙️**, or **Prof. Alan 🎓**), adjust reading speed, and follow along with live karaoke tracking.
 
 5. **Chat with the AI Teaching Assistant:**
    Scroll to the bottom of any lesson:
-   - Type a question or click the **🎙️ microphone icon** to speak your question aloud.
+   - Type a question or click the **🎙️ microphone icon** to speak your question aloud ("Talk to Chip").
    - The assistant streams grounded explanations cited with exact section references.
    - Click **🔊 Read Answer Aloud** to hear the response spoken.
 
 6. **Settings & Dynamic Build Info:**
    Click the **Model / Settings button ⚙️** in the top navigation to configure your AI model, adjust context budgets, test connection latency, or inspect the dynamic application version and build date.
+
+7. **Built-in Interactive Help (`❓ Help`):**
+   Click the **❓ Help** button in the top navigation bar (or in the footer) to access the integrated guide covering:
+   - **How to use the app:** Quick tour of adaptive modes, simulators, audio studio, and tutor.
+   - **How to use local LLM:** Step-by-step instructions for downloading Ollama, running `ollama serve`, and pulling models (`llama3.2:1b`).
+   - **About & Freeware Notice:** Software background and license details.
 
 ---
 
@@ -228,5 +260,7 @@ cd web && npm test
 
 ## 📄 Attribution & Licensing
 
+- **Developed and distributed as freeware by Qunisphere Pvt Limited, Bangalore.**
 - Curriculum content is derived from [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners) under the [MIT License](https://github.com/microsoft/AI-For-Beginners/blob/main/LICENSE). This project is independent and not affiliated with, sponsored by, or endorsed by Microsoft.
 - Application source code, simulators, and architecture are released under the [MIT License](LICENSE).
+
