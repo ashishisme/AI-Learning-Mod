@@ -206,6 +206,15 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 		return "", 0, fmt.Errorf("failed to create lessons directory: %w", err)
 	}
 
+	// Lessons are held in memory until every fetch has succeeded, so a failed or
+	// cancelled run leaves the existing content untouched.
+	type pendingFile struct {
+		id   string
+		path string
+		data []byte
+	}
+	var pending []pendingFile
+
 	for order, cand := range candidates {
 		// FR-ING-03: Derivations
 		// id = lowercase folder segment (valid identifier)
@@ -275,11 +284,15 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 		if err != nil {
 			return "", 0, fmt.Errorf("failed to marshal lesson %s: %w", id, err)
 		}
-		if err := os.WriteFile(lessonFile, data, 0644); err != nil {
-			return "", 0, fmt.Errorf("failed to write lesson %s: %w", id, err)
-		}
+		pending = append(pending, pendingFile{id: id, path: lessonFile, data: data})
 
 		lessons = append(lessons, meta)
+	}
+
+	for _, f := range pending {
+		if err := writeFileAtomic(f.path, f.data); err != nil {
+			return "", 0, fmt.Errorf("failed to write lesson %s: %w", f.id, err)
+		}
 	}
 
 	// Write public-content/index.json (FR-ING-04, §6.1)
@@ -292,11 +305,32 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 		return "", 0, fmt.Errorf("failed to marshal index: %w", err)
 	}
 	indexFile := filepath.Join(cfg.ContentDir, "index.json")
-	if err := os.WriteFile(indexFile, indexData, 0644); err != nil {
+	if err := writeFileAtomic(indexFile, indexData); err != nil {
 		return "", 0, fmt.Errorf("failed to write index file: %w", err)
 	}
 
 	return pinnedSHA, len(lessons), nil
+}
+
+// writeFileAtomic replaces path in one step so readers never see a partial file.
+func writeFileAtomic(path string, data []byte) error {
+	tmp, err := os.CreateTemp(filepath.Dir(path), ".tmp-*")
+	if err != nil {
+		return err
+	}
+	defer os.Remove(tmp.Name()) // no-op once the rename has succeeded
+
+	if _, err := tmp.Write(data); err != nil {
+		tmp.Close()
+		return err
+	}
+	if err := tmp.Close(); err != nil {
+		return err
+	}
+	if err := os.Chmod(tmp.Name(), 0644); err != nil {
+		return err
+	}
+	return os.Rename(tmp.Name(), path)
 }
 
 func ExtractTitle(md, defaultID string) string {

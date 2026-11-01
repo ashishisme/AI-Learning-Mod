@@ -1,5 +1,5 @@
 // SPEC: FR-CNT-01, FR-CNT-02, FR-TUT-01, FR-TUT-07, FR-TUT-08, FR-SET-03, FR-SET-04, NFR-REL-01, NFR-REL-02
-import { useSettingsStore } from './store'
+import { useSettingsStore, useRuntimeStore, useAuthStore, AuthSessionInfo } from './store'
 
 export interface LessonMeta {
   id: string
@@ -36,12 +36,15 @@ export interface TutorResponse {
 export class ApiError extends Error {
   status: number
   data?: unknown
+  code?: string
 
   constructor(status: number, message: string, data?: unknown) {
     super(message)
     this.name = 'ApiError'
     this.status = status
     this.data = data
+    const code = (data as { code?: unknown } | null | undefined)?.code
+    if (typeof code === 'string') this.code = code
   }
 }
 
@@ -64,6 +67,8 @@ export async function fetchLesson(id: string): Promise<Lesson> {
 }
 
 function getAIHeaders(): Record<string, string> {
+  // Hosted deployments ignore these on the server; do not send credentials that would be discarded.
+  if (useRuntimeStore.getState().hosted) return {}
   const settings = useSettingsStore.getState().settings
   const headers: Record<string, string> = {}
   if (settings.baseUrl) headers['X-AI-Base-URL'] = settings.baseUrl
@@ -103,7 +108,8 @@ export async function askTutorStream(
   question: string,
   onToken: (token: string) => void,
   onComplete: (fallback?: string) => void,
-  onError: (error: ApiError | Error) => void
+  onError: (error: ApiError | Error) => void,
+  mode?: string
 ): Promise<() => void> {
   const controller = new AbortController()
 
@@ -114,7 +120,8 @@ export async function askTutorStream(
       'Accept': 'text/event-stream',
       ...getAIHeaders(),
     },
-    body: JSON.stringify({ lessonId, question }),
+    // The audience mode is sent separately so the server applies the tone; it is not part of the question.
+    body: JSON.stringify(mode && mode !== 'standard' ? { lessonId, question, mode } : { lessonId, question }),
     signal: controller.signal,
   })
     .then(async (res) => {
@@ -306,11 +313,81 @@ export interface AdaptiveLessonPayload {
   }>
 }
 
-export async function fetchAdaptiveLesson(id: string, mode: "junior" | "plain-english"): Promise<AdaptiveLessonPayload> {
+// Returns null when the lesson has no adaptive version: the server then answers 200 with the
+// standard lesson, which has blocks instead of sections.
+export async function fetchAdaptiveLesson(id: string, mode: "junior" | "plain-english"): Promise<AdaptiveLessonPayload | null> {
   const res = await fetch(`/api/lessons/${encodeURIComponent(id)}?mode=${encodeURIComponent(mode)}`)
   if (!res.ok) {
     const body = await res.json().catch(() => null)
     throw new ApiError(res.status, body?.error || `Failed to fetch adaptive lesson (${res.status})`, body)
   }
-  return res.json()
+  const payload = await res.json()
+  return Array.isArray(payload?.sections) ? payload : null
+}
+
+
+// ---- SPEC-008 learner auth (same-origin cookies) ----
+async function authCall<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(path, init)
+  if (!res.ok) {
+    const body = await res.json().catch(() => null)
+    throw new ApiError(res.status, body?.error || `Request failed (${res.status})`, body)
+  }
+  return (res.status === 204 ? undefined : await res.json()) as T
+}
+
+const postJSON = (body: unknown): RequestInit => ({
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(body),
+})
+
+export interface AuthSessionResponse extends Partial<AuthSessionInfo> {
+  authenticated: boolean
+}
+
+export const fetchAuthSession = () => authCall<AuthSessionResponse>('/api/auth/session')
+export const activateInvite = (token: string) =>
+  authCall<{ betaId: string; password: string; expiresAt: string }>('/api/auth/activate', postJSON({ token }))
+export const login = (betaId: string, password: string) =>
+  authCall<AuthSessionResponse>('/api/auth/login', postJSON({ betaId, password }))
+export const logout = () => authCall<void>('/api/auth/logout', { method: 'POST' })
+
+/** Fills the auth store from the server; anonymous when the probe fails or says so. */
+export async function refreshAuthSession(): Promise<void> {
+  try {
+    const s = await fetchAuthSession()
+    if (s.authenticated && s.betaId) {
+      useAuthStore.getState().setSession(s as AuthSessionInfo)
+    } else {
+      useAuthStore.setState({ status: 'anonymous' })
+    }
+  } catch {
+    useAuthStore.setState({ status: 'anonymous' })
+  }
+}
+
+let guardInstalled = false
+/** Any 401 from a protected /api/ call returns the learner to sign-in with the server's message. */
+export function installAuthFetchGuard(): void {
+  if (guardInstalled || typeof window === 'undefined') return
+  guardInstalled = true
+  const orig = window.fetch.bind(window)
+  window.fetch = async (input, init) => {
+    const res = await orig(input, init)
+    if (res.status === 401 && useRuntimeStore.getState().authRequired) {
+      const raw = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+      let path = raw
+      try {
+        path = new URL(raw, window.location.origin).pathname
+      } catch {
+        /* keep raw */
+      }
+      if (path.startsWith('/api/') && !path.startsWith('/api/auth/') && !path.startsWith('/api/admin/')) {
+        const body = await res.clone().json().catch(() => null)
+        useAuthStore.getState().clearSession(body?.error || 'Please sign in.')
+      }
+    }
+    return res
+  }
 }

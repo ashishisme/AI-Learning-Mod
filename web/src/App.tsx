@@ -4,10 +4,14 @@ import { Routes, Route, Link } from 'react-router-dom'
 import { Home } from './pages/Home'
 import { Lesson } from './pages/Lesson'
 import { Quiz } from './pages/Quiz'
+import { Invite } from './pages/Invite'
+import { AdminLayout } from './pages/admin/AdminLayout'
+import { ExpiryBanner } from './components/ExpiryBanner'
+import { AuthGate, SignOutControl } from './components/AuthGate'
 import { Attribution } from './components/Attribution'
 import { SettingsModal } from './components/SettingsModal'
 import { HelpModal } from './components/HelpModal'
-import { useSettingsStore, useHelpStore, useThemeStore, applyThemeClass } from './store'
+import { useSettingsStore, useHelpStore, useThemeStore, useRuntimeStore, applyThemeClass, resolveTheme } from './store'
 
 export const App: React.FC = () => {
   const { setDrawerOpen, settings } = useSettingsStore()
@@ -19,9 +23,15 @@ export const App: React.FC = () => {
     applyThemeClass(theme)
   }, [theme])
 
+  useEffect(() => {
+    void useRuntimeStore.getState().load()
+  }, [])
+
+  // Toggle from what is on screen: with theme "system" on a dark OS the page is already dark,
+  // so the first click must go to light.
+  const shownTheme = resolveTheme(theme)
   const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark'
-    setTheme(next)
+    setTheme(shownTheme === 'dark' ? 'light' : 'dark')
   }
 
   return (
@@ -58,7 +68,7 @@ export const App: React.FC = () => {
               className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
               title={`Current theme: ${theme}. Click to toggle.`}
             >
-              {theme === 'dark' ? '🌙' : '☀️'}
+              {shownTheme === 'dark' ? '🌙' : '☀️'}
             </button>
 
             {/* Help & Getting Started Trigger */}
@@ -89,17 +99,23 @@ export const App: React.FC = () => {
                 <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" title="Cloud AI Active" />
               )}
             </button>
+            <SignOutControl />
           </nav>
         </div>
       </header>
+      <ExpiryBanner />
 
       {/* Main Content Area */}
       <main className="flex-1">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/lesson/:id" element={<Lesson />} />
-          <Route path="/quiz/:id" element={<Quiz />} />
-        </Routes>
+        <AuthGate>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/lesson/:id" element={<Lesson />} />
+            <Route path="/quiz/:id" element={<Quiz />} />
+            <Route path="/invite/:token" element={<Invite />} />
+            <Route path="/admin/*" element={<AdminLayout />} />
+          </Routes>
+        </AuthGate>
       </main>
 
       {/* Help & User Guide Modal */}

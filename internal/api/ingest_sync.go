@@ -9,9 +9,18 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"ai-foundations-coach/internal/ingest"
+)
+
+const (
+	// SyncRateLimit is the number of sync requests allowed per client per RateLimitWindow.
+	SyncRateLimit = 3
+	// SyncEnabledEnv must be "true" for the endpoint to run. It is off by default so a
+	// deployed server never exposes content rewrites or its GITHUB_TOKEN to anonymous callers.
+	SyncEnabledEnv = "INGEST_SYNC_ENABLED"
 )
 
 type IngestSyncRequest struct {
@@ -28,6 +37,7 @@ type IngestSyncResponse struct {
 
 type IngestSyncHandler struct {
 	contentDir string
+	running    sync.Mutex
 }
 
 func NewIngestSyncHandler(contentDir string) *IngestSyncHandler {
@@ -42,6 +52,20 @@ func (h *IngestSyncHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		_ = json.NewEncoder(w).Encode(map[string]string{"error": "method not allowed"})
+		return
+	}
+
+	if !strings.EqualFold(strings.TrimSpace(os.Getenv(SyncEnabledEnv)), "true") {
+		w.WriteHeader(http.StatusForbidden)
+		_ = json.NewEncoder(w).Encode(IngestSyncResponse{Error: "curriculum sync is disabled on this server"})
+		return
+	}
+
+	// Cross-site HTML forms cannot send this content type without a CORS preflight, which
+	// this server never approves, so this also blocks cross-site request forgery.
+	if !strings.HasPrefix(strings.ToLower(r.Header.Get("Content-Type")), "application/json") {
+		w.WriteHeader(http.StatusUnsupportedMediaType)
+		_ = json.NewEncoder(w).Encode(IngestSyncResponse{Error: "content type must be application/json"})
 		return
 	}
 
@@ -67,6 +91,13 @@ func (h *IngestSyncHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !h.running.TryLock() {
+		w.WriteHeader(http.StatusConflict)
+		_ = json.NewEncoder(w).Encode(IngestSyncResponse{Error: "a curriculum sync is already running"})
+		return
+	}
+	defer h.running.Unlock()
+
 	ctx, cancel := context.WithTimeout(r.Context(), 90*time.Second)
 	defer cancel()
 
@@ -85,7 +116,7 @@ func (h *IngestSyncHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(IngestSyncResponse{
 			OK:         false,
 			DurationMs: latency,
-			Error:      err.Error(),
+			Error:      "curriculum sync failed; check the server logs",
 		})
 		return
 	}

@@ -1,0 +1,29 @@
+# Secrets and local state must never reach the build context
+.env
+.env.*
+data/
+logs/
+*.log
+
+# Rebuilt inside the image
+web/node_modules/
+web/dist/
+web/test-results/
+web/playwright-report/
+bin/
+/server
+
+# Not needed in the image
+.git/
+.claude/
+.specify/
+spec/
+specs/
+research_notes/
+reports/
+scripts/
+web/tests/
+Dockerfile
+.dockerignore
+.DS_Store
+coverage.out

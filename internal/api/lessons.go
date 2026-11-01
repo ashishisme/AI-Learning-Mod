@@ -10,12 +10,15 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"ai-foundations-coach/internal/usage"
 )
 
 var idRegex = regexp.MustCompile(`^[a-z0-9][a-z0-9_-]{0,63}$`)
 
 type LessonsHandler struct {
 	contentDir string
+	usage      *usage.Recorder
 }
 
 func NewLessonsHandler(contentDir string) *LessonsHandler {
@@ -143,6 +146,11 @@ func (h *LessonsHandler) GetLesson(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	// One count per page view: the lesson page always fetches the standard lesson once, and an
+	// adaptive request carries ?mode= on top of that (FR-040).
+	if mode == "" {
+		h.usage.IncLesson(id)
+	}
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write(data)
 }

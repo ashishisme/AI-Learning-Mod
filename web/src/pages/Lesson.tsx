@@ -8,7 +8,7 @@ import {
   AdaptiveLessonPayload,
   ApiError,
 } from '../api'
-import { useProgressStore, useAudienceModeStore } from '../store'
+import { useProgressStore, useAudienceModeStore, useRuntimeStore } from '../store'
 import { MarkdownBlock } from '../components/MarkdownBlock'
 import { TutorPanel } from '../components/TutorPanel'
 import { AudienceModeSelector } from '../components/AudienceModeSelector'
@@ -23,6 +23,7 @@ export const Lesson: React.FC = () => {
 
   const { completedLessons, toggleLesson } = useProgressStore()
   const { mode: audienceMode } = useAudienceModeStore()
+  const tutorEnabled = useRuntimeStore((st) => st.tutorEnabled) // FR-024
 
   // 1. Fetch canonical lesson metadata
   useEffect(() => {
@@ -91,6 +92,47 @@ export const Lesson: React.FC = () => {
 
   const isAdaptiveActive = audienceMode !== 'standard' && adaptivePayload !== null
 
+  // Quiz, Colab and completion stay reachable in every audience mode.
+  const lessonActions = (
+      <div className="flex flex-wrap items-center gap-2.5 flex-shrink-0" data-testid="lesson-actions">
+        <Link
+          to={`/quiz/${lesson.id}`}
+          data-testid="lesson-quiz-button"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
+        >
+          <span>🎯</span>
+          <span>Take Quiz</span>
+        </Link>
+
+        {hasNotebook && (
+          <a
+            href={colabLink}
+            target="_blank"
+            rel="noreferrer"
+            data-testid="colab-button"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
+          >
+            <span>⚡</span>
+            <span>Open in Colab</span>
+          </a>
+        )}
+
+        <button
+          type="button"
+          data-testid="mark-complete-button"
+          onClick={() => toggleLesson(lesson.id)}
+          className={`inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg border active:scale-95 transition-all ${
+            isCompleted
+              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 shadow-sm'
+              : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm'
+          }`}
+        >
+          <span>{isCompleted ? '✅' : '⬜'}</span>
+          <span>{isCompleted ? 'Completed' : 'Mark Complete'}</span>
+        </button>
+      </div>
+  )
+
   return (
     <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6">
       {/* Navigation Sub-bar */}
@@ -127,50 +169,17 @@ export const Lesson: React.FC = () => {
               </h1>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2.5 flex-shrink-0">
-              <Link
-                to={`/quiz/${lesson.id}`}
-                data-testid="lesson-quiz-button"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
-              >
-                <span>🎯</span>
-                <span>Take Quiz</span>
-              </Link>
-
-              {hasNotebook && (
-                <a
-                  href={colabLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  data-testid="colab-button"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
-                >
-                  <span>⚡</span>
-                  <span>Open in Colab</span>
-                </a>
-              )}
-
-              <button
-                type="button"
-                data-testid="mark-complete-button"
-                onClick={() => toggleLesson(lesson.id)}
-                className={`inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg border active:scale-95 transition-all ${
-                  isCompleted
-                    ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 shadow-sm'
-                    : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm'
-                }`}
-              >
-                <span>{isCompleted ? '✅' : '⬜'}</span>
-                <span>{isCompleted ? 'Completed' : 'Mark Complete'}</span>
-              </button>
-            </div>
+            {lessonActions}
           </div>
         </header>
       )}
 
       {/* Main Content Area */}
       {isAdaptiveActive ? (
-        <AdaptiveLessonView payload={adaptivePayload} />
+        <>
+          <div className="mb-6 flex justify-end">{lessonActions}</div>
+          <AdaptiveLessonView payload={adaptivePayload} />
+        </>
       ) : (
         <main
           data-testid="lesson-content"
@@ -178,7 +187,7 @@ export const Lesson: React.FC = () => {
         >
           {audienceMode !== 'standard' && !adaptivePayload && (
             <div className="p-3 mb-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 text-amber-800 dark:text-amber-300 text-xs font-medium">
-              ℹ️ Adaptive mode "{audienceMode}" is currently available for Lesson 1 (Pilot). Showing standard curriculum for this lesson.
+              ℹ️ Adaptive mode "{audienceMode}" isn't available for this lesson yet. Showing standard curriculum for this lesson.
             </div>
           )}
           {lesson.blocks.map((block, idx) => (
@@ -188,7 +197,7 @@ export const Lesson: React.FC = () => {
       )}
 
       {/* Grounded AI Teaching Assistant */}
-      <TutorPanel lessonId={lesson.id} />
+      {tutorEnabled && <TutorPanel lessonId={lesson.id} />}
     </div>
   )
 }

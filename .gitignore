@@ -37,6 +37,9 @@ Thumbs.db
 logs/
 nohup.out
 web/nohup.out
-server
+# Compiled server binary at the repo root only (not cmd/server/)
+/server
 web/*.tsbuildinfo
 
+# Runtime state file for invite-only mode (SPEC-008)
+data/

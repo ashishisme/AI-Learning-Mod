@@ -51,3 +51,4 @@ $$\text{Cost}_{\text{total}} = \text{Cost}_{\text{compute}} + \text{Cost}_{\text
 - **Google Cloud Platform (Primary):** Cloud Run v2 (scale-to-zero, concurrency 80) + Cloud CDN + Cloud Secret Manager.
 - **AWS Equivalent (Secondary):** AWS App Runner or ECS Fargate (vCPU 1.0, RAM 512MB) + CloudFront.
 - **CI/CD:** GitHub Actions with Google Workload Identity Federation (WIF) and Docker Buildx multi-arch caching.
+

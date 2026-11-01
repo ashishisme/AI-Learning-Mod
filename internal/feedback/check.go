@@ -1,0 +1,182 @@
+// SPEC: FR-048, SC-018
+package feedback
+
+import (
+	"regexp"
+	"strings"
+)
+
+// Kinds of personal detail the rule check reports. The matched text itself is never returned.
+const (
+	KindEmail       = "email"
+	KindPhone       = "phone"
+	KindAddress     = "address"
+	KindIDNumber    = "id_number"
+	KindDateOfBirth = "date_of_birth"
+	KindLink        = "link"
+)
+
+const (
+	monthName = `(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)`
+	tlds      = `(?:com|in|org|net|edu|gov|io|ac|ly|app|dev|xyz|info|co\.in|co\.uk|org\.in|ac\.in)`
+)
+
+var (
+	emailRe = regexp.MustCompile(`[a-z0-9._%+\-]+@[a-z0-9\-]+(?:\.[a-z0-9\-]+)*\.[a-z]{2,}`)
+	// "name at gmail dot com", "name (at) gmail.com"
+	spokenEmailRe = regexp.MustCompile(`[a-z0-9._\-]+\s*(?:\bat\b|\(at\)|\[at\])\s*[a-z0-9\-]+(?:\s+dot\s+|\s*\.\s*)` + tlds + `\b`)
+
+	linkRe = regexp.MustCompile(`https?://|\bwww\.|\b[a-z0-9\-]+\.` + tlds + `\b|\b(?:t|wa)\.me/`)
+	// "@asha_k", "my insta", "add me on snapchat"
+	handleRe = regexp.MustCompile(`(?:^|\s)@[a-z0-9_.]{2,}|\b(?:my|add me on|follow me on|find me on|message me on|text me on)\s+(?:insta(?:gram)?|snap(?:chat)?|telegram|whatsapp|facebook|fb|tiktok|discord)\b`)
+
+	// A number, one or two name words, then a street word: "12 MG Road", "27 Rose Garden Road".
+	// At least one word between them, so "2 road signs" is fine. "2 cars on the road" has three.
+	streetRe = regexp.MustCompile(`\b\d+[a-z]?(?:[\s,/\-]+[a-z.']+){1,2}[\s,]+(?:street|st|road|rd|lane|ln|avenue|ave|marg|nagar|colony|apartments?|apts|layout|enclave|vihar|highway|boulevard|blvd|drive)\b`)
+	// "House no. 27", "flat 4B", "plot 12", "sector 9"
+	premisesRe = regexp.MustCompile(`\b(?:house|flat|plot|door|apartment|apt|ward|sector|h\.?\s?no)\.?\s*(?:no\.?|number|#)?\s*[:\-]?\s*\d+[a-z]?\b`)
+	postcodeRe = regexp.MustCompile(`\b(?:pin\s?code|pin|zip\s?code|zip|post\s?code|postal\s?code)\s*(?:code|is)?\s*[:\-]?\s*\d{5,6}\b`)
+	statedAddr = regexp.MustCompile(`\b(?:i live at|i live on|we live at|we live on|my (?:home |house )?address|my house is (?:at|on|near)|my house number)\b`)
+
+	panRe = regexp.MustCompile(`\b[a-z]{5}\d{4}[a-z]\b`)
+
+	datePart = `(?:\d{1,2}(?:st|nd|rd|th)?[\s/\-.]+(?:\d{1,2}|` + monthName + `)(?:[\s/\-.,]+\d{2,4})?|` + monthName + `\s+\d{1,2}(?:st|nd|rd|th)?(?:[\s,]+\d{2,4})?|\d{4}[\-/.]\d{1,2}[\-/.]\d{1,2})`
+	dobRe    = regexp.MustCompile(`\b(?:my birthday|my birth\s?date|my date of birth|date of birth|my dob|dob|born on|i was born)\b(?:\s*(?:is|was|:|-|on|in))*\s*(?:` + datePart + `|\d{4}\b)`)
+
+	digitTokenRe = regexp.MustCompile(`[a-z]+|\d+`)
+
+	numberWords = map[string]int{"zero": 1, "oh": 1, "one": 1, "two": 1, "three": 1, "four": 1, "five": 1, "six": 1, "seven": 1, "eight": 1, "nine": 1}
+	repeatWords = map[string]int{"double": 2, "triple": 3}
+)
+
+// Other scripts' digits an Indian learner may type, by the code point of their zero.
+var digitZeros = []rune{0x0660, 0x06F0, 0x0966, 0x09E6, 0x0A66, 0x0AE6, 0x0B66, 0x0BE6, 0x0C66, 0x0CE6, 0x0D66, 0xFF10}
+
+// normalizeForCheck lower-cases, removes invisible characters and turns other digits into ASCII.
+func normalizeForCheck(s string) string {
+	return strings.ToLower(strings.Map(func(r rune) rune {
+		switch r {
+		case 0x200B, 0x200C, 0x200D, 0x2060, 0xFEFF, 0x00AD:
+			return -1
+		case 0x00A0, 0x202F:
+			return ' '
+		case 0xFF20:
+			return '@'
+		case 0xFF0E:
+			return '.'
+		}
+		for _, z := range digitZeros {
+			if r >= z && r <= z+9 {
+				return '0' + (r - z)
+			}
+		}
+		return r
+	}, s))
+}
+
+// digitRunKind looks for a long run of digits or spelled-out digits, with only spaces and phone
+// punctuation between them. Words and other punctuation end a run, so "10 out of 10" is two short
+// runs and "10:30 12:45" is not a number at all.
+func digitRunKind(s string) (string, bool) {
+	best := ""
+	runDigits, runStart := 0, -1
+	prevEnd := -1
+	repeat := 1
+	flush := func(end int) {
+		if runDigits >= 7 {
+			text := s[runStart:end]
+			// A plain decimal such as 3.14159 is not a phone number.
+			if !isDecimal(text) {
+				kind := KindPhone
+				digits := onlyDigits(text)
+				plus := runStart > 0 && s[runStart-1] == '+'
+				switch {
+				case plus:
+				case len(digits) >= 13:
+					kind = KindIDNumber
+				case len(digits) == 12 && !(strings.HasPrefix(digits, "91") && digits[2] >= '6' && digits[2] <= '9'):
+					kind = KindIDNumber
+				}
+				if best == "" || kind == KindIDNumber {
+					best = kind
+				}
+			}
+		}
+		runDigits, runStart = 0, -1
+	}
+	for _, loc := range digitTokenRe.FindAllStringIndex(s, -1) {
+		tok := s[loc[0]:loc[1]]
+		isDigits := tok[0] >= '0' && tok[0] <= '9'
+		_, isWord := numberWords[tok]
+		rep, isRepeat := repeatWords[tok]
+		if prevEnd >= 0 && !strings.ContainsFunc(s[prevEnd:loc[0]], func(r rune) bool { return !strings.ContainsRune(" \t\n\r+().-", r) }) && runStart >= 0 {
+			// still contiguous
+		} else if runStart >= 0 {
+			flush(prevEnd)
+		}
+		switch {
+		case isRepeat:
+			repeat = rep
+			if runStart < 0 {
+				runStart = loc[0]
+			}
+		case isDigits:
+			if runStart < 0 {
+				runStart = loc[0]
+			}
+			runDigits += len(tok)
+			repeat = 1
+		case isWord:
+			if runStart < 0 {
+				runStart = loc[0]
+			}
+			runDigits += repeat
+			repeat = 1
+		default:
+			if runStart >= 0 {
+				flush(prevEnd)
+			}
+			repeat = 1
+		}
+		prevEnd = loc[1]
+	}
+	if runStart >= 0 {
+		flush(prevEnd)
+	}
+	return best, best != ""
+}
+
+var decimalRe = regexp.MustCompile(`^\d{1,3}\.\d+$`)
+
+func isDecimal(s string) bool { return decimalRe.MatchString(s) }
+
+func onlyDigits(s string) string {
+	var b strings.Builder
+	for _, r := range s {
+		if r >= '0' && r <= '9' {
+			b.WriteRune(r)
+		}
+	}
+	return b.String()
+}
+
+// Check reports the kind of the first personal detail found. It uses deterministic rules only and
+// is not perfect: a name written in plain words passes here and is left to the AI auditor. The
+// matched text is never returned or logged.
+func Check(message string) (kind string, found bool) {
+	s := normalizeForCheck(message)
+	squeezed := strings.Join(strings.Fields(s), "") // "a . b @ g m a i l . c o m"
+	switch {
+	case emailRe.MatchString(s), emailRe.MatchString(squeezed), spokenEmailRe.MatchString(s):
+		return KindEmail, true
+	case dobRe.MatchString(s):
+		return KindDateOfBirth, true
+	case linkRe.MatchString(s), handleRe.MatchString(s):
+		return KindLink, true
+	case streetRe.MatchString(s), premisesRe.MatchString(s), postcodeRe.MatchString(s), statedAddr.MatchString(s):
+		return KindAddress, true
+	case panRe.MatchString(s):
+		return KindIDNumber, true
+	}
+	return digitRunKind(s)
+}

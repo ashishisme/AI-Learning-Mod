@@ -29,6 +29,9 @@ if [ -f "${ROOT_DIR}/.env" ]; then
   set +a
 fi
 
+# Local runs keep the Settings "Sync Latest" button working; deployed servers leave this off.
+export INGEST_SYNC_ENABLED="${INGEST_SYNC_ENABLED:-true}"
+
 # 3. Start Go Backend (Port 8080)
 echo "⚙️ Starting Go backend server (port 8080)..."
 cd "${ROOT_DIR}"

@@ -152,15 +152,24 @@ npm --prefix web run dev
 The application compiles into an optimized non-root container (`UID 10001`):
 
 ```bash
+# Generate the lessons first: the image bundles public-content/ as it is at build time
+GITHUB_TOKEN=<your-token> go run ./cmd/ingest
+
 # Build production image
 docker build -t ai-foundations-coach .
 
-# Run container with local Ollama or cloud OpenAI:
+# Run a private local container with a host Ollama. HOSTED_MODE=false allows the private address:
 docker run -p 8080:8080 \
-  -e AI_BASE_URL="http://host.docker.internal:11434/v1" \
-  -e AI_MODEL="llama3.2:1b" \
+  -e HOSTED_MODE=false \
+  -e OPENAI_BASE_URL="http://host.docker.internal:11434/v1" \
+  -e OPENAI_MODEL="llama3.2:1b" \
   ai-foundations-coach
+
+# Run a public deployment (the image default is HOSTED_MODE=true):
+docker run -p 8080:8080 -e OPENAI_API_KEY=<key> -e TRUSTED_PROXY_HOPS=1 ai-foundations-coach
 ```
+In hosted mode the AI endpoint, key and model come only from the server's environment. Settings overrides, curriculum sync and AI-config-test are disabled, and the server refuses to connect to private or cloud-metadata addresses.
+
 Access the application at **http://localhost:8080**.
 
 ---
@@ -188,11 +197,14 @@ The Go server automatically serves the compiled frontend assets from `web/dist/`
 |---|---|---|
 | `PORT` | `8080` | Port for the HTTP backend server |
 | `CONTENT_DIR` | `public-content` | Path to curriculum JSON lessons |
-| `AI_BASE_URL` | `http://localhost:11434/v1` | URL for the OpenAI-compatible or Ollama API |
-| `AI_MODEL` | `llama3.2:1b` | Default LLM model identifier |
+| `OPENAI_BASE_URL` | *(empty)* | OpenAI-compatible or Ollama endpoint (for example `http://localhost:11434/v1`) |
+| `OPENAI_MODEL` | `gpt-4o-mini` | Default LLM model identifier |
 | `OPENAI_API_KEY` | *(empty)* | API key for OpenAI (leave blank for local Ollama) |
 | `MOCK_TUTOR` | `false` | When `true`, simulates grounded AI tutor responses offline |
-| `AI_MAX_BYTES` | `4000` | Truncation budget for curriculum context passed to the LLM |
+| `TUTOR_MAX_LESSON_BYTES` | `12000` | Truncation budget for curriculum context passed to the LLM |
+| `HOSTED_MODE` | `false` (`true` in the Docker image) | Public deployment: AI settings come only from the server environment, per-request overrides are ignored, curriculum sync and AI-config-test are disabled, and connections to private or metadata addresses are refused |
+| `TRUSTED_PROXY_HOPS` | `0` | Reverse proxies in front of the server (`1` on Cloud Run). Rate limits then count each visitor separately |
+| `INGEST_SYNC_ENABLED` | `false` | Allows `POST /api/ingest/sync` (Settings "Sync Latest"). Local use only; ignored when `HOSTED_MODE` is on |
 
 ---
 

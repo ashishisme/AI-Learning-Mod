@@ -80,15 +80,18 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
     });
   };
 
-  // Stop playback if component unmounts
+  // Stop playback only when this button unmounts while its own track is playing. Reading the
+  // store at that moment (not a render-time closure) keeps a track change from stopping the
+  // track that was just started.
   useEffect(() => {
     return () => {
-      if (activeTrackId === id) {
+      const audio = useAudioStore.getState();
+      if (audio.activeTrackId === id) {
         speechService.stop();
-        stopAudio();
+        audio.stopAudio();
       }
     };
-  }, [id, activeTrackId, stopAudio]);
+  }, [id]);
 
   if (isMuted) {
     return null;

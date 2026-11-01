@@ -559,7 +559,22 @@ dependency requires amendment.
 
 **DC-08.** Single container image serves SPA and API on one port.
 
-**DC-09.** No database, ORM, session store, or server-side state in v1.
+**DC-09 (amended 2.2.0, 2026-11-01).** Lessons remain static JSON packaged
+with the release. Server-side persistent state is permitted only for
+(a) access-control records (invites, pseudonymous beta accounts, sessions,
+admin audit entries); (b) operational counters (daily AI spend tally,
+rate-limit counters, aggregate usage counts per day, a last-seen time per
+beta account); and (c) learner feedback records (a rating, a category, a
+message of at most 500 characters scrubbed of emails, phone numbers and
+links, and context fields: group label, lesson, audience mode, app version,
+time), with no Beta ID, network address, session or device details, deleted
+automatically after 180 days. It shall contain no personal data and no
+learner question or answer text from the AI tutor, shall be reached only
+through a store interface, shall not use an ORM, and in a hosted deployment
+shall live in a managed serverless store that costs nothing when idle. A
+local file-backed implementation is permitted for development, tests and
+single-instance self-hosting. Learner progress and preferences remain
+browser-local.
 
 **DC-10.** No Python anywhere in the build or runtime.
  

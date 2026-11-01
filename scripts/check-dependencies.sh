@@ -222,6 +222,11 @@ echo ""
 
 # Final Summary
 echo -e "${BOLD}${BLUE}================================================================${NC}"
+if [ "$STRICT_MODE" = true ] && [ $ERRORS -eq 0 ] && [ $WARNINGS -gt 0 ]; then
+    echo -e "${RED}${BOLD} --strict: failing because of ${WARNINGS} warning(s) listed above.${NC}"
+    echo -e "${BOLD}${BLUE}================================================================${NC}"
+    exit 1
+fi
 if [ $ERRORS -eq 0 ]; then
     echo -e "${GREEN}${BOLD} All mandatory requirements are satisfied!${NC}"
     if [ $WARNINGS -gt 0 ]; then

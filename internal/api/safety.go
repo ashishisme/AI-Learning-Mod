@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+	"strings"
+	"unicode"
 )
 
 // SafetyCategory identifies why a question was not sent to the model.
@@ -21,20 +23,38 @@ const (
 
 // A deliberately small, conservative screen. It is a first line of defence in
 // front of the model, not a replacement for the provider's own moderation.
+// Rules run on normalizeForScreening output: lowercase words separated by single
+// spaces, with apostrophes removed and other punctuation treated as a space.
 var safetyRules = []struct {
 	category SafetyCategory
 	re       *regexp.Regexp
 }{
-	{SafetySelfHarm, regexp.MustCompile(`(?i)\b(kill myself|hurt myself|harm myself|suicide|suicidal|want to die|end my life|cut myself)\b`)},
-	{SafetyExplicit, regexp.MustCompile(`(?i)\b(porn\w*|nudes?|naked|sex video|sexual content|xxx)\b`)},
-	{SafetyViolence, regexp.MustCompile(`(?i)\b(make a bomb|build a bomb|how to kill|how to hurt|make a weapon|buy a gun)\b`)},
-	{SafetyPersonalPII, regexp.MustCompile(`(?i)\b(my (home )?address is|my phone number is|my password is|i live at)\b`)},
+	{SafetySelfHarm, regexp.MustCompile(`\b(?:(?:kill|hurt|harm|cutt?|stabb?|shoot|hang|poison|starve?|drown)(?:ing|s)? my ?self|suicid\w*|self ?harm\w*|unalive\w*|want(?:s|ed)? to die|wanna die|wish i (?:was|were) dead|wish i could die|end(?:ing)? my (?:own )?life|tak(?:e|ing) my (?:own )?life|end(?:ing)? it all|(?:dont|do not) (?:want to|wanna) (?:live|be alive|exist|be here anymore)|better off dead|no reason to live)\b`)},
+	{SafetyExplicit, regexp.MustCompile(`\b(?:porn\w*|nudes?|naked|sex video|sexual content|xxx)\b`)},
+	{SafetyViolence, regexp.MustCompile(`\b(?:(?:mak|build|creat|construct)\w* (?:(?:a|an|some|my|homemade|pipe) )*(?:bombs?|explosives?|weapons?)|how (?:to|(?:do|can|could|would|should) i) (?:kill|hurt|stab|shoot|poison)|(?:want to|wanna|going to|gonna) (?:kill|stab|shoot|hurt) (?:him|her|them|someone|somebody|people|my \w+)|(?:buy|buying|get|getting) a gun)\b`)},
+	{SafetyPersonalPII, regexp.MustCompile(`\b(?:my (?:home |house |email |e mail )?address is|my (?:cell |mobile |home |phone )(?:phone )?number is|my (?:pass ?word|passcode|pin) is|i live at|i live on \w+ (?:street|st|road|rd|avenue|ave|lane|drive)|heres my (?:home |house |email |e mail )?address|heres my (?:cell |mobile |home )?(?:phone )?number|heres my password)\b`)},
+}
+
+// normalizeForScreening stops spacing, punctuation and letter case from defeating the rules.
+func normalizeForScreening(question string) string {
+	cleaned := strings.Map(func(r rune) rune {
+		switch {
+		case r == '\'' || r == '’':
+			return -1
+		case unicode.IsLetter(r) || unicode.IsDigit(r):
+			return unicode.ToLower(r)
+		default:
+			return ' '
+		}
+	}, question)
+	return strings.Join(strings.Fields(cleaned), " ")
 }
 
 // ScreenQuestion returns the category of the first matching rule, or SafetyNone.
 func ScreenQuestion(question string) SafetyCategory {
+	normalized := normalizeForScreening(question)
 	for _, r := range safetyRules {
-		if r.re.MatchString(question) {
+		if r.re.MatchString(normalized) {
 			return r.category
 		}
 	}

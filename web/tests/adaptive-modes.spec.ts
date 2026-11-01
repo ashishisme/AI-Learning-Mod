@@ -111,4 +111,31 @@ test.describe('Adaptive Audience Modes (Kids 8-14 & Plain English)', () => {
     await expect(juniorTab).toHaveAttribute('aria-selected', 'true')
     await expect(page.getByText('Chip the Robot', { exact: true })).toBeVisible()
   })
+
+  test('falls back to the standard lesson when a lesson has no adaptive version', async ({ page }) => {
+    const pageErrors: string[] = []
+    page.on('pageerror', (err) => pageErrors.push(err.message))
+
+    const lesson = {
+      id: 'no-adaptive',
+      module: 'general',
+      title: 'Lesson Without Adaptive Version',
+      order: 99,
+      path: 'no-adaptive/README.md',
+      commitSha: 'abc',
+      blocks: [{ type: 'markdown', content: 'Standard lesson body.' }],
+    }
+    // The server answers ?mode=junior with the canonical lesson when no adaptive file exists.
+    await page.route('**/api/lessons/no-adaptive*', (route) => route.fulfill({ json: lesson }))
+    await page.evaluate(() =>
+      localStorage.setItem('ai-foundations-audience-mode', JSON.stringify({ state: { mode: 'junior' }, version: 0 })),
+    )
+
+    await page.goto('/lesson/no-adaptive')
+
+    await expect(page.locator('[data-testid="lesson-title"]')).toHaveText(lesson.title)
+    await expect(page.getByText('Standard lesson body.')).toBeVisible()
+    await expect(page.getByText("isn't available for this lesson yet")).toBeVisible()
+    expect(pageErrors).toEqual([])
+  })
 })

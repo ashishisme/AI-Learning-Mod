@@ -1,6 +1,6 @@
 // SPEC: FR-SET-01, FR-SET-02, FR-SET-03, FR-SET-05, FR-UI-14, FR-UI-15, NFR-SEC-01
 import React, { useState } from 'react'
-import { useSettingsStore, useThemeStore, AISettings } from '../store'
+import { useSettingsStore, useThemeStore, useRuntimeStore, AISettings } from '../store'
 import { testAIConfig, syncCurriculum, ConfigTestResult, IngestSyncResult } from '../api'
 import pkg from '../../package.json'
 import { formatBuild } from '../buildInfo'
@@ -8,6 +8,7 @@ import { formatBuild } from '../buildInfo'
 export const SettingsModal: React.FC = () => {
   const { settings, isDrawerOpen, setDrawerOpen, updateSettings, resetDefaults } = useSettingsStore()
   const { theme, setTheme } = useThemeStore()
+  const hosted = useRuntimeStore((st) => st.hosted)
 
   const [form, setForm] = useState<AISettings>(settings)
   const [showApiKey, setShowApiKey] = useState(false)
@@ -180,6 +181,17 @@ export const SettingsModal: React.FC = () => {
           </div>
         </div>
 
+        {/* FR-021: on a hosted deployment the AI provider, credentials, certificate handling and
+            curriculum sync are controlled by the server, so none of those controls are shown. */}
+        {hosted ? (
+          <div
+            data-testid="settings-hosted-note"
+            className="p-3 rounded-xl border border-slate-800 bg-slate-800/30 text-[11px] text-slate-400"
+          >
+            The AI tutor and lesson content are managed by this service. Only your display preferences can be changed here.
+          </div>
+        ) : (
+          <>
         {/* Curriculum Git Sync (FR-ING-09, FR-SET-05) */}
         <div className="p-4 rounded-xl border border-slate-800 bg-slate-800/30 flex flex-col gap-2">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -465,6 +477,9 @@ export const SettingsModal: React.FC = () => {
           </div>
         </div>
 
+          </>
+        )}
+
         {/* Live Diagnostics Card */}
         {testResult && (
           <div
@@ -517,6 +532,7 @@ export const SettingsModal: React.FC = () => {
           </button>
 
           <div className="flex items-center gap-2">
+            {!hosted && (
             <button
               type="button"
               id="test-connection-btn"
@@ -536,6 +552,7 @@ export const SettingsModal: React.FC = () => {
                 </>
               )}
             </button>
+            )}
 
             <button
               type="button"

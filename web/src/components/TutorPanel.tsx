@@ -1,26 +1,8 @@
 // SPEC: FR-UI-03, FR-UI-07, FR-UI-12, NFR-SEC-05, AC-24, SPEC-005 (Audio & Speech Tutor)
-import React, { useState, useEffect } from 'react'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import rehypeRaw from 'rehype-raw'
-import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
+import React, { useState, useEffect, useRef } from 'react'
 import { askTutorStream, ApiError } from '../api'
 import { useAudienceModeStore } from '../store'
 import { speechService } from '../services/speechService'
-
-const sanitizeSchema = {
-  ...defaultSchema,
-  tagNames: defaultSchema.tagNames?.filter(
-    (tag) => !['script', 'iframe', 'object', 'embed', 'form'].includes(tag)
-  ),
-  attributes: {
-    ...defaultSchema.attributes,
-    '*': (defaultSchema.attributes?.['*'] || []).filter(
-      (attr) => typeof attr === 'string' && !attr.toLowerCase().startsWith('on')
-    ),
-    a: ['href', 'title', 'target', 'rel'],
-  },
-}
 
 interface TutorPanelProps {
   lessonId: string
@@ -46,6 +28,18 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
     }
   })
   const [showMicConsent, setShowMicConsent] = useState(false)
+  const recognitionRef = useRef<any>(null)
+
+  // Release the microphone if the panel goes away while listening.
+  useEffect(() => {
+    return () => {
+      try {
+        recognitionRef.current?.abort()
+      } catch {
+        /* already stopped */
+      }
+    }
+  }, [])
 
   useEffect(() => {
     // Check Web Speech API availability
@@ -70,6 +64,11 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
     }
 
     if (isListening) {
+      try {
+        recognitionRef.current?.stop()
+      } catch {
+        /* already stopped */
+      }
       setIsListening(false)
       return
     }
@@ -81,7 +80,10 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
       recognition.lang = 'en-US'
 
       recognition.onstart = () => setIsListening(true)
-      recognition.onend = () => setIsListening(false)
+      recognition.onend = () => {
+        recognitionRef.current = null
+        setIsListening(false)
+      }
       recognition.onerror = () => setIsListening(false)
       recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript
@@ -91,8 +93,10 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
         setIsListening(false)
       }
 
+      recognitionRef.current = recognition
       recognition.start()
     } catch (e) {
+      recognitionRef.current = null
       console.warn('Speech recognition start failed', e)
       setIsListening(false)
     }
@@ -129,16 +133,9 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
     setErrorMessage(null)
     setIsReadingAnswer(false)
 
-    const promptToSend =
-      audienceMode === "junior"
-        ? `[Tone: Friendly explanation for a 10-year-old student with playful analogies]: ${question.trim()}`
-        : audienceMode === "plain-english"
-        ? `[Tone: Plain English everyday explanation for non-tech adults]: ${question.trim()}`
-        : question.trim()
-
     await askTutorStream(
       lessonId,
-      promptToSend,
+      question.trim(),
       (token) => {
         setAnswer((prev) => (prev || '') + token)
       },
@@ -159,7 +156,8 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
           const msg = err instanceof Error ? err.message : 'An unexpected error occurred'
           setErrorMessage(msg)
         }
-      }
+      },
+      audienceMode
     )
   }
 
@@ -234,12 +232,9 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
             data-testid="tutor-answer"
             className="p-5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 text-sm font-normal leading-relaxed select-text prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-headings:my-2 prose-p:my-1.5 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:font-medium prose-a:underline hover:prose-a:text-blue-700"
           >
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
-            >
-              {answer}
-            </ReactMarkdown>
+            {/* NFR-SEC-05: model output is untrusted, so it is shown as plain text. Links and images
+                from a model would be live phishing links for child users. */}
+            <p className="whitespace-pre-wrap break-words">{answer}</p>
             {isStreaming && (
               <span
                 data-testid="streaming-cursor"

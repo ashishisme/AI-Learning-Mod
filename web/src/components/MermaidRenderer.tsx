@@ -62,6 +62,19 @@ export const MermaidRenderer: React.FC<Props> = ({ chart, caption, alt, classNam
     }
   }, [chart, theme, uniqueId])
 
+  // Attach the rendered SVG as DOM nodes instead of an HTML string (NFR-SEC-05 forbids raw
+  // HTML injection). Mermaid's strict security level has already sanitised the markup.
+  useEffect(() => {
+    const host = containerRef.current
+    if (!host || !svgContent) return
+    const parsed = new DOMParser().parseFromString(svgContent, 'text/html').querySelector('svg')
+    if (!parsed) {
+      setError('Could not render diagram preview')
+      return
+    }
+    host.replaceChildren(document.importNode(parsed, true))
+  }, [svgContent])
+
   return (
     <figure aria-label={alt} className={`my-6 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm ${className}`}>
       {caption && (
@@ -84,7 +97,6 @@ export const MermaidRenderer: React.FC<Props> = ({ chart, caption, alt, classNam
             role="img"
             aria-label={alt || caption}
             className="w-full flex justify-center [&_svg]:max-w-full [&_svg]:h-auto transition-all"
-            dangerouslySetInnerHTML={{ __html: svgContent }}
           />
         ) : (
           <div className="flex items-center gap-2 text-xs font-medium text-slate-400 animate-pulse">

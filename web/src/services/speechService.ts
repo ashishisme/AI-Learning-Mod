@@ -72,7 +72,10 @@ class SpeechService {
   private currentUtterance: SpeechSynthesisUtterance | null = null;
   private voices: SpeechSynthesisVoice[] = [];
   private audioCtx: AudioContext | null = null;
-  private isCancelled: boolean = false;
+  // Bumped by every speak() and stop(). Events from an utterance that belongs to an older
+  // generation (for example the "interrupted" event the browser fires after cancel()) are ignored,
+  // so they can neither queue more speech nor report a stale end.
+  private generation: number = 0;
   private activeChunkTimeout: any = null;
 
   constructor() {
@@ -202,7 +205,8 @@ class SpeechService {
 
     // Halt any active playback
     this.stop();
-    this.isCancelled = false;
+    const gen = ++this.generation;
+    const isStale = () => gen !== this.generation;
 
     const chunks = this.cleanAndChunkText(text);
     if (chunks.length === 0) {
@@ -225,11 +229,8 @@ class SpeechService {
     let currentIndex = 0;
 
     const speakNextChunk = () => {
-      if (this.isCancelled || !this.synth) {
-        this.currentUtterance = null;
-        if (options.onEnd) options.onEnd();
-        return;
-      }
+      // Stopped or replaced by a newer speak(): the newer owner reports its own state.
+      if (isStale() || !this.synth) return;
 
       if (currentIndex >= chunks.length) {
         this.currentUtterance = null;
@@ -252,7 +253,7 @@ class SpeechService {
       }
 
       utterance.onend = () => {
-        if (this.isCancelled) return;
+        if (isStale()) return;
         currentIndex++;
         // Natural human breath pause (50ms) between sentences
         this.activeChunkTimeout = setTimeout(() => {
@@ -261,7 +262,7 @@ class SpeechService {
       };
 
       utterance.onerror = (e) => {
-        if (this.isCancelled) return;
+        if (isStale()) return;
         currentIndex++;
         if (currentIndex < chunks.length) {
           speakNextChunk();
@@ -283,7 +284,7 @@ class SpeechService {
    * Stop current speech and cancel pending sentence timeouts
    */
   public stop(): void {
-    this.isCancelled = true;
+    this.generation++;
     if (this.activeChunkTimeout) {
       clearTimeout(this.activeChunkTimeout);
       this.activeChunkTimeout = null;

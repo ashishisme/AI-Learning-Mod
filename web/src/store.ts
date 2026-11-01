@@ -90,11 +90,22 @@ export interface ThemeState {
   setTheme: (theme: ThemeMode) => void
 }
 
+// The theme the learner actually sees: "system" resolves to the operating system's setting.
+export function resolveTheme(theme: ThemeMode): 'light' | 'dark' {
+  if (theme === 'dark') return 'dark'
+  if (
+    theme === 'system' &&
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  ) {
+    return 'dark'
+  }
+  return 'light'
+}
+
 export function applyThemeClass(theme: ThemeMode) {
   if (typeof window === 'undefined') return
-  const isDark =
-    theme === 'dark' ||
-    (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  const isDark = resolveTheme(theme) === 'dark'
   if (isDark) {
     document.documentElement.classList.add('dark')
   } else {
@@ -189,3 +200,89 @@ export const useHelpStore = create<HelpState>((set) => ({
   setHelpOpen: (open: boolean) => set({ isHelpOpen: open }),
 }))
 
+
+// Deployment facts reported by the server (GET /api/runtime). On a hosted deployment the AI
+// endpoint, key, model, curriculum sync and certificate options are controlled by the server only.
+// The defaults keep today's behaviour until the server answers: no sign-in, tutor on, no feedback.
+export interface RuntimeState {
+  hosted: boolean
+  authRequired: boolean
+  tutorEnabled: boolean
+  feedbackEnabled: boolean
+  loaded: boolean
+  load: () => Promise<void>
+}
+
+export const useRuntimeStore = create<RuntimeState>()((set) => ({
+  hosted: false,
+  authRequired: false,
+  tutorEnabled: true,
+  feedbackEnabled: false,
+  loaded: false,
+  load: async () => {
+    try {
+      const res = await fetch('/api/runtime')
+      if (res.ok) {
+        const data = await res.json()
+        set({
+          hosted: data?.hosted === true,
+          authRequired: data?.authRequired === true,
+          // Only an explicit false hides the tutor, so older servers keep working.
+          tutorEnabled: data?.tutorEnabled !== false,
+          feedbackEnabled: data?.feedbackEnabled === true,
+          loaded: true,
+        })
+        return
+      }
+    } catch {
+      /* the server stays the authority: it ignores overrides when hosted */
+    }
+    // Unreachable or not ok: keep today's defaults (no sign-in screen) so the app never hangs.
+    set({ loaded: true })
+  },
+}))
+
+// Learner session (SPEC-008). Never persisted: the server cookie is the source of truth.
+export interface AuthSessionInfo {
+  betaId: string
+  label?: string
+  expiresAt: string
+  daysLeft: number
+  expiringSoon: boolean
+}
+
+export interface AuthState {
+  status: 'loading' | 'anonymous' | 'authenticated'
+  betaId: string
+  label: string
+  expiresAt: string
+  daysLeft: number
+  expiringSoon: boolean
+  message: string | null
+  setSession: (info: AuthSessionInfo) => void
+  clearSession: (message?: string) => void
+  setLoading: () => void
+}
+
+export const useAuthStore = create<AuthState>()((set) => ({
+  status: 'loading',
+  betaId: '',
+  label: '',
+  expiresAt: '',
+  daysLeft: 0,
+  expiringSoon: false,
+  message: null,
+  setSession: (info) =>
+    set({
+      status: 'authenticated',
+      betaId: info.betaId,
+      label: info.label ?? '',
+      expiresAt: info.expiresAt,
+      daysLeft: info.daysLeft,
+      expiringSoon: info.expiringSoon,
+      message: null,
+    }),
+  clearSession: (message) =>
+    set({ status: 'anonymous', betaId: '', label: '', expiresAt: '', daysLeft: 0, expiringSoon: false, message: message ?? null }),
+  setLoading: () => set({ status: 'loading' }),
+}))
