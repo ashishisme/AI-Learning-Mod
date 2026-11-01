@@ -1,7 +1,7 @@
 {
   "name": "ai-foundations-coach-web",
   "private": true,
-  "version": "3.1.0-rc1",
+  "version": "3.2.0-GA",
   "type": "module",
   "scripts": {
     "dev": "vite",
