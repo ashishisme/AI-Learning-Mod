@@ -14,7 +14,7 @@
       "heading": "1. From Words to Numbers: Tokenization",
       "analogy": {
         "metaphorName": "The Universal Index",
-        "description": "Machines cannot process emotions or grammar rules directly. They begin by breaking text into indexed vocabulary units called tokens."
+        "description": "Machines cannot process emotions or grammar rules directly. They begin by breaking text into small, indexed vocabulary units called tokens, much like a librarian assigning a catalogue number to every book."
       },
       "bodyMarkdown": "Computers do not read sentences as thoughts. They only read numbers. So the first step is **tokenization**.\n\nA tokenizer splits text into small units called **tokens**. These can be words or small pieces like `run` and `ing`. Each piece gets a number code in a big lookup list.\n\nOnce text turns into numbers, math models can count words, check order, and find patterns fast.",
       "jargonBuster": [
@@ -100,7 +100,7 @@
       "heading": "4. Enterprise Applications: Search, Summarization, and Chat",
       "analogy": {
         "metaphorName": "The Automated Analyst",
-        "description": "NLP tools analyze millions of customer queries, documents, and records in seconds, turning unstructured text into clear answers."
+        "description": "NLP tools can analyze millions of customer queries, documents, and records in seconds, turning large piles of unstructured text into clear, usable answers."
       },
       "bodyMarkdown": "Language AI powers tools millions use every day:\n\n* **Smart Search:** Finds pages by ideas instead of exact word matches.\n* **Tone Checks:** Reads customer reviews to see if people feel happy or upset.\n* **Fast Summaries:** Shrinks long reports into short, clear bullet points.\n* **Help Chatbots:** Answers questions for shoppers and travelers around the clock.\n\nBy turning words into math, language models help humans read, write, and find facts faster.",
       "jargonBuster": [

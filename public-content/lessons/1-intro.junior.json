@@ -94,7 +94,7 @@
       "chipQuote": "There are two famous ways scientists teach AI: writing an impossible rulebook, or letting the computer learn from clues!",
       "analogy": {
         "metaphorName": "The 10,000-Page Cat Rulebook vs. The Photo Album",
-        "description": "Path 1: You write rules for a cat: 'Pointy ears, whiskers, 4 legs.' But what if the cat is sleeping in a box? Or has one ear tucked? Your rules break! Path 2: Show the computer 1,000 photos of cats in goofy poses. Let it figure out what makes a cat a cat!"
+        "description": "Path 1: You write rules for a cat: 'Pointy ears, whiskers, 4 legs'. But what if the cat is sleeping in a box? Or has one ear tucked? Your rules break! Path 2: Show the computer 1,000 photos of cats in goofy poses. Let it figure out what makes a cat a cat!"
       },
       "bodyMarkdown": "In computer science, these two methods are known as:\n\n1. **Top-Down (Symbolic AI)**: Humans write every single rule manually. Great for math, terrible for recognizing messy real-world objects.\n2. **Bottom-Up (Machine Learning)**: Humans give data, and the machine figures out the patterns on its own!",
       "diagram": {

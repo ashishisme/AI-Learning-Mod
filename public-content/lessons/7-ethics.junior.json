@@ -83,7 +83,7 @@
         "metaphorName": "The Airplane Autopilot",
         "description": "Airplanes have autopilot systems to hold steady speed in calm skies. But real pilots always sit in the cockpit to handle stormy weather, tricky landings, and safety checks!"
       },
-      "bodyMarkdown": "Should an AI make a big life choice on its own?\n\nResponsible AI experts say **no**! For big choices, like hospital care or school admissions, we always keep a **Human-in-the-Loop**:\n* The AI acts as a fast helper that spots clues.\n* A caring human makes the final call and takes responsibility.\n\nThis keeps tech safe, warm, and fair.",
+      "bodyMarkdown": "Should an AI make a big life choice on its own?\n\nResponsible AI experts say **no**! For big choices, like hospital care or school admissions, we always keep a **Human-in-the-Loop**.\n\n* The AI acts as a fast helper that spots clues.\n* A caring human makes the final call and takes responsibility.\n\nThis keeps tech safe, warm, and fair.",
       "jargonBuster": [
         {
           "term": "Human-in-the-Loop",

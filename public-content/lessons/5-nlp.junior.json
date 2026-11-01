@@ -83,7 +83,7 @@
         "metaphorName": "The Story Chain Game",
         "description": "Have you played the game where you and a friend make a story one word at a time? Modern AI does the exact same thing billions of times every second!"
       },
-      "bodyMarkdown": "How do tools like ChatGPT write stories and help with homework?\n\nThey use a powerful brain called a **Transformer**. It reads the words you typed, looks back at the context, and calculates probabilities for the next word:\n* If the sentence is `The fluffy kitten drinks...`, what comes next?\n* The AI checks its training: `milk` is 85% likely, `water` is 10%, and `pizza` is 0.01%!\n\nBy picking the best next words one by one, the AI forms smart, helpful sentences!",
+      "bodyMarkdown": "How do tools like ChatGPT write stories and help with homework?\n\nThey use a powerful brain called a **Transformer**. It reads the words you typed. It looks back at the context. Then it works out how likely each next word is:\n* If the sentence is `The fluffy kitten drinks...`, what comes next?\n* The AI checks its training: `milk` is 85% likely, `water` is 10%, and `pizza` is 0.01%!\n\nBy picking the best next words one by one, the AI forms smart, helpful sentences!",
       "jargonBuster": [
         {
           "term": "Transformer",

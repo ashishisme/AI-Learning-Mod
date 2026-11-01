@@ -42,7 +42,7 @@
         "metaphorName": "The Calibrated Scale",
         "description": "Just as scales in commerce must be certified for accuracy, AI models in production must be audited to ensure equal treatment across demographics."
       },
-      "bodyMarkdown": "To stop discrimination, engineers check code with clear fairness scores.\n\nA key benchmark is the **Disparate Impact Ratio**, often set by the legal 80% rule: the pass rate for any group must be at least 80% of the top group rate.\n\nEngineers fix gaps by balancing datasets and resetting score thresholds. Test the fairness tool below to see this live.",
+      "bodyMarkdown": "To stop discrimination, engineers check code with clear fairness scores.\n\nA key benchmark is the **Disparate Impact Ratio**, often set by the legal 80% rule. Under this rule, the pass rate for any group must be at least 80% of the top group rate.\n\nEngineers fix gaps by balancing datasets and resetting score thresholds. Test the fairness tool below to see this live.",
       "interactiveWidget": {
         "type": "bias-detective-sim",
         "title": "Interactive Bias Detective: AI Fairness Auditor",

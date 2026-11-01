@@ -17,7 +17,7 @@
         "metaphorName": "The Two-Key Treasure Box",
         "description": "Imagine a treasure chest that only pops open if two pirate captains turn their keys at the very same second. A neuron is just like that: it waits for enough electric signals to arrive before it decides to fire its own spark!"
       },
-      "bodyMarkdown": "Every animal brain is made of **neurons**. A biological neuron has tiny branches called **dendrites** that catch signals, a center nucleus that adds them up, and a wire called an **axon** that sends the signal to its neighbors.\n\nScientists asked: *Can we build a computer program that acts like a single neuron?* In 1957, Frank Rosenblatt created the **Perceptron**—the very first artificial brain cell!",
+      "bodyMarkdown": "Every animal brain is made of **neurons**. A biological neuron has tiny branches called **dendrites** that catch signals. A center nucleus adds them up. A wire called an **axon** sends the signal to its neighbors.\n\nScientists asked: *Can we build a computer program that acts like a single neuron?* In 1957, Frank Rosenblatt created the **Perceptron**—the very first artificial brain cell!",
       "jargonBuster": [
         {
           "term": "Neuron",
