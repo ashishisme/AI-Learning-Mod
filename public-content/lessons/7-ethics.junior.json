@@ -1,11 +1,11 @@
 {
   "lessonId": "7-ethics",
   "mode": "junior",
-  "title": "Superpowers with a Moral Compass: AI Ethics \ud83e\udded",
+  "title": "Superpowers with a Moral Compass: AI Ethics 🧭",
   "readingTimeMinutes": 6,
   "mascot": {
     "name": "Chip",
-    "avatar": "\ud83e\udd16",
+    "avatar": "🤖",
     "greeting": "Beep boop! Having superpowers is awesome, but keeping them fair and kind is even more important. Let us explore AI ethics together!"
   },
   "sections": [
@@ -17,7 +17,7 @@
         "metaphorName": "The Cake Recipe Mix-up",
         "description": "If a baker only practices baking with salt instead of sugar, their cakes will taste salty every single time. An AI is just like that baker: if we feed it unfair data from the past, it learns unfair habits!"
       },
-      "bodyMarkdown": "AI models do not make up thoughts. They learn by studying past human notes.\n\nIf the data we give them has unfair habits from history, the computer copies them. This is called **AI bias**.\n\nImagine an AI that reads job resumes. If it was only shown resumes from one group of people in the past, it might skip great people from other groups. That is why engineers must be data detectives!",
+      "bodyMarkdown": "AI models do not make up thoughts. They learn by studying past human notes.\n\nIf the data we give them has unfair habits from history, the computer copies them. This is called **AI bias**.\n\nImagine an AI that reads job resumes. If it only saw resumes from one group in the past, it might skip great people from other groups. That is why engineers must be data detectives!",
       "jargonBuster": [
         {
           "term": "Ethics",
@@ -27,7 +27,19 @@
           "term": "AI Bias",
           "simpleExplanation": "When an AI makes unfair choices because its training data was one-sided."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "Why the data matters",
+        "alt": "Four steps: people collect examples, an AI learns from them, the AI makes choices based on what it learned, and if some groups were missing from the examples the AI treats them unfairly.",
+        "content": "",
+        "steps": [
+          "People collect examples for the AI to learn from. 📚",
+          "The AI learns patterns from those examples.",
+          "It then makes choices using what it learned.",
+          "If some groups were missing, it can treat them unfairly. ⚖️"
+        ]
+      }
     },
     {
       "id": "bias-detective",
@@ -37,11 +49,20 @@
         "metaphorName": "The School Playground Referee",
         "description": "Imagine a referee who checks that both teams get equal turns on the soccer field. An AI fairness auditor checks that every group of people gets equal, fair chances."
       },
-      "bodyMarkdown": "How do we fix one-sided data?\n\n1. **Balance the Dataset:** We make sure training examples include boys, girls, different cultures, and ages equally.\n2. **Run Fairness Checks:** We test the software on thousands of practice cases to measure approval rates.\n3. **Tune the Dials:** We adjust settings so no group is left behind.\n\nTry our Bias Detective tool below! See what happens when training data is skewed, and how turning on fairness audits balances the scores.",
+      "bodyMarkdown": "How do we fix one-sided data?\n\n1. **Balance the Data:** We make sure the examples include girls, boys, and people of all ages and cultures.\n2. **Run Fairness Checks:** We test the AI on thousands of practice cases and count how often each group gets a yes.\n3. **Tune the Dials:** We change the settings so no group is left behind.\n\nTry the Bias Detective tool below! See what happens when the data is lopsided. Then turn on the fairness check and watch the scores even out.",
       "interactiveWidget": {
         "type": "bias-detective-sim",
         "title": "Interactive Bias Detective: AI Fairness Auditor",
-        "instruction": "Toggle between the Raw Historical Model and the Audited & Mitigated model to inspect candidate selection parity."
+        "instruction": "Toggle between the Raw Historical Model and the Audited & Mitigated model to inspect candidate selection parity.",
+        "goal": "Find out which group the robot treats unfairly, then fix it.",
+        "scaffold": "guided",
+        "predictionPrompt": "Before you switch models: do you think the robot is fair to both groups?",
+        "hints": [
+          "Compare how many from each group were chosen.",
+          "Look at the fairness badge at the top."
+        ],
+        "successMessage": "Fairness fixed! Checking the numbers for every group is how people catch unfair robots.",
+        "allowFreePlay": true
       },
       "jargonBuster": [
         {
@@ -62,7 +83,7 @@
         "metaphorName": "The Airplane Autopilot",
         "description": "Airplanes have autopilot systems to hold steady speed in calm skies. But real pilots always sit in the cockpit to handle stormy weather, tricky landings, and safety checks!"
       },
-      "bodyMarkdown": "Should an AI make a big life choice on its own?\n\nResponsible AI experts say **no**! For big choices\u2014like hospital care or school admissions\u2014we always keep a **Human-in-the-Loop**:\n* The AI acts as a fast helper that spots clues.\n* A caring human makes the final call and takes responsibility.\n\nThis keeps tech safe, warm, and fair.",
+      "bodyMarkdown": "Should an AI make a big life choice on its own?\n\nResponsible AI experts say **no**! For big choices, like hospital care or school admissions, we always keep a **Human-in-the-Loop**:\n* The AI acts as a fast helper that spots clues.\n* A caring human makes the final call and takes responsibility.\n\nThis keeps tech safe, warm, and fair.",
       "jargonBuster": [
         {
           "term": "Human-in-the-Loop",
@@ -72,23 +93,47 @@
           "term": "Accountability",
           "simpleExplanation": "Being responsible for the outcomes and actions of a technology."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "A human stays in charge",
+        "alt": "Four steps: the AI makes a suggestion, a person checks it, the person decides, and the AI learns from the person's feedback.",
+        "content": "",
+        "steps": [
+          "The AI makes a suggestion. 💡",
+          "A person checks it carefully. 🧑‍⚕️",
+          "The person makes the final decision. ✅",
+          "Feedback helps the AI do better next time. 🔁"
+        ]
+      }
     },
     {
       "id": "guardrails-future",
       "heading": "4. Building a Bright and Safe AI Future!",
-      "chipQuote": "When we build technology with kindness and clear rules, it can help cure diseases, explore the stars, and protect nature!",
+      "chipQuote": "When we build tech with kindness and clear rules, it can help cure illness, explore space, and protect nature!",
       "analogy": {
         "metaphorName": "The Guardrails on the Mountain Road",
-        "description": "Guardrails do not stop cars from going fast\u2014they keep cars from sliding off the edge into danger. Ethical AI rules are safety guardrails for the whole world!"
+        "description": "Guardrails do not stop cars from going fast—they keep cars from sliding off the edge into danger. Ethical AI rules are safety guardrails for the whole world!"
       },
-      "bodyMarkdown": "To keep AI safe as it grows smarter, creators follow six clear rules:\n\n* \u2696\ufe0f **Fairness:** Treat every person with equal respect.\n* \ud83d\udee1\ufe0f **Safety:** Test systems heavily so they do no harm.\n* \ud83d\udd12 **Privacy:** Keep private personal info safe.\n* \ud83c\udf0d **Inclusiveness:** Help people of all walks of life.\n* \ud83d\udd0d **Transparency:** Explain clearly how answers are made.\n* \ud83e\udd1d **Accountability:** Real humans stand behind the results.\n\nWith these rules, AI becomes a great tool for human good!",
+      "bodyMarkdown": "To keep AI safe as it grows smarter, builders follow six clear rules:\n\n* ⚖️ **Fairness:** Treat every person with respect.\n* 🛡️ **Safety:** Test it well so it does no harm.\n* 🔒 **Privacy:** Keep private information safe.\n* 🌍 **Inclusion:** Help people from all walks of life.\n* 🔍 **Transparency:** Explain how answers are made.\n* 🤝 **Accountability:** Real people stand behind the results.\n\nWith these rules, AI can be a great tool for good!",
       "jargonBuster": [
         {
           "term": "Transparency",
           "simpleExplanation": "Being open and honest about how an AI works and when it is being used."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "Guardrails for safe AI",
+        "alt": "Four safety habits for building AI: test it before using it, make it explain itself, check that it is fair to everyone, and make sure a human can always press stop.",
+        "content": "",
+        "steps": [
+          "Test it carefully before people use it. 🧪",
+          "Make it explain how it decided. 💬",
+          "Check that it is fair to everyone. ⚖️",
+          "Keep a big STOP button that humans control. 🛑"
+        ]
+      }
     }
   ],
   "miniQuiz": [
@@ -127,6 +172,29 @@
       "correctIndex": 1,
       "praise": "Superstar answer! You are a certified AI Ethics Detective!",
       "explanation": "Fairness audits verify that acceptance rates, accuracy, and error rates are balanced and fair across all groups!"
+    }
+  ],
+  "teachBack": {
+    "prompt": "Chip asks: Why can an AI be unfair? Pick the best explanation.",
+    "options": [
+      "It learned from examples that left some people out.",
+      "Robots decide to be unkind.",
+      "The computer was too slow."
+    ],
+    "correctIndex": 0,
+    "explanation": "Yes! Unbalanced examples teach unfair habits, so we must check."
+  },
+  "recall": [
+    {
+      "fromLesson": "5-nlp",
+      "question": "How does a language model usually build a sentence?",
+      "options": [
+        "By predicting the next word, one at a time",
+        "By copying a whole sentence from a book",
+        "By asking a person"
+      ],
+      "correctIndex": 0,
+      "explanation": "Next-word prediction, repeated."
     }
   ]
 }

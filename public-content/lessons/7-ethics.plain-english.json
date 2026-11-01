@@ -5,8 +5,8 @@
   "readingTimeMinutes": 6,
   "mascot": {
     "name": "Nova",
-    "avatar": "\ud83c\udf99\ufe0f",
-    "greeting": "Welcome! Today we explore Ethical and Responsible AI\u2014ensuring intelligent software remains fair, safe, and accountable to society."
+    "avatar": "🎙️",
+    "greeting": "Welcome! Today we explore Ethical and Responsible AI—ensuring intelligent software remains fair, safe, and accountable to society."
   },
   "sections": [
     {
@@ -26,7 +26,14 @@
           "term": "Training Data Skew",
           "simpleExplanation": "An imbalance in dataset composition where some demographics are heavily over- or under-represented."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "How biased data leads to biased results",
+        "alt": "A flow from left to right: historical data is used for training, the model learns its patterns including any unfairness, and its decisions repeat that unfairness.",
+        "content": "flowchart LR\n    A[\"Historical data<br/>(may be unbalanced)\"] --> B[\"Model learns<br/>the patterns\"] --> C[\"Decisions repeat<br/>the imbalance\"]"
+      },
+      "realWorld": "Hiring and lending tools trained on past decisions can repeat past unfairness."
     },
     {
       "id": "fairness-audits",
@@ -39,7 +46,16 @@
       "interactiveWidget": {
         "type": "bias-detective-sim",
         "title": "Interactive Bias Detective: AI Fairness Auditor",
-        "instruction": "Switch between raw historical models and mitigated models to observe disparate impact metrics."
+        "instruction": "Switch between raw historical models and mitigated models to observe disparate impact metrics.",
+        "goal": "Identify the disparity in selection rates and apply the mitigated model.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you switch models: do you expect the selection rates to be similar across groups?",
+        "hints": [
+          "Compare selection rates, not raw counts.",
+          "A ratio below 0.8 is a common warning sign."
+        ],
+        "successMessage": "That is a fairness audit: measure outcomes by group, then adjust and re-test.",
+        "allowFreePlay": true
       },
       "jargonBuster": [
         {
@@ -50,7 +66,8 @@
           "term": "Demographic Parity",
           "simpleExplanation": "A fairness criterion requiring that decision outcomes are independent of protected attributes."
         }
-      ]
+      ],
+      "realWorld": "Companies compare approval rates across groups before launching a tool."
     },
     {
       "id": "explainability-blackbox",
@@ -69,7 +86,14 @@
           "term": "Black Box Model",
           "simpleExplanation": "A complex model whose internal decision pathways are difficult or impossible for humans to trace directly."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Black box versus explainable model",
+        "alt": "Two paths from input to decision. The black box path gives a decision with no reasons. The explainable path gives a decision together with the factors that led to it.",
+        "content": "flowchart LR\n    I[\"Input\"] --> BB[\"Black box\"] --> D1[\"Decision, no reasons\"]\n    I --> EX[\"Explainable model\"] --> D2[\"Decision + key factors\"]"
+      },
+      "realWorld": "A bank that must tell you why a loan was declined."
     },
     {
       "id": "governance-accountability",
@@ -88,7 +112,14 @@
           "term": "Accountability",
           "simpleExplanation": "The ethical and legal obligation of individuals and organizations to justify and answer for system behavior."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "A human review loop",
+        "alt": "A loop: the AI suggests, a person reviews, the person decides, and the outcome is fed back to improve the AI.",
+        "content": "flowchart LR\n    A[\"AI suggests\"] --> B[\"Person reviews\"] --> C[\"Person decides\"] --> D[\"Feedback to improve AI\"] --> A"
+      },
+      "realWorld": "Doctors reviewing an AI suggestion before treating a patient."
     }
   ],
   "miniQuiz": [
@@ -127,6 +158,29 @@
       "correctIndex": 1,
       "praise": "Exactly right! Human oversight preserves accountability and safety.",
       "explanation": "Human-in-the-loop ensures that compassionate human oversight retains final authority and accountability on consequential decisions."
+    }
+  ],
+  "teachBack": {
+    "prompt": "Which sentence best explains why an AI system can be biased?",
+    "options": [
+      "It learns patterns from historical data that may be unbalanced.",
+      "Developers always program bias into it on purpose.",
+      "Models become biased only after they are deployed."
+    ],
+    "correctIndex": 0,
+    "explanation": "Bias often comes from the data, which is why audits compare outcomes by group."
+  },
+  "recall": [
+    {
+      "fromLesson": "5-nlp",
+      "question": "How does a language model usually build a sentence?",
+      "options": [
+        "By predicting the next word, one at a time",
+        "By copying a whole sentence from a book",
+        "By asking a person"
+      ],
+      "correctIndex": 0,
+      "explanation": "Next-word prediction, repeated."
     }
   ]
 }

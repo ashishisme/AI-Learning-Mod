@@ -1,11 +1,11 @@
 {
   "lessonId": "4-computervision",
   "mode": "junior",
-  "title": "Robot Eyes: How Computers Learn to See \ud83d\udc41\ufe0f",
+  "title": "Robot Eyes: How Computers Learn to See 👁️",
   "readingTimeMinutes": 6,
   "mascot": {
     "name": "Chip",
-    "avatar": "\ud83e\udd16",
+    "avatar": "🤖",
     "greeting": "Beep boop! Today we give computers robot eyes. Grab your spy glass. Let's learn how AI sees the world!"
   },
   "sections": [
@@ -27,7 +27,19 @@
           "term": "RGB",
           "simpleExplanation": "Red, Green, and Blue light mixed together to paint every color on your display."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "From a picture to numbers",
+        "alt": "Four steps: a photo is cut into a grid of tiny squares, each square gets a brightness number from 0 to 255, and the computer reads only those numbers.",
+        "content": "",
+        "steps": [
+          "Start with a photo. 🖼️",
+          "Cut it into a grid of tiny squares called pixels.",
+          "Give each square a number: 0 is dark, 255 is bright.",
+          "The computer reads the numbers, not the picture. 🔢"
+        ]
+      }
     },
     {
       "id": "convolutions-filter",
@@ -37,11 +49,20 @@
         "metaphorName": "The Detective's Filter Lens",
         "description": "Imagine holding a small 3x3 cardboard frame with tinted glass over a drawing. As you slide it across the page, it highlights borders and hides smooth areas. That moving frame is called a convolution filter!"
       },
-      "bodyMarkdown": "How does an AI spot ears or wheels inside millions of numbers? It uses a clever math trick called **convolution**!\n\nIt takes a small 3-by-3 grid of numbers called a **kernel** and slides it over the image, dot by dot:\n1. It multiplies the small grid numbers by the image pixels.\n2. It adds all the math answers into one new number.\n3. When it slides across a sharp edge, the numbers jump high and light up!\n\nTry our Filter Lab below! Click different lenses to watch the AI catch vertical walls, horizontal lines, and outlines instantly.",
+      "bodyMarkdown": "How can an AI spot ears or wheels inside millions of numbers? It uses a math trick called **convolution**!\n\nIt takes a small 3-by-3 grid of numbers called a **kernel**. Then it slides the grid over the picture, one spot at a time:\n1. It multiplies the grid numbers by the pixel numbers.\n2. It adds the answers into one new number.\n3. At a sharp edge, the new number jumps high and lights up!\n\nTry the Filter Lab below! Click the lenses and watch the AI find up-and-down lines, side-to-side lines, and outlines.",
       "interactiveWidget": {
         "type": "convolution-sim",
         "title": "Interactive Convolution & Filter Lab",
-        "instruction": "Select filter presets below to observe how kernel matrix arithmetic extracts edge features from a pixel grid."
+        "instruction": "Select filter presets below to observe how kernel matrix arithmetic extracts edge features from a pixel grid.",
+        "goal": "Make the robot highlight the edges of a shape.",
+        "scaffold": "guided",
+        "predictionPrompt": "Before you pick a filter: what do you think an edge filter will light up?",
+        "hints": [
+          "Edges are where dark meets bright.",
+          "Try the blur filter to see the opposite effect."
+        ],
+        "successMessage": "Edges found! That is the first thing robot eyes learn to see.",
+        "allowFreePlay": true
       },
       "jargonBuster": [
         {
@@ -62,7 +83,7 @@
         "metaphorName": "The LEGO Pyramid of Sight",
         "description": "On the bottom floor, the AI spots tiny edge lines. On the second floor, it snaps lines together to build circles and ears. On the top floor, it puts everything together and shouts: 'That is a puppy!'"
       },
-      "bodyMarkdown": "A single filter only catches simple lines. But when engineers stack many filter layers together into a **Convolutional Neural Network** (CNN), amazing things happen!\n\n* **First Layer:** Finds simple straight lines, angles, and color edges.\n* **Middle Layer:** Assembles lines into shapes like wheels, curves, and textures.\n* **Deep Layer:** Combines shapes into full objects like cars, bicycles, or smiling faces!\n\nEach layer builds on top of the last layer, learning more complex ideas step by step.",
+      "bodyMarkdown": "One filter only finds simple lines. But engineers can stack many filter layers. This is called a **Convolutional Neural Network**, or CNN. Cool things happen!\n\n* **First Layer:** Finds straight lines and edges.\n* **Middle Layer:** Joins lines into shapes like wheels and curves.\n* **Deep Layer:** Joins shapes into whole things like cars and smiling faces!\n\nEach layer builds on the one before it. The AI learns bigger ideas, step by step.",
       "jargonBuster": [
         {
           "term": "CNN",
@@ -72,23 +93,47 @@
           "term": "Feature Map",
           "simpleExplanation": "The new picture created after sliding a filter to highlight edges."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "From lines to whiskers",
+        "alt": "Four layers of a vision network: the first finds lines and edges, the second finds curves and corners, the third finds parts like ears and eyes, and the last names the whole animal.",
+        "content": "",
+        "steps": [
+          "Layer 1 finds simple lines and edges. ➖",
+          "Layer 2 combines them into curves and corners. 🌀",
+          "Layer 3 spots parts: ears, eyes, whiskers. 👂",
+          "The last layer says: \"Cat!\" 🐱"
+        ]
+      }
     },
     {
       "id": "real-world-vision",
       "heading": "4. Robot Eyes in the Real World!",
-      "chipQuote": "Robot eyes are helping people all over planet Earth\u2014from keeping drivers safe to helping doctors heal patients!",
+      "chipQuote": "Robot eyes help people all over the world, from keeping drivers safe to helping doctors!",
       "analogy": {
         "metaphorName": "The Tireless Spotter",
-        "description": "Human eyes get sleepy after staring at a screen for hours. Robot eyes never get tired: they can scan millions of photos every second without missing a clue!"
+        "description": "Human eyes get tired after hours at a screen. Robot eyes never get tired. They can look at millions of photos every second!"
       },
-      "bodyMarkdown": "Where do we use computer vision today? Almost everywhere you look!\n\n* \ud83d\ude97 **Self-Driving Cars:** Cameras spot stop signs, lane lines, and pedestrians to steer safely.\n* \ud83d\udcf1 **Face Unlock:** Phone cameras check your unique face features in a split second.\n* \ud83e\ude7a **Doctor Assistants:** AI scans medical photos to help doctors spot illness early.\n* \ud83c\udf3e **Smart Drones:** Drones fly over farm fields and spot thirsty crops before they dry up.\n\nGiving computers the gift of sight helps humans solve big challenges with speed and care!",
+      "bodyMarkdown": "Where do we use computer vision today? Almost everywhere!\n\n* 🚗 **Self-Driving Cars:** Cameras spot stop signs, lane lines, and people crossing.\n* 📱 **Face Unlock:** Your phone camera checks your face in a split second.\n* 🩺 **Doctor Helpers:** AI looks at medical photos to help doctors spot illness early.\n* 🌾 **Smart Drones:** Drones fly over farms and spot dry plants before they wilt.\n\nWhen computers can see, people can solve big problems fast!",
       "jargonBuster": [
         {
           "term": "Object Detection",
           "simpleExplanation": "When an AI draws a colored box around an item and names what it sees."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "Where robot eyes help us",
+        "alt": "Four examples of computer vision: unlocking a phone with your face, cars that spot people crossing, doctors getting help reading scans, and apps that name plants.",
+        "content": "",
+        "steps": [
+          "Your phone knows your face and unlocks. 📱",
+          "Cars spot people and bikes on the road. 🚗",
+          "Doctors get a second pair of eyes on scans. 🩺",
+          "Apps tell you the name of a plant from a photo. 🌿"
+        ]
+      }
     }
   ],
   "miniQuiz": [
@@ -127,6 +172,29 @@
       "correctIndex": 0,
       "praise": "Superstar answer! You understand deep learning!",
       "explanation": "Early layers find simple edges and lines. Later layers combine them into shapes, ears, and complete objects!"
+    }
+  ],
+  "teachBack": {
+    "prompt": "Chip asks: How does a computer see? Pick the best explanation.",
+    "options": [
+      "It turns a picture into numbers and looks for patterns in them.",
+      "It looks at the picture the same way your eyes do.",
+      "It asks a person what is in the picture."
+    ],
+    "correctIndex": 0,
+    "explanation": "Yes! Computers see numbers, then find edges, shapes and parts."
+  },
+  "recall": [
+    {
+      "fromLesson": "3-neuralnetworks",
+      "question": "What do weights do in a neuron?",
+      "options": [
+        "Control how much each input matters",
+        "Store the neuron's name",
+        "Make the screen brighter"
+      ],
+      "correctIndex": 0,
+      "explanation": "Weights decide how important each clue is."
     }
   ]
 }

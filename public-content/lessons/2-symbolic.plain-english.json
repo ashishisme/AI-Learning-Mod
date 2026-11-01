@@ -3,67 +3,86 @@
   "mode": "plain-english",
   "title": "Knowledge Representation & Expert Systems",
   "readingTimeMinutes": 7,
-  "intro": "Before modern machine learning began analyzing vast datasets, artificial intelligence relied on explicit knowledge engineering: capturing human expertise as logical rules and structured facts that anyone can audit.",
+  "intro": "Before machine learning became popular, AI meant writing expert knowledge down as clear rules. Those rules are still used today. Anyone can read them and check how a decision was reached.",
   "sections": [
     {
       "id": "symbolic-foundations",
-      "heading": "1. Symbolic AI: Building Logic from Explicit Rules",
+      "heading": "1. Symbolic AI: Smart Software Built on Clear Rules",
       "analogy": {
         "metaphorName": "Tax Preparation Software",
-        "description": "When you file taxes with TurboTax, the program doesn't guess or predict numbers using statistics. It walks you through a precise flowchart of tax laws: 'If you bought solar panels AND are a homeowner, apply a 30% credit.' Every deduction is explainable and verifiable."
+        "description": "When tax software helps you file a return, it does not guess. It follows a long list of rules, such as giving you a credit if you installed solar panels and own your home. You can always see why each figure appears."
       },
-      "bodyMarkdown": "**Symbolic AI** (also called Classical AI or Good Old-Fashioned AI) is based on the idea that human thinking can be modeled using symbols (words, entities, concepts) and rules that manipulate them.\n\nInstead of training on millions of examples to discover hidden patterns, human domain experts explicitly program the knowledge into the system. This makes symbolic systems deterministic, mathematically rigorous, and fully transparent.",
+      "bodyMarkdown": "**Symbolic AI** is built on written knowledge: words, facts, and rules that experts have typed into the system.\n\nThe software does not study millions of examples to find hidden patterns. It simply follows the rules it was given. This makes its behavior predictable and easy to check, because the same input always gives the same answer.",
       "jargonBuster": [
         {
           "term": "Symbolic AI",
-          "simpleExplanation": "An approach to artificial intelligence based on explicit rules and human-readable symbols rather than statistics."
+          "simpleExplanation": "AI that follows written facts and rules instead of learning from data."
         },
         {
-          "term": "Deterministic",
-          "simpleExplanation": "An algorithm that always gives the exact same output for the same input every single time."
+          "term": "Predictable",
+          "simpleExplanation": "Gives the same answer every time for the same input."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "How a rule-based system reaches an answer",
+        "alt": "A flow from left to right: a fact comes in, a matching if-then rule is found, the rule is applied, and the answer comes with the rule that produced it.",
+        "content": "flowchart LR\n    A[\"Fact comes in\"] --> B[\"Find matching rule\"] --> C[\"Apply the rule\"] --> D[\"Answer + the rule used\"]"
+      },
+      "realWorld": "Tax software and loan-eligibility checkers that follow written rules."
     },
     {
       "id": "expert-system-architecture",
-      "heading": "2. Inside an Expert System: Knowledge Base vs Inference Engine",
+      "heading": "2. Inside an Expert System: Rules and a Reasoning Engine",
       "analogy": {
         "metaphorName": "Hospital Triage Guidelines",
-        "description": "In an emergency room, the medical knowledge protocol (the handbook of symptoms and diseases) is kept separate from the triage nurse who applies those rules to incoming patients."
+        "description": "In a hospital, the handbook of symptoms and diseases is kept separate from the nurse who sorts incoming patients. The handbook can be updated without retraining the nurse."
       },
-      "bodyMarkdown": "In the 1970s and 1980s, computer scientists built **Expert Systems** designed to replicate the decision-making ability of human specialists. A clean expert system always separates two elements:\n\n1. **The Knowledge Base**: The repository of domain-specific facts and production rules (`IF condition THEN action`).\n2. **The Inference Engine**: The domain-independent reasoning module that determines which rules apply to current observed facts.\n\nBecause the rules are decoupled from the code, doctors or engineers can update medical rules without changing the underlying software engine.",
+      "bodyMarkdown": "In the 1970s and 1980s, researchers built **expert systems** to copy the way human specialists make decisions. Every expert system has two main parts:\n\n1. **The knowledge base**, which is a store of facts and if-then rules written by experts.\n2. **The inference engine**, which checks the facts against the rules, decides which rules apply, and draws a conclusion.\n\nBecause the two parts are kept separate, a doctor or engineer can update a rule without changing the software that runs it.",
       "diagram": {
         "type": "mermaid",
         "caption": "Decoupled Architecture: Knowledge Base + Inference Engine",
-        "content": "graph TD\n    Facts[\"📋 Working Memory<br/>(Observed Symptoms / Inputs)\"] --> Engine[\"⚙️ Inference Engine<br/>(Pattern Matcher & Reasoner)\"]\n    KB[\"📚 Knowledge Base<br/>(If-Then Production Rules)\"] --> Engine\n    Engine --> Output[\"✅ Verified Conclusion & Audit Trail\"]"
+        "content": "graph TD\n    Facts[\"📋 Working Memory<br/>(Observed Symptoms / Inputs)\"] --> Engine[\"⚙️ Inference Engine<br/>(Pattern Matcher & Reasoner)\"]\n    KB[\"📚 Knowledge Base<br/>(If-Then Production Rules)\"] --> Engine\n    Engine --> Output[\"✅ Verified Conclusion & Audit Trail\"]",
+        "alt": "Two inputs feed one engine. Observed inputs in working memory and if-then rules in the knowledge base go into the inference engine, which produces a conclusion with an audit trail."
       },
       "jargonBuster": [
         {
           "term": "Knowledge Base",
-          "simpleExplanation": "The collection of factual statements and If-Then rules defining human expertise in a subject."
+          "simpleExplanation": "The collection of facts and if-then rules."
         },
         {
           "term": "Inference Engine",
-          "simpleExplanation": "The software algorithm that matches incoming observations against rules to draw valid conclusions."
+          "simpleExplanation": "The part that applies the rules to the facts."
         },
         {
           "term": "Forward Chaining",
-          "simpleExplanation": "Data-driven reasoning starting from observed facts and chaining through rules toward a goal."
+          "simpleExplanation": "Start with known facts, fire the rules that match, and reach a conclusion."
         }
-      ]
+      ],
+      "realWorld": "Medical checklists and car-repair scanners that match symptoms to causes."
     },
     {
       "id": "interactive-diagnostic-sim",
       "heading": "3. Interactive Simulation: Forward Chaining Diagnostic Engine",
       "analogy": {
         "metaphorName": "Automotive Diagnostic Computer",
-        "description": "When a mechanic plugs an OBD-II scanner into your vehicle, the onboard computer evaluates sensor thresholds to identify why the Check Engine light illuminated."
+        "description": "When a mechanic plugs a scanner into your car, the car's computer checks its sensors and reports a likely reason why the check-engine light came on."
       },
-      "bodyMarkdown": "Explore the simulation below to see an inference engine in action. Toggle sensor inputs in working memory to observe which production rules match and trigger in real time.",
+      "bodyMarkdown": "Try the simulator below by switching the sensor readings on and off. As you do, watch which rules match the readings and which conclusion appears at the end.",
       "interactiveWidget": {
         "type": "expert-system-sim",
-        "title": "🚀 Interactive Simulation: The Mars Rover Expert System"
-      }
+        "title": "🚀 Interactive Simulation: The Mars Rover Expert System",
+        "goal": "Turn on the sensor readings that trigger the right diagnosis.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you change any input: which rule do you expect to match?",
+        "hints": [
+          "Rules fire only when all their conditions are true.",
+          "Try one input at a time."
+        ],
+        "successMessage": "That is forward chaining: facts go in, matching rules fire, and a conclusion comes out.",
+        "allowFreePlay": true
+      },
+      "realWorld": "The check-engine light: sensors trigger rules that point to a fault."
     }
   ],
   "miniQuiz": [
@@ -99,6 +118,29 @@
       "correctIndex": 0,
       "praise": "Spot on! When human safety is on the line, having a verifiable audit trail of rules is indispensable.",
       "explanation": "Symbolic rule-based logic is essential in mission-critical applications where every single automated decision must be provably verifiable."
+    }
+  ],
+  "teachBack": {
+    "prompt": "Which sentence best explains a rule-based system?",
+    "options": [
+      "It applies written if-then rules, so each answer can be traced.",
+      "It learns hidden patterns from large data sets.",
+      "It predicts outcomes with probabilities and cannot explain them."
+    ],
+    "correctIndex": 0,
+    "explanation": "Rule-based systems are transparent because every conclusion points to a rule."
+  },
+  "recall": [
+    {
+      "fromLesson": "1-intro",
+      "question": "What is Narrow AI?",
+      "options": [
+        "AI built to do one specific job well",
+        "AI that can do any job a person can",
+        "AI that only works on small computers"
+      ],
+      "correctIndex": 0,
+      "explanation": "All AI that exists today is Narrow AI."
     }
   ]
 }

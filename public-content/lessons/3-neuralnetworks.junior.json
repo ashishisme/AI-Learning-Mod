@@ -27,7 +27,19 @@
           "term": "Perceptron",
           "simpleExplanation": "The simplest artificial neuron: a math formula that adds up clues and decides whether to fire."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "How a neuron decides to fire",
+        "alt": "Four steps: signals arrive at a neuron, the neuron adds them up, checks if the total is big enough, and then either sends a spark or stays quiet.",
+        "content": "",
+        "steps": [
+          "Signals arrive from other neurons, like tiny messages. ✉️",
+          "The neuron adds up all the signals it received.",
+          "It asks: \"Is the total big enough?\"",
+          "Big enough? Spark! ⚡ Not big enough? Stay quiet. 💤"
+        ]
+      }
     },
     {
       "id": "weights-and-bias",
@@ -41,7 +53,8 @@
       "diagram": {
         "type": "mermaid",
         "caption": "Inside a Perceptron: Inputs × Weights + Bias = Fired or Dormant",
-        "content": "graph LR\n    X1[\"Input 1: Sweetness (x1)\"] -->|Weight w1| Sum[\"➕ Adder Nucleus<br/>(Sum = x1·w1 + x2·w2 + b)\"]\n    X2[\"Input 2: Roundness (x2)\"] -->|Weight w2| Sum\n    Bias[\"🎛️ Bias (b)\"] --> Sum\n    Sum --> Gate{\"Threshold: Sum ≥ 0?\"}\n    Gate -->|YES| Fire[\"⚡ Output: FIRED! (Apple 🍎)\"]\n    Gate -->|NO| Sleep[\"💤 Output: DORMANT (Lemon 🍋)\"]"
+        "content": "graph LR\n    X1[\"Input 1: Sweetness (x1)\"] -->|Weight w1| Sum[\"➕ Adder Nucleus<br/>(Sum = x1·w1 + x2·w2 + b)\"]\n    X2[\"Input 2: Roundness (x2)\"] -->|Weight w2| Sum\n    Bias[\"🎛️ Bias (b)\"] --> Sum\n    Sum --> Gate{\"Threshold: Sum ≥ 0?\"}\n    Gate -->|YES| Fire[\"⚡ Output: FIRED! (Apple 🍎)\"]\n    Gate -->|NO| Sleep[\"💤 Output: DORMANT (Lemon 🍋)\"]",
+        "alt": "Two inputs, sweetness and roundness, are each multiplied by a weight, added to a bias, and compared with a threshold. If the sum is at least zero the neuron fires and says apple. Otherwise it stays dormant and says lemon."
       },
       "jargonBuster": [
         {
@@ -65,7 +78,16 @@
       "bodyMarkdown": "Test different fruits and tweak the synaptic weights below. Watch the total weighted sum change in real time!",
       "interactiveWidget": {
         "type": "perceptron-sim",
-        "title": "⚡ Interactive Simulation: The Fruit Sorting Perceptron"
+        "title": "⚡ Interactive Simulation: The Fruit Sorting Perceptron",
+        "goal": "Tune the sliders so the neuron says apple for apples and lemon for lemons.",
+        "scaffold": "guided",
+        "predictionPrompt": "Before you move a slider: should sweetness matter more or less than roundness?",
+        "hints": [
+          "Raise the weight of the clue that separates the fruits.",
+          "A lower bias makes the neuron more eager to fire."
+        ],
+        "successMessage": "You trained a neuron! You nudged the weights until the guesses were right.",
+        "allowFreePlay": true
       }
     }
   ],
@@ -102,6 +124,29 @@
       "correctIndex": 0,
       "praise": "Awesome history knowledge! Frank Rosenblatt designed the pioneering Perceptron at Cornell University!",
       "explanation": "Frank Rosenblatt developed the Perceptron algorithm in 1957, establishing the foundation for modern deep learning."
+    }
+  ],
+  "teachBack": {
+    "prompt": "Chip asks: How does a neuron learn? Pick the best explanation for a friend.",
+    "options": [
+      "It nudges its weights up or down until its guesses get better.",
+      "Someone types in the right answer every time.",
+      "It memorizes every picture exactly."
+    ],
+    "correctIndex": 0,
+    "explanation": "Yes! Learning means nudging the weights until the guesses are right."
+  },
+  "recall": [
+    {
+      "fromLesson": "2-symbolic",
+      "question": "In a rule-based system, what does an if-then rule do?",
+      "options": [
+        "Connects a fact to an action",
+        "Learns from pictures",
+        "Adds random noise"
+      ],
+      "correctIndex": 0,
+      "explanation": "Rules link conditions to actions, so answers can be traced."
     }
   ]
 }

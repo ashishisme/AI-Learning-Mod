@@ -5,8 +5,8 @@
   "readingTimeMinutes": 6,
   "mascot": {
     "name": "Nova",
-    "avatar": "\ud83c\udf99\ufe0f",
-    "greeting": "Welcome! Today we will break down Natural Language Processing\u2014how software interprets human speech and text."
+    "avatar": "🎙️",
+    "greeting": "Welcome! Today we will break down Natural Language Processing—how software interprets human speech and text."
   },
   "sections": [
     {
@@ -26,7 +26,14 @@
           "term": "Vocabulary",
           "simpleExplanation": "The complete reference dictionary of known tokens recognized by a model."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "From text to numbers",
+        "alt": "A flow from left to right: a sentence is split into tokens, each token is mapped to a number, and the model reads the list of numbers.",
+        "content": "flowchart LR\n    A[\"Sentence\"] --> B[\"Tokens<br/>(small pieces)\"] --> C[\"Numbers\"] --> D[\"Model input\"]"
+      },
+      "realWorld": "Chatbots and translators first split your text into tokens."
     },
     {
       "id": "semantic-embeddings",
@@ -35,11 +42,20 @@
         "metaphorName": "The Multi-Dimensional Map",
         "description": "Rather than treating words as isolated labels, embeddings place each term into a coordinate space where semantic similarity translates into physical proximity."
       },
-      "bodyMarkdown": "Simple number codes do not show meaning. The number for `dog` is no closer to `puppy` than to `desk`.\n\nTo fix this, models use **Word Embeddings**. Each word gets a spot on a map\u2014a list of numbers called a vector:\n* Words with close meanings sit right next to each other.\n* Map lines capture ideas like gender, age, and style.\n\nThis makes word math work: `King - Man + Woman = Queen`. Test this idea in the tool below!",
+      "bodyMarkdown": "Simple number codes do not show meaning. The number for `dog` is no closer to `puppy` than to `desk`.\n\nTo fix this, models use **Word Embeddings**. Each word gets a spot on a map—a list of numbers called a vector:\n* Words with close meanings sit right next to each other.\n* Map lines capture ideas like gender, age, and style.\n\nThis makes word math work: `King - Man + Woman = Queen`. Test this idea in the tool below!",
       "interactiveWidget": {
         "type": "vector-math-sim",
         "title": "Interactive Word Vector Space & Math Lab",
-        "instruction": "Select word analogies to see how vector subtraction and addition unlock semantic concepts."
+        "instruction": "Select word analogies to see how vector subtraction and addition unlock semantic concepts.",
+        "goal": "Predict the word that completes each analogy, then check it on the map.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you run an analogy: what word do you expect as the answer?",
+        "hints": [
+          "Subtracting a word removes a trait. Adding one puts a new trait in.",
+          "Distance on the map stands for difference in meaning."
+        ],
+        "successMessage": "Good. Meaning becomes geometry, so a computer can do arithmetic on words.",
+        "allowFreePlay": true
       },
       "jargonBuster": [
         {
@@ -50,7 +66,8 @@
           "term": "Cosine Similarity",
           "simpleExplanation": "A metric measuring how closely two word vectors point in the same direction."
         }
-      ]
+      ],
+      "realWorld": "Search that understands what you mean, not only the exact words you typed."
     },
     {
       "id": "sequence-attention",
@@ -69,7 +86,14 @@
           "term": "Transformer",
           "simpleExplanation": "The foundational deep learning architecture behind modern large language models."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "How context shapes the next word",
+        "alt": "A flow from left to right: the model reads the words so far, weighs which earlier words matter most, scores possible next words, and picks a likely one.",
+        "content": "flowchart LR\n    A[\"Words so far\"] --> B[\"Weigh which words<br/>matter most\"] --> C[\"Score possible<br/>next words\"] --> D[\"Pick a likely word\"]"
+      },
+      "realWorld": "Predictive text and chat assistants use the words so far to choose the next one."
     },
     {
       "id": "nlp-production",
@@ -88,7 +112,14 @@
           "term": "Semantic Search",
           "simpleExplanation": "Searching by underlying meaning rather than strict keyword string matching."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Common business uses of language AI",
+        "alt": "A hub with one center, language AI, connected to four uses: search, summaries, chat assistants and translation.",
+        "content": "flowchart TD\n    L[\"Language AI\"] --> S[\"Search\"]\n    L --> M[\"Summaries\"]\n    L --> C[\"Chat assistants\"]\n    L --> T[\"Translation\"]"
+      },
+      "realWorld": "Email summaries, help-desk bots and document search at work."
     }
   ],
   "miniQuiz": [
@@ -127,6 +158,29 @@
       "correctIndex": 1,
       "praise": "Precisely right! Self-attention links words across arbitrary distances.",
       "explanation": "Self-attention computes weights between all tokens simultaneously, allowing the model to interpret pronouns, context, and dependencies accurately."
+    }
+  ],
+  "teachBack": {
+    "prompt": "Which sentence best explains how a language model produces text?",
+    "options": [
+      "It predicts the next word repeatedly, using the words so far as context.",
+      "It searches a database for a matching answer.",
+      "It reasons about meaning as a person does."
+    ],
+    "correctIndex": 0,
+    "explanation": "Language models generate text by repeated next-word prediction."
+  },
+  "recall": [
+    {
+      "fromLesson": "4-computervision",
+      "question": "What does a computer actually read when it looks at a picture?",
+      "options": [
+        "Numbers for each pixel",
+        "The colors the way eyes see them",
+        "A written description"
+      ],
+      "correctIndex": 0,
+      "explanation": "Pictures become grids of numbers."
     }
   ]
 }

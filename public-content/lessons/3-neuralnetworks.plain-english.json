@@ -3,67 +3,86 @@
   "mode": "plain-english",
   "title": "Introduction to Neural Networks & Perceptrons",
   "readingTimeMinutes": 7,
-  "intro": "Neural networks are computational models loosely inspired by biological brains. Rather than executing rigid If-Then rules, neural networks learn by calibrating numerical weights across interconnected nodes.",
+  "intro": "Neural networks are computer programs that are loosely inspired by the human brain. They do not follow fixed rules written by people; instead, they learn by adjusting many small numbers until their answers become more accurate.",
   "sections": [
     {
       "id": "biological-inspiration",
-      "heading": "1. From Biology to Math: The Rosenblatt Perceptron",
+      "heading": "1. From Brain Cells to Math: The Perceptron",
       "analogy": {
         "metaphorName": "The Weighted Committee Vote",
-        "description": "Imagine a corporate committee deciding whether to fund a new project. Each board member votes yes (1) or no (0), but some members carry higher voting weight based on expertise. If the combined weighted score exceeds the budget threshold, the proposal is approved."
+        "description": "Picture a committee voting on a new project, where each member votes yes or no but some votes count for more than others. If the weighted total passes a set score, the project goes ahead."
       },
-      "bodyMarkdown": "In biological brains, a **neuron** receives chemical signals through dendrites. If the cumulative electrical charge in the cell body surpasses an action potential threshold, an electric pulse travels down the axon to trigger downstream cells.\n\nIn 1957, Cornell psychologist **Frank Rosenblatt** translated this biological mechanism into mathematics, inventing the **Perceptron**—the fundamental building block of modern deep learning.",
+      "bodyMarkdown": "Your brain is made of billions of cells called **neurons**. Each neuron collects signals from its neighbors, and if those signals add up to enough, it sends a signal of its own to the cells that come next.\n\nIn 1957, a psychologist named **Frank Rosenblatt** turned that idea into simple mathematics and built the **Perceptron**, which is still the basic building block of modern AI systems.",
       "jargonBuster": [
         {
           "term": "Perceptron",
-          "simpleExplanation": "The simplest mathematical model of a neuron, calculating a weighted sum of inputs and applying a threshold."
+          "simpleExplanation": "The simplest artificial neuron. It adds up weighted clues and decides yes or no."
         },
         {
-          "term": "Action Potential",
-          "simpleExplanation": "The electrical threshold in a neuron that must be crossed before it fires an outgoing signal."
+          "term": "Neuron",
+          "simpleExplanation": "A brain cell that passes signals to other cells."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "From a brain cell to an artificial neuron",
+        "alt": "A flow from left to right: signals come into a neuron, are added up, and if the total passes a threshold the neuron fires and passes a signal on.",
+        "content": "flowchart LR\n    A[\"Incoming signals\"] --> B[\"Add them up\"] --> C{\"Total big enough?\"}\n    C -->|Yes| D[\"Fire a signal\"]\n    C -->|No| E[\"Stay quiet\"]"
+      },
+      "realWorld": "Face unlock and photo search are built from many artificial neurons."
     },
     {
       "id": "weights-bias-activation",
-      "heading": "2. Mathematical Foundations: Inputs, Weights, Bias & Activation",
+      "heading": "2. The Four Parts: Inputs, Weights, Bias and the Gate",
       "analogy": {
         "metaphorName": "The Audio Mixing Board",
-        "description": "An audio engineer adjusts individual slider faders (weights) for guitars, vocals, and drums, and sets an overall master gain knob (bias) to prevent clipping. When the master output crosses the decibel gate, the sound broadcasts to the arena."
+        "description": "A sound engineer sets one slider for the guitar, one for the voice, and one for the drums, and then sets a master knob that controls the overall level. Once the combined mix is loud enough, it is sent out to the crowd."
       },
-      "bodyMarkdown": "A perceptron computes an output through four concise steps:\n\n1. **Inputs ($x_i$)**: The raw numerical features (e.g., sweetness, roundness, temperature).\n2. **Weights ($w_i$)**: Adjustable multipliers representing the significance of each input.\n3. **Bias ($b$)**: A baseline offset that shifts the activation threshold.\n4. **Activation Function**: A mathematical gate. If the weighted sum $\\sum (w_i x_i) + b \\ge 0$, the neuron outputs $+1$; otherwise it outputs $0$ (or $-1$).",
+      "bodyMarkdown": "A perceptron reaches a decision in four steps:\n\n1. **Inputs** are the clues it receives, such as how sweet or how round a piece of fruit is.\n2. **Weights** say how much each clue matters to the final decision.\n3. **Bias** is a built-in nudge that makes it easier or harder for the neuron to say yes.\n4. **The gate** compares the total to a limit, answering yes if the total is high enough and no if it is not.",
       "diagram": {
         "type": "mermaid",
         "caption": "Perceptron Architecture: Linear Combination & Threshold Step",
-        "content": "graph LR\n    X1[\"Input x1\"] -->|Weight w1| Sum[\"➕ Linear Combination<br/>z = ∑(wi·xi) + b\"]\n    X2[\"Input x2\"] -->|Weight w2| Sum\n    Bias[\"Bias b\"] --> Sum\n    Sum --> Act[\"📈 Activation Gate<br/>f(z) ≥ 0\"]\n    Act --> Out[\"💡 Binary Output (0 or 1)\"]"
+        "content": "graph LR\n    X1[\"Input x1\"] -->|Weight w1| Sum[\"➕ Linear Combination<br/>z = ∑(wi·xi) + b\"]\n    X2[\"Input x2\"] -->|Weight w2| Sum\n    Bias[\"Bias b\"] --> Sum\n    Sum --> Act[\"📈 Activation Gate<br/>f(z) ≥ 0\"]\n    Act --> Out[\"💡 Binary Output (0 or 1)\"]",
+        "alt": "Two inputs are each multiplied by a weight, added together with a bias, and passed through a gate. The output is 1 or 0."
       },
       "jargonBuster": [
         {
-          "term": "Synaptic Weight",
-          "simpleExplanation": "The strength of a connection between two nodes, adjusted during machine learning training."
+          "term": "Weight",
+          "simpleExplanation": "A number that says how much one clue matters."
+        },
+        {
+          "term": "Bias",
+          "simpleExplanation": "A built-in nudge that makes saying yes easier or harder."
         },
         {
           "term": "Activation Function",
-          "simpleExplanation": "A function that transforms the neuron's weighted sum into an outgoing output signal."
-        },
-        {
-          "term": "Linear Separability",
-          "simpleExplanation": "A classification problem where two classes can be divided by a single straight line or plane."
+          "simpleExplanation": "The gate that turns the total into a yes or no."
         }
-      ]
+      ],
+      "realWorld": "Spam filters learn which words matter more by adjusting weights."
     },
     {
       "id": "interactive-perceptron-playground",
       "heading": "3. Interactive Simulation: Tuning a Binary Classifier",
       "analogy": {
         "metaphorName": "Calibrating a Sensor Threshold",
-        "description": "Think of setting an automatic thermostat: you adjust sensitivity dials so the heater kicks on only when the combined temperature and humidity drop below your comfort line."
+        "description": "Think of a home thermostat, where you adjust the dials until the heater switches on only when the room is cold enough to be uncomfortable."
       },
-      "bodyMarkdown": "Experiment with the live single-neuron simulator below. Select fruit presets and adjust weights $w_1, w_2$ and bias $b$ to see how the decision boundary shifts.",
+      "bodyMarkdown": "Try the neuron below by choosing a fruit and then adjusting the weights and the bias. As you change them, watch how the dividing line between the two kinds of fruit moves across the screen.",
       "interactiveWidget": {
         "type": "perceptron-sim",
-        "title": "⚡ Interactive Simulation: The Fruit Sorting Perceptron"
-      }
+        "title": "⚡ Interactive Simulation: The Fruit Sorting Perceptron",
+        "goal": "Adjust the weights and bias until the sorter classifies every fruit correctly.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you adjust anything: which input should carry more weight?",
+        "hints": [
+          "Change one weight at a time.",
+          "Watch how the dividing line moves."
+        ],
+        "successMessage": "That is how learning works: small adjustments until the mistakes disappear.",
+        "allowFreePlay": true
+      },
+      "realWorld": "Any recommendation system tunes its settings in the same way, only at a much larger scale."
     }
   ],
   "miniQuiz": [
@@ -99,6 +118,29 @@
       "correctIndex": 0,
       "praise": "Brilliant! Algorithms like gradient descent nudge weights incrementally to reduce error!",
       "explanation": "Learning in neural networks consists of optimizing connection weights through error backpropagation."
+    }
+  ],
+  "teachBack": {
+    "prompt": "Which sentence best explains how a neural network learns?",
+    "options": [
+      "It adjusts numeric weights to reduce its mistakes.",
+      "It stores every example and looks it up later.",
+      "Engineers write a rule for each case."
+    ],
+    "correctIndex": 0,
+    "explanation": "Training adjusts weights step by step to reduce errors."
+  },
+  "recall": [
+    {
+      "fromLesson": "2-symbolic",
+      "question": "In a rule-based system, what does an if-then rule do?",
+      "options": [
+        "Connects a fact to an action",
+        "Learns from pictures",
+        "Adds random noise"
+      ],
+      "correctIndex": 0,
+      "explanation": "Rules link conditions to actions, so answers can be traced."
     }
   ]
 }

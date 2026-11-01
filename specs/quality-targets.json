@@ -1,0 +1,32 @@
+{
+  "_comment": "Single source of truth for lesson quality gates. Read by scripts/audit_lesson.py and referenced by SPEC-006.",
+  "modes": {
+    "junior": {
+      "gradeMin": 0.0,
+      "gradeMax": 6.0,
+      "maxSentenceWords": 22,
+      "maxAvgSentenceWords": 14,
+      "minJargonBusters": 2
+    },
+    "plain-english": {
+      "gradeMin": 7.0,
+      "gradeMax": 9.0,
+      "maxSentenceWords": 30,
+      "maxAvgSentenceWords": 20,
+      "minJargonBusters": 2
+    }
+  },
+  "sections": {
+    "requireDiagram": true,
+    "requireDiagramAlt": true,
+    "requireAnalogy": true
+  },
+  "widgets": {
+    "requireGoal": true,
+    "requireScaffold": true,
+    "allowedScaffolds": ["guided", "standard"]
+  },
+  "quiz": {
+    "minQuestions": 2
+  }
+}

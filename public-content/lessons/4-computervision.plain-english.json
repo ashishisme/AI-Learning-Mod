@@ -5,8 +5,8 @@
   "readingTimeMinutes": 6,
   "mascot": {
     "name": "Nova",
-    "avatar": "\ud83c\udf99\ufe0f",
-    "greeting": "Welcome! Today we will break down Computer Vision\u2014how software interprets visual media from raw pixels to self-driving awareness."
+    "avatar": "🎙️",
+    "greeting": "Welcome! Today we will break down Computer Vision—how software interprets visual media from raw pixels to self-driving awareness."
   },
   "sections": [
     {
@@ -26,7 +26,14 @@
           "term": "RGB",
           "simpleExplanation": "Red, Green, and Blue light values mixed to make any screen color."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "How a computer stores a picture",
+        "alt": "A flow from left to right: a photo is split into a grid of pixels, each pixel is stored as a brightness number, and the computer works only with those numbers.",
+        "content": "flowchart LR\n    A[\"Photo\"] --> B[\"Grid of pixels\"] --> C[\"One number per pixel<br/>(0 dark to 255 bright)\"] --> D[\"Computer works<br/>with the numbers\"]"
+      },
+      "realWorld": "Every photo on your phone is stored as a grid of numbers."
     },
     {
       "id": "convolution-filters",
@@ -39,7 +46,16 @@
       "interactiveWidget": {
         "type": "convolution-sim",
         "title": "Interactive Convolution & Filter Lab",
-        "instruction": "Select filter presets to observe how kernel matrix arithmetic extracts edge features from a pixel grid."
+        "instruction": "Select filter presets to observe how kernel matrix arithmetic extracts edge features from a pixel grid.",
+        "goal": "Choose a filter that reveals the outline of the shape.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you pick a filter: what should an edge filter highlight?",
+        "hints": [
+          "Edge filters respond to sudden changes in brightness.",
+          "Compare the result with the blur filter."
+        ],
+        "successMessage": "Right. Vision models start with simple filters like this and stack them into complex ones.",
+        "allowFreePlay": true
       },
       "jargonBuster": [
         {
@@ -50,7 +66,8 @@
           "term": "Feature Map",
           "simpleExplanation": "The new grid that lights up wherever the filter found a pattern."
         }
-      ]
+      ],
+      "realWorld": "Photo apps use filters to sharpen, blur or outline pictures."
     },
     {
       "id": "cnn-hierarchy",
@@ -69,7 +86,14 @@
           "term": "Pooling",
           "simpleExplanation": "A shrinking step that keeps the strongest points and cuts down compute time."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Layers of a vision network",
+        "alt": "A flow from left to right: early layers detect edges, middle layers detect shapes, later layers detect object parts, and the final layer names the object.",
+        "content": "flowchart LR\n    A[\"Edges\"] --> B[\"Shapes\"] --> C[\"Object parts\"] --> D[\"Label: cat, car, face\"]"
+      },
+      "realWorld": "Face unlock and photo search use stacked layers like these."
     },
     {
       "id": "practical-impact",
@@ -88,7 +112,14 @@
           "term": "Semantic Segmentation",
           "simpleExplanation": "Marking each pixel with the exact kind of object it belongs to."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Where computer vision is used",
+        "alt": "A hub with one center, computer vision, connected to four uses: phone face unlock, driver assistance in cars, medical scan support, and quality checks in factories.",
+        "content": "flowchart TD\n    V[\"Computer vision\"] --> P[\"Phone face unlock\"]\n    V --> C[\"Driver assistance\"]\n    V --> M[\"Medical scan support\"]\n    V --> F[\"Factory quality checks\"]"
+      },
+      "realWorld": "Driver-assistance features, face unlock and scan-reading tools."
     }
   ],
   "miniQuiz": [
@@ -127,6 +158,29 @@
       "correctIndex": 1,
       "praise": "Precisely right! You have grasped hierarchical feature learning.",
       "explanation": "CNNs build a hierarchical abstraction: early layers identify basic edges and textures, while deeper layers assemble them into complex objects."
+    }
+  ],
+  "teachBack": {
+    "prompt": "Which sentence best explains how computer vision works?",
+    "options": [
+      "Images become grids of numbers, and layers of filters find patterns in them.",
+      "The computer recognizes objects the way people do.",
+      "Each object is matched against a stored photo."
+    ],
+    "correctIndex": 0,
+    "explanation": "Vision models detect simple patterns first and combine them into complex ones."
+  },
+  "recall": [
+    {
+      "fromLesson": "3-neuralnetworks",
+      "question": "What do weights do in a neuron?",
+      "options": [
+        "Control how much each input matters",
+        "Store the neuron's name",
+        "Make the screen brighter"
+      ],
+      "correctIndex": 0,
+      "explanation": "Weights decide how important each clue is."
     }
   ]
 }
