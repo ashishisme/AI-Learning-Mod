@@ -196,6 +196,12 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// FR-REV-20: screen the question before it reaches the model; nothing is logged or echoed (FR-REV-21)
+	if cat := ScreenQuestion(req.Question); cat != SafetyNone {
+		writeSafetyReply(w, isStream, SafetyReply(cat))
+		return
+	}
+
 	// Load lesson content from disk
 	lessonPath := filepath.Join(h.contentDir, "lessons", req.LessonID+".json")
 	lessonData, err := os.ReadFile(lessonPath)
