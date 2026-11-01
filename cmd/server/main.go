@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"ai-foundations-coach/internal/api"
+	"ai-foundations-coach/internal/netopt"
 	openai "github.com/sashabaranov/go-openai"
 )
 
@@ -64,6 +65,10 @@ func main() {
 	}
 
 	openAIKey := os.Getenv("OPENAI_API_KEY")
+
+	if netopt.EnvInsecure() {
+		slog.Warn("INSECURE_SKIP_TLS_VERIFY is enabled: TLS certificates are NOT verified for curriculum ingest or the AI endpoint. Use only on trusted networks.")
+	}
 
 	var staticFS fs.FS
 	if info, err := os.Stat("web/dist"); err == nil && info.IsDir() {

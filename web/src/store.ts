@@ -46,6 +46,7 @@ export interface AISettings {
   apiKey: string
   githubToken: string
   maxBytes: number
+  insecureTls?: boolean // skip TLS verification for the AI endpoint (self-signed certs). Off by default.
 }
 
 export interface SettingsState {
@@ -63,6 +64,7 @@ const defaultSettings: AISettings = {
   apiKey: '',
   githubToken: '',
   maxBytes: 1500,
+  insecureTls: false,
 }
 
 export const useSettingsStore = create<SettingsState>()(

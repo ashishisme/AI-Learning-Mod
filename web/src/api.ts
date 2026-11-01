@@ -70,6 +70,7 @@ function getAIHeaders(): Record<string, string> {
   if (settings.model) headers['X-AI-Model'] = settings.model
   if (settings.apiKey) headers['X-AI-Key'] = settings.apiKey
   if (settings.maxBytes) headers['X-AI-Max-Bytes'] = String(settings.maxBytes)
+  if (settings.insecureTls) headers['X-AI-Insecure-TLS'] = 'true'
   return headers
 }
 
@@ -186,7 +187,7 @@ export interface ConfigTestResult {
   activeModel?: string
 }
 
-export async function testAIConfig(config: { baseUrl: string; model: string; apiKey?: string }): Promise<ConfigTestResult> {
+export async function testAIConfig(config: { baseUrl: string; model: string; apiKey?: string; insecureTls?: boolean }): Promise<ConfigTestResult> {
   const res = await fetch('/api/config/test', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

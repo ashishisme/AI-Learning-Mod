@@ -62,6 +62,7 @@ export const SettingsModal: React.FC = () => {
         baseUrl: form.baseUrl,
         model: form.model,
         apiKey: form.apiKey,
+        insecureTls: !!form.insecureTls,
       })
       setTestResult(res)
     } catch (err: any) {
@@ -290,6 +291,38 @@ export const SettingsModal: React.FC = () => {
               placeholder="e.g. http://localhost:11434/v1"
               className="w-full px-3 py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition font-mono"
             />
+          </div>
+
+          {/* Insecure TLS (opt-in) */}
+          <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-3">
+            <label className="flex items-start gap-2.5 cursor-pointer">
+              <input
+                type="checkbox"
+                id="settings-insecure-tls"
+                checked={!!form.insecureTls}
+                onChange={(e) => setForm({ ...form, insecureTls: e.target.checked })}
+                className="mt-0.5 h-4 w-4 rounded border-slate-600 accent-amber-500"
+              />
+              <span>
+                <span className="block font-semibold text-slate-200">
+                  Allow self-signed certificate (skip TLS verification)
+                </span>
+                <span className="block text-[11px] text-slate-400 mt-0.5">
+                  For https AI servers with a self-signed or company certificate. Not needed for local http
+                  endpoints such as Ollama.
+                </span>
+              </span>
+            </label>
+            {form.insecureTls && (
+              <p
+                role="alert"
+                data-testid="insecure-tls-warning"
+                className="mt-2 text-[11px] text-amber-300"
+              >
+                ⚠️ Anyone on the network could read or change what is sent to this server, including lesson
+                text and your API key. Only use it on a network you trust.
+              </p>
+            )}
           </div>
 
           {/* Model Name */}

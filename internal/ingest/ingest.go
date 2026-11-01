@@ -19,13 +19,14 @@ import (
 	"strings"
 	"time"
 
+	"ai-foundations-coach/internal/netopt"
 	"github.com/google/go-github/v66/github"
 )
 
 const (
 	RepoOwner     = "microsoft"
 	RepoName      = "AI-For-Beginners"
-	MaxBlobSize   = 5 * 1024 * 1024 // 5 MiB cap per NFR-SEC-09
+	MaxBlobSize   = 5 * 1024 * 1024  // 5 MiB cap per NFR-SEC-09
 	EgressTimeout = 30 * time.Second // 30s per NFR-SEC-09
 )
 
@@ -365,9 +366,9 @@ func RewriteRelativeAssets(content, owner, repo, sha, baseDir, rawHost string) s
 
 // NFR-SEC-09: Egress client restricted to api.github.com and raw.githubusercontent.com
 func NewEgressClient() *http.Client {
-	return &http.Client{
-		Timeout: EgressTimeout,
-	}
+	// TLS verification stays ON unless the operator opts out with INSECURE_SKIP_TLS_VERIFY=true.
+	// The curriculum fetch can carry a GitHub token, so insecure mode is never enabled per request.
+	return netopt.HTTPClient(EgressTimeout, netopt.EnvInsecure())
 }
 
 func FetchWithRetry(ctx context.Context, client *http.Client, rawURL string) ([]byte, error) {

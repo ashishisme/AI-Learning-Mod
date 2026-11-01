@@ -6,6 +6,8 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -75,5 +77,44 @@ func TestTutorBlocksUnsafeQuestionBeforeModel(t *testing.T) {
 	}
 	if !strings.Contains(rec.Body.String(), "trusted adult") {
 		t.Errorf("expected kind redirect, got %s", rec.Body.String())
+	}
+}
+
+// Opt-in TLS skip via the X-AI-Insecure-TLS header (Settings toggle).
+func TestTutorInsecureTLSHeaderOptIn(t *testing.T) {
+	llm := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"id":"x","object":"chat.completion","choices":[{"index":0,"message":{"role":"assistant","content":"A neuron adds signals. [Lesson § Intro]"},"finish_reason":"stop"}]}`))
+	}))
+	defer llm.Close()
+
+	dir := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(dir, "lessons"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	lesson := `{"title":"Lesson","blocks":[{"type":"markdown","content":"## Intro\nNeurons add signals."}]}`
+	if err := os.WriteFile(filepath.Join(dir, "lessons", "1-intro.json"), []byte(lesson), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	ask := func(insecureHeader string) *httptest.ResponseRecorder {
+		h := NewTutorHandler("", dir, nil)
+		req := httptest.NewRequest(http.MethodPost, "/api/tutor", strings.NewReader(`{"lessonId":"1-intro","question":"What does a neuron do?"}`))
+		req.Header.Set("X-AI-Base-URL", llm.URL+"/v1")
+		req.Header.Set("X-AI-Key", "k")
+		if insecureHeader != "" {
+			req.Header.Set("X-AI-Insecure-TLS", insecureHeader)
+		}
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, req)
+		return rec
+	}
+
+	if rec := ask(""); rec.Code == http.StatusOK {
+		t.Fatalf("self-signed endpoint must fail by default, got 200: %s", rec.Body.String())
+	}
+	rec := ask("true")
+	if rec.Code != http.StatusOK || !strings.Contains(rec.Body.String(), "A neuron adds signals") {
+		t.Fatalf("expected success with header, got %d: %s", rec.Code, rec.Body.String())
 	}
 }

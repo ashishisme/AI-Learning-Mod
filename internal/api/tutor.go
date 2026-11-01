@@ -16,6 +16,7 @@ import (
 	"strings"
 	"time"
 
+	"ai-foundations-coach/internal/netopt"
 	openai "github.com/sashabaranov/go-openai"
 )
 
@@ -292,6 +293,11 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		cfg := openai.DefaultConfig(key)
 		if customBaseURL != "" {
 			cfg.BaseURL = customBaseURL
+		}
+		// Opt-in TLS skip for self-signed AI endpoints (server env or per-request header from Settings).
+		if netopt.EnvInsecure() || strings.EqualFold(strings.TrimSpace(r.Header.Get("X-AI-Insecure-TLS")), "true") {
+			slog.Warn("TLS certificate verification disabled for AI endpoint")
+			cfg.HTTPClient = netopt.HTTPClient(0, true)
 		}
 		client = &defaultOpenAIWrapper{client: openai.NewClientWithConfig(cfg)}
 	}
