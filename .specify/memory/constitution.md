@@ -14,7 +14,7 @@
 - Streaming token delivery (`FR-TUT-11`) over SSE must maintain write-deadline safety (`http.ResponseController.SetWriteDeadline(time.Time{})`) to prevent socket termination during CPU evaluation.
 
 ### III. Technology Constraints (DC-01 .. DC-11)
-- **Backend (DC-02)**: Go 1.23 using standard library `net/http` router only (`http.NewServeMux()` with Go 1.22+ method+path patterns). No third-party routers allowed.
+- **Backend (DC-02)**: Go 1.27.3 using standard library `net/http` router only (`http.NewServeMux()` with Go 1.22+ method+path patterns). No third-party routers allowed.
 - **Frontend (DC-01)**: React 18 + TypeScript + Vite + Tailwind CSS + Zustand with local persistence.
 - **Ingestion (DC-03)**: Go CLI using `github.com/google/go-github/v66`.
 - **Minimal State (DC-09, amended 2.2.0)**: Lessons remain static JSON packaged with the release. Server-side persistent state is permitted **only** for:
@@ -50,4 +50,4 @@ Every new phase, PR, or implementation task MUST pass the three-tier verificatio
 - This Constitution supersedes informal prompt requests. If an implementation plan conflicts with this Constitution, the Constitution takes precedence.
 - Proposed amendments to architecture constraints (DC-*) require updating `spec/SPEC.md §8` and this document simultaneously.
 
-**Version**: 2.2.0 | **Ratified**: 2026-10-26 | **Last Amended**: 2026-11-01 (DC-09 twice: access records and counters 2.1.0, feedback records 2.2.0; SPEC-008) | **Governing Baseline**: `spec/SPEC.md`
+**Version**: 2.2.1 | **Ratified**: 2026-10-26 | **Last Amended**: 2026-11-02 (DC-02: Go 1.27.3; DC-09 access records and feedback remain as ratified in 2.1.0 and 2.2.0) | **Governing Baseline**: `spec/SPEC.md`

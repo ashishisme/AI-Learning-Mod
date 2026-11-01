@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.1.0 |
+| Version | 2.2.1 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -540,7 +540,7 @@ not new acceptance criteria unless observable behavior changes.
 `rehype-highlight` + `rehype-raw` + `rehype-sanitize` + `zustand` with
 `persist`.
 
-**DC-02.** Backend: Go 1.23, stdlib `net/http` with the Go 1.22
+**DC-02.** Backend: Go 1.27.3, stdlib `net/http` with the Go 1.22
 method+path router, `embed.FS`. No third-party router.
 
 **DC-03.** Ingestion: Go CLI using `github.com/google/go-github/v66`.
