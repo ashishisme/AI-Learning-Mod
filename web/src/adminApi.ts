@@ -19,16 +19,20 @@ export interface AccountFilters { label?: string; status?: string; sort?: string
 
 let csrf = ''
 
-async function parse<T>(res: Response): Promise<T> {
+async function parse<T>(res: Response, notifyExpiry = true): Promise<T> {
   if (!res.ok) {
     const body = await res.json().catch(() => null)
+    if (notifyExpiry && res.status === 401 && body?.code === 'admin_required') {
+      csrf = ''
+      window.dispatchEvent(new Event('admin-session-expired'))
+    }
     throw new ApiError(res.status, body?.error || `Request failed (${res.status})`, body)
   }
   return (res.status === 204 ? undefined : await res.json()) as T
 }
 
 export async function adminMe(): Promise<AdminMe> {
-  const me = await parse<AdminMe>(await fetch('/api/admin/me'))
+  const me = await parse<AdminMe>(await fetch('/api/admin/me'), false)
   csrf = me.csrfToken
   return me
 }

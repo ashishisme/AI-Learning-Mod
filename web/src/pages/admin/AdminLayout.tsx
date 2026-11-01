@@ -1,10 +1,14 @@
 // SPEC-008 US2: admin shell. GET /api/admin/me decides between organisation sign-in and the console.
 import React, { useCallback, useEffect, useState } from 'react'
 import { NavLink, Route, Routes, useNavigate, useSearchParams } from 'react-router-dom'
-import { adminLogout, adminMe } from '../../adminApi'
+import { adminLogout, adminMe, fetchFeedback } from '../../adminApi'
 import { ApiError } from '../../api'
 import { UsersInvites } from './UsersInvites'
 import { Audit } from './Audit'
+import { Overview } from './Overview'
+import { Usage } from './Usage'
+import { Costs } from './Costs'
+import { FeedbackInbox } from './FeedbackInbox'
 
 const ERRORS: Record<string, string> = {
   state: 'The sign-in link expired. Please try again.',
@@ -43,6 +47,27 @@ export const AdminLayout: React.FC = () => {
   const navigate = useNavigate()
   const errorKey = params.get('error')
   const [outError, setOutError] = useState('')
+  const [feedbackUnread, setFeedbackUnread] = useState(0)
+
+  useEffect(() => {
+    const expired = () => { setMe(null); setState('out'); navigate('/admin', { replace: true }) }
+    window.addEventListener('admin-session-expired', expired)
+    return () => window.removeEventListener('admin-session-expired', expired)
+  }, [navigate])
+
+  useEffect(() => {
+    if (state !== 'in') return
+    let live = true
+    const refresh = () => {
+      if (document.visibilityState !== 'visible') return
+      void fetchFeedback({ limit: 1 }).then((value) => {
+        if (live) setFeedbackUnread((value as { unread: number }).unread)
+      }).catch(() => {})
+    }
+    refresh()
+    const timer = window.setInterval(refresh, 30_000)
+    return () => { live = false; window.clearInterval(timer) }
+  }, [state])
 
   useEffect(() => {
     adminMe()
@@ -119,16 +144,16 @@ export const AdminLayout: React.FC = () => {
       <nav aria-label="Admin sections" className="mb-6 flex overflow-x-auto border-b border-slate-300 dark:border-slate-700">
         {TABS.map(([to, label, end]) => (
           <NavLink key={to} to={to} end={end} className={tabCls}>
-            {label}
+            {label}{label === 'Feedback' && feedbackUnread > 0 ? ` (${feedbackUnread})` : ''}
           </NavLink>
         ))}
       </nav>
       <Routes>
-        <Route index element={<Later title="Overview" />} />
+        <Route index element={<Overview />} />
         <Route path="users" element={<UsersInvites />} />
-        <Route path="usage" element={<Later title="Usage" />} />
-        <Route path="costs" element={<Later title="Costs" />} />
-        <Route path="feedback" element={<Later title="Feedback" />} />
+        <Route path="usage" element={<Usage />} />
+        <Route path="costs" element={<Costs />} />
+        <Route path="feedback" element={<FeedbackInbox unreadChanged={setFeedbackUnread} />} />
         <Route path="audit" element={<Audit />} />
         <Route path="*" element={<Later title="Not found" />} />
       </Routes>

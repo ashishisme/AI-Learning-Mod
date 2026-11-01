@@ -6,6 +6,13 @@ import { readFileSync } from 'fs'
 const auditRow = (id: number) => ({ id, at: '2026-11-02T10:00:00Z', actor: 'owner@example.org', action: 'invite.create', target: `t${id}`, detail: 'n=1' })
 
 test.describe('SPEC-008 US2 admin shell', () => {
+  test('an expired admin cookie during a list request returns to organisation sign-in', async ({ page }) => {
+    await mockAdmin(page)
+    await page.goto('/admin')
+    await page.route('**/api/admin/dashboard**', (r) => r.fulfill({ status: 401, json: { code: 'admin_required', error: 'Admin sign-in required' } }))
+    await page.getByRole('link', { name: 'Users and Invites' }).click()
+    await expect(page.getByTestId('admin-signin-link')).toBeVisible()
+  })
   test('signed-out admin sees the sign-in link', async ({ page }) => {
     await mockAdmin(page, { signedIn: false })
     await page.goto('/admin')
@@ -34,7 +41,7 @@ test.describe('SPEC-008 US2 admin shell', () => {
     const tabs = page.getByRole('navigation', { name: 'Admin sections' }).getByRole('link')
     await expect(tabs).toHaveText(['Overview', 'Users and Invites', 'Usage', 'Costs', 'Feedback', 'Audit'])
     await expect(page.getByRole('link', { name: 'Overview' })).toHaveAttribute('aria-current', 'page')
-    await expect(page.getByTestId('coming-later')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Overview' })).toBeVisible()
     await page.getByRole('link', { name: 'Audit' }).click()
     await expect(page).toHaveURL(/\/admin\/audit$/)
     await expect(page.getByRole('link', { name: 'Audit' })).toHaveAttribute('aria-current', 'page')
@@ -71,7 +78,7 @@ test.describe('SPEC-008 US2 users and invites', () => {
     await expect(page.getByTestId('tile-expiring')).toHaveText('9')
     await expect(page.getByTestId('tile-pending')).toHaveText('22')
     const acc = page.getByTestId('accounts-table')
-    await expect(acc.getByRole('columnheader')).toHaveCount(8)
+    await expect(acc.getByRole('columnheader')).toHaveCount(9)
     await expect(acc).toContainText('2 Nov 2026, 3:30 pm')
     await expect(acc).toContainText('Never')
     // revoked accounts: no extend / revoke controls

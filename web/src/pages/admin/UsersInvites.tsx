@@ -129,10 +129,10 @@ export const UsersInvites: React.FC = () => {
 
   const d = dash.data
   const rows = accounts.data?.items ?? []
-  const labelFilter = (
+  const labelFilter = (id: string) => (
     <div className="flex items-center gap-2">
-      <label htmlFor="f-label" className="text-sm font-semibold">Group label</label>
-      <select id="f-label" data-testid="f-label" className={field} value={label} onChange={(e) => setLabel(e.target.value)}>
+      <label htmlFor={id} className="text-sm font-semibold">Group label</label>
+      <select id={id} data-testid="f-label" className={field} value={label} onChange={(e) => setLabel(e.target.value)}>
         <option value="">All labels</option>
         {(d?.labels ?? []).map((l) => <option key={l} value={l}>{l}</option>)}
       </select>
@@ -148,7 +148,7 @@ export const UsersInvites: React.FC = () => {
       <section aria-labelledby="seats-h">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
           <h2 id="seats-h" className="text-lg font-bold">Seats and accounts</h2>
-          {labelFilter}
+          {labelFilter('dashboard-group-label')}
         </div>
         <ListState loading={dash.loading} error={dash.error} empty={!d} emptyText="No data yet." onRetry={dash.reload}>
           {d && (
@@ -229,7 +229,7 @@ export const UsersInvites: React.FC = () => {
       <section aria-labelledby="acc-h">
         <h2 id="acc-h" className="text-lg font-bold mb-2">Accounts</h2>
         <div className="flex flex-wrap items-center gap-4 mb-3">
-          {labelFilter}
+          {labelFilter('accounts-group-label')}
           <div className="flex items-center gap-2">
             <label htmlFor="f-status" className="text-sm font-semibold">Status</label>
             <select id="f-status" data-testid="f-status" className={field} value={status} onChange={(e) => setStatus(e.target.value)}>
@@ -259,7 +259,7 @@ export const UsersInvites: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-sm" data-testid="accounts-table">
               <caption className="sr-only">Accounts</caption>
-              <thead><tr>{['Beta ID', 'Label', 'Status', 'Activated (IST)', 'Expires (IST)', 'Last seen (IST)', 'Devices', 'Actions'].map((h) => <th key={h} scope="col" className={th}>{h}</th>)}</tr></thead>
+              <thead><tr>{['Beta ID', 'Label', 'Status', 'Activated (IST)', 'Expires (IST)', 'Last seen (IST)', 'Devices', 'Active now', 'Actions'].map((h) => <th key={h} scope="col" className={th}>{h}</th>)}</tr></thead>
               <tbody>
                 {rows.map((a: AccountRow) => (
                   <tr key={a.betaId}>
@@ -268,8 +268,9 @@ export const UsersInvites: React.FC = () => {
                     <td className={td}><StatusText status={a.status} /></td>
                     <td className={td}>{formatIST(a.activatedAt)}</td>
                     <td className={td} data-testid={`expires-${a.betaId}`}>{formatIST(a.expiresAt)}</td>
-                    <td className={td}>{formatIST(a.lastSeenAt)}</td>
+                    <td className={td}>{formatIST(a.lastSeenAt)}{a.status === 'active' && (!a.lastSeenAt || Date.now() - new Date(a.lastSeenAt).getTime() > 14 * 86400_000) && <span className="block text-amber-800 dark:text-amber-300 font-semibold">Inactive 14 days</span>}</td>
                     <td className={td}>{a.devices}</td>
+                    <td className={td}>{a.activeNow ? 'Yes' : 'No'}</td>
                     <td className={td}>
                       <div className="flex gap-2 flex-wrap">
                         {a.status !== 'revoked' && <button type="button" className={btn} aria-label={`Extend ${a.betaId}`} onClick={() => setDlg({ k: 'extend', id: a.betaId })}>Extend</button>}

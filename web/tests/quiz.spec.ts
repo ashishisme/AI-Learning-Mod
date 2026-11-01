@@ -1,5 +1,17 @@
 import { test, expect } from '@playwright/test'
 
+test('SPEC-008: opening a quiz counts one usage event without blocking the quiz', async ({ page }) => {
+  let events = 0
+  await page.route('/api/usage/event', async (route) => {
+    events++
+    expect(route.request().postDataJSON()).toEqual({ event: 'quiz_open' })
+    await route.fulfill({ status: 503, body: '' })
+  })
+  await page.goto('/quiz/1-intro')
+  await expect(page.locator('[data-testid="quiz-interactive"]')).toBeVisible()
+  await expect.poll(() => events).toBe(1)
+})
+
 // SPEC: AC-25 (FR-UI-05): /quiz/:id renders the placeholder for unknown lessons.
 test.describe('AC-25 Quiz Placeholder', () => {
   test('AC-25: /quiz/:id renders the placeholder linking to /', async ({ page }) => {

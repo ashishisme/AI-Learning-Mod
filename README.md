@@ -253,6 +253,35 @@ The Go server automatically serves the compiled frontend assets from `web/dist/`
 
 ---
 
+## Invite-only cloud beta
+
+The beta uses one server instance and a persistent state file. Mount a volume at `/app/data`; the container's default is `STATE_FILE=/app/data/state.json`. For example, run the built image with `-v coach-data:/app/data`. Do not run multiple replicas against this file store. Set `ADMIN_EMAILS` to the first administrator's organisation email before startup; that person then signs in through the configured OIDC provider and can create invite links.
+
+For local testing, start the development identity provider with `go run ./cmd/devidp -addr 127.0.0.1:9100`, then set the OIDC variables below and run `go run ./cmd/server`. The development provider is for local use only.
+
+| Variable | Purpose / default |
+| --- | --- |
+| `AUTH_REQUIRED` | Require learner sign-in; default off outside hosted mode |
+| `STATE_FILE` | Persistent JSON state path; required with auth |
+| `SESSION_SECRET` | Cookie signing secret, at least 32 bytes; required with auth |
+| `PUBLIC_BASE_URL` | Public URL used for invite links and OIDC callbacks |
+| `OIDC_ISSUER` | Organisation identity provider issuer URL |
+| `OIDC_CLIENT_ID` | OIDC client ID |
+| `OIDC_CLIENT_SECRET` | OIDC client secret |
+| `OIDC_REQUIRE_MFA` | Require an MFA claim for admin sign-in |
+| `ADMIN_EMAILS` | Comma-separated allowlist of admin email addresses |
+| `SEAT_CAP` | Maximum active accounts plus pending invites; default `1000` |
+| `TUTOR_ENABLED` | Tutor on/off; defaults off in hosted mode and on otherwise |
+| `DAILY_SPEND_CEILING_USD` | Shared daily AI spend ceiling; default `1.00` |
+| `AI_PRICE_INPUT_PER_MTOK` | Estimated input price per million tokens; default `0.15` |
+| `AI_PRICE_OUTPUT_PER_MTOK` | Estimated output price per million tokens; default `0.60` |
+| `MONTHLY_BUDGET_USD` | Admin cost view budget; default `30` |
+| `FEEDBACK_AUDITOR_BASE_URL` | AI feedback auditor endpoint; set with the next two variables |
+| `FEEDBACK_AUDITOR_API_KEY` | Auditor API key; keep out of source control |
+| `FEEDBACK_AUDITOR_MODEL` | Auditor model; all three auditor variables enable feedback |
+
+---
+
 ## 📐 Spec-Driven Development (SDD)
 
 This repository is developed following strict **Spec-Driven Development** governed by [GitHub Spec Kit](https://github.com/github/spec-kit) and the project constitution (`.specify/memory/constitution.md`). Every feature is designed, ratified, and tested before release.

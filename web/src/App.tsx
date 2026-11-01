@@ -7,6 +7,7 @@ import { Quiz } from './pages/Quiz'
 import { Invite } from './pages/Invite'
 import { AdminLayout } from './pages/admin/AdminLayout'
 import { ExpiryBanner } from './components/ExpiryBanner'
+import { FeedbackButton } from './components/FeedbackButton'
 import { AuthGate, SignOutControl } from './components/AuthGate'
 import { Attribution } from './components/Attribution'
 import { SettingsModal } from './components/SettingsModal'
@@ -51,7 +52,7 @@ export const App: React.FC = () => {
             </span>
           </Link>
 
-          <nav className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
+          <nav className="flex min-w-0 overflow-x-auto items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
             <Link
               to="/"
               className="px-2.5 py-1.5 rounded-md hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
@@ -100,6 +101,7 @@ export const App: React.FC = () => {
               )}
             </button>
             <SignOutControl />
+            <FeedbackButton />
           </nav>
         </div>
       </header>

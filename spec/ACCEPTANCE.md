@@ -40,3 +40,11 @@
 | AC-36 | FR-UI-15 | `web/tests/theme.spec.ts::AC-36` | PASS | Dark/Light theme toggle updates document class and persists in localStorage |
 | AC-37 | FR-ING-09, FR-SET-05 | `internal/api/ingest_sync_test.go::TestAC37_IngestSync`, `web/tests/sync.spec.ts::AC-37` | PASS | POST /api/ingest/sync executes curriculum sync from GitHub and settings UI shows live status |
 | AC-38 | FR-TUT-13 | `internal/api/tutor_test.go::TestAC38_CustomProviderAutoCitation` | PASS | Custom-provider uncited long streamed answers get an appended citation; short ones get the FR-TUT-06 fallback |
+| AC-39 | FR-001..FR-006 | `internal/api/auth_handlers_test.go`, `web/tests/auth.spec.ts` | PASS | Signed-out gate, activation and sign-in |
+| AC-40 | FR-003, FR-004 | `internal/auth/service_activate_test.go`, `web/tests/auth.spec.ts` | PASS | One-use invite and one-time credential display |
+| AC-41 | FR-035..FR-038 | `internal/api/abuse_test.go`, `internal/auth/service_login_test.go` | PASS | Lockout and session validation |
+| AC-42 | FR-018..FR-022 | `internal/api/expiry_handlers_test.go`, `web/tests/expiry.spec.ts` | PASS | Expiry, warning and admin extension |
+| AC-43 | FR-024, FR-025 | `internal/api/hosted_test.go`, `web/tests/tutor-disabled.spec.ts` | PASS | Hosted tutor defaults off; runtime hides controls |
+| AC-44 | FR-026..FR-028 | `internal/spend/tally_test.go`, `internal/api/abuse_test.go` | PASS | Daily spend reservations prevent overshoot |
+| AC-45 | FR-041..FR-046 | `internal/api/admin_insights_test.go`, `web/tests/admin-insights.spec.ts` | PASS | Overview, usage, activity and honest cost reporting |
+| AC-46 | FR-047..FR-059 | `internal/feedback/*_test.go`, `internal/api/feedback_handlers_test.go`, `web/tests/feedback.spec.ts` | PASS | Rule check, AI audit, inbox and retention |

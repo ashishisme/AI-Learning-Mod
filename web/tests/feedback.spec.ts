@@ -1,0 +1,52 @@
+import { expect, test } from '@playwright/test'
+import { mockAdmin } from './helpers/admin-mock'
+
+const session = { authenticated: true, betaId: 'BETA-7KQ3-M9XP', label: 'School A', expiresAt: '2027-01-01T08:30:00Z', daysLeft: 61, expiringSoon: false }
+
+test('learner feedback is gated, warns about personal details, and does not echo a rejected message', async ({ page }) => {
+  await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, authRequired: true, tutorEnabled: false, feedbackEnabled: true } }))
+  await page.route('**/api/auth/session', (r) => r.fulfill({ json: session }))
+  await page.route('**/api/lessons', (r) => r.fulfill({ json: { commitSha: '', lessons: [] } }))
+  let calls = 0
+  await page.route('**/api/feedback', (r) => {
+    calls++
+    return calls === 1 ? r.fulfill({ status: 422, json: { code: 'pii_detected', kind: 'phone', error: 'Please remove personal details' } }) : r.fulfill({ status: 201, json: { ok: true } })
+  })
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Feedback' }).click()
+  await expect(page.getByRole('dialog')).toContainText('Please do not include names, phone numbers, emails or addresses.')
+  await page.getByRole('radio', { name: '4' }).check()
+  await page.getByRole('textbox', { name: 'Message (optional)' }).fill('call 9876543210')
+  await expect(page.getByText('15 / 500 characters')).toBeVisible()
+  await page.getByRole('button', { name: 'Send feedback' }).click()
+  await expect(page.getByRole('status')).toContainText('Please remove personal details (phone)')
+  await expect(page.getByRole('textbox', { name: 'Message (optional)' })).toHaveValue('call 9876543210')
+  await page.getByRole('textbox', { name: 'Message (optional)' }).fill('The quiz was clear')
+  await page.getByRole('button', { name: 'Send feedback' }).click()
+  await expect(page.getByRole('status')).toContainText('sent for review')
+})
+
+test('admin sees only passed items, held counts, status controls and CSV export', async ({ page }) => {
+  const mock = await mockAdmin(page, { feedback: () => ({ items: [{ id: 'f1', at: '2026-11-02T10:00:00Z', rating: 4, category: 'content', message: 'The quiz was clear', label: 'School A', lessonId: '1-intro', mode: 'junior', status: 'new' }], total: 1, unread: 1, held: { waiting: 2, withheld: 1, byReason: { personal_details: 1 } } }) })
+  await page.goto('/admin/feedback')
+  await expect(page.getByRole('navigation', { name: 'Admin sections' }).getByRole('link', { name: 'Feedback (1)' })).toBeVisible()
+  await expect(page.getByText('Waiting: 2; withheld: 1')).toBeVisible()
+  await expect(page.getByRole('table', { name: 'Reviewed feedback' })).toContainText('The quiz was clear')
+  await expect(page.getByRole('link', { name: 'Export CSV' })).toHaveAttribute('href', /\/api\/admin\/feedback.csv/)
+  await page.getByRole('button', { name: 'Mark read' }).click()
+  await expect.poll(() => mock.posts().some((r) => r.path === '/api/admin/feedback/f1/status' && (r.body as { status: string }).status === 'read')).toBe(true)
+})
+
+test('learner sees the hourly feedback limit without losing the draft', async ({ page }) => {
+  await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, authRequired: true, tutorEnabled: false, feedbackEnabled: true } }))
+  await page.route('**/api/auth/session', (r) => r.fulfill({ json: session }))
+  await page.route('**/api/lessons', (r) => r.fulfill({ json: { commitSha: '', lessons: [] } }))
+  await page.route('**/api/feedback', (r) => r.fulfill({ status: 429, json: { code: 'feedback_limit', error: 'limit' } }))
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Feedback' }).click()
+  await page.getByRole('radio', { name: '3' }).check()
+  await page.getByRole('textbox', { name: 'Message (optional)' }).fill('Please add more quizzes')
+  await page.getByRole('button', { name: 'Send feedback' }).click()
+  await expect(page.getByRole('status')).toContainText('try again later')
+  await expect(page.getByRole('textbox', { name: 'Message (optional)' })).toHaveValue('Please add more quizzes')
+})

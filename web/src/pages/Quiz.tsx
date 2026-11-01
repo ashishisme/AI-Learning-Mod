@@ -1,5 +1,5 @@
 // SPEC: FR-UI-05, FR-QZ-01, FR-QZ-02, FR-QZ-03, FR-QZ-04, AC-25, AC-35
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { QUIZ_DATA, LessonQuiz } from '../data/quizzes'
 import { useProgressStore } from '../store'
@@ -9,6 +9,17 @@ export const Quiz: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const lessonId = id || ''
   const quiz: LessonQuiz | undefined = QUIZ_DATA[lessonId]
+  const countedQuiz = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (!quiz || countedQuiz.current === lessonId) return
+    countedQuiz.current = lessonId
+    void fetch('/api/usage/event', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event: 'quiz_open' }),
+    }).catch(() => { /* Usage counting must never interrupt a quiz. */ })
+  }, [lessonId, quiz])
 
   const { setLessonCompleted, isLessonCompleted } = useProgressStore()
 
