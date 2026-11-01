@@ -8,6 +8,9 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "playwright test",
+    "test:ui": "playwright test",
+    "test:ui:headed": "playwright test --headed",
+    "test:ui:report": "playwright show-report",
     "check:deps": "../scripts/check-dependencies.sh"
   },
   "dependencies": {

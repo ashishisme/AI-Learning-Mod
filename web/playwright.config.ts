@@ -10,12 +10,29 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:3000',
   },
-  webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: true,
-    timeout: 30000,
-  },
+  // UI-test environment: Go API (tutor defaults to local Ollama) + Vite dev server.
+  // Existing servers on :8080 / :3000 are reused, so a manually started stack still works.
+  // Override the tutor backend with UI_TEST_AI_BASE_URL / UI_TEST_AI_MODEL.
+  webServer: [
+    {
+      command: 'go run ./cmd/server',
+      cwd: '..',
+      url: 'http://localhost:8080/api/health',
+      reuseExistingServer: true,
+      timeout: 120000,
+      env: {
+        PORT: '8080',
+        OPENAI_BASE_URL: process.env.UI_TEST_AI_BASE_URL ?? 'http://localhost:11434/v1',
+        OPENAI_MODEL: process.env.UI_TEST_AI_MODEL ?? 'llama3.2:1b',
+      },
+    },
+    {
+      command: 'npm run dev',
+      url: 'http://localhost:3000',
+      reuseExistingServer: true,
+      timeout: 30000,
+    },
+  ],
   projects: [
     {
       name: 'chromium',
