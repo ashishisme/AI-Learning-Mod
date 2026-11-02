@@ -266,36 +266,150 @@ The Go server automatically serves the compiled frontend assets from `web/dist/`
 
 ---
 
-## Invite-only cloud beta
+## ☁️ Google Cloud Platform (GCP) Deployment
 
-The beta uses one server instance and a persistent state file. Mount a volume at `/app/data`; the container's default is `STATE_FILE=/app/data/state.json`. For example, run the built image with `-v coach-data:/app/data`. Do not run multiple replicas against this file store. Set `ADMIN_EMAILS` to the first administrator's organisation email before startup; that person then signs in through the configured OIDC provider and can create invite links.
+The production deployment of **AI Foundations Coach** runs on **Google Cloud Platform (GCP)** using **Cloud Run v2**, **Cloud Firestore Native mode**, **Google Secret Manager**, **Artifact Registry**, and automated **GitHub Actions CI/CD** authenticated via keyless **Workload Identity Federation (WIF)**.
 
-For local testing, start the development identity provider with `go run ./cmd/devidp -addr 127.0.0.1:9100`, then set the OIDC variables below and run `go run ./cmd/server`. The development provider is for local use only.
+```
+                              [ GitHub Actions Release Workflow ]
+                                               │
+                                 (Workload Identity Federation)
+                                               ▼
+[ User / Learner Browser ] ──HTTPS──▶ [ Cloud Run v2 Service ]
+                                      Region: asia-south1 (Mumbai)
+                                               │
+               ┌───────────────────────────────┼───────────────────────────────┐
+               ▼                               ▼                               ▼
+     [ Cloud Firestore Native ]      [ Secret Manager ]             [ Artifact Registry ]
+     - Standard Edition              - session-secret (volume mount)- Multi-arch images
+     - Collection single-field index - oidc-client-secret (volume)  - Automatic SBOM
+     - Daily 14-day Backups          - auditor-api-key (optional)
+```
 
-| Variable | Purpose / default |
-| --- | --- |
-| `AUTH_REQUIRED` | Require learner sign-in; default off outside hosted mode |
-| `STATE_BACKEND` | `file` (default; development, tests, self-hosting) or `firestore` (required on Cloud Run) |
-| `STATE_FILE` | Persistent JSON state path; required with auth on the file backend |
-| `FIRESTORE_PROJECT_ID` | Project holding the Firestore database; required with the firestore backend |
-| `SESSION_SECRET` | Cookie signing secret, at least 32 bytes; required with auth |
-| `PUBLIC_BASE_URL` | Public URL used for invite links and OIDC callbacks |
-| `OIDC_ISSUER` | Organisation identity provider issuer URL |
-| `OIDC_CLIENT_ID` | OIDC client ID |
-| `OIDC_CLIENT_SECRET` | OIDC client secret |
-| `OIDC_REQUIRE_MFA` | Require an MFA claim for admin sign-in |
-| `ADMIN_EMAILS` | Comma-separated allowlist of admin email addresses |
-| `SEAT_CAP` | Maximum active accounts plus pending invites; default `1000` |
-| `TUTOR_ENABLED` | Tutor on/off; defaults off in hosted mode and on otherwise |
-| `DAILY_SPEND_CEILING_USD` | Shared daily AI spend ceiling; default `1.00` |
-| `AI_PRICE_INPUT_PER_MTOK` | Estimated input price per million tokens; default `0.15` |
-| `AI_PRICE_OUTPUT_PER_MTOK` | Estimated output price per million tokens; default `0.60` |
-| `MONTHLY_BUDGET_USD` | Admin cost view budget; default `30` |
-| `BUDGET_PUSH_AUDIENCE`, `BUDGET_PUSH_SERVICE_ACCOUNT` | Turn on the verified budget notification route that can switch the tutor off; set both or neither |
-| `FEEDBACK_AUDITOR_BASE_URL` | AI feedback auditor endpoint; set with the next two variables |
-| `FEEDBACK_AUDITOR_API_KEY` | Auditor API key; keep out of source control |
-| `SESSION_SECRET_FILE`, `OIDC_CLIENT_SECRET_FILE`, `FEEDBACK_AUDITOR_API_KEY_FILE` | File holding that secret, such as a mounted Secret Manager volume. Required on Cloud Run, where the plain variables are refused |
-| `FEEDBACK_AUDITOR_MODEL` | Auditor model; all three auditor variables enable feedback |
+### 1. Architecture & Security Highlights
+
+* **Serverless & Cost-Optimized:** Scales automatically to zero when idle ($0.00 base cost).
+* **Zero Long-Lived Service Account Keys:** GitHub Actions authenticates through OpenID Connect (OIDC) Workload Identity Pools.
+* **Secret Container Volume Mounting:** Cloud Run strictly mounts secrets directly from Google Secret Manager (`SESSION_SECRET_FILE`, `OIDC_CLIENT_SECRET_FILE`) to eliminate runtime environment variable leakage.
+* **Strict Client-Side Privacy:** All user lesson progress, quiz attempts, and client tokens remain in the browser's local store.
+
+---
+
+### 2. Required Infrastructure Parameters
+
+Configure your parameters in `deploy/terraform/terraform.tfvars`:
+
+| Parameter | Description | Example / Default |
+| :--- | :--- | :--- |
+| `project_id` | Google Cloud Project ID | `your-gcp-project-id` |
+| `region` | Compute & Firestore location | `asia-south1` |
+| `service_name` | Name for Cloud Run & Artifact Registry | `ai-foundations-coach` |
+| `github_repository` | GitHub `owner/repo` authorized for WIF | `your-org/your-repo` |
+| `billing_account` | GCP Billing Account ID for budget alerts | `000000-000000-000000` |
+| `owner_alert_email`| Notification email for cost and health alerts| `admin@example.com` |
+| `oidc_issuer` | Identity provider issuer URL | `https://accounts.google.com` |
+| `oidc_client_id` | Google OAuth Client ID for Admin console | `<YOUR_GOOGLE_OAUTH_CLIENT_ID>` |
+| `admin_emails` | Comma-separated admin email allowlist | `admin@example.com` |
+
+---
+
+### 3. One-Time Infrastructure Provisioning (Google Cloud Shell)
+
+We recommend bootstrapping from [Google Cloud Shell](https://shell.cloud.google.com/), where the Google Cloud SDK and network authentication are pre-configured.
+
+1. **Clone the repository and enter the Terraform directory:**
+   ```bash
+   git clone -b cloud-beta https://github.com/<YOUR_GITHUB_ORG>/AI-Learning-Mod.git
+   cd AI-Learning-Mod/deploy/terraform
+   ```
+
+2. **Ensure official Terraform binary is available:**
+   ```bash
+   sudo curl -fsSL https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_amd64.zip -o /tmp/tf.zip
+   sudo unzip -q -o /tmp/tf.zip -d /usr/local/bin
+   sudo rm -f /tmp/tf.zip
+   ```
+
+3. **Initialize and provision Terraform:**
+   ```bash
+   export GOOGLE_OAUTH_ACCESS_TOKEN=$(gcloud auth print-access-token)
+   export CLOUDSDK_CORE_PROJECT="<YOUR_GCP_PROJECT_ID>"
+
+   /usr/local/bin/terraform init -upgrade
+   /usr/local/bin/terraform apply -auto-approve
+   ```
+
+4. **Populate Secret Manager with your secrets:**
+   ```bash
+   # Session signing key (generates random 32 bytes)
+   head -c 32 /dev/urandom | base64 | tr -d '\n' | gcloud secrets versions add ai-foundations-coach-session-secret \
+     --project="<YOUR_GCP_PROJECT_ID>" --data-file=-
+
+   # Google OAuth Client Secret
+   printf "%s" "<YOUR_GOOGLE_OAUTH_CLIENT_SECRET>" | gcloud secrets versions add ai-foundations-coach-oidc-client-secret \
+     --project="<YOUR_GCP_PROJECT_ID>" --data-file=-
+
+   # Optional auditor API key
+   printf "none" | gcloud secrets versions add ai-foundations-coach-auditor-api-key \
+     --project="<YOUR_GCP_PROJECT_ID>" --data-file=-
+   ```
+
+5. **Retrieve the live service URL:**
+   ```bash
+   gcloud run services describe ai-foundations-coach --region <YOUR_GCP_REGION> --format='value(status.url)'
+   ```
+   > **Note:** In the Google Cloud Console (APIs & Services ➔ Credentials), add `<YOUR_LIVE_URL>/api/auth/admin/callback` to your OAuth 2.0 Client ID's **Authorized Redirect URIs**.
+
+---
+
+### 4. GitHub Actions Automated CI/CD Setup
+
+Continuous deployment is triggered on version tags (`v*`).
+
+1. **Configure Repository Variable:**
+   In your repository: **Settings ➔ Secrets and variables ➔ Actions ➔ Variables**, create:
+   * `CLOUD_DEPLOYMENT_READY` = `true`
+
+2. **Configure Environment Variables:**
+   Under **Settings ➔ Environments**, verify the `staging` and `staging-promote` environments have the following variables (generated by Terraform output):
+   * `GCP_PROJECT_ID`: `<YOUR_GCP_PROJECT_ID>`
+   * `GCP_REGION`: `<YOUR_GCP_REGION>`
+   * `GCP_SERVICE`: `ai-foundations-coach`
+   * `GCP_ARTIFACT_REPOSITORY`: `ai-foundations-coach`
+   * `GCP_DEPLOY_SERVICE_ACCOUNT`: `ai-foundations-coach-deploy@<YOUR_GCP_PROJECT_ID>.iam.gserviceaccount.com`
+   * `GCP_WORKLOAD_IDENTITY_PROVIDER`: `projects/<PROJECT_NUMBER>/locations/global/workloadIdentityPools/ai-foundations-coach-github/providers/github-actions`
+
+3. **Deploy a Release:**
+   Tag and push to main/cloud-beta:
+   ```bash
+   git tag v0.1.0
+   git push origin v0.1.0
+   ```
+   The workflow runs Go tests, Playwright browser suites, and Firestore emulator integration, builds a multi-arch container, performs zero-downtime candidate smoke tests, and promotes traffic.
+
+---
+
+### 5. Runtime Environment Variables Reference
+
+| Variable | Purpose / Default |
+| :--- | :--- |
+| `AUTH_REQUIRED` | Require learner sign-in; defaults off locally, forced on in hosted mode |
+| `STATE_BACKEND` | `file` (default for local development) or `firestore` (required on Cloud Run) |
+| `STATE_FILE` | Persistent JSON state path; required when `STATE_BACKEND=file` |
+| `FIRESTORE_PROJECT_ID` | GCP Project holding the Cloud Firestore database |
+| `SESSION_SECRET_FILE` | Path to mounted secret file for cookie signing (required on Cloud Run) |
+| `OIDC_CLIENT_SECRET_FILE` | Path to mounted secret file for Google OAuth (required on Cloud Run) |
+| `PUBLIC_BASE_URL` | Public canonical base URL for invite links and OIDC callback validation |
+| `OIDC_ISSUER` | OIDC issuer URL (e.g. `https://accounts.google.com`) |
+| `OIDC_CLIENT_ID` | OIDC Client ID |
+| `OIDC_REQUIRE_MFA` | Enforce Multi-Factor Authentication claim for administrator sign-ins |
+| `ADMIN_EMAILS` | Comma-separated allowlist of administrator emails |
+| `SEAT_CAP` | Maximum allowed active accounts and pending invites (default `1000`) |
+| `TUTOR_ENABLED` | Enable or disable the hosted AI tutor |
+| `DAILY_SPEND_CEILING_USD` | Shared daily hosted AI spend ceiling (default `1.00`) |
+| `MONTHLY_BUDGET_USD` | Monthly budget ceiling for cost controls (default `30`) |
+
+---
 
 ### Using your own local AI on the hosted site
 
