@@ -8,6 +8,6 @@ monthly_budget_usd = 30
 owner_alert_email  = "qunityfy@gmail.com"
 
 oidc_issuer        = "https://accounts.google.com"
-oidc_client_id     = "<YOUR_GOOGLE_OAUTH_CLIENT_ID>"
+oidc_client_id     = "210042136085-hc4ct8pf61mh66k7q84t2q868ert3ceh.apps.googleusercontent.com"
 admin_emails       = "qunityfy@gmail.com"
 backup_retention   = "1209600s"
