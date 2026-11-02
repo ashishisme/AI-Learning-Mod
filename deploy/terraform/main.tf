@@ -453,30 +453,30 @@ resource "google_pubsub_subscription" "budget_push" {
   }
 }
 
-resource "google_billing_budget" "monthly" {
-  billing_account = var.billing_account
-  display_name    = "${var.service_name} monthly budget"
-  budget_filter {
-    projects = ["projects/${data.google_project.this.number}"]
-  }
-  amount {
-    specified_amount {
-      currency_code = "USD"
-      units         = tostring(var.monthly_budget_usd)
-    }
-  }
-  threshold_rules {
-    threshold_percent = 0.5
-  }
-  threshold_rules {
-    threshold_percent = 0.9
-  }
-  threshold_rules {
-    threshold_percent = 1.0
-  }
-  all_updates_rule {
-    pubsub_topic                     = google_pubsub_topic.budget.id
-    monitoring_notification_channels = [google_monitoring_notification_channel.owner.id]
-  }
-  depends_on = [google_project_service.apis]
-}
+# resource "google_billing_budget" "monthly" {
+#   billing_account = var.billing_account
+#   display_name    = "${var.service_name} monthly budget"
+#   budget_filter {
+#     projects = ["projects/${data.google_project.this.number}"]
+#   }
+#   amount {
+#     specified_amount {
+#       currency_code = "USD"
+#       units         = tostring(var.monthly_budget_usd)
+#     }
+#   }
+#   threshold_rules {
+#     threshold_percent = 0.5
+#   }
+#   threshold_rules {
+#     threshold_percent = 0.9
+#   }
+#   threshold_rules {
+#     threshold_percent = 1.0
+#   }
+#   all_updates_rule {
+#     pubsub_topic                     = google_pubsub_topic.budget.id
+#     monitoring_notification_channels = [google_monitoring_notification_channel.owner.id]
+#   }
+#   depends_on = [google_project_service.apis]
+# }
