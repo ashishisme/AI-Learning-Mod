@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
@@ -140,9 +141,11 @@ func (h *authHandlers) login(w http.ResponseWriter, r *http.Request) {
 		setSessionCookie(w, si.Token, si.Expires, h.secure)
 		writeSecretJSON(w, sessionBody{Authenticated: true, SessionInfo: &si.Info})
 	case errors.As(err, &locked):
+		slog.Info("auth_failure", "kind", "locked") // no Beta ID or address: this only feeds a metric
 		w.Header().Set("Retry-After", strconv.Itoa(int(locked.RetryAfter.Seconds())+1))
 		writeAuthError(w, http.StatusTooManyRequests, "locked", "Too many attempts. Try again in 15 minutes.")
 	case errors.Is(err, auth.ErrBadCredentials):
+		slog.Info("auth_failure", "kind", "bad_credentials")
 		h.usage.Inc(usage.SigninFail)
 		writeAuthError(w, http.StatusUnauthorized, "bad_credentials", "Beta ID or password is incorrect.")
 	case errors.Is(err, auth.ErrAccountExpired):

@@ -2,6 +2,7 @@
 package main
 
 import (
+	"flag"
 	"context"
 	"log/slog"
 	"os"
@@ -25,6 +26,21 @@ var (
 )
 
 func main() {
+	verify := flag.Bool("verify", false, "check that the content directory is complete and self-contained, then exit")
+	flag.Parse()
+	if *verify {
+		dir := os.Getenv("CONTENT_DIR")
+		if strings.TrimSpace(dir) == "" {
+			dir = "public-content"
+		}
+		if err := ingest.VerifyContent(dir); err != nil {
+			slog.Error("Content check failed", "error", err.Error())
+			os.Exit(1)
+		}
+		slog.Info("Content check passed", "contentDir", dir)
+		return
+	}
+
 	token := os.Getenv("GITHUB_TOKEN")
 	if strings.TrimSpace(token) == "" {
 		slog.Error("GITHUB_TOKEN environment variable is required")
@@ -39,6 +55,7 @@ func main() {
 	cfg := Config{
 		GitHubToken: token,
 		ContentDir:  contentDir,
+		PinnedSHA:   strings.TrimSpace(os.Getenv("INGEST_PINNED_SHA")),
 	}
 
 	ctx := context.Background()

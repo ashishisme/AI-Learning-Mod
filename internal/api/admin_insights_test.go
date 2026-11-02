@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"ai-foundations-coach/internal/state"
+	"ai-foundations-coach/internal/usage"
 )
 
 func decode(t *testing.T, body string) map[string]any {
@@ -72,6 +73,13 @@ func TestUsageIsCountedThroughRealRequests(t *testing.T) {
 	resp, _ := (&http.Client{}).Post(e.app.URL+"/api/auth/login", "application/json", strings.NewReader(`{"betaId":"`+id+`","password":"nope"}`))
 	resp.Body.Close()
 	_ = pw
+	// Daily-active counts reach the store at flush, so all instances agree. Keep the other counts
+	// pending by flushing a separate recorder that saw only this account.
+	seen := usage.New(e.store)
+	seen.Seen(context.Background(), id)
+	if err := seen.Flush(context.Background()); err != nil {
+		t.Fatal(err)
+	}
 
 	_, body := e.do(t, "GET", "/api/admin/usage?days=7", nil, nil)
 	m := decode(t, body)

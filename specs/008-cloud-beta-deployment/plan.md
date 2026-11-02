@@ -15,7 +15,7 @@ This plan covers the two launch blockers that remain after hosted-mode hardening
 
 Approach, in one paragraph: a new `internal/auth` package holds all domain logic (invites, accounts, passwords, sessions, lockouts, audit, IST calendar-month maths, OIDC verification) behind a transactional `Store` interface; a transactional JSON file store implements it for development, tests and the single-instance beta. A new `internal/spend` package keeps the daily tally in the same store and reserves worst-case cost before each AI call. `internal/usage` counts activity in memory and flushes aggregate counts to the store every 30 seconds; `internal/feedback` runs the deterministic personal-details check, stores feedback as "waiting", and drives the AI auditor that releases or withholds it; `internal/cost` reads costs through a replaceable provider (AI spend now, cloud billing later). `internal/api` adds the HTTP handlers and a session gate that wraps every `/api/*` route except a short allowlist. The React app gains a sign-in screen, an invite-activation page, an expiry banner, and an admin dashboard. Everything is standard library only: no router, ORM, or new module dependency.
 
-**Deferred (stay in the spec, not in this plan)**: FR-023 (managed identity), FR-026 (budget alert delivery; the console only displays thresholds), the hosting/data-store billing adapter (FR-045 requires only the interface and the honest "not connected" state), FR-027 (scale limits), FR-029 (managed store + daily backups), FR-030..FR-032 (CI/CD, rollback, cleanup), FR-033..FR-034 (self-hosted images, CSP tightening). The managed serverless store adapter is a separate step; until it exists the beta must run as **one instance with a persistent volume** (see Risks).
+**Cloud beta scope (added 2026-11-02)**: FR-023, FR-026, FR-027, FR-029..FR-034 were deferred from the sections below and are now planned in [cloud-beta-design.md](./cloud-beta-design.md), with tasks in [tasks.md Phase 10](./tasks.md). The owner's environment decision is that **the staging Cloud Run environment is the invite-only beta demo**; a separate production environment is a GA milestone. Until the Firestore adapter and its restore drill are proven, no Cloud Run deployment runs: the file store stays limited to development, tests and single-instance self-hosting on a persistent volume. The hosting/data-store billing adapter stays deferred (FR-045 requires only the interface and the honest "not connected" state).
 
 ## Technical Context
 
@@ -23,15 +23,15 @@ Approach, in one paragraph: a new `internal/auth` package holds all domain logic
 
 **Primary Dependencies**: Go standard library only (`net/http`, `crypto/*`, `encoding/json`). Frontend: existing React, React Router, Zustand. **No new modules.** PBKDF2-HMAC-SHA256 remains implemented in-package and pinned by RFC 7914 test vectors; the toolchain upgrade does not change stored password hashes.
 
-**Storage**: `auth.Store` interface (transactional). Implementation now: JSON file, in-memory working copy, mutex-serialised transactions, atomic write (temp file + rename). Managed serverless adapter: later, behind the same interface (DC-09 amended).
+**Storage**: `auth.Store` interface (transactional). Implementation now: JSON file, in-memory working copy, mutex-serialised transactions, atomic write (temp file + rename). Managed adapter for Cloud Run: Firestore Standard edition in Native mode over a standard-library REST client, behind the same interface (DC-09 amended, DC-06; see cloud-beta-design.md).
 
 **Testing**: `go test ./...` (unit, concurrency with `-race`, end-to-end router tests with a fake OIDC provider on `httptest`), Playwright for UI flows, `tsc --noEmit && vite build`.
 
-**Target Platform**: Single Linux container (DC-08), non-root UID 10001, state directory writable by that user.
+**Target Platform**: Single Linux container (DC-08), non-root UID 10001. Beta demo: Cloud Run v2 in the staging project with no CDN or external load balancer by default. Self-hosted file-store runs need a state directory writable by that user.
 
 **Project Type**: Web application (Go API + React SPA served by the same binary).
 
-**Performance Goals**: Sign-in p95 under 500 ms on one shared vCPU; 40 simultaneous sign-ins complete inside 2 minutes (SC-004). Session check adds under 1 ms per request (in-memory lookup).
+**Performance Goals**: Sign-in p95 under 500 ms on one shared vCPU; 40 simultaneous sign-ins complete inside 2 minutes (SC-004). Session check adds under 1 ms per request on the file store (in-memory lookup). On Firestore it is two document reads per request; its latency is measured in T122 against the p95 1.5-second alert.
 
 **Constraints**: No personal data about learners (FR-035); no password or token in logs (FR-038); passwords never retrievable (FR-004); seat cap exact under concurrency (SC-005); revoked and expired accounts refused on the next request (SC-006); self-hosting without auth keeps working.
 
@@ -41,7 +41,7 @@ Approach, in one paragraph: a new `internal/auth` package holds all domain logic
 
 *GATE: Must pass before Phase 0 research. Re-checked after Phase 1 design.*
 
-Constitution 2.2.0 (DC-09 amended and ratified 2026-11-01, twice: 2.1.0 access records and counters, 2.2.0 feedback records).
+Constitution 2.3.0 (DC-09 amended and ratified three times: 2026-11-01 for 2.1.0 access records and counters and 2.2.0 feedback records; 2026-11-02 for 2.3.0 hosted store cost wording).
 
 | Rule | Status | Note |
 | --- | --- | --- |
@@ -49,10 +49,11 @@ Constitution 2.2.0 (DC-09 amended and ratified 2026-11-01, twice: 2.1.0 access r
 | II. Grounded & citable tutor | Pass | Tutor behaviour unchanged. It is gated (disabled / resting) before the model call, never after. |
 | III. DC-02 stdlib router only | Pass | Go 1.22 method+path patterns on `http.ServeMux`. |
 | III. DC-01 frontend stack | Pass | React + TS + Vite + Tailwind + Zustand. |
-| III. DC-09 minimal state (2.2.0) | Pass for accounts, sessions, audit, spend tally, usage counts, last-seen | Access-control records and operational counters only; no personal data; store interface; no ORM; file store only for dev/tests/single instance. Hosted use of the file store is a **temporary, flagged exception** until the managed adapter ships (see Complexity Tracking). |
+| III. DC-09 minimal state (2.3.0) | Pass for accounts, sessions, audit, spend tally, usage counts, last-seen | Access-control records and operational counters only; no personal data; store interface; no ORM; file store only for dev/tests/single instance, and refused on Cloud Run (T107). Firestore meets the 2.3.0 hosted store wording: no idle compute or provisioned capacity, with small storage and backup charges allowed. |
+| III. DC-06 dependency allowlist | Pass by design | The Firestore adapter uses a standard-library REST client, so no module is added and no amendment is needed. T106 re-checks `go mod graph`. |
 | III. DC-09 for feedback | Pass (amendment 2 ratified 2026-11-01) | Feedback holds learner-written text with the ratified narrowing: no identity, ≤500 chars, 180-day deletion. The text is rejected by a rule check if it contains personal details and then audited before admins can read it, which is stricter than the amendment's "scrubbed" wording; the review-state fields are processing metadata, like `status`. |
 | III. DC-10 zero Python | Pass | Python is used only to cross-check a test vector at authoring time and is not committed. |
-| III. DC-08 single container | Pass | One image; needs a writable state directory. |
+| III. DC-08 single container | Pass | One image. Needs a writable state directory only with the file store. |
 | IV. Quality floor (DC-11) | Pass | New screens: labelled inputs, ≥44px targets, ≥4.5:1 contrast in both themes. |
 | V. Git discipline | Pass | Explicit paths only; conventional commit prefixes. |
 | Quality gates | Pass | `go test ./...`, Playwright, `npm run build` must all pass before completion. |
@@ -68,6 +69,7 @@ specs/008-cloud-beta-deployment/
 ├── research.md              # Phase 0
 ├── data-model.md            # Phase 1
 ├── quickstart.md            # Phase 1
+├── cloud-beta-design.md     # Staging beta design: Firestore, Cloud Run, release, owner decisions
 ├── contracts/
 │   ├── http-api.md          # Phase 1: learner, admin, console, feedback, runtime endpoints
 │   └── store.md             # Phase 1: Store/Tx interface contract
@@ -84,7 +86,8 @@ cmd/
 internal/
 ├── state/
 │   ├── store.go             # Store/Tx interfaces and record types (Invite, Account, Session, Audit, Feedback, Counter)
-│   └── filestore.go         # transactional JSON file store, batched counter flush
+│   ├── filestore.go         # transactional JSON file store, batched counter flush
+│   └── firestorestore.go    # planned (T105): Firestore Native over REST for Cloud Run
 ├── auth/
 │   ├── password.go          # PBKDF2-HMAC-SHA256, passphrase + Beta ID generation
 │   ├── wordlist.go          # 256 child-safe words
@@ -148,7 +151,8 @@ web/tests/auth.spec.ts, admin-console.spec.ts, feedback.spec.ts
 
 | Risk | Mitigation |
 | --- | --- |
-| File store loses data on scale-to-zero, redeploy, or a second instance | Beta runs one instance on a persistent volume until the managed adapter exists; the server logs a startup warning in hosted mode naming the state path; documented in quickstart. **Do not launch on ephemeral disk.** |
+| File store loses data on scale-to-zero, redeploy, or a second instance | The file store is for self-hosting on a persistent volume only. Cloud Run startup is refused without the Firestore backend (T107), and traffic waits on the restore drill and staging acceptance (T115, T120). **Do not launch on ephemeral disk.** |
+| Firestore outage or transaction conflict during a request | Bounded retries, then fail closed; read errors can never look like "not found" (cloud-beta-design.md section 3; T105, T106). |
 | Hand-written PBKDF2 / JWT verification | Known-answer tests (RFC 7914 vectors), alg pinned to RS256 (reject `none`/HS*), `kid` required, issuer/audience/expiry/nonce checks, negative tests for each. |
 | Passphrase entropy vs offline attack if the state file leaks | Hashed with 200k iterations and salt; ~42 bits plus a 40-bit random Beta ID; lockout limits online guessing. Iteration count is stored per hash so it can be raised later. |
 | CPU cost of PBKDF2 under a login flood | Per-address request limiter on login/activate (reuses `RateLimiter`), plus lockout. |
@@ -165,6 +169,6 @@ web/tests/auth.spec.ts, admin-console.spec.ts, feedback.spec.ts
 
 | Violation / exception | Why Needed | Simpler Alternative Rejected Because |
 | --- | --- | --- |
-| File store used for the hosted beta (amended DC-09 says hosted state belongs in a managed serverless store) | Owner chose to ship the interface and a fully tested file store first; the managed adapter cannot be tested without cloud credentials | Writing a Firestore adapter blind would add an untested SDK dependency. Mitigated by single-instance + persistent volume and by the interface, which keeps the swap mechanical. |
+| Hand-written Firestore REST client | DC-06 requires an amendment for any new module, and the SDK would add a large transitive graph | The Go SDK would save code but needs a constitution amendment. The emulator covers the client's behaviour locally and in CI; live behaviour is proven in staging (T120). |
 | In-package PBKDF2 and ID-token verification | No `x/crypto` available; spec and owner require no new dependencies | A third-party JWT library adds supply-chain surface for a 150-line verifier; known-answer and negative tests cover the risk. |
 | `cmd/devidp` and `internal/auth/fakeidp` | Admin flow cannot be exercised locally or in tests without an identity provider | Mocking inside handlers would leave the real redirect/token/JWKS path untested. Not built into the production image (`go build ./cmd/server` only). |

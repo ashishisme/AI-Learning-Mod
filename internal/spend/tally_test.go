@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"ai-foundations-coach/internal/state"
+	"ai-foundations-coach/internal/state/statetest"
 )
 
 var bg = context.Background()
@@ -21,10 +22,11 @@ func (c *clock) Now() time.Time { return time.Unix(0, c.t.Load()).UTC() }
 
 func newTally(t *testing.T, ceiling float64) (*Tally, state.Store, *clock) {
 	t.Helper()
-	st, err := state.OpenFileStore(filepath.Join(t.TempDir(), "state.json"))
+	fileStore, err := state.OpenFileStore(filepath.Join(t.TempDir(), "state.json"))
 	if err != nil {
 		t.Fatal(err)
 	}
+	st := statetest.Rerunning(fileStore)
 	t.Cleanup(func() { st.Close() })
 	c := &clock{}
 	c.t.Store(time.Date(2026, 11, 2, 6, 0, 0, 0, time.UTC).UnixNano()) // 11:30 IST

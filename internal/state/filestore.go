@@ -438,18 +438,10 @@ func (t *fileTx) ListCounters(prefix string) map[string]int64 {
 	}
 	return out
 }
-func (t *fileTx) DeleteCountersWhere(match func(string) bool) int {
-	if !t.write(true) {
-		return 0
+func (t *fileTx) DeleteCounter(k string) {
+	if t.write(true) {
+		delete(t.d.Counters, k)
 	}
-	n := 0
-	for k := range t.d.Counters {
-		if match(k) {
-			delete(t.d.Counters, k)
-			n++
-		}
-	}
-	return n
 }
 
 func (t *fileTx) GetAttempts(k string) []time.Time {

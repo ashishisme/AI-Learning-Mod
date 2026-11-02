@@ -2,8 +2,10 @@
 package auth
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"testing"
 	"time"
 
@@ -76,7 +78,7 @@ func TestUnknownIDsOnlyCountAgainstTheAddress(t *testing.T) {
 	}
 	_ = st.View(bg, func(tx state.Tx) error {
 		keys := tx.ListAttemptKeys()
-		if len(keys) != 1 || keys[0] != "ip:"+addr1 {
+		if len(keys) != 1 || keys[0] != svc.ipKey(addr1) {
 			t.Errorf("only the address may be tracked for unknown IDs (no unbounded growth): %v", keys)
 		}
 		return nil
@@ -131,11 +133,53 @@ func TestAttemptTablePrunesStaleKeys(t *testing.T) {
 		return nil
 	})
 	clk.Advance(20 * time.Minute)
-	_, _ = svc.Login(bg, "BETA-NONE-NONE", "x", addr1) // a failure triggers pruning above 5,000 keys
+	svc.failedLogins.Store(pruneEvery - 1)
+	_, _ = svc.Login(bg, "BETA-NONE-NONE", "x", addr1) // every pruneEvery-th failure prunes
 	_ = st.View(bg, func(tx state.Tx) error {
 		if n := len(tx.ListAttemptKeys()); n > 10 {
 			t.Errorf("stale attempt keys were not pruned: %d left", n)
 		}
 		return nil
 	})
+}
+
+// A daily backup outlives the lockout window, so no stored key may hold the address itself.
+func TestAddressIsNotStoredInLockoutRecords(t *testing.T) {
+	svc, st, _ := newTestService(t)
+	_, _ = svc.Login(bg, "BETA-NONE-NONE", "x", "203.0.113.77")
+	_ = st.View(bg, func(tx state.Tx) error {
+		keys := tx.ListAttemptKeys()
+		if len(keys) != 1 || strings.Contains(keys[0], "203.0.113.77") {
+			t.Errorf("attempt keys: %v", keys)
+		}
+		return nil
+	})
+}
+
+// Instances sharing a store and key must share an address lockout.
+func TestAddressLockoutIsSharedAcrossInstances(t *testing.T) {
+	key := []byte("shared")
+	one, st, _ := newTestService(t, func(c *Config) { c.LockoutKey = key })
+	two := NewService(st, Config{LockoutKey: key, SeatCap: 1})
+	two.SetClock(one.clock)
+	for i := 0; i < lockMax; i++ {
+		_, _ = one.Login(bg, "BETA-NONE-NONE", "x", addr1)
+	}
+	if _, err := two.Login(bg, "BETA-NONE-NONE", "x", addr1); !errors.Is(err, ErrLocked) {
+		t.Errorf("the second instance must see the lockout: %v", err)
+	}
+}
+
+type failingDo struct{ state.Store }
+
+func (failingDo) Do(context.Context, func(state.Tx) error) error { return errors.New("store down") }
+
+// An outage must not allow unlimited guessing.
+func TestFailedSignInIsRefusedWhenItCannotBeRecorded(t *testing.T) {
+	_, st, _ := newTestService(t)
+	svc := NewService(failingDo{st}, DefaultConfig("https://coach.example.org"))
+	_, err := svc.Login(bg, "BETA-NONE-NONE", "x", addr1)
+	if err == nil || errors.Is(err, ErrBadCredentials) {
+		t.Errorf("a failure that was not recorded must not look like a normal refusal: %v", err)
+	}
 }

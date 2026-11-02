@@ -12,6 +12,7 @@ import (
 	"encoding/csv"
 	"encoding/hex"
 	"errors"
+	"log/slog"
 	"regexp"
 	"strconv"
 	"strings"
@@ -28,6 +29,7 @@ const (
 	retention       = 180 * 24 * time.Hour
 	waitingLimit    = 7 * 24 * time.Hour
 	ratePrefix      = "fbrate:"
+	claimTTL        = 2 * time.Minute // well over the auditor's timeout; lets another instance retry after a crash
 )
 
 var (
@@ -172,6 +174,7 @@ func (s *Service) Run(ctx context.Context) {
 func (s *Service) ProcessWaiting(ctx context.Context) bool {
 	var waiting []state.Feedback
 	if err := s.store.View(ctx, func(tx state.Tx) error {
+		waiting = nil
 		for _, f := range tx.ListFeedback() {
 			if f.Review == state.ReviewWaiting {
 				waiting = append(waiting, f)
@@ -184,32 +187,70 @@ func (s *Service) ProcessWaiting(ctx context.Context) bool {
 	for i := len(waiting) - 1; i >= 0; i-- { // ListFeedback is newest first
 		f := waiting[i]
 		if f.Message == "" {
-			s.settle(ctx, f.ID, Verdict{Pass: true})
+			if !s.settle(ctx, f.ID, Verdict{Pass: true}) {
+				return false
+			}
 			continue
+		}
+		claimed, err := s.claim(ctx, f.ID)
+		if err != nil {
+			return false
+		}
+		if !claimed {
+			continue // another instance is reviewing it, so it must not be paid for twice
 		}
 		v, err := s.auditor.Review(ctx, f.Message)
 		if err != nil {
 			s.noteTry(ctx, f.ID)
 			return false
 		}
-		s.settle(ctx, f.ID, v)
+		if !s.settle(ctx, f.ID, v) {
+			return false
+		}
 	}
 	return true
 }
 
+// claim reserves a waiting item for this worker.
+func (s *Service) claim(ctx context.Context, id string) (bool, error) {
+	claimed := false
+	err := s.store.Do(ctx, func(tx state.Tx) error {
+		claimed = false
+		f, ok := tx.GetFeedback(id)
+		if !ok || f.Review != state.ReviewWaiting {
+			return nil
+		}
+		now := s.now()
+		if f.ClaimedUntil != nil && now.Before(*f.ClaimedUntil) {
+			return nil
+		}
+		until := now.Add(claimTTL)
+		f.ClaimedUntil = &until
+		tx.PutFeedback(f)
+		claimed = true
+		return nil
+	})
+	return claimed, err
+}
+
 func (s *Service) noteTry(ctx context.Context, id string) {
-	_ = s.store.Do(ctx, func(tx state.Tx) error {
+	err := s.store.Do(ctx, func(tx state.Tx) error {
 		if f, ok := tx.GetFeedback(id); ok {
 			f.ReviewTries++
+			f.ClaimedUntil = nil
 			tx.PutFeedback(f)
 		}
 		return nil
 	})
+	if err != nil {
+		slog.Warn("Could not record a feedback review attempt", "error", err.Error())
+	}
 }
 
 // settle applies a verdict. A withheld message's text is deleted in the same transaction (FR-059).
-func (s *Service) settle(ctx context.Context, id string, v Verdict) {
-	_ = s.store.Do(ctx, func(tx state.Tx) error {
+// It returns false if the verdict could not be stored; the item then stays waiting and hidden.
+func (s *Service) settle(ctx context.Context, id string, v Verdict) bool {
+	err := s.store.Do(ctx, func(tx state.Tx) error {
 		f, ok := tx.GetFeedback(id)
 		if !ok || f.Review != state.ReviewWaiting {
 			return nil
@@ -217,6 +258,7 @@ func (s *Service) settle(ctx context.Context, id string, v Verdict) {
 		now := s.now()
 		f.ReviewedAt = &now
 		f.ReviewTries++
+		f.ClaimedUntil = nil
 		if v.Pass {
 			f.Review = state.ReviewPassed
 		} else {
@@ -225,6 +267,11 @@ func (s *Service) settle(ctx context.Context, id string, v Verdict) {
 		tx.PutFeedback(f)
 		return nil
 	})
+	if err != nil {
+		slog.Warn("Could not store a feedback verdict", "error", err.Error())
+		return false
+	}
+	return true
 }
 
 // Filter selects passed feedback for admins.
@@ -345,9 +392,11 @@ func csvCell(v string) string {
 // CSV exports passed items matching the filter and records the export (FR-051, FR-052).
 func (s *Service) CSV(ctx context.Context, actor string, f Filter) ([]byte, error) {
 	var buf bytes.Buffer
-	w := csv.NewWriter(&buf)
-	_ = w.Write([]string{"at", "rating", "category", "message", "label", "lessonId", "mode", "appVersion", "status"})
+	var w *csv.Writer
 	err := s.store.Do(ctx, func(tx state.Tx) error {
+		buf.Reset() // a transaction may run more than once
+		w = csv.NewWriter(&buf)
+		_ = w.Write([]string{"at", "rating", "category", "message", "label", "lessonId", "mode", "appVersion", "status"})
 		n := 0
 		for _, x := range tx.ListFeedback() {
 			if f.matches(x) {
@@ -367,19 +416,40 @@ func (s *Service) CSV(ctx context.Context, actor string, f Filter) ([]byte, erro
 }
 
 // Sweep deletes old items and finished rate counters. It has the shape of auth.SweepHook.
-func (s *Service) Sweep(_ context.Context, tx state.Tx, now time.Time) {
-	for _, f := range tx.ListFeedback() {
+func (s *Service) Sweep(ctx context.Context, now time.Time) error {
+	old := func(f state.Feedback) bool {
 		age := now.Sub(f.At)
-		if age > retention || (f.Review == state.ReviewWaiting && age > waitingLimit) {
-			tx.DeleteFeedback(f.ID)
-		}
+		return age > retention || (f.Review == state.ReviewWaiting && age > waitingLimit)
 	}
 	current := auth.HourKey(now)
-	tx.DeleteCountersWhere(func(key string) bool {
-		if !strings.HasPrefix(key, ratePrefix) {
+	var items, counters []string
+	if err := s.store.View(ctx, func(tx state.Tx) error {
+		items, counters = nil, nil
+		for _, f := range tx.ListFeedback() {
+			if old(f) {
+				items = append(items, f.ID)
+			}
+		}
+		for key := range tx.ListCounters(ratePrefix) {
+			if i := strings.LastIndexByte(key, ':'); i > 0 && key[i+1:] < current {
+				counters = append(counters, key)
+			}
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+	_, err := state.DoBatches(ctx, s.store, items, func(tx state.Tx, id string) bool {
+		f, ok := tx.GetFeedback(id)
+		if !ok || !old(f) {
 			return false
 		}
-		i := strings.LastIndexByte(key, ':')
-		return i > 0 && key[i+1:] < current
+		tx.DeleteFeedback(id)
+		return true
 	})
+	_, err2 := state.DoBatches(ctx, s.store, counters, func(tx state.Tx, key string) bool {
+		tx.DeleteCounter(key)
+		return true
+	})
+	return errors.Join(err, err2)
 }

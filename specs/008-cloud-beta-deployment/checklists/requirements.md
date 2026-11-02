@@ -13,7 +13,7 @@
 
 ## Requirement Completeness
 
-- [ ] No [NEEDS CLARIFICATION] markers remain — 3 open (FR-007, FR-023, FR-025)
+- [x] No [NEEDS CLARIFICATION] markers remain — none in `spec.md`; FR-023 settled by the owner 2026-11-02
 - [x] Requirements are testable and unambiguous
 - [x] Success criteria are measurable
 - [x] Success criteria are technology-agnostic (no implementation details) — see note 1

@@ -3,6 +3,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"ai-foundations-coach/internal/state"
@@ -66,6 +67,7 @@ func (s *Service) ExtendLabel(ctx context.Context, actor, label string, months i
 	}
 	n := 0
 	err = s.store.Do(ctx, func(tx state.Tx) error {
+		n = 0 // a transaction may run more than once
 		now := s.now()
 		for _, a := range tx.ListAccounts() {
 			if a.Label == label && a.Status != state.AccountRevoked {
@@ -82,7 +84,7 @@ func (s *Service) ExtendLabel(ctx context.Context, actor, label string, months i
 }
 
 // SweepHook lets other packages clean their own records in the same pass.
-type SweepHook func(ctx context.Context, tx state.Tx, now time.Time)
+type SweepHook func(ctx context.Context, now time.Time) error
 
 // AddSweepHook registers extra clean-up. Call it before the first Sweep.
 func (s *Service) AddSweepHook(h SweepHook) { s.sweepHooks = append(s.sweepHooks, h) }
@@ -91,36 +93,64 @@ func (s *Service) AddSweepHook(h SweepHook) { s.sweepHooks = append(s.sweepHooks
 type SweepResult struct{ Accounts, Sessions, Invites int }
 
 // Sweep deletes accounts expired for more than 90 days (FR-039), dead sessions and old invites,
-// then runs the registered hooks. It is safe to run often.
+// then runs the registered hooks. It is safe to run often. Candidates are found in a read-only view
+// and removed in short transactions, so a sweep never holds locks across every record.
 func (s *Service) Sweep(ctx context.Context) (SweepResult, error) {
-	var res SweepResult
-	err := s.store.Do(ctx, func(tx state.Tx) error {
-		now := s.now()
+	now := s.now()
+	var accounts, sessions, invites []string
+	if err := s.store.View(ctx, func(tx state.Tx) error {
+		accounts, sessions, invites = nil, nil, nil
 		for _, a := range tx.ListAccounts() {
 			if now.Sub(a.ExpiresAt) > purgeAfter {
-				tx.DeleteSessionsFor(a.BetaID)
-				tx.DeleteAccount(a.BetaID)
-				appendAudit(tx, now, "system", "account.purge", a.BetaID, "expired more than 90 days ago")
-				res.Accounts++
+				accounts = append(accounts, a.BetaID)
 			}
 		}
 		for _, sess := range tx.ListSessions() {
 			if !now.Before(sess.ExpiresAt) {
-				tx.DeleteSession(sess.TokenHash)
-				res.Sessions++
+				sessions = append(sessions, sess.TokenHash)
 			}
 		}
 		for _, in := range tx.ListInvites() {
 			if now.Sub(in.ExpiresAt) > purgeAfter {
-				tx.DeleteInvite(in.ID)
-				res.Invites++
+				invites = append(invites, in.ID)
 			}
 		}
-		s.pruneAttempts(tx, now)
-		for _, h := range s.sweepHooks {
-			h(ctx, tx, now)
-		}
 		return nil
+	}); err != nil {
+		return SweepResult{}, err
+	}
+
+	var res SweepResult
+	var errs [3]error
+	res.Accounts, errs[0] = state.DoBatches(ctx, s.store, accounts, func(tx state.Tx, id string) bool {
+		a, ok := tx.GetAccount(id)
+		if !ok || now.Sub(a.ExpiresAt) <= purgeAfter {
+			return false // gone, or extended since the view
+		}
+		tx.DeleteSessionsFor(id)
+		tx.DeleteAccount(id)
+		appendAudit(tx, now, "system", "account.purge", id, "expired more than 90 days ago")
+		return true
 	})
-	return res, err
+	res.Sessions, errs[1] = state.DoBatches(ctx, s.store, sessions, func(tx state.Tx, h string) bool {
+		sess, ok := tx.GetSession(h)
+		if !ok || now.Before(sess.ExpiresAt) {
+			return false
+		}
+		tx.DeleteSession(h)
+		return true
+	})
+	res.Invites, errs[2] = state.DoBatches(ctx, s.store, invites, func(tx state.Tx, id string) bool {
+		in, ok := tx.GetInviteByID(id)
+		if !ok || now.Sub(in.ExpiresAt) <= purgeAfter {
+			return false
+		}
+		tx.DeleteInvite(id)
+		return true
+	})
+	all := []error{errs[0], errs[1], errs[2], s.pruneAttempts(ctx, now)}
+	for _, h := range s.sweepHooks {
+		all = append(all, h(ctx, now))
+	}
+	return res, errors.Join(all...)
 }

@@ -72,19 +72,24 @@ func inviteStatus(in state.Invite, now time.Time) string {
 	return in.Status
 }
 
-func rowOf(tx state.Tx, a state.Account, now time.Time) AccountRow {
+func rowOf(a state.Account, devices int, now time.Time) AccountRow {
 	return AccountRow{BetaID: a.BetaID, Label: a.Label, Status: derivedStatus(a, now), ActivatedAt: a.ActivatedAt,
-		ExpiresAt: a.ExpiresAt, LastSeenAt: a.LastSeenAt, Devices: tx.CountSessionsFor(a.BetaID)}
+		ExpiresAt: a.ExpiresAt, LastSeenAt: a.LastSeenAt, Devices: devices}
 }
 
 func (s *Service) accountRows(tx state.Tx, f AccountFilter) []AccountRow {
 	now := s.now()
 	var rows []AccountRow
+	// One read of all sessions, not one query per account.
+	devices := map[string]int{}
+	for _, sess := range tx.ListSessions() {
+		devices[sess.BetaID]++
+	}
 	for _, a := range tx.ListAccounts() {
 		if f.Label != "" && a.Label != f.Label {
 			continue
 		}
-		r := rowOf(tx, a, now)
+		r := rowOf(a, devices[a.BetaID], now)
 		if f.Status != "" && r.Status != f.Status {
 			continue
 		}

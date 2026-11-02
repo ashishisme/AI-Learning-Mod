@@ -142,7 +142,22 @@ func (h *adminHandlers) costs(w http.ResponseWriter, r *http.Request) {
 		h.fail(w, err)
 		return
 	}
+	if h.latch != nil {
+		if snap.TutorOff, err = h.latch.Off(r.Context()); err != nil {
+			h.fail(w, err)
+			return
+		}
+	}
 	writeSecretJSON(w, snap)
+}
+
+// resetTutor is the authorized manual reset of the budget switch (FR-026).
+func (h *adminHandlers) resetTutor(w http.ResponseWriter, r *http.Request) {
+	if err := h.latch.Reset(r.Context(), adminEmail(r.Context())); err != nil {
+		h.fail(w, err)
+		return
+	}
+	writeSecretJSON(w, map[string]bool{"ok": true})
 }
 
 // ---- feedback inbox: only items that passed both checks are ever returned (FR-051, SC-019)

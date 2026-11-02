@@ -79,7 +79,7 @@ func newAdminEnv(t *testing.T, allowlist []string, mutate ...func(*auth.Config))
 	fb := feedback.NewService(st, audit)
 	app.Config.Handler = NewRouter(RouterConfig{ContentDir: setupTestContent(t), Auth: svc, OIDC: oidc, Signer: signer,
 		AdminEmails: allowlist, ModelClient: &mockModelClient{}, Spend: tally, Usage: rec, Cost: cost.NewProvider(tally, 30, nil),
-		Feedback: fb, FeedbackEnabled: true})
+		Feedback: fb, FeedbackEnabled: true, TutorLatch: spend.NewLatch(st, tally, 0)})
 	app.Start()
 	t.Cleanup(app.Close)
 

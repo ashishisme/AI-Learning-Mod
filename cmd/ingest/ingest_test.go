@@ -2,9 +2,12 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"image"
+	"image/png"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -14,6 +17,8 @@ import (
 	"strings"
 	"sync/atomic"
 	"testing"
+
+	"ai-foundations-coach/internal/ingest"
 )
 
 // AC-01 (FR-ING-01..04): Ingestion writes index.json with >=20 lessons, dense order, unique id, 40-hex SHA, and parses as §6.3
@@ -41,6 +46,9 @@ func TestAC01_IngestOutput(t *testing.T) {
 	}
 
 	rawServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if serveTestImage(w, r) {
+			return
+		}
 		w.Header().Set("Content-Type", "text/plain")
 		_, _ = fmt.Fprintf(w, "# Lesson Title\n\nContent with an image: ![Diagram](images/diag.png)\n<img src=\"images/logo.png\">")
 	}))
@@ -154,6 +162,9 @@ func TestAC02_NoRelativeImages(t *testing.T) {
 	}
 
 	rawServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if serveTestImage(w, r) {
+			return
+		}
 		w.Header().Set("Content-Type", "text/plain")
 		_, _ = fmt.Fprintf(w, `# Intro
 
@@ -216,13 +227,18 @@ And absolute: ![Online](https://raw.githubusercontent.com/microsoft/AI-For-Begin
 		t.Errorf("content still contains relative html image: %s", content)
 	}
 
-	// Must be rewritten to raw.githubusercontent.com/microsoft/AI-For-Beginners/<sha>/...
-	expectedPrefix := "https://raw.githubusercontent.com/microsoft/AI-For-Beginners/" + mockSHA + "/"
-	if !strings.Contains(content, expectedPrefix+"lessons/01-Intro/images/neural.png") {
-		t.Errorf("content missing rewritten markdown image prefix: %s", content)
+	// FR-033: images are bundled and served from the app's own origin, including absolute upstream ones.
+	if strings.Contains(content, "raw.githubusercontent.com") {
+		t.Errorf("an image still loads from upstream: %s", content)
 	}
-	if !strings.Contains(content, expectedPrefix+"lessons/01-Intro/assets/robot.svg") {
-		t.Errorf("content missing rewritten html image prefix: %s", content)
+	if !regexp.MustCompile(`!\[Local Diagram\]\(/lesson-assets/[0-9a-f]{32}\.png\)`).MatchString(content) {
+		t.Errorf("markdown image not bundled: %s", content)
+	}
+	if !regexp.MustCompile(`<img src="/lesson-assets/[0-9a-f]{32}\.svg" alt="Robot">`).MatchString(content) {
+		t.Errorf("html image not bundled: %s", content)
+	}
+	if err := ingest.VerifyContent(tempDir); err != nil {
+		t.Errorf("a fresh ingest must pass the release check: %v", err)
 	}
 }
 
@@ -300,4 +316,19 @@ func TestAC16_EgressRetryBackoff(t *testing.T) {
 	if atomic.LoadInt32(&server404Count) != 1 {
 		t.Errorf("expected fast-fail (1 attempt) for 4xx, got %d", server404Count)
 	}
+}
+
+// serveTestImage answers image paths with a real image, because ingest refuses anything else.
+func serveTestImage(w http.ResponseWriter, r *http.Request) bool {
+	switch {
+	case strings.HasSuffix(r.URL.Path, ".png"):
+		var buf bytes.Buffer
+		_ = png.Encode(&buf, image.NewRGBA(image.Rect(0, 0, 1, 1)))
+		_, _ = w.Write(buf.Bytes())
+	case strings.HasSuffix(r.URL.Path, ".svg"):
+		_, _ = w.Write([]byte(`<svg xmlns="http://www.w3.org/2000/svg"></svg>`))
+	default:
+		return false
+	}
+	return true
 }

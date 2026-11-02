@@ -148,12 +148,26 @@ npm --prefix web run dev
 
 ## 🐳 How to Deploy
 
+### Curriculum pin
+
+A release ingests `microsoft/AI-For-Beginners` at commit `392d0df1b2647cbee104942390551f1ed9e072c8` (NFR-LIC-03), set by `INGEST_PINNED_SHA` in `.github/workflows/deploy.yml`.
+
+**Changing the pin needs a human image review.** NFR-LIC-02 forbids Microsoft logos and brand assets, and no automated check can find a hand-drawn one. At a size where a thumbnail looked clean, two sketchnotes turned out to have the logo. When the pin changes:
+
+1. Run ingest, then view every file in `public-content/assets/` at full size. Zoom in on sketchnotes.
+2. Add the content hash of any image with a logo to `brandedImages` in `internal/ingest/ingest.go`. It is then left out of the lessons, and the build refuses it.
+3. Update the image count in `web/tests/lesson-assets.spec.ts`.
+
+Review record for the current pin (2026-11-02): 22 images reviewed. 2 left out for a Microsoft logo (the Symbolic AI and NLP sketchnotes), 20 kept. Licensing beyond the upstream MIT grant was not checked for each image.
+
 ### 1. Docker Deployment (Single Multi-Stage Container)
 The application compiles into an optimized non-root container (`UID 10001`):
 
 ```bash
-# Generate the lessons first: the image bundles public-content/ as it is at build time
-GITHUB_TOKEN=<your-token> go run ./cmd/ingest
+# Generate the lessons first: the image bundles public-content/ as it is at build time.
+# INGEST_PINNED_SHA is the upstream commit a release uses (see "Curriculum pin"). The image build
+# fails if the content is incomplete or an image is damaged.
+GITHUB_TOKEN=<your-token> INGEST_PINNED_SHA=392d0df1b2647cbee104942390551f1ed9e072c8 go run ./cmd/ingest
 
 # Build production image
 docker build -t ai-foundations-coach .
@@ -262,7 +276,9 @@ For local testing, start the development identity provider with `go run ./cmd/de
 | Variable | Purpose / default |
 | --- | --- |
 | `AUTH_REQUIRED` | Require learner sign-in; default off outside hosted mode |
-| `STATE_FILE` | Persistent JSON state path; required with auth |
+| `STATE_BACKEND` | `file` (default; development, tests, self-hosting) or `firestore` (required on Cloud Run) |
+| `STATE_FILE` | Persistent JSON state path; required with auth on the file backend |
+| `FIRESTORE_PROJECT_ID` | Project holding the Firestore database; required with the firestore backend |
 | `SESSION_SECRET` | Cookie signing secret, at least 32 bytes; required with auth |
 | `PUBLIC_BASE_URL` | Public URL used for invite links and OIDC callbacks |
 | `OIDC_ISSUER` | Organisation identity provider issuer URL |
@@ -276,8 +292,10 @@ For local testing, start the development identity provider with `go run ./cmd/de
 | `AI_PRICE_INPUT_PER_MTOK` | Estimated input price per million tokens; default `0.15` |
 | `AI_PRICE_OUTPUT_PER_MTOK` | Estimated output price per million tokens; default `0.60` |
 | `MONTHLY_BUDGET_USD` | Admin cost view budget; default `30` |
+| `BUDGET_PUSH_AUDIENCE`, `BUDGET_PUSH_SERVICE_ACCOUNT` | Turn on the verified budget notification route that can switch the tutor off; set both or neither |
 | `FEEDBACK_AUDITOR_BASE_URL` | AI feedback auditor endpoint; set with the next two variables |
 | `FEEDBACK_AUDITOR_API_KEY` | Auditor API key; keep out of source control |
+| `SESSION_SECRET_FILE`, `OIDC_CLIENT_SECRET_FILE`, `FEEDBACK_AUDITOR_API_KEY_FILE` | File holding that secret, such as a mounted Secret Manager volume. Required on Cloud Run, where the plain variables are refused |
 | `FEEDBACK_AUDITOR_MODEL` | Auditor model; all three auditor variables enable feedback |
 
 ---

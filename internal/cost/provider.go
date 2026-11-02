@@ -65,6 +65,7 @@ type Snapshot struct {
 	GeneratedAt time.Time `json:"generatedAt"`
 	AI          AI        `json:"ai"`
 	Hosting     Hosting   `json:"hosting"`
+	TutorOff    bool      `json:"tutorOff"` // the budget switch has turned the tutor off (FR-026)
 }
 
 type Provider struct {

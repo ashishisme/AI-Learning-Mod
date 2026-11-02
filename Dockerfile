@@ -1,7 +1,14 @@
 # SPEC: NFR-OPS-01, NFR-OPS-04, AC-31, DC-08
 
 # Stage 1: Build Frontend SPA
-FROM node:20-alpine AS frontend-builder
+# Builders run natively on the build machine, so a multi-architecture release needs no emulation here.
+FROM --platform=$BUILDPLATFORM node:24-alpine AS frontend-builder
+# FR-031: stamped by the release workflow. .git is not in the build context, so these are the only source.
+ARG BUILD_NUMBER=0
+ARG BUILD_COMMIT=unknown
+ARG BUILD_DATE=
+ARG RELEASE_TAG=
+ENV BUILD_NUMBER=$BUILD_NUMBER BUILD_COMMIT=$BUILD_COMMIT BUILD_DATE=$BUILD_DATE RELEASE_TAG=$RELEASE_TAG
 WORKDIR /app/web
 COPY web/package*.json ./
 RUN npm ci
@@ -9,16 +16,22 @@ COPY web/ ./
 RUN npm run build
 
 # Stage 2: Build Go Server
-FROM golang:1.27.3-alpine3.24 AS backend-builder
+FROM --platform=$BUILDPLATFORM golang:1.27.3-alpine3.24 AS backend-builder
+ARG TARGETARCH
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY cmd/ ./cmd/
 COPY internal/ ./internal/
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /app/server ./cmd/server
+# FR-033: refuse to build an image with missing lessons or damaged or forbidden images.
+COPY public-content ./public-content
+RUN CONTENT_DIR=public-content go run ./cmd/ingest -verify
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=$TARGETARCH go build -trimpath -ldflags="-w -s" -o /app/server ./cmd/server
 
 # Stage 3: Minimal non-root production runtime
-FROM alpine:3.20 AS runner
+FROM alpine:3.24 AS runner
+ARG RELEASE_TAG=
+ENV RELEASE_TAG=$RELEASE_TAG
 WORKDIR /app
 
 # NFR-OPS-01, AC-31: Create non-root user with non-zero UID (10001)
@@ -36,8 +49,9 @@ COPY --chown=appuser:appgroup public-content ./public-content
 # NFR-OPS-04: Remove package managers from production container
 RUN rm -rf /sbin/apk /etc/apk /lib/apk
 
-# SPEC-008: state directory for the JSON state file. Mount a persistent volume at /app/data for the
-# single-instance beta; the container filesystem alone does not survive a restart.
+# SPEC-008: state directory for the JSON state file when self-hosting. Mount a persistent volume at
+# /app/data; the container filesystem alone does not survive a restart. Cloud Run refuses this backend
+# and uses Firestore instead.
 RUN mkdir -p /app/data && chown appuser:appgroup /app/data
 
 # Switch to non-root user

@@ -4,11 +4,13 @@ package auth
 
 import (
 	"context"
+	"crypto/rand"
 	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"ai-foundations-coach/internal/state"
@@ -36,6 +38,7 @@ type Config struct {
 	SessionTTL    time.Duration // FR-012
 	AccountMonths int           // FR-007
 	BaseURL       string        // for invite links
+	LockoutKey    []byte        // keys address lockout records; a hosted server sets it from SESSION_SECRET
 }
 
 func DefaultConfig(baseURL string) Config {
@@ -43,15 +46,21 @@ func DefaultConfig(baseURL string) Config {
 }
 
 type Service struct {
-	store      state.Store
-	cfg        Config
-	clock      func() time.Time
-	sweepHooks []SweepHook
+	store        state.Store
+	cfg          Config
+	clock        func() time.Time
+	sweepHooks   []SweepHook
+	failedLogins atomic.Uint64
 }
 
 func NewService(st state.Store, cfg Config) *Service {
 	if cfg.SeatCap <= 0 {
 		cfg.SeatCap = 1000
+	}
+	if len(cfg.LockoutKey) == 0 {
+		// Instances sharing a store must share this key, or they would not share address lockouts.
+		cfg.LockoutKey = make([]byte, 32)
+		_, _ = rand.Read(cfg.LockoutKey)
 	}
 	return &Service{store: st, cfg: cfg, clock: time.Now}
 }
@@ -69,6 +78,8 @@ var labelRe = regexp.MustCompile(`^[A-Za-z0-9 _.-]{0,40}$`)
 // ValidLabel reports whether label is a usable group label: at most 40 characters of letters,
 // digits, space, "-", "_" and ".".
 func ValidLabel(label string) bool { return labelRe.MatchString(label) }
+
+const seatGuardKey = "lock:seats"
 
 // seatsUsed counts active accounts (expired ones keep their seat until purged) plus pending,
 // unexpired invites.
@@ -103,6 +114,9 @@ func (s *Service) CreateInvites(ctx context.Context, actor string, n int, label 
 	}
 	var links []string
 	err := s.store.Do(ctx, func(tx state.Tx) error {
+		// Touch one shared record first, so concurrent batches queue here instead of conflicting
+		// across the whole scan in seatsUsed.
+		tx.AddCounter(seatGuardKey, 1)
 		now := s.now()
 		if seatsUsed(tx, now)+n > s.cfg.SeatCap {
 			return ErrSeatCap

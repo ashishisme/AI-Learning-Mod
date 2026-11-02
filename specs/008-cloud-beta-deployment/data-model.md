@@ -104,6 +104,7 @@ Counters older than 400 days are swept.
 | `withheldReason` | enum or empty | `personal_details`, `contact_details`, `address`, `abusive`, `unsafe`, `injection_attempt`, `unclear`; set only when `review = withheld` |
 | `reviewedAt` | time, optional | |
 | `reviewTries` | int | auditor attempts so far; informational |
+| `claimedUntil` | time, optional | processing metadata: one auditor worker at a time across instances |
 
 **Transitions**: `waiting → passed` or `waiting → withheld` (text deleted in the same transaction). No transition leaves `passed` except deletion. A rule-check rejection never creates a record. Deleted after 180 days from `at`, or 7 days from `at` if still `waiting`. Admin queries and exports return only `review = passed`. No Beta ID, address, session or device details; the auditor's free text is never stored.
 

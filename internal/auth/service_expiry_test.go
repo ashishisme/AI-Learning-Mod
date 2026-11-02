@@ -169,7 +169,7 @@ func TestSweepRemovesDeadSessionsOldInvitesAndRunsHooks(t *testing.T) {
 	_ = act
 	links, _ := svc.CreateInvites(bg, admin, 1, "")
 	called := false
-	svc.AddSweepHook(func(_ context.Context, _ state.Tx, _ time.Time) { called = true })
+	svc.AddSweepHook(func(context.Context, time.Time) error { called = true; return nil })
 
 	clk.Advance(15 * 24 * time.Hour) // activation session (14 days) is dead; the invite is expired but recent
 	res, _ := svc.Sweep(bg)

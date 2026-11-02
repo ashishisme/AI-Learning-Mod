@@ -46,3 +46,22 @@ Constitution 2.0.0 → **2.1.0** (MINOR: materially expanded guidance on an exis
 ## Version impact
 
 Constitution 2.1.0 to **2.2.0** (MINOR). `spec/SPEC.md` §8 must be updated at the same time.
+
+---
+
+# Amendment 3: DC-09 hosted store cost wording (2.2.1 to 2.3.0)
+
+**Status**: **Ratified 2026-11-02** by the owner; applied to `.specify/memory/constitution.md` (2.3.0) and `spec/SPEC.md` §8.
+
+## Change
+
+> ~~a managed serverless store that costs nothing when idle~~ → a managed serverless store with no idle compute or provisioned capacity; small storage and backup charges are allowed
+
+## Rationale
+
+- FR-029 requires daily backups, and Firestore bills for backup storage, so a store with backups cannot literally cost nothing when idle.
+- The intent is kept: nothing is provisioned or running while idle, and budget alerts cover the remaining charges.
+
+## Version impact
+
+Constitution 2.2.1 to **2.3.0** (MINOR: changes the meaning of an existing constraint). `spec/SPEC.md` §8 updated at the same time.

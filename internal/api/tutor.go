@@ -122,6 +122,8 @@ type TutorHandler struct {
 	enabled bool
 	// spend is the shared daily ceiling (FR-025). Nil on a self-hosted run with no state store.
 	spend *spend.Tally
+	// latch switches the tutor off at the monthly budget until an admin resets it (FR-026).
+	latch *spend.Latch
 	usage *usage.Recorder
 }
 
@@ -188,7 +190,15 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 	}
 
-	if !h.enabled {
+	allowed := h.enabled
+	if allowed && h.latch != nil {
+		var err error
+		if allowed, err = h.latch.Allowed(r.Context()); err != nil {
+			slog.Error("Cannot read the tutor switch; refusing", "error", err.Error())
+			allowed = false // unknown state must not spend money
+		}
+	}
+	if !allowed {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusServiceUnavailable)
 		_ = json.NewEncoder(w).Encode(TutorResponse{Error: "tutor disabled"})

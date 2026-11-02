@@ -199,16 +199,18 @@ func (c idClaims) audiences() []string {
 	return many
 }
 
-func (o *OIDC) verifyIDToken(ctx context.Context, raw, nonce string) (string, error) {
+// signedClaims checks the signature and returns the claims. Nothing in them is trusted before this.
+func (o *OIDC) signedClaims(ctx context.Context, raw string) (idClaims, error) {
+	var c idClaims
 	parts := strings.Split(raw, ".")
 	if len(parts) != 3 {
-		return "", ErrOIDCToken
+		return c, ErrOIDCToken
 	}
 	hb, err1 := b64Decode(parts[0])
 	cb, err2 := b64Decode(parts[1])
 	sig, err3 := b64Decode(parts[2])
 	if err1 != nil || err2 != nil || err3 != nil {
-		return "", ErrOIDCToken
+		return c, ErrOIDCToken
 	}
 	var h struct {
 		Alg string `json:"alg"`
@@ -216,20 +218,50 @@ func (o *OIDC) verifyIDToken(ctx context.Context, raw, nonce string) (string, er
 	}
 	// Only RS256 with a key id is accepted: never "none", never an HMAC "signed" with a public key.
 	if json.Unmarshal(hb, &h) != nil || h.Alg != "RS256" || h.KID == "" {
-		return "", ErrOIDCToken
+		return c, ErrOIDCToken
 	}
 	key, err := o.keyFor(ctx, h.KID)
 	if err != nil {
-		return "", ErrOIDCToken
+		return c, ErrOIDCToken
 	}
 	digest := sha256.Sum256([]byte(parts[0] + "." + parts[1]))
 	if rsa.VerifyPKCS1v15(key, crypto.SHA256, digest[:], sig) != nil {
-		return "", ErrOIDCToken
+		return c, ErrOIDCToken
 	}
-
-	var c idClaims
 	if json.Unmarshal(cb, &c) != nil {
-		return "", ErrOIDCToken
+		return c, ErrOIDCToken
+	}
+	return c, nil
+}
+
+// VerifyPushToken checks the token Pub/Sub attaches to a push request: signed by the provider, for
+// this audience, unexpired, and from the expected service account with a verified email.
+func (o *OIDC) VerifyPushToken(ctx context.Context, raw, audience, email string) error {
+	c, err := o.signedClaims(ctx, raw)
+	if err != nil {
+		return err
+	}
+	now := o.clockNow()
+	audOK := false
+	for _, a := range c.audiences() {
+		audOK = audOK || a == audience
+	}
+	iss := strings.TrimRight(c.Iss, "/")
+	switch {
+	case iss != o.cfg.Issuer && "https://"+iss != o.cfg.Issuer, // Google may omit the scheme
+		!audOK,
+		c.Exp == 0 || !now.Before(time.Unix(c.Exp, 0)),
+		!strings.EqualFold(c.Email, email),
+		strings.Trim(string(c.EmailVerified), `"`) != "true":
+		return ErrOIDCToken
+	}
+	return nil
+}
+
+func (o *OIDC) verifyIDToken(ctx context.Context, raw, nonce string) (string, error) {
+	c, err := o.signedClaims(ctx, raw)
+	if err != nil {
+		return "", err
 	}
 	now := o.clockNow()
 	auds := c.audiences()

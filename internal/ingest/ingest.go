@@ -2,10 +2,18 @@
 package ingest
 
 import (
+	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
+	"encoding/xml"
 	"errors"
 	"fmt"
+	"image"
+	"image/gif"
+	"image/jpeg"
+	"image/png"
 	"io"
 	"log/slog"
 	"net/http"
@@ -35,6 +43,7 @@ type Config struct {
 	ContentDir  string
 	BaseURL     string // optional override for testing
 	RawBaseURL  string // optional override for testing
+	PinnedSHA   string // upstream commit to ingest, so a release is reproducible (NFR-LIC-03); empty means current main
 	Client      *http.Client
 }
 
@@ -102,18 +111,21 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 		ghClient.BaseURL = u
 	}
 
-	// FR-ING-01: fetch current main branch commit SHA
-	branch, resp, err := ghClient.Repositories.GetBranch(ctx, RepoOwner, RepoName, "main", 0)
-	if err != nil {
-		if resp != nil && resp.StatusCode >= 400 && resp.StatusCode < 500 {
-			return "", 0, fmt.Errorf("GitHub API returned client error %d: %w", resp.StatusCode, err)
+	pinnedSHA := cfg.PinnedSHA
+	if pinnedSHA == "" {
+		// FR-ING-01: fetch current main branch commit SHA
+		branch, resp, err := ghClient.Repositories.GetBranch(ctx, RepoOwner, RepoName, "main", 0)
+		if err != nil {
+			if resp != nil && resp.StatusCode >= 400 && resp.StatusCode < 500 {
+				return "", 0, fmt.Errorf("GitHub API returned client error %d: %w", resp.StatusCode, err)
+			}
+			return "", 0, fmt.Errorf("failed to fetch main branch: %w", err)
 		}
-		return "", 0, fmt.Errorf("failed to fetch main branch: %w", err)
+		if branch.Commit == nil || branch.Commit.SHA == nil {
+			return "", 0, errors.New("main branch commit SHA not found")
+		}
+		pinnedSHA = *branch.Commit.SHA
 	}
-	if branch.Commit == nil || branch.Commit.SHA == nil {
-		return "", 0, errors.New("main branch commit SHA not found")
-	}
-	pinnedSHA := *branch.Commit.SHA
 	slog.Info("Pinned upstream commit SHA", "sha", pinnedSHA)
 
 	// Fetch Git Tree recursively
@@ -214,6 +226,7 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 		data []byte
 	}
 	var pending []pendingFile
+	images := &imageBundle{client: client, rawHost: rawHost, byURL: map[string]string{}, files: map[string][]byte{}}
 
 	for order, cand := range candidates {
 		// FR-ING-03: Derivations
@@ -246,6 +259,12 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 		// FR-ING-05: rewrite relative images and links
 		lessonDir := path.Dir(cand.readmePath)
 		cleanMD = RewriteRelativeAssets(cleanMD, RepoOwner, RepoName, pinnedSHA, lessonDir, "https://raw.githubusercontent.com")
+
+		// FR-033: images ship with the release and are served from the app's own origin.
+		cleanMD, err = images.bundle(ctx, cleanMD)
+		if err != nil {
+			return "", 0, fmt.Errorf("lesson %s: %w", id, err)
+		}
 
 		// FR-ING-03: title = first # heading, else title-cased id
 		title := ExtractTitle(cleanMD, id)
@@ -289,6 +308,18 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 		lessons = append(lessons, meta)
 	}
 
+	if len(images.files) > 0 {
+		assetsDir := filepath.Join(cfg.ContentDir, AssetDir)
+		if err := os.MkdirAll(assetsDir, 0755); err != nil {
+			return "", 0, fmt.Errorf("failed to create assets directory: %w", err)
+		}
+		for name, data := range images.files {
+			if err := writeFileAtomic(filepath.Join(assetsDir, name), data); err != nil {
+				return "", 0, fmt.Errorf("failed to write image %s: %w", name, err)
+			}
+		}
+	}
+
 	for _, f := range pending {
 		if err := writeFileAtomic(f.path, f.data); err != nil {
 			return "", 0, fmt.Errorf("failed to write lesson %s: %w", f.id, err)
@@ -310,6 +341,239 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 	}
 
 	return pinnedSHA, len(lessons), nil
+}
+
+// AssetDir holds bundled images under the content directory, and AssetURLPrefix is where the server
+// serves them. Names are content hashes, so a response can be cached forever.
+const (
+	AssetDir       = "assets"
+	AssetURLPrefix = "/lesson-assets/"
+)
+
+const upstreamRawHost = "https://raw.githubusercontent.com/"
+
+var (
+	imageExts = map[string]bool{".png": true, ".jpg": true, ".jpeg": true, ".gif": true, ".svg": true, ".webp": true}
+	// AssetNameRe is the only shape a bundled image's name can have, so a request can never leave AssetDir.
+	AssetNameRe = regexp.MustCompile(`^[0-9a-f]{32}\.(png|jpg|jpeg|gif|svg|webp)$`)
+)
+
+// brandedImages are upstream images found by visual review to contain a Microsoft logo, which
+// NFR-LIC-02 forbids. They are matched by content hash and left out of the release. No automated check
+// can find a hand-drawn logo, so a new upstream pin needs a new review (see README, "Curriculum pin").
+var brandedImages = map[string]string{
+	"34c718c74e361ac078620316175d4425": "Symbolic AI sketchnote: logo beside \"Concept Graph\"",
+	"e8c2816e2bb1aea82dd6f321b225c501": "NLP sketchnote: logo beside \"2014 CEO India\"",
+}
+
+func contentHash(data []byte) string {
+	sum := sha256.Sum256(data)
+	return hex.EncodeToString(sum[:])[:32]
+}
+
+// droppedImage marks where a left-out image was. dropRe removes it with the credit line that follows
+// it, which would otherwise describe a picture that is no longer there.
+const droppedImage = "\x00dropped-image\x00"
+
+var dropRe = regexp.MustCompile(droppedImage + `(\s*\n> Sketchnote by [^\n]*)?\n?`)
+
+// imageBundle downloads each upstream image once and holds it until the whole run has succeeded.
+type imageBundle struct {
+	client  *http.Client
+	rawHost string
+	byURL   map[string]string
+	files   map[string][]byte
+}
+
+// local returns the self-origin URL for an upstream image and leaves any other URL alone, or "" for an
+// image that must be left out. An image on another host is caught by VerifyContent, which fails the
+// release build.
+func (b *imageBundle) local(ctx context.Context, src string) (string, error) {
+	if !strings.HasPrefix(src, upstreamRawHost) {
+		return src, nil
+	}
+	if url, ok := b.byURL[src]; ok {
+		return url, nil
+	}
+	ext := strings.ToLower(path.Ext(strings.SplitN(src, "?", 2)[0]))
+	if !imageExts[ext] {
+		return "", fmt.Errorf("unsupported image type %q", ext)
+	}
+	data, err := FetchWithRetry(ctx, b.client, strings.TrimRight(b.rawHost, "/")+"/"+strings.TrimPrefix(src, upstreamRawHost))
+	if err != nil {
+		return "", fmt.Errorf("failed to fetch image: %w", err)
+	}
+	if err := checkImage(ext, data); err != nil {
+		return "", fmt.Errorf("%s: %w", src, err)
+	}
+	hash := contentHash(data)
+	if reason, branded := brandedImages[hash]; branded {
+		slog.Info("Left out an image with a Microsoft logo (NFR-LIC-02)", "image", reason)
+		b.byURL[src] = ""
+		return "", nil
+	}
+	name := hash + ext
+	b.files[name] = data
+	b.byURL[src] = AssetURLPrefix + name
+	return b.byURL[src], nil
+}
+
+// bundle rewrites Markdown and HTML images. Links are left alone: following one is navigation, which
+// neither the CSP nor FR-033 covers.
+func (b *imageBundle) bundle(ctx context.Context, content string) (string, error) {
+	var firstErr error
+	rewrite := func(src string) string {
+		out, err := b.local(ctx, src)
+		if err != nil && firstErr == nil {
+			firstErr = err
+		}
+		return out
+	}
+	content = mdImageRegex.ReplaceAllStringFunc(content, func(m string) string {
+		sub := mdImageRegex.FindStringSubmatch(m)
+		target := strings.TrimSpace(sub[2])
+		src, title, _ := strings.Cut(target, " ") // ![alt](url "title")
+		if title != "" {
+			title = " " + title
+		}
+		local := rewrite(src)
+		if local == "" {
+			return droppedImage
+		}
+		return fmt.Sprintf("![%s](%s%s)", sub[1], local, title)
+	})
+	content = htmlImgRegex.ReplaceAllStringFunc(content, func(m string) string {
+		sub := htmlImgRegex.FindStringSubmatch(m)
+		local := rewrite(strings.TrimSpace(sub[2]))
+		if local == "" {
+			return droppedImage
+		}
+		return fmt.Sprintf("<img %ssrc=\"%s\"%s>", sub[1], local, sub[3])
+	})
+	return dropRe.ReplaceAllString(content, ""), firstErr
+}
+
+// checkImage proves the bytes really are an image of the type the name claims. A failed download or an
+// HTML error page saved as .png would otherwise ship as a broken picture and still pass a file-exists
+// check. PNG, JPEG and GIF are fully decoded, which also catches a truncated file.
+func checkImage(ext string, data []byte) error {
+	decode := func(dec func(io.Reader) (image.Image, error)) error {
+		if _, err := dec(bytes.NewReader(data)); err != nil {
+			return fmt.Errorf("not a valid %s image: %w", ext, err)
+		}
+		return nil
+	}
+	switch ext {
+	case ".png":
+		return decode(png.Decode)
+	case ".jpg", ".jpeg":
+		return decode(jpeg.Decode)
+	case ".gif":
+		// All frames: an animation can be damaged after its first frame.
+		if _, err := gif.DecodeAll(bytes.NewReader(data)); err != nil {
+			return fmt.Errorf("not a valid .gif image: %w", err)
+		}
+		return nil
+	case ".webp":
+		if len(data) < 12 || string(data[:4]) != "RIFF" || string(data[8:12]) != "WEBP" {
+			return errors.New("not a valid .webp image")
+		}
+		return nil // shortcut: header only, because the standard library has no WebP decoder; the browser test decodes it
+	case ".svg":
+		var root struct {
+			XMLName xml.Name
+		}
+		if err := xml.NewDecoder(bytes.NewReader(data)).Decode(&root); err != nil || root.XMLName.Local != "svg" {
+			return errors.New("not a valid .svg image")
+		}
+		return nil
+	}
+	return fmt.Errorf("unsupported image type %q", ext)
+}
+
+// imageSources lists every image a lesson would load.
+func imageSources(lesson Lesson) []string {
+	var out []string
+	for _, block := range lesson.Blocks {
+		if block.Src != "" {
+			out = append(out, block.Src)
+		}
+		for _, m := range mdImageRegex.FindAllStringSubmatch(block.Content, -1) {
+			src, _, _ := strings.Cut(strings.TrimSpace(m[2]), " ")
+			out = append(out, src)
+		}
+		for _, m := range htmlImgRegex.FindAllStringSubmatch(block.Content, -1) {
+			out = append(out, strings.TrimSpace(m[2]))
+		}
+	}
+	return out
+}
+
+// VerifyContent is the release gate for FR-033. It fails unless the content directory is complete and
+// self-contained: an index, every indexed lesson, and every image bundled and present.
+func VerifyContent(contentDir string) error {
+	raw, err := os.ReadFile(filepath.Join(contentDir, "index.json"))
+	if err != nil {
+		return fmt.Errorf("no lesson index: %w", err)
+	}
+	var index LessonIndex
+	if err := json.Unmarshal(raw, &index); err != nil {
+		return fmt.Errorf("lesson index is invalid: %w", err)
+	}
+	if len(index.Lessons) == 0 {
+		return errors.New("lesson index lists no lessons")
+	}
+	for _, l := range index.Lessons {
+		if _, err := os.Stat(filepath.Join(contentDir, "lessons", l.ID+".json")); err != nil {
+			return fmt.Errorf("lesson %s is in the index but has no file", l.ID)
+		}
+	}
+	// A forbidden image must not ship even if no lesson refers to it.
+	assets, err := filepath.Glob(filepath.Join(contentDir, AssetDir, "*"))
+	if err != nil {
+		return err
+	}
+	for _, a := range assets {
+		base := filepath.Base(a)
+		if reason, branded := brandedImages[strings.TrimSuffix(base, path.Ext(base))]; branded {
+			return fmt.Errorf("the release contains an image that NFR-LIC-02 forbids: %s", reason)
+		}
+	}
+	files, err := filepath.Glob(filepath.Join(contentDir, "lessons", "*.json"))
+	if err != nil {
+		return err
+	}
+	for _, f := range files {
+		raw, err := os.ReadFile(f)
+		if err != nil {
+			return err
+		}
+		var lesson Lesson
+		if err := json.Unmarshal(raw, &lesson); err != nil {
+			return fmt.Errorf("%s is invalid: %w", filepath.Base(f), err)
+		}
+		for _, src := range imageSources(lesson) {
+			name, ok := strings.CutPrefix(src, AssetURLPrefix)
+			if !ok || !AssetNameRe.MatchString(name) {
+				return fmt.Errorf("%s loads an image from outside the app: %s", filepath.Base(f), src)
+			}
+			data, err := os.ReadFile(filepath.Join(contentDir, AssetDir, name))
+			if err != nil {
+				return fmt.Errorf("%s needs a missing image: %s", filepath.Base(f), name)
+			}
+			hash := contentHash(data)
+			if !strings.HasPrefix(name, hash+".") {
+				return fmt.Errorf("%s needs an image whose content has changed: %s", filepath.Base(f), name)
+			}
+			if reason, branded := brandedImages[hash]; branded {
+				return fmt.Errorf("%s uses an image that NFR-LIC-02 forbids: %s", filepath.Base(f), reason)
+			}
+			if err := checkImage(strings.ToLower(path.Ext(name)), data); err != nil {
+				return fmt.Errorf("%s needs a damaged image %s: %w", filepath.Base(f), name, err)
+			}
+		}
+	}
+	return nil
 }
 
 // writeFileAtomic replaces path in one step so readers never see a partial file.

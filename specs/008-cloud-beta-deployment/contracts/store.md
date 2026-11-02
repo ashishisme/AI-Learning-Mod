@@ -57,7 +57,7 @@ type Tx interface {
     GetCounter(key string) int64
     AddCounter(key string, delta int64) int64
     ListCounters(prefix string) map[string]int64
-    DeleteCountersWhere(match func(key string) bool) int
+    DeleteCounter(key string)
     GetAttempts(key string) []time.Time
     PutAttempts(key string, ts []time.Time)
     ListAttemptKeys() []string
@@ -80,6 +80,8 @@ Returned values are copies; mutating them does not change stored state until `Pu
 4. **Durability**: after `Do` returns nil for an access-control change, re-opening the store from the same location shows it. Counter-only changes become durable within 5 seconds or on `Flush`.
 5. **Crash safety**: a partially written file is never loaded (temp file, fsync, rename). A corrupt or unknown-version file makes the constructor return an error.
 6. **No hidden state**: the store holds exactly the records of the data model and nothing else.
+7. **Re-runnable functions**: `fn` may run more than once for one `Do` or `DoCounters`. It must reset anything it captures and have no side effects outside `Tx`. The shared suite runs closures twice to prove this on every backend.
+8. **Failure is explicit**: when the backend fails during `fn`, `Do` and `View` return that error in preference to `fn`'s own result and keep none of its writes.
 
 ## File store specifics
 
@@ -88,6 +90,6 @@ Returned values are copies; mutating them does not change stored state until `Pu
 - Writer goroutine batches counter-only commits every 5 seconds; `Do` that touches anything else writes immediately.
 - Intended for development, tests and a single-instance deployment on a persistent volume. It does **not** provide cross-process locking; the constructor takes an exclusive lock file `<path>.lock` and fails if another process holds it.
 
-## Managed adapter notes (out of scope here)
+## Managed adapter notes
 
-Map `Do` to the platform's read-write transaction, `AddCounter` to an atomic increment, and the seat count to a transactional counter document. Because `Do` is the only write path, handler and service code does not change.
+The managed adapter is Firestore Native over REST, using the standard library only. [cloud-beta-design.md](../cloud-beta-design.md) sections 2 and 3 hold its data model and transaction rules. `Do` remains the only write path, so handlers do not change. Service closures do change: they must follow rule 7, `Sweep` is split into short transactions, and the seat cap keeps its scan behind a guard counter, because pending invites expire by time and a stored count would drift.

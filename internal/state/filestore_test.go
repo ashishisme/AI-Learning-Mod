@@ -48,3 +48,14 @@ func TestFileStoreRejectsUnknownVersion(t *testing.T) {
 		t.Fatal("an unknown version was accepted")
 	}
 }
+
+func TestFileStoreRejectsCorruptFile(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "state.json")
+	if err := os.WriteFile(path, []byte("{not json"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if s, err := state.OpenFileStore(path); err == nil {
+		s.Close()
+		t.Fatal("a corrupt state file was accepted")
+	}
+}

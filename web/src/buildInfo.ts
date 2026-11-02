@@ -4,6 +4,7 @@ export const buildInfo = {
   commit: __BUILD_COMMIT__,
   dirty: __BUILD_DIRTY__,
   date: __BUILD_DATE__,
+  release: __RELEASE_TAG__,
 }
 
 /** e.g. "Build #56 · 4d94b1c+dirty · 2026-11-01" */

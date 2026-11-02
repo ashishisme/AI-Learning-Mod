@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"ai-foundations-coach/internal/state"
+	"ai-foundations-coach/internal/state/statetest"
 )
 
 var bg = context.Background()
@@ -26,10 +27,11 @@ func (c *testClock) Advance(d time.Duration) {
 // newTestService returns a service on a temp file store with a controllable clock.
 func newTestService(t *testing.T, mutate ...func(*Config)) (*Service, state.Store, *testClock) {
 	t.Helper()
-	st, err := state.OpenFileStore(filepath.Join(t.TempDir(), "state.json"))
+	fileStore, err := state.OpenFileStore(filepath.Join(t.TempDir(), "state.json"))
 	if err != nil {
 		t.Fatal(err)
 	}
+	st := statetest.Rerunning(fileStore)
 	t.Cleanup(func() { st.Close() })
 	cfg := DefaultConfig("https://coach.example.org")
 	for _, m := range mutate {

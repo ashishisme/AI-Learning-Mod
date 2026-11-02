@@ -6,6 +6,7 @@ package spend
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"math"
 	"strings"
 	"sync"
@@ -89,10 +90,14 @@ func (r *Reservation) Settle(_ context.Context, actualInputTokens, actualOutputT
 	r.once.Do(func() {
 		delta := r.t.cost(actualInputTokens, actualOutputTokens) - r.reserved
 		if delta != 0 {
-			_ = r.t.store.DoCounters(context.Background(), func(tx state.Tx) error {
+			err := r.t.store.DoCounters(context.Background(), func(tx state.Tx) error {
 				tx.AddCounter(r.key, delta)
 				return nil
 			})
+			if err != nil {
+				// The worst case stays reserved, so a failed settle errs on the safe side.
+				slog.Warn("Could not settle an AI spend reservation", "error", err.Error())
+			}
 		}
 	})
 }

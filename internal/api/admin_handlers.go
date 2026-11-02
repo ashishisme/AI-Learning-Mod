@@ -14,6 +14,7 @@ import (
 	"ai-foundations-coach/internal/auth"
 	"ai-foundations-coach/internal/cost"
 	"ai-foundations-coach/internal/feedback"
+	"ai-foundations-coach/internal/spend"
 	"ai-foundations-coach/internal/usage"
 )
 
@@ -49,11 +50,12 @@ type adminHandlers struct {
 	cost   *cost.Provider
 	fb     *feedback.Service
 	tutor  bool
+	latch  *spend.Latch
 }
 
 // registerAdmin adds the admin sign-in and console routes (SPEC-008 FR-014).
 func registerAdmin(mux *http.ServeMux, cfg RouterConfig) {
-	h := &adminHandlers{svc: cfg.Auth, oidc: cfg.OIDC, signer: cfg.Signer, secure: cfg.SecureCookies, admins: map[string]bool{},
+	h := &adminHandlers{latch: cfg.TutorLatch, svc: cfg.Auth, oidc: cfg.OIDC, signer: cfg.Signer, secure: cfg.SecureCookies, admins: map[string]bool{},
 		usage: cfg.Usage, cost: cfg.Cost, fb: cfg.Feedback, tutor: !cfg.TutorDisabled}
 	for _, e := range cfg.AdminEmails {
 		h.admins[strings.ToLower(strings.TrimSpace(e))] = true
@@ -83,6 +85,9 @@ func registerAdmin(mux *http.ServeMux, cfg RouterConfig) {
 		mux.Handle("GET /api/admin/usage", guard(h.usageReport))
 		mux.Handle("GET /api/admin/users/activity", guard(h.activity))
 		mux.Handle("GET /api/admin/costs", guard(h.costs))
+		if h.latch != nil {
+			mux.Handle("POST /api/admin/tutor/reset", guard(h.resetTutor))
+		}
 	}
 	if h.fb != nil {
 		mux.Handle("GET /api/admin/feedback", guard(h.feedbackList))

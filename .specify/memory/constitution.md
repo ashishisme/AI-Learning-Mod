@@ -17,14 +17,14 @@
 - **Backend (DC-02)**: Go 1.27.3 using standard library `net/http` router only (`http.NewServeMux()` with Go 1.22+ method+path patterns). No third-party routers allowed.
 - **Frontend (DC-01)**: React 18 + TypeScript + Vite + Tailwind CSS + Zustand with local persistence.
 - **Ingestion (DC-03)**: Go CLI using `github.com/google/go-github/v66`.
-- **Minimal State (DC-09, amended 2.2.0)**: Lessons remain static JSON packaged with the release. Server-side persistent state is permitted **only** for:
+- **Minimal State (DC-09, amended 2.3.0)**: Lessons remain static JSON packaged with the release. Server-side persistent state is permitted **only** for:
   (a) access-control records: invites, pseudonymous beta accounts, sessions, and admin audit entries;
   (b) operational counters: the daily AI spend tally, rate-limit counters, aggregate usage counts per day, and a last-seen time per beta account;
   (c) learner feedback records: a rating, a category, a message of at most 500 characters scrubbed of emails, phone numbers and links, and context fields (group label, lesson, audience mode, app version, time), with no Beta ID, network address, session or device details, deleted automatically after 180 days.
-  Such state MUST NOT contain personal data (names, emails, phone numbers, dates of birth), or learner question or answer text from the AI tutor; MUST be reached only through a store interface; MUST NOT introduce an ORM; and in a hosted deployment MUST be held in a managed serverless store that costs nothing when idle. A local file-backed implementation of the interface is permitted for development, tests and single-instance self-hosting. Learner progress and preferences remain browser-local.
+  Such state MUST NOT contain personal data (names, emails, phone numbers, dates of birth), or learner question or answer text from the AI tutor; MUST be reached only through a store interface; MUST NOT introduce an ORM; and in a hosted deployment MUST be held in a managed serverless store with no idle compute or provisioned capacity; small storage and backup charges are allowed. A local file-backed implementation of the interface is permitted for development, tests and single-instance self-hosting. Learner progress and preferences remain browser-local.
   (a) access-control records: invites, pseudonymous beta accounts, sessions, and admin audit entries;
   (b) operational counters: the daily AI spend tally and rate-limit counters.
-  Such state MUST NOT contain personal data (names, emails, phone numbers, dates of birth), learner question text, or answers; MUST be reached only through a store interface; MUST NOT introduce an ORM; and in a hosted deployment MUST be held in a managed serverless store that costs nothing when idle. A local file-backed implementation of the interface is permitted for development, tests and single-instance self-hosting. Learner progress and preferences remain browser-local.
+  Such state MUST NOT contain personal data (names, emails, phone numbers, dates of birth), learner question text, or answers; MUST be reached only through a store interface; MUST NOT introduce an ORM; and in a hosted deployment MUST be held in a managed serverless store with no idle compute or provisioned capacity; small storage and backup charges are allowed. A local file-backed implementation of the interface is permitted for development, tests and single-instance self-hosting. Learner progress and preferences remain browser-local.
 - **Zero Python (DC-10)**: No Python code anywhere in the build, backend, or runtime.
 - **Single Container (DC-08)**: Single container image serves both SPA frontend and API on one port.
 
@@ -50,4 +50,4 @@ Every new phase, PR, or implementation task MUST pass the three-tier verificatio
 - This Constitution supersedes informal prompt requests. If an implementation plan conflicts with this Constitution, the Constitution takes precedence.
 - Proposed amendments to architecture constraints (DC-*) require updating `spec/SPEC.md §8` and this document simultaneously.
 
-**Version**: 2.2.1 | **Ratified**: 2026-10-26 | **Last Amended**: 2026-11-02 (DC-02: Go 1.27.3; DC-09 access records and feedback remain as ratified in 2.1.0 and 2.2.0) | **Governing Baseline**: `spec/SPEC.md`
+**Version**: 2.3.0 | **Ratified**: 2026-10-26 | **Last Amended**: 2026-11-02 (DC-09 hosted store cost wording, 2.3.0; DC-02: Go 1.27.3, 2.2.1; DC-09 access records and feedback remain as ratified in 2.1.0 and 2.2.0) | **Governing Baseline**: `spec/SPEC.md`

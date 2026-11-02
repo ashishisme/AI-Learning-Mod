@@ -90,6 +90,7 @@ export const fetchOverview = () => get<unknown>('/api/admin/overview')
 export const fetchUsage = (days: 7 | 30) => get<unknown>(`/api/admin/usage${qs({ days })}`)
 export const fetchUsersActivity = () => get<unknown>('/api/admin/users/activity')
 export const fetchCosts = () => get<unknown>('/api/admin/costs')
+export const resetTutor = () => post<void>('/api/admin/tutor/reset')
 export const fetchFeedback = (f: Record<string, string | number | undefined> = {}) => get<unknown>(`/api/admin/feedback${qs(f)}`)
 export const setFeedbackStatus = (id: string, status: 'new' | 'read' | 'resolved') =>
   post<void>(`/api/admin/feedback/${enc(id)}/status`, { status })

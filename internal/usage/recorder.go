@@ -43,12 +43,11 @@ type Recorder struct {
 	delta    map[string]int64
 	lastSeen map[string]time.Time
 	dirty    map[string]bool
-	dauDay   map[string]string // the IST day each account was last counted as active
 }
 
 func New(st state.Store) *Recorder {
 	return &Recorder{store: st, clock: time.Now, delta: map[string]int64{}, lastSeen: map[string]time.Time{},
-		dirty: map[string]bool{}, dauDay: map[string]string{}}
+		dirty: map[string]bool{}}
 }
 
 // SetClock replaces the time source (tests).
@@ -70,39 +69,15 @@ func (r *Recorder) Inc(measure string) {
 // IncLesson counts one view of a lesson. id must already be validated by the caller.
 func (r *Recorder) IncLesson(id string) { r.Inc(lessonPref + id) }
 
-// Seen notes activity by an account, at 1-minute precision, and counts it as active for the IST day
-// the first time. After a restart the stored last-seen date prevents counting it twice.
-func (r *Recorder) Seen(ctx context.Context, betaID string) {
+// Seen notes activity by an account, at 1-minute precision. Flush counts it as active for the IST
+// day, against the stored last-seen time, so instances sharing a store cannot count it twice.
+func (r *Recorder) Seen(_ context.Context, betaID string) {
 	if r == nil {
 		return
 	}
-	now := r.clock()
-	day := auth.DayKey(now)
-
-	r.mu.Lock()
-	_, known := r.dauDay[betaID]
-	r.mu.Unlock()
-	storedDay := ""
-	if !known {
-		_ = r.store.View(ctx, func(tx state.Tx) error {
-			if a, ok := tx.GetAccount(betaID); ok && a.LastSeenAt != nil {
-				storedDay = auth.DayKey(*a.LastSeenAt)
-			}
-			return nil
-		})
-	}
-
-	seen := now.UTC().Truncate(time.Minute)
+	seen := r.clock().UTC().Truncate(time.Minute)
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	prev, known := r.dauDay[betaID]
-	if !known {
-		prev = storedDay
-	}
-	if prev != day {
-		r.delta[dayKey(day, dau)]++
-	}
-	r.dauDay[betaID] = day
 	if !r.lastSeen[betaID].Equal(seen) {
 		r.lastSeen[betaID] = seen
 		r.dirty[betaID] = true
@@ -154,7 +129,9 @@ func (r *Recorder) Flush(ctx context.Context) error {
 		err := r.store.Do(ctx, func(tx state.Tx) error {
 			for id, t := range seen {
 				if a, ok := tx.GetAccount(id); ok && (a.LastSeenAt == nil || a.LastSeenAt.Before(t)) {
-					t := t
+					if day := auth.DayKey(t); a.LastSeenAt == nil || auth.DayKey(*a.LastSeenAt) != day {
+						tx.AddCounter(dayKey(day, dau), 1)
+					}
 					a.LastSeenAt = &t
 					tx.PutAccount(a)
 				}
@@ -330,10 +307,25 @@ func (r *Recorder) Decorate(rows []auth.AccountRow) {
 }
 
 // Sweep deletes daily counters and spend tallies older than the retention period.
-func (r *Recorder) Sweep(_ context.Context, tx state.Tx, now time.Time) {
+func (r *Recorder) Sweep(ctx context.Context, now time.Time) error {
 	cutoff := auth.DayKey(now.Add(-counterRetention))
-	tx.DeleteCountersWhere(func(key string) bool {
-		parts := strings.SplitN(key, ":", 3)
-		return len(parts) >= 2 && (parts[0] == "usage" || parts[0] == "spend") && parts[1] < cutoff
+	var old []string
+	if err := r.store.View(ctx, func(tx state.Tx) error {
+		old = nil
+		for _, prefix := range []string{keyPrefix, "spend:"} {
+			for key := range tx.ListCounters(prefix) {
+				if parts := strings.SplitN(key, ":", 3); len(parts) >= 2 && parts[1] < cutoff {
+					old = append(old, key)
+				}
+			}
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+	_, err := state.DoBatches(ctx, r.store, old, func(tx state.Tx, key string) bool {
+		tx.DeleteCounter(key)
+		return true
 	})
+	return err
 }

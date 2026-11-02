@@ -32,6 +32,11 @@ These decisions apply **only to the beta testing phase** and are reconsidered af
 - Q: How is personal data kept out of feedback? → A: **Two automatic checks.** First, a deterministic rule check rejects any message containing phone numbers, emails, addresses or similar before anything is stored. Second, an AI auditor reviews each stored message before any admin can read it. Nothing reaches an admin without passing both.
 - Q: When does the AI auditor run? → A: **Only when feedback is received.** No feedback means no AI call and no AI cost.
 
+### Session 2026-11-02 (cloud beta decisions, owner)
+
+- Q: May the feedback auditor use a third-party API key under FR-023? → A: **Yes**, if the key is retrieved from Secret Manager at runtime using the Cloud Run service account's own identity, limited to `roles/secretmanager.secretAccessor`. It is never hardcoded, never in a plain environment variable and never in GitHub configuration. Under FR-059, deployment configuration names the secret and does not hold its value. Feedback stays hidden until this is working in staging. Access to cloud services stays managed identity only.
+- Q: Which region does the staging beta use? → A: **`us-central1` (Iowa).** A later GA environment may choose separately.
+
 ## Context: Verified Gaps in the Current Build
 
 These were confirmed in the code on 2026-11-01 and are why this spec exists. They are facts, not requirements.

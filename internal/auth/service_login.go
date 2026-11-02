@@ -3,6 +3,7 @@ package auth
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
 	"ai-foundations-coach/internal/state"
@@ -33,11 +34,15 @@ func (s *Service) Login(ctx context.Context, betaID, password, clientAddr string
 	}
 	if !found {
 		DummyVerify()
-		s.loginFailed(ctx, id, clientAddr, false)
+		if err := s.loginFailed(ctx, id, clientAddr, false); err != nil {
+			return SignedIn{}, err
+		}
 		return SignedIn{}, ErrBadCredentials
 	}
 	if !VerifyPassword(NormalizePassword(password), acct.PasswordHash) {
-		s.loginFailed(ctx, id, clientAddr, true)
+		if err := s.loginFailed(ctx, id, clientAddr, true); err != nil {
+			return SignedIn{}, err
+		}
 		return SignedIn{}, ErrBadCredentials
 	}
 	now := s.now()
@@ -93,7 +98,9 @@ func (s *Service) Validate(ctx context.Context, token string) (SessionInfo, erro
 	}
 	if verdict != nil {
 		// Best effort: drop the dead session so it is not looked up again.
-		_ = s.store.Do(ctx, func(tx state.Tx) error { tx.DeleteSession(h); return nil })
+		if err := s.store.Do(ctx, func(tx state.Tx) error { tx.DeleteSession(h); return nil }); err != nil {
+			slog.Warn("Could not remove a dead session", "error", err.Error())
+		}
 		return SessionInfo{}, verdict
 	}
 	return info, nil

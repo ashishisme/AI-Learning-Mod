@@ -84,9 +84,12 @@ the command shall fetch the raw Markdown from
 `public-content/lessons/<id>.json` and one index to
 `public-content/index.json`, conforming to §6.1 and §6.2.
 
-**FR-ING-05.** The command shall rewrite relative Markdown image and
-link references to `https://raw.githubusercontent.com/microsoft/AI-For-Beginners/<sha>/<resolved-path>`
-so the CSP in NFR-SEC-04 permits them.
+**FR-ING-05 (amended by SPEC-008 FR-033, 2026-11-02).** The command shall
+rewrite relative Markdown links to
+`https://raw.githubusercontent.com/microsoft/AI-For-Beginners/<sha>/<resolved-path>`.
+It shall download every image from that repository at `<sha>` into the content
+directory and rewrite its reference to `/lesson-assets/<content-hash>.<ext>`, so
+the CSP in NFR-SEC-03 permits it and a release is self-contained.
 
 **FR-ING-06.** The command shall strip any `href="javascript:…"` or
 `src="javascript:…"` construct from the ingested Markdown.
@@ -316,7 +319,7 @@ enabled on decoding.
 `X-Frame-Options: DENY`,
 `Referrer-Policy: no-referrer`,
 `Cross-Origin-Opener-Policy: same-origin`,
-`Content-Security-Policy: default-src 'self'; img-src 'self' https://raw.githubusercontent.com data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'`.
+`Content-Security-Policy: default-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'`.
 
 **NFR-SEC-04.** No CORS headers shall be emitted. Origin enforcement is
 same-origin only.
@@ -559,7 +562,7 @@ dependency requires amendment.
 
 **DC-08.** Single container image serves SPA and API on one port.
 
-**DC-09 (amended 2.2.0, 2026-11-01).** Lessons remain static JSON packaged
+**DC-09 (amended 2.3.0, 2026-11-02).** Lessons remain static JSON packaged
 with the release. Server-side persistent state is permitted only for
 (a) access-control records (invites, pseudonymous beta accounts, sessions,
 admin audit entries); (b) operational counters (daily AI spend tally,
@@ -571,8 +574,9 @@ time), with no Beta ID, network address, session or device details, deleted
 automatically after 180 days. It shall contain no personal data and no
 learner question or answer text from the AI tutor, shall be reached only
 through a store interface, shall not use an ORM, and in a hosted deployment
-shall live in a managed serverless store that costs nothing when idle. A
-local file-backed implementation is permitted for development, tests and
+shall live in a managed serverless store with no idle compute or provisioned
+capacity; small storage and backup charges are allowed. A local file-backed
+implementation is permitted for development, tests and
 single-instance self-hosting. Learner progress and preferences remain
 browser-local.
 
@@ -615,8 +619,8 @@ annotation contains the AC ID. Tests live in
 `commitSha`; each `lessons/<id>.json` parses as §6.3.
 
 **AC-02 (FR-ING-05, NFR-SEC-03).** Ingested lessons contain no relative
-image references; all `img` sources are on
-`raw.githubusercontent.com/microsoft/AI-For-Beginners/<sha>/`.
+image references; all `img` sources are bundled `/lesson-assets/` paths
+(amended by SPEC-008 FR-033, 2026-11-02).
 
 **AC-03 (FR-ING-07).** Ingestion without `GITHUB_TOKEN` exits 1.
 

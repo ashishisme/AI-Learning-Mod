@@ -3,7 +3,7 @@
 | AC | Requirement(s) | Test file | Status | Notes |
 |---|---|---|---|---|
 | AC-01 | FR-ING-01..04 | `cmd/ingest/ingest_test.go::TestAC01_IngestOutput` | PASS | Ingest writes index.json with >=20 lessons, dense order, unique ID, 40-hex SHA |
-| AC-02 | FR-ING-05, NFR-SEC-03 | `cmd/ingest/ingest_test.go::TestAC02_NoRelativeImages` | PASS | No relative image references; all img sources on raw.githubusercontent.com |
+| AC-02 | FR-ING-05, NFR-SEC-03 | `cmd/ingest/ingest_test.go::TestAC02_NoRelativeImages` | PASS | No relative image references; all img sources are bundled `/lesson-assets/` paths (SPEC-008 FR-033) |
 | AC-03 | FR-ING-07 | `cmd/ingest/ingest_test.go::TestAC03_MissingTokenExits1` | PASS | Ingest without GITHUB_TOKEN exits 1 |
 | AC-04 | FR-CNT-01, FR-CNT-02 | `internal/api/lessons_test.go::TestAC04_GetLessons` | PASS | GET /api/lessons and /api/lessons/{id} return conformant JSON |
 | AC-05 | FR-CNT-03, FR-CNT-04 | `internal/api/lessons_test.go::TestAC05_PathTraversal` | PASS | Path traversal attempts return 400 or 404, no leak |

@@ -31,3 +31,36 @@ test('users show activity and overview refreshes every 30 seconds while visible'
   await expect(accounts).toContainText('Active now')
   await page.getByTestId('f-sort').selectOption('lastSeen')
 })
+
+test('the budget switch shows on Costs and only a confirmed reset clears it', async ({ page }) => {
+  await mockAdmin(page)
+  let off = true
+  const resets: string[] = []
+  await page.route('**/api/admin/costs', (route) => route.fulfill({
+    json: { generatedAt: '2026-11-02T06:00:00Z', tutorOff: off, hosting: { connected: false, reason: 'Not set up', items: [] },
+      ai: { estimated: true, todayUSD: 0, ceilingUSD: 1, ceilingReached: false, monthToDateUSD: 30, budgetUSD: 30, budgetUsedPct: 100,
+        projectedMonthUSD: null, thresholds: { 50: true, 90: true, 100: true } } },
+  }))
+  await page.route('**/api/admin/tutor/reset', (route) => {
+    resets.push(route.request().headers()['x-csrf-token'] ?? '')
+    off = false
+    return route.fulfill({ json: { ok: true } })
+  })
+  await page.goto('/admin/costs')
+  await expect(page.getByRole('heading', { name: 'The tutor is off' })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Turn the tutor back on' }).click()
+  await expect(page.getByTestId('tutor-reset-dialog')).toContainText('audit trail')
+  await page.getByRole('button', { name: 'Keep it off' }).click()
+  expect(resets).toHaveLength(0)
+  await expect(page.getByTestId('tutor-off')).toBeVisible()
+
+  const button = page.getByRole('button', { name: 'Turn the tutor back on' })
+  const box = await button.boundingBox()
+  expect(box!.height).toBeGreaterThanOrEqual(44) // DC-11
+  await button.click()
+  await page.getByRole('button', { name: 'Turn it back on', exact: true }).click()
+  await expect(page.getByTestId('tutor-off')).toHaveCount(0)
+  expect(resets).toHaveLength(1)
+  expect(resets[0]).not.toBe('')
+})

@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync/atomic"
@@ -16,6 +17,7 @@ import (
 
 	"ai-foundations-coach/internal/spend"
 	"ai-foundations-coach/internal/state"
+	"ai-foundations-coach/internal/state/statetest"
 )
 
 var bg = context.Background()
@@ -44,6 +46,7 @@ type aiServer struct {
 	reply  atomic.Value // string
 	status atomic.Int32
 	bodies chan string
+	auth   atomic.Value // string
 }
 
 func newAIServer(t *testing.T) *aiServer {
@@ -53,6 +56,7 @@ func newAIServer(t *testing.T) *aiServer {
 	s.status.Store(200)
 	s.Server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		s.calls.Add(1)
+		s.auth.Store(r.Header.Get("Authorization"))
 		b, _ := io.ReadAll(r.Body)
 		s.bodies <- string(b)
 		if st := int(s.status.Load()); st != 200 {
@@ -69,10 +73,11 @@ func newAIServer(t *testing.T) *aiServer {
 
 func newEnv(t *testing.T, ai *aiServer, ceiling float64) (*Service, state.Store) {
 	t.Helper()
-	st, err := state.OpenFileStore(filepath.Join(t.TempDir(), "state.json"))
+	fileStore, err := state.OpenFileStore(filepath.Join(t.TempDir(), "state.json"))
 	if err != nil {
 		t.Fatal(err)
 	}
+	st := statetest.Rerunning(fileStore)
 	t.Cleanup(func() { st.Close() })
 	a := NewModelAuditor(AuditorConfig{BaseURL: ai.URL + "/v1", APIKey: "k", Model: "m", Timeout: 2 * time.Second,
 		Tally: spend.New(st, spend.Config{CeilingUSD: ceiling, InputPerMtokUSD: 0.15, OutputPerMtokUSD: 0.60})})
@@ -304,4 +309,82 @@ func TestWorkerRunsOnWakeAndRetriesAfterFailure(t *testing.T) {
 	}
 	cancel()
 	<-done
+}
+
+// A review costs money, so two instances must never review one item at once.
+func TestOnlyOneInstanceReviewsAnItem(t *testing.T) {
+	s, st, _ := newSvc(t)
+	if err := s.Submit(bg, "BETA-A", "", clean); err != nil {
+		t.Fatal(err)
+	}
+	id := only(t, st).ID
+	if claimed, err := s.claim(bg, id); !claimed || err != nil {
+		t.Fatalf("first claim: %v %v", claimed, err)
+	}
+	if claimed, err := s.claim(bg, id); claimed || err != nil {
+		t.Errorf("second claim must be refused: %v %v", claimed, err)
+	}
+	counting := &countingAuditor{}
+	other := NewService(st, counting)
+	other.SetClock(s.clock)
+	if !other.ProcessWaiting(bg) || counting.calls != 0 {
+		t.Errorf("a claimed item must be skipped, calls %d", counting.calls)
+	}
+	// A crashed worker's claim runs out, so the item is not stuck.
+	later := s.now().Add(claimTTL + time.Second)
+	other.SetClock(func() time.Time { return later })
+	if !other.ProcessWaiting(bg) || counting.calls != 1 {
+		t.Errorf("an expired claim must be retried, calls %d", counting.calls)
+	}
+}
+
+type countingAuditor struct{ calls int }
+
+func (c *countingAuditor) Review(context.Context, string) (Verdict, error) {
+	c.calls++
+	return Verdict{Pass: true}, nil
+}
+
+func TestKeyFileIsReadOnEveryReviewAndAFailureKeepsTheItemHidden(t *testing.T) {
+	ai := newAIServer(t)
+	st, err := state.OpenFileStore(filepath.Join(t.TempDir(), "state.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { st.Close() })
+	keyFile := filepath.Join(t.TempDir(), "key")
+	s := NewService(st, NewModelAuditor(AuditorConfig{BaseURL: ai.URL + "/v1", KeyFile: keyFile, Model: "m", Timeout: 2 * time.Second,
+		Tally: spend.New(st, spend.Config{CeilingUSD: 1, InputPerMtokUSD: 0.15, OutputPerMtokUSD: 0.60})}))
+	if err := s.Submit(bg, "BETA-A", "", clean); err != nil {
+		t.Fatal(err)
+	}
+	if s.ProcessWaiting(bg) {
+		t.Error("an unreadable key must count as a failure")
+	}
+	if f := only(t, st); f.Review != state.ReviewWaiting {
+		t.Errorf("the item must stay hidden: %s", f.Review)
+	}
+	if ai.calls.Load() != 0 {
+		t.Error("no AI call without a key")
+	}
+	var spent int64
+	_ = st.View(bg, func(tx state.Tx) error {
+		for _, v := range tx.ListCounters("spend:") {
+			spent += v
+		}
+		return nil
+	})
+	if spent != 0 {
+		t.Errorf("an unreadable key must cost nothing, spent %d", spent)
+	}
+
+	if err := os.WriteFile(keyFile, []byte("rotated-key\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if !s.ProcessWaiting(bg) || only(t, st).Review != state.ReviewPassed {
+		t.Errorf("a key added later must work without a restart: %s", only(t, st).Review)
+	}
+	if got := ai.auth.Load(); got != "Bearer rotated-key" {
+		t.Errorf("Authorization: %v", got)
+	}
 }

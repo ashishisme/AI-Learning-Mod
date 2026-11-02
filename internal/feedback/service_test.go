@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"ai-foundations-coach/internal/state"
+	"ai-foundations-coach/internal/state/statetest"
 )
 
 type stubAuditor struct{ v Verdict }
@@ -19,10 +20,11 @@ func (s stubAuditor) Review(context.Context, string) (Verdict, error) { return s
 
 func newSvc(t *testing.T) (*Service, state.Store, *time.Time) {
 	t.Helper()
-	st, err := state.OpenFileStore(filepath.Join(t.TempDir(), "state.json"))
+	fileStore, err := state.OpenFileStore(filepath.Join(t.TempDir(), "state.json"))
 	if err != nil {
 		t.Fatal(err)
 	}
+	st := statetest.Rerunning(fileStore)
 	t.Cleanup(func() { st.Close() })
 	now := time.Date(2026, 11, 2, 6, 0, 0, 0, time.UTC)
 	s := NewService(st, stubAuditor{Verdict{Pass: true}})
@@ -215,7 +217,9 @@ func TestSweepRetention(t *testing.T) {
 	*now = now.Add(100 * 24 * time.Hour)
 	_ = s.Submit(bg, "BETA-Z", "", clean) // waiting, day 100; not processed
 	sweep := func() {
-		_ = st.Do(bg, func(tx state.Tx) error { s.Sweep(bg, tx, s.now()); return nil })
+		if err := s.Sweep(bg, s.now()); err != nil {
+			t.Fatal(err)
+		}
 	}
 	count := func() int {
 		n := 0

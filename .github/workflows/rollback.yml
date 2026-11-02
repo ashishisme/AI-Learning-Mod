@@ -1,0 +1,49 @@
+# SPEC: FR-030, SC-013
+# One-step rollback of the staging beta to an earlier revision. Each release's summary prints the exact
+# command. Dispatch it on a release tag: the deploy identity only trusts v* tags. There is no reviewer,
+# so a bad release can be undone at once. Target: under 5 minutes.
+name: Roll back staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      revision:
+        description: Revision to send all traffic to
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: staging-release
+  cancel-in-progress: false
+
+jobs:
+  rollback:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v3
+      - name: Move all traffic and check the result
+        env:
+          REVISION: ${{ inputs.revision }}
+          GCP_SERVICE: ${{ vars.GCP_SERVICE }}
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+          GCP_REGION: ${{ vars.GCP_REGION }}
+        run: |
+          [[ "$REVISION" =~ ^[a-z][a-z0-9-]{0,62}$ ]] || { echo "Not a revision name" >&2; exit 1; }
+          args=(--project "$GCP_PROJECT_ID" --region "$GCP_REGION")
+          gcloud run services update-traffic "$GCP_SERVICE" "${args[@]}" --to-revisions "$REVISION=100" --quiet
+          url="$(gcloud run services describe "$GCP_SERVICE" "${args[@]}" --format='value(status.url)')"
+          # Cloud Run does not re-run health checks on a rollback, so this does.
+          ./deploy/scripts/smoke.sh "$url"

@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 	"time"
 
@@ -88,6 +89,7 @@ func parseVerdict(reply string) (Verdict, error) {
 type AuditorConfig struct {
 	BaseURL string
 	APIKey  string
+	KeyFile string // a mounted secret; read on every review, so rotation needs no deploy (FR-023)
 	Model   string
 	Guarded bool // refuse private and metadata addresses (hosted mode, FR-022)
 	Tally   *spend.Tally
@@ -98,6 +100,8 @@ type AuditorConfig struct {
 // shared daily ceiling.
 type ModelAuditor struct {
 	client  *openai.Client
+	config  openai.ClientConfig
+	keyFile string
 	model   string
 	tally   *spend.Tally
 	timeout time.Duration
@@ -115,7 +119,22 @@ func NewModelAuditor(cfg AuditorConfig) *ModelAuditor {
 	if t == 0 {
 		t = 20 * time.Second
 	}
-	return &ModelAuditor{client: openai.NewClientWithConfig(oc), model: cfg.Model, tally: cfg.Tally, timeout: t}
+	return &ModelAuditor{client: openai.NewClientWithConfig(oc), config: oc, keyFile: cfg.KeyFile, model: cfg.Model, tally: cfg.Tally, timeout: t}
+}
+
+// currentClient reads the key file when there is one. A failure keeps the item waiting and hidden.
+func (a *ModelAuditor) currentClient() (*openai.Client, error) {
+	if a.keyFile == "" {
+		return a.client, nil
+	}
+	raw, err := os.ReadFile(a.keyFile)
+	key := strings.TrimSpace(string(raw))
+	if err != nil || key == "" {
+		return nil, errors.New("feedback: the auditor key cannot be read")
+	}
+	cfg := openai.DefaultConfig(key)
+	cfg.BaseURL, cfg.HTTPClient = a.config.BaseURL, a.config.HTTPClient
+	return openai.NewClientWithConfig(cfg), nil
 }
 
 // delimit wraps the message in a marker the message cannot contain, so it cannot close the block.
@@ -129,6 +148,10 @@ func delimit(message string) string {
 }
 
 func (a *ModelAuditor) Review(ctx context.Context, message string) (Verdict, error) {
+	client, err := a.currentClient()
+	if err != nil {
+		return Verdict{}, err // before reserving, so an unreadable key costs nothing
+	}
 	user := delimit(message)
 	estIn := (len(auditorPrompt)+len(user))/3 + 1
 	in, out := estIn, auditorMaxTokens
@@ -141,7 +164,7 @@ func (a *ModelAuditor) Review(ctx context.Context, message string) (Verdict, err
 	}
 	ctx, cancel := context.WithTimeout(ctx, a.timeout)
 	defer cancel()
-	resp, err := a.client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
+	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
 		Model: a.model,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: openai.ChatMessageRoleSystem, Content: auditorPrompt},

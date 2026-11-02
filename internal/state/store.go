@@ -93,6 +93,7 @@ type Feedback struct {
 	WithheldReason string     `json:"withheldReason,omitempty"`
 	ReviewedAt     *time.Time `json:"reviewedAt,omitempty"`
 	ReviewTries    int        `json:"reviewTries"`
+	ClaimedUntil   *time.Time `json:"claimedUntil,omitempty"` // one auditor worker at a time across instances
 }
 
 var (
@@ -143,7 +144,7 @@ type Tx interface {
 	GetCounter(key string) int64
 	AddCounter(key string, delta int64) int64
 	ListCounters(prefix string) map[string]int64
-	DeleteCountersWhere(match func(key string) bool) int
+	DeleteCounter(key string)
 
 	GetAttempts(key string) []time.Time
 	PutAttempts(key string, ts []time.Time) // an empty slice deletes the key
@@ -153,4 +154,32 @@ type Tx interface {
 	GetFeedback(id string) (Feedback, bool)
 	ListFeedback() []Feedback
 	DeleteFeedback(id string)
+}
+
+// batchSize keeps each clean-up transaction short: a long one holds locks against live requests.
+const batchSize = 50
+
+// DoBatches runs fn for each id in short transactions and returns how many it reported as changed.
+// fn must re-check the record, because it may have changed since the id was found.
+func DoBatches(ctx context.Context, st Store, ids []string, fn func(tx Tx, id string) bool) (int, error) {
+	total := 0
+	for len(ids) > 0 {
+		n := min(batchSize, len(ids))
+		changed := 0
+		err := st.Do(ctx, func(tx Tx) error {
+			changed = 0
+			for _, id := range ids[:n] {
+				if fn(tx, id) {
+					changed++
+				}
+			}
+			return nil
+		})
+		if err != nil {
+			return total, err
+		}
+		total += changed
+		ids = ids[n:]
+	}
+	return total, nil
 }

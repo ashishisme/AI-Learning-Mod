@@ -5,10 +5,13 @@ import (
 	"encoding/json"
 	"io/fs"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"ai-foundations-coach/internal/auth"
 	"ai-foundations-coach/internal/cost"
 	"ai-foundations-coach/internal/feedback"
+	"ai-foundations-coach/internal/ingest"
 	"ai-foundations-coach/internal/spend"
 	"ai-foundations-coach/internal/usage"
 )
@@ -46,14 +49,21 @@ type RouterConfig struct {
 	TutorDisabled bool
 	// FeedbackEnabled is reported to the UI; it is true only when the auditor is configured (FR-058).
 	FeedbackEnabled bool
+	// TutorLatch switches the tutor off at the monthly budget until an admin resets it (FR-026), and
+	// BudgetPush lets a verified budget notification trip it. Nil on a self-hosted run.
+	TutorLatch *spend.Latch
+	BudgetPush *BudgetPush
+	// Release is the tag this image was built from, empty outside a release (FR-031).
+	Release string
 }
 
 // RuntimeInfo is what the UI needs to know about this deployment.
 type RuntimeInfo struct {
-	Hosted          bool `json:"hosted"`
-	AuthRequired    bool `json:"authRequired"`
-	TutorEnabled    bool `json:"tutorEnabled"`
-	FeedbackEnabled bool `json:"feedbackEnabled"`
+	Hosted          bool   `json:"hosted"`
+	AuthRequired    bool   `json:"authRequired"`
+	TutorEnabled    bool   `json:"tutorEnabled"`
+	FeedbackEnabled bool   `json:"feedbackEnabled"`
+	Release         string `json:"release,omitempty"`
 }
 
 // RuntimeHandler reports deployment facts the UI needs. It is separate from /api/health,
@@ -83,6 +93,23 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	mux.HandleFunc("GET /api/lessons", lessonsHandler.GetIndex)
 	mux.HandleFunc("GET /api/lessons/{id}", lessonsHandler.GetLesson)
 
+	// Lesson images ship with the release (FR-033). Outside /api, so the session gate does not apply:
+	// like the SPA itself, they hold no lesson text. Names are content hashes, so caching is safe.
+	mux.HandleFunc("GET "+ingest.AssetURLPrefix+"{name}", func(w http.ResponseWriter, r *http.Request) {
+		name := r.PathValue("name")
+		file := filepath.Join(cfg.ContentDir, ingest.AssetDir, name)
+		if !ingest.AssetNameRe.MatchString(name) {
+			http.NotFound(w, r)
+			return
+		}
+		if _, err := os.Stat(file); err != nil {
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+		http.ServeFile(w, r, file)
+	})
+
 	// Health handler
 	mux.HandleFunc("GET /api/health", HealthHandler)
 
@@ -96,6 +123,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	tutorHandler.hosted = cfg.Hosted
 	tutorHandler.enabled = !cfg.TutorDisabled
 	tutorHandler.spend = cfg.Spend
+	tutorHandler.latch = cfg.TutorLatch
 	tutorHandler.usage = cfg.Usage
 	mux.Handle("POST /api/tutor", limiter.Middleware(tutorHandler))
 	mux.Handle("POST /api/tutor/stream", limiter.Middleware(tutorHandler))
@@ -106,11 +134,13 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	}
 
 	registerLearnerExtras(mux, cfg)
+	registerBudgetPush(mux, cfg)
 
 	// Lets the UI hide controls that do not apply on a hosted deployment (FR-021).
 	mux.HandleFunc("GET /api/runtime", RuntimeHandler(RuntimeInfo{
 		Hosted: cfg.Hosted, AuthRequired: cfg.Auth != nil, TutorEnabled: !cfg.TutorDisabled,
 		FeedbackEnabled: cfg.Auth != nil && cfg.FeedbackEnabled,
+		Release:         cfg.Release,
 	}))
 
 	if cfg.Hosted {
@@ -158,6 +188,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	}
 	handler = SecurityHeadersMiddleware(handler)
 	handler = PanicRecoveryMiddleware(handler)
+	handler = RequestIDMiddleware(handler)
 	handler = usageMiddleware(cfg.Usage)(handler) // outermost, so it also counts panics answered with 500
 
 	return handler

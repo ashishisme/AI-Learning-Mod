@@ -14,6 +14,7 @@ import (
 
 	"ai-foundations-coach/internal/auth"
 	"ai-foundations-coach/internal/state"
+	"ai-foundations-coach/internal/state/statetest"
 )
 
 var bg = context.Background()
@@ -26,10 +27,11 @@ func (c *clock) Advance(d time.Duration) { c.t.Add(int64(d)) }
 
 func newRec(t *testing.T) (*Recorder, state.Store, *clock) {
 	t.Helper()
-	st, err := state.OpenFileStore(filepath.Join(t.TempDir(), "state.json"))
+	fileStore, err := state.OpenFileStore(filepath.Join(t.TempDir(), "state.json"))
 	if err != nil {
 		t.Fatal(err)
 	}
+	st := statetest.Rerunning(fileStore)
 	t.Cleanup(func() { st.Close() })
 	c := &clock{}
 	c.Set(time.Date(2026, 11, 2, 6, 0, 0, 0, time.UTC)) // 11:30 IST
@@ -150,6 +152,12 @@ func TestReportMergesFlushedAndPending(t *testing.T) {
 	r.IncLesson("2-symbolic")
 	addAccount(t, st, "BETA-AAAA-AAAA", nil)
 	r.Seen(bg, "BETA-AAAA-AAAA")
+	seen := New(st) // daily-active counts reach the store at flush; the rest above stay pending
+	seen.SetClock(c.Now)
+	seen.Seen(bg, "BETA-AAAA-AAAA")
+	if err := seen.Flush(bg); err != nil {
+		t.Fatal(err)
+	}
 
 	rep, err := r.Report(bg, 7)
 	if err != nil {
@@ -262,9 +270,11 @@ func TestSweepDropsOldCounters(t *testing.T) {
 		tx.AddCounter("usage:2026-10-01:req", 1)
 		tx.AddCounter("spend:2026-10-01", 1)
 		tx.AddCounter("other:2025-01-01", 1)
-		r.Sweep(bg, tx, c.Now())
 		return nil
 	})
+	if err := r.Sweep(bg, c.Now()); err != nil {
+		t.Fatal(err)
+	}
 	got := counters(t, st)
 	if _, ok := got["usage:2025-01-01:req"]; ok {
 		t.Error("old usage counter kept")
@@ -276,5 +286,40 @@ func TestSweepDropsOldCounters(t *testing.T) {
 		if _, ok := got[keep]; !ok {
 			t.Errorf("%s must stay", keep)
 		}
+	}
+}
+
+// Two instances sharing a store must count one account once a day, and each must see the other's
+// flushed activity as "active now".
+func TestInstancesSharingAStoreCountAnAccountOnce(t *testing.T) {
+	one, st, c := newRec(t)
+	two := New(st)
+	two.SetClock(c.Now)
+	addAccount(t, st, "BETA-AAAA-AAAA", nil)
+	one.Seen(bg, "BETA-AAAA-AAAA")
+	two.Seen(bg, "BETA-AAAA-AAAA")
+	c.Advance(time.Minute)
+	two.Seen(bg, "BETA-AAAA-AAAA")
+	if err := one.Flush(bg); err != nil {
+		t.Fatal(err)
+	}
+	if err := two.Flush(bg); err != nil {
+		t.Fatal(err)
+	}
+	if got := counters(t, st)["usage:2026-11-02:dau"]; got != 1 {
+		t.Errorf("one account on two instances: %d, want 1", got)
+	}
+	var seen *time.Time
+	_ = st.View(bg, func(tx state.Tx) error {
+		a, _ := tx.GetAccount("BETA-AAAA-AAAA")
+		seen = a.LastSeenAt
+		return nil
+	})
+	three := New(st)
+	three.SetClock(c.Now)
+	rows := []auth.AccountRow{{BetaID: "BETA-AAAA-AAAA", LastSeenAt: seen}}
+	three.Decorate(rows)
+	if !rows[0].ActiveNow {
+		t.Error("an instance must see activity flushed by another")
 	}
 }

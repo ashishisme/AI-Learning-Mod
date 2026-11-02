@@ -63,7 +63,7 @@ func openPath(path string) bool {
 	if !strings.HasPrefix(path, "/api/") {
 		return true
 	}
-	return path == "/api/health" || path == "/api/runtime" ||
+	return path == "/api/health" || path == "/api/runtime" || path == budgetPushPath ||
 		strings.HasPrefix(path, "/api/auth/") || strings.HasPrefix(path, "/api/admin/")
 }
 

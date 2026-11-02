@@ -4,16 +4,22 @@ package statetest
 
 import (
 	"context"
+	"errors"
 	"fmt"
-	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"sync"
 	"testing"
 	"time"
 
 	"ai-foundations-coach/internal/state"
 )
+
+// Racers is how many goroutines the race tests use. The contract is 50. The emulator sets fewer: Google
+// states it does not mimic production transactions, and at 50 writers on one document its locking
+// livelocks (measured 2026-11-02: 20 succeed, 50 do not). Production proof is SPEC-008 T120.
+var Racers = 50
 
 // Opener opens (or reopens) a store at path.
 type Opener func(path string) (state.Store, error)
@@ -59,7 +65,7 @@ func RunStoreTests(t *testing.T, open Opener) {
 		var mu sync.Mutex
 		seen := map[int64]bool{}
 		var wg sync.WaitGroup
-		for i := 0; i < 50; i++ {
+		for i := 0; i < Racers; i++ {
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
@@ -75,8 +81,8 @@ func RunStoreTests(t *testing.T, open Opener) {
 		}
 		wg.Wait()
 		_ = s.View(ctx, func(tx state.Tx) error {
-			if tx.GetCounter("c") != 50 || len(seen) != 50 {
-				t.Errorf("counter %d, distinct reads %d, want 50 and 50", tx.GetCounter("c"), len(seen))
+			if tx.GetCounter("c") != int64(Racers) || len(seen) != Racers {
+				t.Errorf("counter %d, distinct reads %d, want %d and %d", tx.GetCounter("c"), len(seen), Racers, Racers)
 			}
 			return nil
 		})
@@ -92,11 +98,13 @@ func RunStoreTests(t *testing.T, open Opener) {
 		var wins int
 		var mu sync.Mutex
 		var wg sync.WaitGroup
-		for i := 0; i < 50; i++ {
+		for i := 0; i < Racers; i++ {
 			wg.Add(1)
 			go func(i int) {
 				defer wg.Done()
-				_ = s.Do(ctx, func(tx state.Tx) error {
+				won := false
+				err := s.Do(ctx, func(tx state.Tx) error {
+					won = false // a transaction may run more than once
 					inv, ok := tx.GetInviteByHash("h1")
 					if !ok || inv.Status != state.InvitePending {
 						return nil
@@ -104,11 +112,14 @@ func RunStoreTests(t *testing.T, open Opener) {
 					inv.Status = state.InviteUsed
 					tx.PutInvite(inv)
 					tx.PutAccount(state.Account{BetaID: fmt.Sprintf("BETA-%04d-AAAA", i)})
+					won = true
+					return nil
+				})
+				if err == nil && won {
 					mu.Lock()
 					wins++
 					mu.Unlock()
-					return nil
-				})
+				}
 			}(i)
 		}
 		wg.Wait()
@@ -125,7 +136,7 @@ func RunStoreTests(t *testing.T, open Opener) {
 		defer s.Close()
 		const cap = 10
 		var wg sync.WaitGroup
-		for i := 0; i < 50; i++ {
+		for i := 0; i < Racers; i++ {
 			wg.Add(1)
 			go func(i int) {
 				defer wg.Done()
@@ -196,10 +207,6 @@ func RunStoreTests(t *testing.T, open Opener) {
 		if err := s.Flush(ctx); err != nil {
 			t.Fatal(err)
 		}
-		raw, err := os.ReadFile(path)
-		if err != nil || len(raw) == 0 {
-			t.Fatalf("state file unreadable: %v", err)
-		}
 		s.Close()
 		s2 := mustOpen(t, open, path)
 		defer s2.Close()
@@ -211,15 +218,151 @@ func RunStoreTests(t *testing.T, open Opener) {
 		})
 	})
 
-	t.Run("corrupt file is rejected", func(t *testing.T) {
-		path := newPath(t)
-		if err := os.WriteFile(path, []byte("{not json"), 0o600); err != nil {
+	t.Run("transaction reads its own writes", func(t *testing.T) {
+		s := mustOpen(t, open, newPath(t))
+		defer s.Close()
+		err := s.Do(ctx, func(tx state.Tx) error {
+			tx.PutAccount(state.Account{BetaID: "BETA-AAAA-FFFF", Label: "new"})
+			if a, ok := tx.GetAccount("BETA-AAAA-FFFF"); !ok || a.Label != "new" {
+				t.Errorf("own write not visible: %+v", a)
+			}
+			if n := len(tx.ListAccounts()); n != 1 {
+				t.Errorf("own write missing from a list: %d", n)
+			}
+			tx.AddCounter("own", 2)
+			if got := tx.AddCounter("own", 3); got != 5 || tx.GetCounter("own") != 5 {
+				t.Errorf("counter = %d", got)
+			}
+			tx.DeleteAccount("BETA-AAAA-FFFF")
+			if _, ok := tx.GetAccount("BETA-AAAA-FFFF"); ok || len(tx.ListAccounts()) != 0 {
+				t.Error("own delete not visible")
+			}
+			return nil
+		})
+		if err != nil {
 			t.Fatal(err)
 		}
-		if s, err := open(path); err == nil {
-			s.Close()
-			t.Fatal("a corrupt state file was accepted")
+	})
+
+	t.Run("lookups, queries and deletes by field", func(t *testing.T) {
+		s := mustOpen(t, open, newPath(t))
+		defer s.Close()
+		now := time.Now().UTC()
+		if err := s.Do(ctx, func(tx state.Tx) error {
+			tx.PutInvite(state.Invite{ID: "i1", TokenHash: "hash1", Status: state.InvitePending, CreatedAt: now})
+			tx.PutSession(state.Session{TokenHash: "s1", BetaID: "A"})
+			tx.PutSession(state.Session{TokenHash: "s2", BetaID: "A"})
+			tx.PutSession(state.Session{TokenHash: "s3", BetaID: "B"})
+			tx.PutAttempts("ip:x/y", []time.Time{now})
+			tx.AddCounter("usage:a/b:1", 1)
+			tx.AddCounter("usage:a/b:2", 1)
+			tx.AddCounter("other", 1)
+			return nil
+		}); err != nil {
+			t.Fatal(err)
 		}
+		_ = s.View(ctx, func(tx state.Tx) error {
+			if in, ok := tx.GetInviteByHash("hash1"); !ok || in.ID != "i1" {
+				t.Errorf("by hash: %+v", in)
+			}
+			if in, ok := tx.GetInviteByID("i1"); !ok || in.TokenHash != "hash1" {
+				t.Errorf("by id: %+v", in)
+			}
+			if tx.CountSessionsFor("A") != 2 || len(tx.ListSessions()) != 3 {
+				t.Errorf("sessions: %d of %d", tx.CountSessionsFor("A"), len(tx.ListSessions()))
+			}
+			if got := tx.ListCounters("usage:"); len(got) != 2 || got["usage:a/b:1"] != 1 {
+				t.Errorf("counters by prefix: %v", got)
+			}
+			if keys := tx.ListAttemptKeys(); len(keys) != 1 || keys[0] != "ip:x/y" {
+				t.Errorf("attempt keys: %v", keys)
+			}
+			return nil
+		})
+		if err := s.Do(ctx, func(tx state.Tx) error {
+			tx.DeleteInvite("i1")
+			tx.DeleteSessionsFor("A")
+			tx.DeleteCounter("usage:a/b:1")
+			tx.PutAttempts("ip:x/y", nil)
+			return nil
+		}); err != nil {
+			t.Fatal(err)
+		}
+		_ = s.View(ctx, func(tx state.Tx) error {
+			if _, ok := tx.GetInviteByHash("hash1"); ok {
+				t.Error("invite not deleted")
+			}
+			if tx.CountSessionsFor("A") != 0 || tx.CountSessionsFor("B") != 1 {
+				t.Error("DeleteSessionsFor removed the wrong sessions")
+			}
+			if len(tx.ListCounters("usage:")) != 1 || len(tx.ListAttemptKeys()) != 0 {
+				t.Error("counter or attempts not deleted")
+			}
+			return nil
+		})
+	})
+
+	t.Run("hostile ids find nothing and break nothing", func(t *testing.T) {
+		s := mustOpen(t, open, newPath(t))
+		defer s.Close()
+		hostile := []string{"", ".", "..", "../sessions/x", "a/b", "__name__", "BETA AAAA", strings.Repeat("x", 3000)}
+		err := s.View(ctx, func(tx state.Tx) error {
+			for _, id := range hostile {
+				if _, ok := tx.GetAccount(id); ok {
+					t.Errorf("account found for %q", id)
+				}
+				if _, ok := tx.GetInviteByHash(id); ok {
+					t.Errorf("invite found for %q", id)
+				}
+				if _, ok := tx.GetFeedback(id); ok {
+					t.Errorf("feedback found for %q", id)
+				}
+			}
+			return nil
+		})
+		if err != nil {
+			t.Fatalf("a hostile id must read as missing, not fail: %v", err)
+		}
+	})
+
+	t.Run("audit order survives separate transactions", func(t *testing.T) {
+		s := mustOpen(t, open, newPath(t))
+		defer s.Close()
+		at := time.Date(2026, 11, 2, 10, 0, 0, 0, time.UTC)
+		for i := 0; i < 3; i++ {
+			if err := s.Do(ctx, func(tx state.Tx) error {
+				tx.AppendAudit(state.AuditEntry{At: at, Actor: "a", Action: fmt.Sprint(i)})
+				return nil
+			}); err != nil {
+				t.Fatal(err)
+			}
+		}
+		_ = s.View(ctx, func(tx state.Tx) error {
+			got := tx.ListAudit(0, "")
+			if len(got) != 3 || got[0].Action != "2" || got[2].Action != "0" {
+				t.Errorf("audit order: %+v", got)
+			}
+			return nil
+		})
+	})
+
+	t.Run("a closure that runs twice keeps nothing from the first run", func(t *testing.T) {
+		s := Rerunning(mustOpen(t, open, newPath(t)))
+		defer s.Close()
+		runs := 0
+		if err := s.Do(ctx, func(tx state.Tx) error {
+			runs++
+			tx.AddCounter("c", 1)
+			return nil
+		}); err != nil {
+			t.Fatal(err)
+		}
+		_ = s.View(ctx, func(tx state.Tx) error {
+			if runs != 2 || tx.GetCounter("c") != 1 {
+				t.Errorf("runs %d, counter %d, want 2 and 1", runs, tx.GetCounter("c"))
+			}
+			return nil
+		})
 	})
 
 	t.Run("view is read only", func(t *testing.T) {
@@ -307,6 +450,31 @@ func RunStoreTests(t *testing.T, open Opener) {
 			return nil
 		})
 	})
+}
+
+// Rerunning makes every Do and DoCounters run fn twice, rolling the first run back, so a closure that
+// is not safe to re-run shows up in the tests of the code that wrote it (contracts/store.md rule 7).
+func Rerunning(s state.Store) state.Store { return rerunning{s} }
+
+type rerunning struct{ state.Store }
+
+var errFirstRun = errors.New("statetest: first run is always rolled back")
+
+func discard(fn func(state.Tx) error) func(state.Tx) error {
+	return func(tx state.Tx) error {
+		_ = fn(tx)
+		return errFirstRun
+	}
+}
+
+func (r rerunning) Do(ctx context.Context, fn func(state.Tx) error) error {
+	_ = r.Store.Do(ctx, discard(fn))
+	return r.Store.Do(ctx, fn)
+}
+
+func (r rerunning) DoCounters(ctx context.Context, fn func(state.Tx) error) error {
+	_ = r.Store.DoCounters(ctx, discard(fn))
+	return r.Store.DoCounters(ctx, fn)
 }
 
 func reverse(in []string) []string {

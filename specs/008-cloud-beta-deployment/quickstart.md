@@ -75,7 +75,7 @@ Logs (`logs/server.log`) must contain no passwords, tokens or cookies.
 
 ## 5. Deployment note
 
-The file store is for one instance with a persistent volume. Do not run it on ephemeral storage or with more than one instance until the managed store adapter exists.
+The file store is for one instance with a persistent volume, and Cloud Run refuses it. Hosted deployments use `STATE_BACKEND=firestore`; see [cloud-beta-design.md](./cloud-beta-design.md).
 
 ## Results (local real-server walkthrough, 2026-11-02)
 
@@ -86,7 +86,7 @@ Started `go run ./cmd/devidp` on `127.0.0.1:9100` and `go run ./cmd/server` on `
 | 1 | PASS | Signed-out admin screen; `GET /api/lessons` returned 401 |
 | 2 | PASS | Fake OIDC sign-in returned to the admin console; initial seat count was zero |
 | 3 | PASS | Admin created three invites; seats rose to three; a later UI pass downloaded invite CSV |
-| 4 | PARTIAL | Fresh browser activated an invite, loaded lessons and enabled “I've saved it” after Copy; the exact IST expiry display was not checked against the clock |
+| 4 | PASS | Fresh browser activated an invite; Beta ID and password shown once, "I've saved it" stayed disabled until Copy; shown expiry was exactly two calendar months on in IST (2 January 2027) |
 | 5 | PASS | Reusing the invite returned 409 |
 | 6 | PASS | Logout denied lesson access; clearing progress removed the browser key; credentials signed in from a second browser |
 | 7 | PASS | Ten wrong passwords caused the next correct attempt to return 429 |
@@ -96,12 +96,12 @@ Started `go run ./cmd/devidp` on `127.0.0.1:9100` and `go run ./cmd/server` on `
 | 11 | PASS | With `SEAT_CAP=5`, a six-invite request returned 409 and created no seats |
 | 12 | PASS | Hosted runtime reported tutor off; an authenticated tutor request returned 503 `tutor disabled` |
 | 13 | PASS | With `MOCK_TUTOR=true` and a $0.002 ceiling, the third long question returned “The tutor is resting until tomorrow.” |
-| 14 | PARTIAL | Live usage endpoint reported series and the real Usage tab rendered; one-minute freshness was not timed |
+| 14 | PASS | A lesson view and daily-active count reached the real Usage tab in 25 seconds (file) and 28 seconds (Firestore fake), inside the one-minute limit; no Beta ID or network address on the page |
 | 15 | PASS | Live Users table had last seen, devices and active-now columns; group/status filtering returned matching accounts |
-| 16 | PARTIAL | Live Costs tab showed estimated AI spend and “not connected” hosting; month projection after day 3 was not checked against a real-server clock |
+| 16 | PASS | Live Costs tab showed estimated AI spend, the 50/90/100 thresholds and "not connected" hosting with no amount. Run on day 2, it correctly showed "Available after day 3"; the projection from day 4 is proven by `TestProjectionOnlyFromDayFour` with an injected clock |
 | 17 | PASS | Rule check refused a phone number without storing it; a clean item appeared only after AI audit; a school-name item was withheld and its text erased; auditor outage kept new text hidden; aging waiting items eight days and restarting deleted them |
 | 18 | PASS | The sixth feedback submission within an hour returned 429 |
-| 19 | PARTIAL | Live admin API marked read/resolved, exported CSV, deleted the item and recorded all three audit actions; UI confirmation was covered by mocked browser tests only |
+| 19 | PASS | Real feedback sent through the UI and passed by a fake auditor. In the real admin UI: marked read, then resolved, exported a CSV holding only the passed item and no Beta ID, deleted it, and the Audit tab listed `feedback.status`, `feedback.export` and `feedback.delete` |
 | 20 | PASS | Restart retained accounts, invite seats, feedback held counts and AI spend tally |
 
-T099 remains open until the partial and unrun scenarios are exercised end to end.
+Scenarios 4, 14, 16 and 19 were rerun in a real browser on 2026-11-02 against a fresh server build, on the file store and on the Firestore adapter (against the in-process fake, not real Firestore). Neither server log held an error, a credential or a Beta ID. The other scenarios were not repeated after the later store changes; the Go and browser suites cover them.

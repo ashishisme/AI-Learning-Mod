@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useSettingsStore, useThemeStore, useRuntimeStore, AISettings } from '../store'
 import { testAIConfig, syncCurriculum, ConfigTestResult, IngestSyncResult } from '../api'
 import pkg from '../../package.json'
-import { formatBuild } from '../buildInfo'
+import { buildInfo, formatBuild } from '../buildInfo'
 
 export const SettingsModal: React.FC = () => {
   const { settings, isDrawerOpen, setDrawerOpen, updateSettings, resetDefaults } = useSettingsStore()
@@ -513,7 +513,7 @@ export const SettingsModal: React.FC = () => {
             <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
             <span className="font-semibold text-slate-300">AI Foundations Coach</span>
             <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800/60 font-bold">
-              v{pkg.version}
+              {buildInfo.release || `v${pkg.version}`}
             </span>
           </div>
           <div className="text-[10px] text-slate-400 font-mono" data-testid="settings-build-info">
