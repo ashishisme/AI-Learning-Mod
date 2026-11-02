@@ -6,6 +6,20 @@ REPO="ashishisme/AI-Learning-Mod"
 OAUTH_CLIENT_SECRET="<YOUR_GOOGLE_OAUTH_CLIENT_SECRET>"
 
 echo "================================================================"
+echo "🔧 Ensuring Terraform is installed..."
+echo "================================================================"
+if ! command -v terraform &> /dev/null || ! terraform version &> /dev/null; then
+  echo "Terraform not found or Cloud Shell shim detected. Installing official Terraform binary..."
+  mkdir -p "$HOME/bin"
+  ARCH="$(dpkg --print-architecture 2>/dev/null || echo "amd64")"
+  curl -fsSL "https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_${ARCH}.zip" -o /tmp/tf.zip
+  unzip -q -o /tmp/tf.zip -d "$HOME/bin"
+  export PATH="$HOME/bin:$PATH"
+  rm -f /tmp/tf.zip
+  echo "✅ Terraform $(terraform version -json | grep -o '"version":[^,]*' || echo 'installed') ready."
+fi
+
+echo "================================================================"
 echo "🚀 1. Initializing and Applying Terraform in deploy/terraform..."
 echo "================================================================"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../deploy/terraform" && pwd)"
