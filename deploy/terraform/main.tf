@@ -350,12 +350,12 @@ resource "google_logging_project_exclusion" "request_logs" {
   depends_on  = [google_project_service.apis]
 }
 
-resource "google_logging_project_bucket_config" "default" {
-  project        = var.project_id
-  location       = "global"
-  bucket_id      = "_Default"
-  retention_days = 30 # FR-038
-}
+# resource "google_logging_project_bucket_config" "default" {
+#   project        = var.project_id
+#   location       = "global"
+#   bucket_id      = "_Default"
+#   retention_days = 30 # FR-038
+# }
 
 # ---- alerts
 
