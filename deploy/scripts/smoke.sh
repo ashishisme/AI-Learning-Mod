@@ -27,7 +27,14 @@ headers="$(curl -sS --max-time 20 -D - -o /dev/null "$base/")"
 echo "$headers" | grep -qi '^HTTP/.* 200' || fail "the app did not load"
 csp="$(echo "$headers" | grep -i '^content-security-policy:' || true)"
 [ -n "$csp" ] || fail "no CSP header"
-case "$csp" in *http*|*data:*) fail "CSP allows another origin: $csp" ;; esac
+# FR-034: the only other hosts allowed are the learner's own computer, for their local AI (FR-021a).
+read -ra sources <<< "$(echo "${csp#*:}" | tr ';\r' '  ')"
+for s in "${sources[@]}"; do
+  case "$s" in
+    'http://localhost:*'|'http://127.0.0.1:*') ;;
+    *http*|*data:*) fail "CSP allows another origin: $csp" ;;
+  esac
+done
 
 code="$(curl -sS --max-time 20 -o /dev/null -w '%{http_code}' "$base/api/lessons")"
 [ "$code" = "401" ] || fail "lessons without a session returned $code, want 401"
