@@ -3,7 +3,8 @@ set -euo pipefail
 
 PROJECT_ID="ai-learning-513415"
 REPO="ashishisme/AI-Learning-Mod"
-OAUTH_CLIENT_SECRET="<YOUR_GOOGLE_OAUTH_CLIENT_SECRET>"
+# Never commit the real value: export OAUTH_CLIENT_SECRET in your shell before running.
+OAUTH_CLIENT_SECRET="${OAUTH_CLIENT_SECRET:-}"
 
 echo "================================================================"
 echo "🔧 Ensuring Terraform is installed..."
@@ -25,22 +26,53 @@ echo "================================================================"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../deploy/terraform" && pwd)"
 cd "${DIR}"
 
+# The official binary falls back to the Cloud Shell metadata server, which can
+# return an empty token ("invalid token JSON from metadata: EOF"). Hand Terraform
+# the gcloud user's token instead (valid ~1h, enough for one apply).
+if [ -z "${GOOGLE_OAUTH_ACCESS_TOKEN:-}" ]; then
+  GOOGLE_OAUTH_ACCESS_TOKEN="$(gcloud auth print-access-token)" || {
+    echo "❌ gcloud is not authenticated. Run: gcloud auth login && gcloud config set project ${PROJECT_ID}" >&2
+    exit 1
+  }
+  export GOOGLE_OAUTH_ACCESS_TOKEN
+fi
+
 terraform init
-terraform apply -auto-approve
+
+# Cloud Run refuses to mount a secret with no versions, so create the secrets
+# and fill them before the full apply creates or updates the service.
+terraform apply -auto-approve \
+  -target=google_secret_manager_secret.session_secret \
+  -target=google_secret_manager_secret.oidc_client_secret
 
 echo ""
 echo "================================================================"
-echo "🔐 2. Populating Secrets in Secret Manager..."
+echo "🔐 2. Populating Secrets in Secret Manager (only if empty)..."
 echo "================================================================"
-# Upload random 32-byte session secret
-head -c 32 /dev/urandom | base64 | tr -d '\n' | gcloud secrets versions add ai-foundations-coach-session-secret \
-  --project="${PROJECT_ID}" \
-  --data-file=-
+has_version() {
+  [ -n "$(gcloud secrets versions list "$1" --project="${PROJECT_ID}" --filter='state=ENABLED' --limit=1 --format='value(name)')" ]
+}
 
-# Upload OAuth client secret securely
-printf "%s" "${OAUTH_CLIENT_SECRET}" | gcloud secrets versions add ai-foundations-coach-oidc-client-secret \
-  --project="${PROJECT_ID}" \
-  --data-file=-
+# Random 32-byte session secret. Skipped on re-runs so existing sessions survive.
+if ! has_version ai-foundations-coach-session-secret; then
+  head -c 32 /dev/urandom | base64 | tr -d '\n' | gcloud secrets versions add ai-foundations-coach-session-secret \
+    --project="${PROJECT_ID}" --data-file=-
+fi
+
+if ! has_version ai-foundations-coach-oidc-client-secret; then
+  if [ -z "${OAUTH_CLIENT_SECRET}" ]; then
+    echo "❌ Set OAUTH_CLIENT_SECRET (Google OAuth client secret) and re-run." >&2
+    exit 1
+  fi
+  printf "%s" "${OAUTH_CLIENT_SECRET}" | gcloud secrets versions add ai-foundations-coach-oidc-client-secret \
+    --project="${PROJECT_ID}" --data-file=-
+fi
+
+echo ""
+echo "================================================================"
+echo "🚀 Applying the rest of the infrastructure..."
+echo "================================================================"
+terraform apply -auto-approve
 
 echo ""
 echo "================================================================"
