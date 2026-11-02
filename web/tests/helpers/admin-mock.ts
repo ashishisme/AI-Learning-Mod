@@ -22,7 +22,7 @@ interface Opts {
 export async function mockAdmin(page: Page, opts: Opts = {}) {
   const reqs: Req[] = []
   let meCalls = 0
-  await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, authRequired: true, tutorEnabled: false, feedbackEnabled: false } }))
+  await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, authRequired: true, tutorEnabled: false, feedbackEnabled: Boolean(opts.feedback) } }))
   await page.route('**/api/auth/session', (r) => r.fulfill({ json: { authenticated: false } }))
   await page.route('**/api/auth/admin/logout', (r) => {
     reqs.push(toReq(r))

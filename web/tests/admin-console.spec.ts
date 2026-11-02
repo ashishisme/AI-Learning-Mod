@@ -39,7 +39,8 @@ test.describe('SPEC-008 US2 admin shell', () => {
     await page.goto('/admin')
     await expect(page.getByTestId('admin-email')).toHaveText('owner@example.org')
     const tabs = page.getByRole('navigation', { name: 'Admin sections' }).getByRole('link')
-    await expect(tabs).toHaveText(['Overview', 'Users and Invites', 'Usage', 'Costs', 'Feedback', 'Audit'])
+    // Feedback is off in this mock, so its tab is hidden (FR-058).
+    await expect(tabs).toHaveText(['Overview', 'Users and Invites', 'Usage', 'Costs', 'Audit'])
     await expect(page.getByRole('link', { name: 'Overview' })).toHaveAttribute('aria-current', 'page')
     await expect(page.getByRole('heading', { name: 'Overview' })).toBeVisible()
     await page.getByRole('link', { name: 'Audit' }).click()

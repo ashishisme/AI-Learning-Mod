@@ -57,7 +57,8 @@ for (const theme of ['light', 'dark'] as const) {
 
   test(`admin tabs fit mobile viewport in ${theme} mode`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
-    await mockAdmin(page)
+    // Feedback on, so every tab is checked.
+    await mockAdmin(page, { feedback: () => ({ items: [], total: 0, unread: 0, held: { waiting: 0, withheld: 0, byReason: {} } }) })
     await page.goto('/admin')
     if (theme === 'dark') await page.evaluate(() => document.documentElement.classList.add('dark'))
     await expect(page.getByText('312 / 1000')).toBeVisible()

@@ -37,6 +37,14 @@ test('admin sees only passed items, held counts, status controls and CSV export'
   await expect.poll(() => mock.posts().some((r) => r.path === '/api/admin/feedback/f1/status' && (r.body as { status: string }).status === 'read')).toBe(true)
 })
 
+test('admin console hides Feedback and shows no error when the auditor is not configured', async ({ page }) => {
+  await mockAdmin(page)
+  await page.goto('/admin/feedback')
+  await expect(page.getByTestId('feedback-off')).toBeVisible()
+  await expect(page.getByRole('navigation', { name: 'Admin sections' }).getByRole('link', { name: /Feedback/ })).toHaveCount(0)
+  await expect(page.getByText('is not valid JSON')).toHaveCount(0)
+})
+
 test('learner sees the hourly feedback limit without losing the draft', async ({ page }) => {
   await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, authRequired: true, tutorEnabled: false, feedbackEnabled: true } }))
   await page.route('**/api/auth/session', (r) => r.fulfill({ json: session }))

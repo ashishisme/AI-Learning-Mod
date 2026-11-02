@@ -9,6 +9,7 @@ import { Overview } from './Overview'
 import { Usage } from './Usage'
 import { Costs } from './Costs'
 import { FeedbackInbox } from './FeedbackInbox'
+import { useRuntimeStore } from '../../store'
 
 const ERRORS: Record<string, string> = {
   state: 'The sign-in link expired. Please try again.',
@@ -40,6 +41,14 @@ const Later: React.FC<{ title: string }> = ({ title }) => (
   </section>
 )
 
+// The server only has feedback routes once the AI auditor is configured (FR-058, O2).
+const FeedbackOff: React.FC = () => (
+  <section aria-labelledby="feedback-off-h" className="rounded-lg border border-slate-300 dark:border-slate-700 p-6">
+    <h2 id="feedback-off-h" className="text-lg font-bold mb-1">Feedback is off</h2>
+    <p data-testid="feedback-off" className="text-sm text-slate-700 dark:text-slate-300">Learners can send feedback once the AI auditor is configured.</p>
+  </section>
+)
+
 export const AdminLayout: React.FC = () => {
   const [me, setMe] = useState<{ email: string } | null>(null)
   const [state, setState] = useState<'loading' | 'out' | 'in' | 'unavailable'>('loading')
@@ -48,6 +57,7 @@ export const AdminLayout: React.FC = () => {
   const errorKey = params.get('error')
   const [outError, setOutError] = useState('')
   const [feedbackUnread, setFeedbackUnread] = useState(0)
+  const feedbackEnabled = useRuntimeStore((s) => s.feedbackEnabled)
 
   useEffect(() => {
     const expired = () => { setMe(null); setState('out'); navigate('/admin', { replace: true }) }
@@ -56,7 +66,7 @@ export const AdminLayout: React.FC = () => {
   }, [navigate])
 
   useEffect(() => {
-    if (state !== 'in') return
+    if (state !== 'in' || !feedbackEnabled) return
     let live = true
     const refresh = () => {
       if (document.visibilityState !== 'visible') return
@@ -67,7 +77,7 @@ export const AdminLayout: React.FC = () => {
     refresh()
     const timer = window.setInterval(refresh, 30_000)
     return () => { live = false; window.clearInterval(timer) }
-  }, [state])
+  }, [state, feedbackEnabled])
 
   useEffect(() => {
     adminMe()
@@ -146,7 +156,7 @@ export const AdminLayout: React.FC = () => {
         </div>
       </div>
       <nav aria-label="Admin sections" className="mb-6 flex overflow-x-auto border-b border-slate-300 dark:border-slate-700">
-        {TABS.map(([to, label, end]) => (
+        {TABS.filter(([to]) => feedbackEnabled || to !== '/admin/feedback').map(([to, label, end]) => (
           <NavLink key={to} to={to} end={end} className={tabCls}>
             {label}{label === 'Feedback' && feedbackUnread > 0 ? ` (${feedbackUnread})` : ''}
           </NavLink>
@@ -157,7 +167,7 @@ export const AdminLayout: React.FC = () => {
         <Route path="users" element={<UsersInvites />} />
         <Route path="usage" element={<Usage />} />
         <Route path="costs" element={<Costs />} />
-        <Route path="feedback" element={<FeedbackInbox unreadChanged={setFeedbackUnread} />} />
+        <Route path="feedback" element={feedbackEnabled ? <FeedbackInbox unreadChanged={setFeedbackUnread} /> : <FeedbackOff />} />
         <Route path="audit" element={<Audit />} />
         <Route path="*" element={<Later title="Not found" />} />
       </Routes>
