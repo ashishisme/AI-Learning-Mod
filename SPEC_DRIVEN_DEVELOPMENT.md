@@ -68,13 +68,11 @@ graph TD
     Client["Browser UI (React 18 + Vite + Zustand)"]
     Server["Go 1.23 HTTP Server (cmd/server)"]
     Content["Local Content Store (public-content/)"]
-    UpstreamGit["GitHub API (microsoft/AI-For-Beginners)"]
     Ollama["Local Ollama Daemon (http://localhost:11434)"]
     OpenAI["OpenAI / Custom Cloud API Gateway"]
 
     Client -->|Static Assets & API Requests| Server
     Server -->|Serve Lessons & Index| Content
-    Server -->|POST /api/ingest/sync| UpstreamGit
     Server -->|Tutor Ingestion & Inquiries| Ollama
     Server -->|Fallback or Cloud Mode| OpenAI
 ```

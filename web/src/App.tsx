@@ -123,7 +123,7 @@ export const App: React.FC = () => {
       {/* Help & User Guide Modal */}
       <HelpModal />
 
-      {/* Global Settings Modal Drawer (FR-SET-01, FR-SET-02, FR-SET-05) */}
+      {/* Global Settings Modal Drawer (FR-SET-01, FR-SET-02) */}
       <SettingsModal />
 
       {/* FR-ATT-01, NFR-LIC-01, AC-26: Mandatory footer across all routes */}

@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	CSPValue = "default-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'"
+	CSPValue = "default-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' http://localhost:* http://127.0.0.1:*; frame-ancestors 'none'; base-uri 'self'"
 )
 
 // SecurityHeadersMiddleware ensures all responses carry the required security headers (NFR-SEC-03)

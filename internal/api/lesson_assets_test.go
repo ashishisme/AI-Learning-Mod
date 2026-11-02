@@ -42,12 +42,14 @@ func TestLessonAssetsAreServedFromTheAppAndCannotLeaveTheFolder(t *testing.T) {
 	}
 }
 
-// FR-034: images, scripts and connections stay on the app's own origin.
+// FR-034: images and scripts stay on the app's own origin. Connections may also reach the
+// learner's own computer (FR-021a), and nowhere else.
 func TestCSPAllowsNoThirdPartyHosts(t *testing.T) {
-	if strings.Contains(CSPValue, "http") || strings.Contains(CSPValue, "data:") {
+	withoutLocal := strings.Replace(CSPValue, "connect-src 'self' http://localhost:* http://127.0.0.1:*;", "connect-src 'self';", 1)
+	if strings.Contains(withoutLocal, "http") || strings.Contains(CSPValue, "data:") || strings.Contains(CSPValue, "https:") {
 		t.Errorf("CSP: %s", CSPValue)
 	}
-	for _, want := range []string{"img-src 'self'", "script-src 'self'", "connect-src 'self'"} {
+	for _, want := range []string{"img-src 'self';", "script-src 'self';", "connect-src 'self' http://localhost:* http://127.0.0.1:*;"} {
 		if !strings.Contains(CSPValue, want) {
 			t.Errorf("CSP is missing %s", want)
 		}

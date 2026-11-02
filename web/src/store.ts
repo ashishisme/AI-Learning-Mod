@@ -44,9 +44,9 @@ export interface AISettings {
   baseUrl: string
   model: string
   apiKey: string
-  githubToken: string
   maxBytes: number
   insecureTls?: boolean // skip TLS verification for the AI endpoint (self-signed certs). Off by default.
+  localLLMEnabled?: boolean // hosted only: the browser asks an AI on this computer (FR-021a). Off by default.
 }
 
 export interface SettingsState {
@@ -62,9 +62,9 @@ const defaultSettings: AISettings = {
   baseUrl: 'http://localhost:11434/v1',
   model: 'llama3.2:1b',
   apiKey: '',
-  githubToken: '',
   maxBytes: 1500,
   insecureTls: false,
+  localLLMEnabled: false,
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -79,6 +79,11 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'ai-foundations-settings', // FR-SET-02 exact key
+      // Curriculum sync was removed: drop any GitHub token an older version saved.
+      merge: (persisted, current) => {
+        const { githubToken: _drop, ...saved } = ((persisted as { settings?: Record<string, unknown> })?.settings ?? {}) as Record<string, unknown>
+        return { ...current, settings: { ...current.settings, ...(saved as Partial<AISettings>) } }
+      },
     }
   )
 )
@@ -202,7 +207,7 @@ export const useHelpStore = create<HelpState>((set) => ({
 
 
 // Deployment facts reported by the server (GET /api/runtime). On a hosted deployment the AI
-// endpoint, key, model, curriculum sync and certificate options are controlled by the server only.
+// endpoint, key, model and certificate options are controlled by the server only.
 // The defaults keep today's behaviour until the server answers: no sign-in, tutor on, no feedback.
 export interface RuntimeState {
   hosted: boolean

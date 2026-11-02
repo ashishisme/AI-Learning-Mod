@@ -182,7 +182,7 @@ docker run -p 8080:8080 \
 # Run a public deployment (the image default is HOSTED_MODE=true):
 docker run -p 8080:8080 -e OPENAI_API_KEY=<key> -e TRUSTED_PROXY_HOPS=1 ai-foundations-coach
 ```
-In hosted mode the AI endpoint, key and model come only from the server's environment. Settings overrides, curriculum sync and AI-config-test are disabled, and the server refuses to connect to private or cloud-metadata addresses.
+In hosted mode the AI endpoint, key and model come only from the server's environment. Settings overrides and AI-config-test are disabled, and the server refuses to connect to private or cloud-metadata addresses.
 
 Access the application at **http://localhost:8080**.
 
@@ -216,9 +216,8 @@ The Go server automatically serves the compiled frontend assets from `web/dist/`
 | `OPENAI_API_KEY` | *(empty)* | API key for OpenAI (leave blank for local Ollama) |
 | `MOCK_TUTOR` | `false` | When `true`, simulates grounded AI tutor responses offline |
 | `TUTOR_MAX_LESSON_BYTES` | `12000` | Truncation budget for curriculum context passed to the LLM |
-| `HOSTED_MODE` | `false` (`true` in the Docker image) | Public deployment: AI settings come only from the server environment, per-request overrides are ignored, curriculum sync and AI-config-test are disabled, and connections to private or metadata addresses are refused |
+| `HOSTED_MODE` | `false` (`true` in the Docker image) | Public deployment: AI settings come only from the server environment, per-request overrides are ignored, AI-config-test is disabled, and connections to private or metadata addresses are refused |
 | `TRUSTED_PROXY_HOPS` | `0` | Reverse proxies in front of the server (`1` on Cloud Run). Rate limits then count each visitor separately |
-| `INGEST_SYNC_ENABLED` | `false` | Allows `POST /api/ingest/sync` (Settings "Sync Latest"). Local use only; ignored when `HOSTED_MODE` is on |
 
 ---
 
@@ -297,6 +296,16 @@ For local testing, start the development identity provider with `go run ./cmd/de
 | `FEEDBACK_AUDITOR_API_KEY` | Auditor API key; keep out of source control |
 | `SESSION_SECRET_FILE`, `OIDC_CLIENT_SECRET_FILE`, `FEEDBACK_AUDITOR_API_KEY_FILE` | File holding that secret, such as a mounted Secret Manager volume. Required on Cloud Run, where the plain variables are refused |
 | `FEEDBACK_AUDITOR_MODEL` | Auditor model; all three auditor variables enable feedback |
+
+### Using your own local AI on the hosted site
+
+The hosted server cannot reach a learner's computer, so the learner's browser talks to their AI directly (FR-021a). In **Settings → Your own AI on this computer**, tick **Use my own local AI**, then:
+
+1. Start Ollama so it accepts the site, for example `OLLAMA_ORIGINS=https://<your-site> ollama serve`.
+2. Pull a model: `ollama pull llama3.2:1b`.
+3. Click **Check connection**, pick the model, and save. If the browser asks to let the site reach devices on your network, allow it.
+
+Only `localhost` and `127.0.0.1` addresses are accepted. Each question is first checked by the server (`POST /api/tutor/prepare`, the same safety screen as the hosted tutor), then sent from the browser to the local AI. The server makes no AI call and spends nothing.
 
 ---
 

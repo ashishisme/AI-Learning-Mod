@@ -101,10 +101,9 @@ cannot be written. It shall not fall back to unauthenticated requests.
 **FR-ING-08.** Each lesson shall contain exactly one `markdown` block
 in v1 (§6.3).
 
-**FR-ING-09.** The system shall expose `POST /api/ingest/sync` allowing
-operators and the settings interface to trigger live curriculum synchronization
-from the upstream GitHub repository, refreshing local lesson artifacts and
-returning `{ "ok": true, "commitSha": "...", "lessonsCount": N }`.
+**FR-ING-09.** **Removed 2026-11-02 (owner decision).** Live curriculum sync (`POST /api/ingest/sync`) no longer
+exists. Lessons come only from the build-time ingest at the pinned commit
+(FR-ING-01 to FR-ING-08). Unknown `/api/*` paths return a JSON 404.
 
 ### 4.2 Content serving — `FR-CNT-*`
 
@@ -248,7 +247,7 @@ browser `localStorage["ai-foundations-theme"]`.
 
 **FR-SET-01.** The Settings Drawer shall provide configuration controls for
 AI Provider (`local` / `openai` / `custom`), Base Endpoint URL, Model name,
-API Key, GitHub Token, and context size budget (`maxBytes`).
+API Key, and context size budget (`maxBytes`).
 
 **FR-SET-02.** Settings configuration shall be stored in browser `localStorage`
 under key `ai-foundations-settings` and loaded into the application state
@@ -263,9 +262,8 @@ optional request headers (`X-AI-Base-URL`, `X-AI-Model`, `X-AI-Key`,
 `X-AI-Max-Bytes`) allowing client settings to dynamically override server
 defaults for the duration of the request.
 
-**FR-SET-05.** The Settings Drawer shall provide a "Sync Curriculum from Git"
-action that calls `POST /api/ingest/sync`, shows synchronization progress,
-displays the latest commit SHA, and refreshes the curriculum list.
+**FR-SET-05.** **Removed 2026-11-02 (owner decision).** Settings has no curriculum sync action and no GitHub
+token field, and drops any token an older version saved in `localStorage`.
 
 ### 4.6 Interactive Quiz Engine — `FR-QZ-*`
 
@@ -485,10 +483,7 @@ Request body (≤4 KiB): `{ "baseUrl"?: string, "model"?: string, "apiKey"?: str
 - 405 → non-POST (FR-SET-03, FR-SET-04)
 
 #### 7.1.7 `POST /api/ingest/sync`
-Request body: `{ "githubToken"?: string }`. The token is used for the
-request only and is never persisted or logged.
-- 200 → `{"ok":bool,"commitSha"?:string,"lessonsCount"?:int,"durationMs":int,"error"?:string}`
-(FR-ING-09, FR-SET-05)
+**Removed 2026-11-02 (owner decision).** The route is gone and returns `404 {"error":"not found"}` (FR-ING-09, FR-SET-05).
 
 ### 7.2 File formats
 - Lessons: one JSON file per lesson at `public-content/lessons/<id>.json`
@@ -739,10 +734,8 @@ modes, applies the `.dark` class to `document.documentElement`, updates
 colors across routes with contrast ≥4.5:1, and persists across reloads via
 `localStorage["ai-foundations-theme"]`.
 
-**AC-37 (FR-ING-09, FR-SET-05).** `POST /api/ingest/sync` triggers curriculum
-synchronization, re-runs ingestion, updates `public-content/index.json`, and
-the Settings Drawer sync button triggers the request, shows live state, and
-displays the updated commit SHA.
+**AC-37 (FR-ING-09, FR-SET-05).** **Removed 2026-11-02 (owner decision).** `POST /api/ingest/sync` returns a JSON
+404, never `index.html`, and Settings shows no sync button or GitHub token field.
 
 **AC-38 (FR-TUT-13).** With a custom provider base URL, a streamed answer
 longer than 20 characters that lacks a citation has

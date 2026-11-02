@@ -72,13 +72,11 @@ func TestHostedServerCannotBeRedirected(t *testing.T) {
 	}
 }
 
-// SC-008: signed in or not, nobody can trigger sync or the config test on a hosted server.
-func TestHostedRefusesSyncAndConfigTestToLearners(t *testing.T) {
-	t.Setenv(SyncEnabledEnv, "true")
-	t.Setenv("GITHUB_TOKEN", "server-token")
+// SC-008: signed in or not, nobody can trigger the config test on a hosted server.
+func TestHostedRefusesConfigTestToLearners(t *testing.T) {
 	e := newAuthEnv(t, func(c *RouterConfig) { c.Hosted = true })
 	client, _ := signedInClient(t, e)
-	for _, p := range []string{"/api/ingest/sync", "/api/config/test"} {
+	for _, p := range []string{"/api/config/test"} {
 		if resp, _ := e.post(t, client, p, map[string]string{"baseUrl": "http://169.254.169.254/"}, "application/json"); resp.StatusCode != 403 {
 			t.Errorf("%s signed in: %d, want 403", p, resp.StatusCode)
 		}

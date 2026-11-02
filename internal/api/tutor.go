@@ -239,50 +239,10 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// NFR-SEC-02: Body limit 8 KiB (413 if exceeded)
-	lr := io.LimitReader(r.Body, MaxRequestBodySize+1)
-	bodyBytes, err := io.ReadAll(lr)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(TutorResponse{Error: "invalid request body"})
-		return
-	}
-	if len(bodyBytes) > MaxRequestBodySize {
-		w.WriteHeader(http.StatusRequestEntityTooLarge)
-		_ = json.NewEncoder(w).Encode(TutorResponse{Error: "request body exceeds 8 KiB"})
-		return
-	}
-
-	// NFR-SEC-02: DisallowUnknownFields
-	dec := json.NewDecoder(strings.NewReader(string(bodyBytes)))
-	dec.DisallowUnknownFields()
-
-	var req TutorRequest
-	if err := dec.Decode(&req); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(TutorResponse{Error: "invalid JSON format or unknown fields"})
-		return
-	}
-
-	// FR-TUT-07: Empty question or question > 500 chars produces 400
-	qTrimmed := strings.TrimSpace(req.Question)
-	if qTrimmed == "" || len(req.Question) > MaxQuestionLength {
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(TutorResponse{Error: "question must be between 1 and 500 characters"})
-		return
-	}
-
-	tone, validMode := toneForMode(req.Mode)
-	if !validMode {
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(TutorResponse{Error: "invalid mode"})
-		return
-	}
-
-	// Validate lessonId
-	if !idRegex.MatchString(req.LessonID) {
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(TutorResponse{Error: "invalid lessonId"})
+	req, tone, status, msg := decodeTutorRequest(r)
+	if status != 0 {
+		w.WriteHeader(status)
+		_ = json.NewEncoder(w).Encode(TutorResponse{Error: msg})
 		return
 	}
 
@@ -293,42 +253,6 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		writeSafetyReply(w, isStream, SafetyReply(cat))
 		return
 	}
-
-	// Load lesson content from disk
-	lessonPath := filepath.Join(h.contentDir, "lessons", req.LessonID+".json")
-	lessonData, err := os.ReadFile(lessonPath)
-	if err != nil {
-		// Unknown lesson -> 404 per §7.1.3
-		w.WriteHeader(http.StatusNotFound)
-		_ = json.NewEncoder(w).Encode(TutorResponse{Error: "unknown lesson"})
-		return
-	}
-
-	var lesson struct {
-		Title  string `json:"title"`
-		Blocks []struct {
-			Type    string `json:"type"`
-			Content string `json:"content"`
-		} `json:"blocks"`
-	}
-	if err := json.Unmarshal(lessonData, &lesson); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		_ = json.NewEncoder(w).Encode(TutorResponse{Error: "internal error"})
-		return
-	}
-
-	// FR-TUT-02: Concatenate lesson Markdown in block order
-	var sb strings.Builder
-	for _, b := range lesson.Blocks {
-		if b.Type == "markdown" {
-			sb.WriteString(b.Content)
-			sb.WriteString("\n\n")
-		}
-	}
-	content := sb.String()
-	// Strip image links so local LLMs do not repeat raw image URLs
-	content = mdImageRegex.ReplaceAllString(content, "")
-	content = htmlImageRegex.ReplaceAllString(content, "")
 
 	// Truncate to MaxLessonBytes per FR-TUT-02 (configurable via env/header for local small models)
 	maxBytes := MaxLessonBytes
@@ -346,33 +270,13 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if customBaseURL != "" && maxBytes > 3000 {
 		maxBytes = 3000
 	}
-	if len(content) > maxBytes {
-		content = content[:maxBytes]
+	p, status, msg := loadTutorPrompt(h.contentDir, req, tone, maxBytes, customBaseURL != "")
+	if status != 0 {
+		w.WriteHeader(status)
+		_ = json.NewEncoder(w).Encode(TutorResponse{Error: msg})
+		return
 	}
-
-	// Extract available section headings from markdown blocks
-	headingRegex := regexp.MustCompile(`(?m)^#{1,3}\s+(.+)$`)
-	var headings []string
-	for _, block := range lesson.Blocks {
-		if block.Type == "markdown" {
-			matches := headingRegex.FindAllStringSubmatch(block.Content, -1)
-			for _, m := range matches {
-				if len(m) > 1 {
-					h := strings.TrimSpace(m[1])
-					if h != "" && !strings.HasPrefix(h, "!") && !strings.HasPrefix(h, "[") {
-						headings = append(headings, h)
-					}
-				}
-			}
-		}
-	}
-	defaultSection := "Overview"
-	if len(headings) > 0 {
-		defaultSection = headings[0]
-	}
-
-	// FR-TUT-04, §7.3.2: Format user message exactly
-	userMessage := fmt.Sprintf("Lesson: %s\n\nContent:\n%s\n\n### USER QUESTION ###\n%s", lesson.Title, content, req.Question)
+	systemPrompt, userMessage := p.system, p.user
 
 	// Create client if not stubbed
 	client := h.modelClient
@@ -415,16 +319,6 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		model = "gpt-4o-mini"
 	}
 
-	// Build system prompt (standard verbatim per §7.3.1; emphatic citation guide for local models)
-	systemPrompt := SystemPrompt
-	if customBaseURL != "" {
-		systemPrompt = fmt.Sprintf("%s\n\nCRITICAL REQUIREMENT: You MUST conclude your response with a citation formatted exactly as [%s § %s]. Do not omit the brackets or the § symbol.", SystemPrompt, lesson.Title, defaultSection)
-	}
-
-	if tone != "" {
-		systemPrompt += "\n\n" + tone
-	}
-
 	// FR-TUT-06: an uncited answer normally falls back to UncitedFallback. Small local models
 	// often drop the bracket format, so only they (never a hosted deployment) get a citation
 	// appended, and only when they gave a real answer.
@@ -433,7 +327,7 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if !lenientCitation || len(strings.TrimSpace(answer)) <= 20 {
 			return ""
 		}
-		return fmt.Sprintf(" [%s § %s]", lesson.Title, defaultSection)
+		return " " + p.citation()
 	}
 
 	// DC-04: model gpt-4o-mini (or OPENAI_MODEL), max completion tokens 800 (FR-TUT-05)
@@ -648,4 +542,122 @@ func (h *TutorHandler) writeSSEError(w http.ResponseWriter, flusher http.Flusher
 	payload, _ := json.Marshal(map[string]any{"error": errType})
 	fmt.Fprintf(w, "event: error\ndata: %s\n\n", payload)
 	flusher.Flush()
+}
+
+// decodeTutorRequest reads and validates a tutor request body. A non-zero status means reject.
+func decodeTutorRequest(r *http.Request) (req TutorRequest, tone string, status int, msg string) {
+	// NFR-SEC-02: Body limit 8 KiB (413 if exceeded)
+	lr := io.LimitReader(r.Body, MaxRequestBodySize+1)
+	bodyBytes, err := io.ReadAll(lr)
+	if err != nil {
+		return req, "", http.StatusBadRequest, "invalid request body"
+	}
+	if len(bodyBytes) > MaxRequestBodySize {
+		return req, "", http.StatusRequestEntityTooLarge, "request body exceeds 8 KiB"
+	}
+
+	// NFR-SEC-02: DisallowUnknownFields
+	dec := json.NewDecoder(strings.NewReader(string(bodyBytes)))
+	dec.DisallowUnknownFields()
+
+	if err := dec.Decode(&req); err != nil {
+		return req, "", http.StatusBadRequest, "invalid JSON format or unknown fields"
+	}
+
+	// FR-TUT-07: Empty question or question > 500 chars produces 400
+	qTrimmed := strings.TrimSpace(req.Question)
+	if qTrimmed == "" || len(req.Question) > MaxQuestionLength {
+		return req, "", http.StatusBadRequest, "question must be between 1 and 500 characters"
+	}
+
+	tone, validMode := toneForMode(req.Mode)
+	if !validMode {
+		return req, "", http.StatusBadRequest, "invalid mode"
+	}
+
+	// Validate lessonId
+	if !idRegex.MatchString(req.LessonID) {
+		return req, "", http.StatusBadRequest, "invalid lessonId"
+	}
+	return req, tone, 0, ""
+}
+
+// tutorPrompt is the exact system and user message sent to the model for one question.
+type tutorPrompt struct{ title, section, system, user string }
+
+func (p tutorPrompt) citation() string { return fmt.Sprintf("[%s § %s]", p.title, p.section) }
+
+// loadTutorPrompt builds the prompt from the lesson on disk (FR-TUT-02, FR-TUT-04, §7.3).
+// emphaticCitation adds the explicit citation instruction that small local models need.
+func loadTutorPrompt(contentDir string, req TutorRequest, tone string, maxBytes int, emphaticCitation bool) (p tutorPrompt, status int, msg string) {
+	// Load lesson content from disk
+	lessonPath := filepath.Join(contentDir, "lessons", req.LessonID+".json")
+	lessonData, err := os.ReadFile(lessonPath)
+	if err != nil {
+		// Unknown lesson -> 404 per §7.1.3
+		return p, http.StatusNotFound, "unknown lesson"
+	}
+
+	var lesson struct {
+		Title  string `json:"title"`
+		Blocks []struct {
+			Type    string `json:"type"`
+			Content string `json:"content"`
+		} `json:"blocks"`
+	}
+	if err := json.Unmarshal(lessonData, &lesson); err != nil {
+		return p, http.StatusInternalServerError, "internal error"
+	}
+
+	// FR-TUT-02: Concatenate lesson Markdown in block order
+	var sb strings.Builder
+	for _, b := range lesson.Blocks {
+		if b.Type == "markdown" {
+			sb.WriteString(b.Content)
+			sb.WriteString("\n\n")
+		}
+	}
+	content := sb.String()
+	// Strip image links so local LLMs do not repeat raw image URLs
+	content = mdImageRegex.ReplaceAllString(content, "")
+	content = htmlImageRegex.ReplaceAllString(content, "")
+
+	if len(content) > maxBytes {
+		content = content[:maxBytes]
+	}
+
+	// Extract available section headings from markdown blocks
+	headingRegex := regexp.MustCompile(`(?m)^#{1,3}\s+(.+)$`)
+	var headings []string
+	for _, block := range lesson.Blocks {
+		if block.Type == "markdown" {
+			matches := headingRegex.FindAllStringSubmatch(block.Content, -1)
+			for _, m := range matches {
+				if len(m) > 1 {
+					h := strings.TrimSpace(m[1])
+					if h != "" && !strings.HasPrefix(h, "!") && !strings.HasPrefix(h, "[") {
+						headings = append(headings, h)
+					}
+				}
+			}
+		}
+	}
+	defaultSection := "Overview"
+	if len(headings) > 0 {
+		defaultSection = headings[0]
+	}
+
+	// FR-TUT-04, §7.3.2: Format user message exactly
+	userMessage := fmt.Sprintf("Lesson: %s\n\nContent:\n%s\n\n### USER QUESTION ###\n%s", lesson.Title, content, req.Question)
+
+	// Build system prompt (standard verbatim per §7.3.1; emphatic citation guide for local models)
+	systemPrompt := SystemPrompt
+	if emphaticCitation {
+		systemPrompt = fmt.Sprintf("%s\n\nCRITICAL REQUIREMENT: You MUST conclude your response with a citation formatted exactly as [%s § %s]. Do not omit the brackets or the § symbol.", SystemPrompt, lesson.Title, defaultSection)
+	}
+
+	if tone != "" {
+		systemPrompt += "\n\n" + tone
+	}
+	return tutorPrompt{title: lesson.Title, section: defaultSection, system: systemPrompt, user: userMessage}, 0, ""
 }

@@ -125,10 +125,7 @@ func main() {
 		os.Exit(1)
 	}
 	if appCfg.Hosted {
-		slog.Info("Hosted mode: AI settings come from server configuration only; curriculum sync and AI-config-test are disabled")
-		if strings.EqualFold(os.Getenv("INGEST_SYNC_ENABLED"), "true") {
-			slog.Warn("INGEST_SYNC_ENABLED is ignored in hosted mode")
-		}
+		slog.Info("Hosted mode: AI settings come from server configuration only; AI-config-test is disabled")
 	}
 	if !appCfg.TutorEnabled {
 		slog.Info("The AI tutor is disabled (TUTOR_ENABLED is false)")

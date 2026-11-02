@@ -221,6 +221,8 @@ Request to the configured AI provider: system instruction stating the message is
 ## Tutor (changes to existing endpoints)
 
 - `POST /api/tutor`, `POST /api/tutor/stream`: when `tutorEnabled` is false → `503 {"error":"tutor disabled"}` before body parsing or any model client.
+- `POST /api/tutor/prepare` (hosted only, learner session, tutor rate limit; FR-021a): same body and `400`/`404`/`413` rules as `/api/tutor`. Works when `tutorEnabled` is false and never calls a model. `200 {"safetyReply"}` when the question is screened out, else `200 {"messages":[{"role":"system","content"},{"role":"user","content"}],"maxTokens","citation","fallback"}`. Not registered on a self-hosted server.
+- Any unknown `/api/*` path → `404 {"error":"not found"}`, never `index.html`.
 - At the daily ceiling → `200` with the reply text "The tutor is resting until tomorrow." in the normal answer shape (JSON answer, or SSE token then done), no model call.
 - Store failure while reserving spend → `503 {"error":"tutor temporarily unavailable"}`.
 

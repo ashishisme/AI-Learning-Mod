@@ -38,12 +38,10 @@ func tutorPost(h http.Handler, body string, headers map[string]string) *httptest
 
 const askBody = `{"lessonId":"lesson-1","question":"How does ML learn?"}`
 
-func TestHostedDisablesSyncAndConfigTest(t *testing.T) {
-	t.Setenv(SyncEnabledEnv, "true")
-	t.Setenv("GITHUB_TOKEN", "server-token")
+func TestHostedDisablesConfigTest(t *testing.T) {
 	router := NewRouter(RouterConfig{ContentDir: t.TempDir(), Hosted: true})
 
-	for _, path := range []string{"/api/ingest/sync", "/api/config/test"} {
+	for _, path := range []string{"/api/config/test"} {
 		req := httptest.NewRequest(http.MethodPost, path, strings.NewReader(`{"baseUrl":"http://169.254.169.254/"}`))
 		req.Header.Set("Content-Type", "application/json")
 		rec := httptest.NewRecorder()

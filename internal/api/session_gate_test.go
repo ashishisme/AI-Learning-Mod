@@ -60,7 +60,7 @@ func TestGateOpenPathsNeedNoSession(t *testing.T) {
 func TestGateBlocksProtectedAPI(t *testing.T) {
 	v := &stubValidator{}
 	h := gated(v)
-	for _, p := range []string{"/api/lessons", "/api/lessons/1-intro", "/api/tutor", "/api/tutor/stream", "/api/config/test", "/api/ingest/sync", "/api/feedback", "/api/usage/event"} {
+	for _, p := range []string{"/api/lessons", "/api/lessons/1-intro", "/api/tutor", "/api/tutor/stream", "/api/config/test", "/api/feedback", "/api/usage/event"} {
 		rec := do(h, http.MethodGet, p, "")
 		if rec.Code != http.StatusUnauthorized || !strings.Contains(rec.Body.String(), `"code":"signin_required"`) {
 			t.Errorf("%s without a cookie: %d %s", p, rec.Code, rec.Body.String())

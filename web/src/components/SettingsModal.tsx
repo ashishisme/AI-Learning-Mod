@@ -1,7 +1,8 @@
-// SPEC: FR-SET-01, FR-SET-02, FR-SET-03, FR-SET-05, FR-UI-14, FR-UI-15, NFR-SEC-01
+// SPEC: FR-SET-01, FR-SET-02, FR-SET-03, FR-UI-14, FR-UI-15, NFR-SEC-01
 import React, { useState } from 'react'
 import { useSettingsStore, useThemeStore, useRuntimeStore, AISettings } from '../store'
-import { testAIConfig, syncCurriculum, ConfigTestResult, IngestSyncResult } from '../api'
+import { testAIConfig, testLocalLLM, ConfigTestResult } from '../api'
+import { LocalLLMSettings } from './LocalLLMSettings'
 import pkg from '../../package.json'
 import { buildInfo, formatBuild } from '../buildInfo'
 
@@ -12,11 +13,8 @@ export const SettingsModal: React.FC = () => {
 
   const [form, setForm] = useState<AISettings>(settings)
   const [showApiKey, setShowApiKey] = useState(false)
-  const [showGitToken, setShowGitToken] = useState(false)
   const [testing, setTesting] = useState(false)
   const [testResult, setTestResult] = useState<ConfigTestResult | null>(null)
-  const [syncing, setSyncing] = useState(false)
-  const [syncResult, setSyncResult] = useState<IngestSyncResult | null>(null)
   const [saveToast, setSaveToast] = useState(false)
 
   // Keep form in sync when opening
@@ -24,7 +22,6 @@ export const SettingsModal: React.FC = () => {
     if (isDrawerOpen) {
       setForm(settings)
       setTestResult(null)
-      setSyncResult(null)
     }
   }, [isDrawerOpen, settings])
 
@@ -60,12 +57,16 @@ export const SettingsModal: React.FC = () => {
     setTesting(true)
     setTestResult(null)
     try {
-      const res = await testAIConfig({
-        baseUrl: form.baseUrl,
-        model: form.model,
-        apiKey: form.apiKey,
-        insecureTls: !!form.insecureTls,
-      })
+      // FR-021a: a hosted site cannot reach the learner's computer, so the browser checks directly.
+      const res = hosted
+        ? await testLocalLLM(form.baseUrl, form.apiKey)
+        : await testAIConfig({
+            baseUrl: form.baseUrl,
+            model: form.model,
+            apiKey: form.apiKey,
+            insecureTls: !!form.insecureTls,
+          })
+      if (hosted && res.ok && res.models?.includes(form.model)) res.activeModel = form.model
       setTestResult(res)
     } catch (err: any) {
       setTestResult({
@@ -75,23 +76,6 @@ export const SettingsModal: React.FC = () => {
       })
     } finally {
       setTesting(false)
-    }
-  }
-
-  const handleSyncCurriculum = async () => {
-    setSyncing(true)
-    setSyncResult(null)
-    try {
-      const res = await syncCurriculum(form.githubToken)
-      setSyncResult(res)
-    } catch (err: any) {
-      setSyncResult({
-        ok: false,
-        durationMs: 0,
-        error: err.message || 'Sync failed',
-      })
-    } finally {
-      setSyncing(false)
     }
   }
 
@@ -121,7 +105,7 @@ export const SettingsModal: React.FC = () => {
             <span className="text-2xl">⚙️</span>
             <div>
               <h2 className="text-lg font-semibold text-slate-100">AI & Learning Settings</h2>
-              <p className="text-xs text-slate-400">Configure theme, local Ollama, cloud endpoints, and sync</p>
+              <p className="text-xs text-slate-400">Configure theme, local Ollama and cloud endpoints</p>
             </div>
           </div>
           <button
@@ -181,69 +165,18 @@ export const SettingsModal: React.FC = () => {
           </div>
         </div>
 
-        {/* FR-021: on a hosted deployment the AI provider, credentials, certificate handling and
-            curriculum sync are controlled by the server, so none of those controls are shown. */}
+        {/* FR-021: on a hosted deployment the server's AI provider, credentials and certificate handling
+            are not shown. FR-021a: the learner may instead point the tutor at an AI on their own computer. */}
         {hosted ? (
-          <div
-            data-testid="settings-hosted-note"
-            className="p-3 rounded-xl border border-slate-800 bg-slate-800/30 text-[11px] text-slate-400"
-          >
-            The AI tutor and lesson content are managed by this service. Only your display preferences can be changed here.
-          </div>
+          <LocalLLMSettings
+            form={form}
+            setForm={setForm}
+            models={testResult?.models}
+            testing={testing}
+            onTest={handleTestConnection}
+          />
         ) : (
           <>
-        {/* Curriculum Git Sync (FR-ING-09, FR-SET-05) */}
-        <div className="p-4 rounded-xl border border-slate-800 bg-slate-800/30 flex flex-col gap-2">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <h3 className="font-semibold text-xs text-slate-200 flex items-center gap-1.5">
-                <span>🔄</span> Curriculum Sync
-              </h3>
-              <p className="text-[11px] text-slate-400">
-                Pull newest lessons from upstream <span className="font-mono">microsoft/AI-For-Beginners</span>
-              </p>
-            </div>
-            <button
-              type="button"
-              id="sync-curriculum-btn"
-              onClick={handleSyncCurriculum}
-              disabled={syncing}
-              className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg shadow-sm transition disabled:opacity-50 flex items-center gap-1.5 self-start sm:self-auto"
-            >
-              {syncing ? (
-                <>
-                  <span className="animate-spin">⏳</span>
-                  <span>Syncing...</span>
-                </>
-              ) : (
-                <>
-                  <span>📥</span>
-                  <span>Sync Latest</span>
-                </>
-              )}
-            </button>
-          </div>
-
-          {syncResult && (
-            <div
-              data-testid={syncResult.ok ? 'sync-success-banner' : 'sync-error-banner'}
-              className={`p-2.5 rounded-lg border text-[11px] mt-1 ${
-                syncResult.ok
-                  ? 'border-emerald-500/40 bg-emerald-950/30 text-emerald-200'
-                  : 'border-rose-500/40 bg-rose-950/30 text-rose-200'
-              }`}
-            >
-              {syncResult.ok ? (
-                <span>
-                  ✓ Sync complete: Ingested {syncResult.lessonsCount ?? (syncResult as any).count ?? 0} lessons (Commit: <span className="font-mono">{syncResult.commitSha}</span>) in {syncResult.durationMs}ms
-                </span>
-              ) : (
-                <span>Sync error: {syncResult.error}</span>
-              )}
-            </div>
-          )}
-        </div>
-
         {/* Provider Presets */}
         <div>
           <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
@@ -403,30 +336,6 @@ export const SettingsModal: React.FC = () => {
               value={form.apiKey}
               onChange={(e) => setForm({ ...form, apiKey: e.target.value })}
               placeholder="Leave blank for Ollama (or enter sk-... for OpenAI)"
-              className="w-full px-3 py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition font-mono"
-            />
-          </div>
-
-          {/* GitHub Token */}
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="font-semibold text-slate-300">
-                GitHub Token (Ingestion Sync)
-              </label>
-              <button
-                type="button"
-                onClick={() => setShowGitToken(!showGitToken)}
-                className="text-[11px] text-indigo-400 hover:underline"
-              >
-                {showGitToken ? 'Hide' : 'Show'}
-              </button>
-            </div>
-            <input
-              type={showGitToken ? 'text' : 'password'}
-              id="settings-github-token"
-              value={form.githubToken}
-              onChange={(e) => setForm({ ...form, githubToken: e.target.value })}
-              placeholder="github_pat_... (for syncing curriculum)"
               className="w-full px-3 py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition font-mono"
             />
           </div>

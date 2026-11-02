@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"ai-foundations-coach/internal/auth"
 	"ai-foundations-coach/internal/cost"
@@ -25,8 +26,8 @@ type RouterConfig struct {
 
 	// Hosted is true on a public deployment (SPEC-008 FR-018..FR-022): the AI endpoint, key,
 	// model and TLS behaviour come only from server configuration, per-request overrides are
-	// ignored, outbound calls to non-public addresses are refused, and curriculum sync and
-	// AI-config-test are unavailable.
+	// ignored, outbound calls to non-public addresses are refused, and AI-config-test is
+	// unavailable.
 	Hosted bool
 	// TrustedProxyHops is the number of reverse proxies in front of the server (see RateLimiter).
 	TrustedProxyHops int
@@ -146,16 +147,11 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	if cfg.Hosted {
 		// FR-020: unavailable to everyone, with no outbound call and no content change.
 		mux.HandleFunc("POST /api/config/test", hostedUnavailable)
-		mux.HandleFunc("POST /api/ingest/sync", hostedUnavailable)
+		// FR-021a: the prompt for a learner's own local AI. No model call, so no spend.
+		mux.Handle("POST /api/tutor/prepare", limiter.Middleware(TutorPrepareHandler(cfg.ContentDir, cfg.Usage)))
 	} else {
 		// Config test handler (FR-SET-03)
 		mux.HandleFunc("POST /api/config/test", ConfigTestHandler)
-
-		// Ingest sync handler (FR-ING-09, FR-SET-05)
-		ingestSyncHandler := NewIngestSyncHandler(cfg.ContentDir)
-		syncLimiter := NewRateLimiter(SyncRateLimit, RateLimitWindow)
-		syncLimiter.SetTrustedProxyHops(cfg.TrustedProxyHops)
-		mux.Handle("POST /api/ingest/sync", syncLimiter.Middleware(ingestSyncHandler))
 	}
 
 	// Static SPA assets serving with client-side fallback (if provided)
@@ -163,6 +159,13 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		fileServer := http.FileServer(http.FS(cfg.StaticFS))
 		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			path := r.URL.Path
+			// An unknown API path must not get index.html, or callers fail parsing it as JSON.
+			if strings.HasPrefix(path, "/api/") {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusNotFound)
+				_, _ = w.Write([]byte(`{"error":"not found"}`))
+				return
+			}
 			if path == "/" || path == "" {
 				fileServer.ServeHTTP(w, r)
 				return

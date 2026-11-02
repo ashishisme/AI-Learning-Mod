@@ -7,8 +7,9 @@ import {
   Lesson as LessonData,
   AdaptiveLessonPayload,
   ApiError,
+  isLocalLLMUrl,
 } from '../api'
-import { useProgressStore, useAudienceModeStore, useRuntimeStore } from '../store'
+import { useProgressStore, useAudienceModeStore, useRuntimeStore, useSettingsStore } from '../store'
 import { MarkdownBlock } from '../components/MarkdownBlock'
 import { TutorPanel } from '../components/TutorPanel'
 import { AudienceModeSelector } from '../components/AudienceModeSelector'
@@ -23,7 +24,11 @@ export const Lesson: React.FC = () => {
 
   const { completedLessons, toggleLesson } = useProgressStore()
   const { mode: audienceMode } = useAudienceModeStore()
-  const tutorEnabled = useRuntimeStore((st) => st.tutorEnabled) // FR-024
+  const serverTutor = useRuntimeStore((st) => st.tutorEnabled) // FR-024
+  const hosted = useRuntimeStore((st) => st.hosted)
+  const { localLLMEnabled, baseUrl } = useSettingsStore((st) => st.settings)
+  // FR-021a: a hosted learner's own local AI works even while the hosted tutor is off.
+  const tutorEnabled = serverTutor || (hosted && !!localLLMEnabled && isLocalLLMUrl(baseUrl))
 
   // 1. Fetch canonical lesson metadata
   useEffect(() => {

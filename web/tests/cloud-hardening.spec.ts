@@ -33,7 +33,7 @@ async function askTutor(page: Page, answerToken: string) {
 }
 
 test.describe('Hosted deployment', () => {
-  test('hides AI, sync and certificate controls and sends no AI overrides', async ({ page }) => {
+  test('hides AI and certificate controls and sends no AI overrides', async ({ page }) => {
     await mockLesson(page)
     await page.route('**/api/runtime', (route) => route.fulfill({ json: { hosted: true } }))
     await page.goto('/lesson/cloud-test')
@@ -41,12 +41,10 @@ test.describe('Hosted deployment', () => {
     await page.locator('[data-testid="open-settings-btn"]').click()
     await expect(page.locator('[data-testid="settings-hosted-note"]')).toBeVisible()
     for (const selector of [
-      '#sync-curriculum-btn',
       '#settings-base-url',
       '#settings-api-key',
       '#settings-model',
       '#settings-insecure-tls',
-      '#settings-github-token',
       '#test-connection-btn',
     ]) {
       await expect(page.locator(selector)).toHaveCount(0)
@@ -66,7 +64,6 @@ test.describe('Hosted deployment', () => {
     await page.goto('/lesson/cloud-test')
     await page.locator('[data-testid="open-settings-btn"]').click()
     await expect(page.locator('#settings-base-url')).toBeVisible()
-    await expect(page.locator('#sync-curriculum-btn')).toBeVisible()
     await page.getByRole('button', { name: 'Close settings' }).click()
 
     const sent = await askTutor(page, 'Fine. [Cloud Test Lesson § Overview]')
@@ -243,5 +240,79 @@ test.describe('Theme', () => {
     await expect(html).not.toHaveClass(/dark/)
     await page.locator('[data-testid="theme-toggle-btn"]').click()
     await expect(html).toHaveClass(/dark/)
+  })
+})
+
+// SPEC-008 FR-021a: a hosted learner can point the tutor at an AI on their own computer.
+test.describe('Hosted deployment with the learner\'s own local AI', () => {
+  const local = 'http://localhost:11434/v1'
+  const plan = {
+    messages: [{ role: 'system', content: 'SYS' }, { role: 'user', content: 'USER' }],
+    maxTokens: 800,
+    citation: '[Cloud Test Lesson § Overview]',
+    fallback: "I couldn't find that in this lesson.",
+  }
+  const openAIStream = (...tokens: string[]) =>
+    tokens.map((t) => `data: ${JSON.stringify({ choices: [{ delta: { content: t } }] })}\n\n`).join('') + 'data: [DONE]\n\n'
+
+  async function enableLocalAI(page: Page) {
+    await mockLesson(page)
+    await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, tutorEnabled: false } }))
+    await page.route(`${local}/models`, (r) => r.fulfill({ json: { data: [{ id: 'llama3.2:1b' }, { id: 'qwen2.5:0.5b' }] } }))
+    await page.goto('/lesson/cloud-test')
+    await expect(page.locator('[data-testid="tutor-panel"]')).toHaveCount(0) // hosted tutor is off
+    await page.locator('[data-testid="open-settings-btn"]').click()
+    await page.locator('#local-llm-enabled').check()
+    await expect(page.locator('#local-llm-base-url')).toHaveValue(local)
+    await page.locator('#local-llm-test-btn').click()
+    await expect(page.getByText('Connection Verified')).toBeVisible()
+    await page.locator('#save-settings-btn').click()
+    await expect(page.locator('[data-testid="tutor-panel"]')).toBeVisible()
+  }
+
+  test('asks the local AI with the server-built prompt and adds the citation', async ({ page }) => {
+    let prepared: any = null
+    let localBody: any = null
+    let serverTutorCalls = 0
+    await page.route('**/api/tutor', (r) => { serverTutorCalls++; return r.fulfill({ status: 503, json: { error: 'tutor disabled' } }) })
+    await page.route('**/api/tutor/prepare', (r) => { prepared = r.request().postDataJSON(); return r.fulfill({ json: plan }) })
+    await page.route(`${local}/chat/completions`, (r) => {
+      localBody = r.request().postDataJSON()
+      return r.fulfill({ status: 200, headers: { 'Content-Type': 'text/event-stream', 'Access-Control-Allow-Origin': '*' }, body: openAIStream('A perceptron is ', 'a single artificial neuron.') })
+    })
+    await enableLocalAI(page)
+
+    await page.locator('[data-testid="tutor-input"]').fill('What is a perceptron?')
+    await page.locator('[data-testid="tutor-submit"]').click()
+    await expect(page.locator('[data-testid="tutor-answer"]')).toContainText('A perceptron is a single artificial neuron.')
+    await expect(page.locator('[data-testid="tutor-answer"]')).toContainText('Cloud Test Lesson')
+    expect(prepared).toMatchObject({ lessonId: 'cloud-test', question: 'What is a perceptron?' })
+    expect(localBody).toMatchObject({ model: 'llama3.2:1b', messages: plan.messages, max_tokens: 800, stream: true })
+    expect(serverTutorCalls).toBe(0)
+  })
+
+  test('shows the safety reply without contacting the local AI', async ({ page }) => {
+    let localCalls = 0
+    await page.route('**/api/tutor/prepare', (r) => r.fulfill({ json: { safetyReply: 'Let\'s keep personal details private.' } }))
+    await page.route(`${local}/chat/completions`, (r) => { localCalls++; return r.abort() })
+    await enableLocalAI(page)
+
+    await page.locator('[data-testid="tutor-input"]').fill('My address is 12 Oak Street')
+    await page.locator('[data-testid="tutor-submit"]').click()
+    await expect(page.locator('[data-testid="tutor-answer"]')).toContainText('keep personal details private')
+    expect(localCalls).toBe(0)
+  })
+
+  test('refuses an address that is not on this computer', async ({ page }) => {
+    await mockLesson(page)
+    await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, tutorEnabled: false } }))
+    await page.goto('/lesson/cloud-test')
+    await page.locator('[data-testid="open-settings-btn"]').click()
+    await page.locator('#local-llm-enabled').check()
+    await page.locator('#local-llm-base-url').fill('https://api.openai.com/v1')
+    await expect(page.getByRole('alert')).toContainText('Only addresses on this computer')
+    await expect(page.locator('#local-llm-test-btn')).toBeDisabled()
+    await page.locator('#save-settings-btn').click()
+    await expect(page.locator('[data-testid="tutor-panel"]')).toHaveCount(0)
   })
 })

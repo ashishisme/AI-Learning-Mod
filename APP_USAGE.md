@@ -153,7 +153,6 @@ Click the **⚙️ Settings** icon in the top-right navigation bar:
 * **AI Provider:** Toggle between **Local Ollama** (`http://localhost:11434/v1`), **Cloud OpenAI**, or **Custom Gateway**.
 * **Model Selection:** Switch between models (e.g. `llama3.2:1b`, `gpt-4o-mini`).
 * **Test Connection:** Live latency ping to confirm your AI endpoint is reachable.
-* **Curriculum Sync:** Sync upstream lessons directly from GitHub using your personal access token.
 * **Theme:** Toggle between **Dark Mode** and **Light Mode**.
 
 ---

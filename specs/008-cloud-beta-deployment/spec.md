@@ -253,7 +253,8 @@ A signed-in learner can tell the team what is wrong or what they like, from any 
 - **FR-018**: The system MUST run in a *hosted mode* in which the AI provider, credentials and model are set only by deployment configuration.
 - **FR-019**: In hosted mode, the system MUST ignore any per-request instruction to change the AI endpoint, credentials, model, response size limit or certificate-verification behaviour.
 - **FR-020**: In hosted mode, curriculum re-sync and AI-config-test MUST be unavailable to everyone through the app, with no outbound call or content change.
-- **FR-021**: In hosted mode, Settings MUST NOT display AI endpoint, API key, model override, curriculum re-sync or certificate-skip fields.
+- **FR-021**: In hosted mode, Settings MUST NOT display the server's AI endpoint, API key, model override or certificate-skip fields. (Curriculum re-sync was removed everywhere on 2026-11-02.)
+- **FR-021a** *(owner decision 2026-11-02)*: In hosted mode, Settings MUST let a learner turn on "Use my own local AI" with an address on their own computer (`localhost` or `127.0.0.1` only), a model and an optional key, all kept in that browser. The tutor then appears even when the hosted tutor is off. For each question the browser calls `POST /api/tutor/prepare`, which requires a learner session, applies the same validation, rate limit and safety screen (FR-REV-20) as the hosted tutor, and returns either the safety reply or the lesson prompt, the citation and the fallback. The server never calls a model or spends for this. The browser sends the prompt to the learner's AI, appends the citation to a real answer without one, and shows the fallback otherwise.
 - **FR-022**: The server MUST NOT be able to make outbound calls to private network ranges or the cloud provider's internal metadata service.
 - **FR-023**: The deployment MUST hold no long-lived AI or code-hosting credentials in configuration or in the shipped image. Access to cloud services MUST use the platform's managed identity with minimum permissions.
 
@@ -275,7 +276,7 @@ A signed-in learner can tell the team what is wrong or what they like, from any 
 **Content and browser security**
 
 - **FR-033**: All lessons and lesson images MUST be packaged with the release and served from the app's own origin.
-- **FR-034**: The browser content-security policy MUST restrict images, scripts and connections to the app's own origin plus explicitly approved hosts.
+- **FR-034**: The browser content-security policy MUST restrict images, scripts and connections to the app's own origin plus explicitly approved hosts. The only approved connection hosts are `http://localhost:*` and `http://127.0.0.1:*`, for FR-021a.
 
 **Privacy (children may be users)**
 

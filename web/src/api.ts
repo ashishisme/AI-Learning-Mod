@@ -113,6 +113,11 @@ export async function askTutorStream(
 ): Promise<() => void> {
   const controller = new AbortController()
 
+  if (usesLocalLLM()) {
+    void askLocalLLMStream(lessonId, question, mode, controller.signal, onToken, onComplete, onError)
+    return () => controller.abort()
+  }
+
   fetch('/api/tutor', {
     method: 'POST',
     headers: {
@@ -186,6 +191,131 @@ export async function askTutorStream(
   return () => controller.abort()
 }
 
+// SPEC-008 FR-021a: on a hosted site the server cannot reach the learner's computer, so the
+// browser asks the learner's own AI directly. Only localhost addresses are allowed (and the
+// page's security policy blocks anything else).
+export function isLocalLLMUrl(raw: string): boolean {
+  try {
+    const u = new URL(raw)
+    return (u.protocol === 'http:' || u.protocol === 'https:') && (u.hostname === 'localhost' || u.hostname === '127.0.0.1')
+  } catch {
+    return false
+  }
+}
+
+export function usesLocalLLM(): boolean {
+  const s = useSettingsStore.getState().settings
+  return useRuntimeStore.getState().hosted && !!s.localLLMEnabled && isLocalLLMUrl(s.baseUrl)
+}
+
+const CITATION = /\[[^\]\n]+?\s*§\s*[^\]\n]+?\]/
+
+function localHeaders(apiKey: string): Record<string, string> {
+  const h: Record<string, string> = { 'Content-Type': 'application/json' }
+  if (apiKey) h.Authorization = `Bearer ${apiKey}`
+  return h
+}
+
+const trimSlash = (u: string) => u.replace(/\/+$/, '')
+
+async function askLocalLLMStream(
+  lessonId: string,
+  question: string,
+  mode: string | undefined,
+  signal: AbortSignal,
+  onToken: (token: string) => void,
+  onComplete: (fallback?: string) => void,
+  onError: (error: ApiError | Error) => void
+): Promise<void> {
+  try {
+    const prep = await fetch('/api/tutor/prepare', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(mode && mode !== 'standard' ? { lessonId, question, mode } : { lessonId, question }),
+      signal,
+    })
+    const plan = await prep.json().catch(() => null)
+    if (!prep.ok || !plan) throw new ApiError(prep.status, plan?.error || `Tutor error (${prep.status})`, plan)
+    if (plan.safetyReply) {
+      onToken(plan.safetyReply)
+      onComplete()
+      return
+    }
+
+    const { baseUrl, model, apiKey } = useSettingsStore.getState().settings
+    let res: Response
+    try {
+      res = await fetch(`${trimSlash(baseUrl)}/chat/completions`, {
+        method: 'POST',
+        headers: localHeaders(apiKey),
+        body: JSON.stringify({ model, messages: plan.messages, max_tokens: plan.maxTokens, stream: true }),
+        signal,
+      })
+    } catch (err) {
+      if ((err as Error).name === 'AbortError') throw err
+      throw new Error(`Cannot reach your AI at ${baseUrl}. Is it running, and does it allow this site? See Settings.`)
+    }
+    if (!res.ok || !res.body) throw new Error(`Your AI answered ${res.status}. Check the model name in Settings.`)
+
+    const reader = res.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+    let full = ''
+    for (;;) {
+      const { done, value } = await reader.read()
+      if (done) break
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split('\n')
+      buffer = lines.pop() || ''
+      for (const line of lines) {
+        const t = line.trim()
+        if (!t.startsWith('data:')) continue
+        const data = t.slice(5).trim()
+        if (data === '[DONE]') continue
+        try {
+          const token = JSON.parse(data)?.choices?.[0]?.delta?.content
+          if (token) {
+            full += token
+            onToken(token)
+          }
+        } catch {
+          // ignore keep-alives and partial lines
+        }
+      }
+    }
+    // Same rule as the server's local-model path (FR-TUT-06): cite a real answer, else fall back.
+    if (CITATION.test(full)) onComplete()
+    else if (full.trim().length > 20) {
+      onToken(' ' + plan.citation)
+      onComplete()
+    } else onComplete(plan.fallback)
+  } catch (err) {
+    if ((err as Error).name !== 'AbortError') onError(err as Error)
+  }
+}
+
+// Lists the models on the learner's own AI, straight from the browser (FR-021a).
+export async function testLocalLLM(baseUrl: string, apiKey: string): Promise<ConfigTestResult> {
+  if (!isLocalLLMUrl(baseUrl)) {
+    return { ok: false, latencyMs: 0, error: 'Use an address on this computer, such as http://localhost:11434/v1' }
+  }
+  const t0 = performance.now()
+  try {
+    const res = await fetch(`${trimSlash(baseUrl)}/models`, { headers: localHeaders(apiKey) })
+    const latencyMs = Math.round(performance.now() - t0)
+    if (!res.ok) return { ok: false, latencyMs, error: `Your AI answered ${res.status}` }
+    const body = await res.json()
+    const models: string[] = (body?.data ?? []).map((m: { id: string }) => m.id).filter(Boolean)
+    return { ok: true, latencyMs, models, activeModel: models[0] }
+  } catch {
+    return {
+      ok: false,
+      latencyMs: Math.round(performance.now() - t0),
+      error: 'Cannot reach it. Check it is running and allows this site (see the steps above).',
+    }
+  }
+}
+
 export interface ConfigTestResult {
   ok: boolean
   latencyMs: number
@@ -212,29 +342,6 @@ export async function fetchHealth(): Promise<{ ok: boolean }> {
   if (!res.ok) {
     throw new ApiError(res.status, 'Health check failed')
   }
-  return res.json()
-}
-
-export interface IngestSyncResult {
-  ok: boolean
-  commitSha?: string
-  lessonsCount?: number
-  durationMs: number
-  error?: string
-}
-
-export async function syncCurriculum(githubToken?: string): Promise<IngestSyncResult> {
-  const token = githubToken || useSettingsStore.getState().settings.githubToken
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-  if (token) {
-    headers['X-GitHub-Token'] = token
-  }
-
-  const res = await fetch('/api/ingest/sync', {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ githubToken: token }),
-  })
   return res.json()
 }
 
