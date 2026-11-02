@@ -25,7 +25,16 @@ if [ -f "${ROOT_DIR}/.env" ]; then
   echo "📋 Loading environment variables from .env..."
   set -a
   # shellcheck source=/dev/null
-  source <(grep -v '^#' "${ROOT_DIR}/.env" | sed -E 's/^[[:space:]]*export[[:space:]]+//')
+  while IFS= read -r line || [ -n "$line" ]; do
+    # Skip comments and empty lines
+    case "$line" in
+      \#*|"") continue ;;
+      *)
+        clean_line=$(echo "$line" | sed -E 's/^[[:space:]]*export[[:space:]]+//')
+        eval "export $clean_line"
+        ;;
+    esac
+  done < "${ROOT_DIR}/.env"
   set +a
 fi
 

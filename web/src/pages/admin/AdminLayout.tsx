@@ -75,7 +75,11 @@ export const AdminLayout: React.FC = () => {
         setMe(m)
         setState('in')
       })
-      .catch((e) => setState(e instanceof ApiError && e.status === 401 ? 'out' : 'unavailable'))
+      .catch((e: unknown) => {
+        const status = (e as { status?: number })?.status
+        const isUnauthorized = e instanceof ApiError ? e.status === 401 : status === 401
+        setState(isUnauthorized ? 'out' : 'unavailable')
+      })
   }, [])
 
   const signOut = useCallback(async () => {
