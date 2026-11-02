@@ -224,7 +224,7 @@ resource "google_artifact_registry_repository" "images" {
 resource "google_cloud_run_v2_service" "coach" {
   name                = var.service_name
   location            = var.region
-  deletion_protection = true
+  deletion_protection = false
   ingress             = "INGRESS_TRAFFIC_ALL"
   # The app has its own session gate. This also avoids an allUsers grant, which organisation policy can forbid.
   invoker_iam_disabled = true
