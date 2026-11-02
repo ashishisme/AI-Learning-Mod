@@ -3,23 +3,45 @@ import { test, expect } from '@playwright/test'
 
 test.describe('Audio Narration & Multi-Modal Sound Effects (SPEC-004)', () => {
   test.beforeEach(async ({ page }) => {
-    // Mock Web Speech API and Web Audio API inside browser context
+    // Ensure lesson route is accessible in all auth environments
+    await page.route('**/api/runtime', (r) =>
+      r.fulfill({ json: { hosted: false, authRequired: false, tutorEnabled: true, feedbackEnabled: false } })
+    )
+    await page.route('**/api/auth/session', (r) =>
+      r.fulfill({ json: { authenticated: false } })
+    )
+
+    // Mock Web Speech API and Web Audio API inside browser context using Object.defineProperty
+    // to override native prototype getters in headless environments (e.g. Linux CI)
     await page.addInitScript(() => {
-      // Mock SpeechSynthesis
+      let isSpeaking = false
       const mockSynth = {
+        get speaking() { return isSpeaking },
         speak: (utterance: any) => {
+          isSpeaking = true
           setTimeout(() => {
             if (utterance.onstart) utterance.onstart()
           }, 10)
         },
-        cancel: () => {},
+        cancel: () => {
+          isSpeaking = false
+        },
         pause: () => {},
         resume: () => {},
         getVoices: () => [
           { name: 'Google US English', lang: 'en-US', default: true }
         ],
       }
-      window.speechSynthesis = mockSynth as any
+
+      try {
+        Object.defineProperty(window, 'speechSynthesis', {
+          value: mockSynth,
+          configurable: true,
+          writable: true,
+        })
+      } catch {
+        (window as any).speechSynthesis = mockSynth
+      }
 
       // Mock AudioContext
       class MockAudioContext {
@@ -29,7 +51,10 @@ test.describe('Audio Narration & Multi-Modal Sound Effects (SPEC-004)', () => {
         createOscillator() {
           return {
             type: 'sine',
-            frequency: { setValueAtTime: () => {} },
+            frequency: {
+              setValueAtTime: () => {},
+              exponentialRampToValueAtTime: () => {},
+            },
             connect: () => {},
             start: () => {},
             stop: () => {},
@@ -39,6 +64,7 @@ test.describe('Audio Narration & Multi-Modal Sound Effects (SPEC-004)', () => {
           return {
             gain: {
               setValueAtTime: () => {},
+              linearRampToValueAtTime: () => {},
               exponentialRampToValueAtTime: () => {},
             },
             connect: () => {},
@@ -46,7 +72,21 @@ test.describe('Audio Narration & Multi-Modal Sound Effects (SPEC-004)', () => {
         }
         get destination() { return {} }
       }
-      (window as any).AudioContext = MockAudioContext
+
+      try {
+        Object.defineProperty(window, 'AudioContext', {
+          value: MockAudioContext,
+          configurable: true,
+          writable: true,
+        })
+        Object.defineProperty(window, 'webkitAudioContext', {
+          value: MockAudioContext,
+          configurable: true,
+          writable: true,
+        })
+      } catch {
+        (window as any).AudioContext = MockAudioContext
+      }
     })
 
     await page.goto('/')
@@ -107,7 +147,6 @@ test.describe('Audio Narration & Multi-Modal Sound Effects (SPEC-004)', () => {
     // Affirmation message appears
     await expect(page.locator('text=Awesome job, explorer!')).toBeVisible()
   })
-})
 
   test('AC-AUD-04: Audio Studio Voice Persona selector allows switching narrators', async ({ page }) => {
     await page.goto('/lesson/1-intro')
@@ -130,3 +169,4 @@ test.describe('Audio Narration & Multi-Modal Sound Effects (SPEC-004)', () => {
     // Voice trigger button updates to Nova
     await expect(page.locator('button[aria-label="Voice Studio Settings"]')).toContainText('Nova')
   })
+})
