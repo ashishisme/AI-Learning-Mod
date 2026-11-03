@@ -29,12 +29,20 @@ export const ENGLISH_QUIZZES: Quizzes = en as Quizzes
 
 const loaders = import.meta.glob<{ default: Quizzes }>(['./quizzes/*.json', '!./quizzes/en.json'])
 
-export async function loadQuizzes(code: string): Promise<Quizzes> {
+export interface LoadedQuizzes {
+  quizzes: Quizzes
+  // Lesson ids whose quiz is really in the chosen language. Any other quiz is English (FR-009 notice).
+  translated: Set<string>
+}
+
+export async function loadQuizzes(code: string): Promise<LoadedQuizzes> {
+  const english = { quizzes: ENGLISH_QUIZZES, translated: new Set(code === 'en' ? Object.keys(ENGLISH_QUIZZES) : []) }
   const load = loaders[`./quizzes/${code}.json`]
-  if (!load) return ENGLISH_QUIZZES
+  if (!load) return english
   try {
-    return { ...ENGLISH_QUIZZES, ...(await load()).default }
+    const own = (await load()).default
+    return { quizzes: { ...ENGLISH_QUIZZES, ...own }, translated: new Set(Object.keys(own)) }
   } catch {
-    return ENGLISH_QUIZZES
+    return english
   }
 }

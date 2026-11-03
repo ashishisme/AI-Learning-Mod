@@ -5,12 +5,14 @@ import {
   fetchLesson,
   fetchAdaptiveLesson,
   Lesson as LessonData,
+  Served,
   AdaptiveLessonPayload,
   ApiError,
   isLocalLLMUrl,
 } from '../api'
 import { useProgressStore, useAudienceModeStore, useRuntimeStore, useSettingsStore } from '../store'
-import { useT } from '../i18n'
+import { useLanguage, useT } from '../i18n'
+import { NotTranslatedNotice } from '../components/NotTranslatedNotice'
 import { MarkdownBlock } from '../components/MarkdownBlock'
 import { TutorPanel } from '../components/TutorPanel'
 import { AudienceModeSelector } from '../components/AudienceModeSelector'
@@ -18,8 +20,8 @@ import { AdaptiveLessonView } from '../components/AdaptiveLessonView'
 
 export const Lesson: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const [lesson, setLesson] = useState<LessonData | null>(null)
-  const [adaptivePayload, setAdaptivePayload] = useState<AdaptiveLessonPayload | null>(null)
+  const [lesson, setLesson] = useState<(LessonData & Served) | null>(null)
+  const [adaptivePayload, setAdaptivePayload] = useState<(AdaptiveLessonPayload & Served) | null>(null)
   const [loading, setLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -30,6 +32,7 @@ export const Lesson: React.FC = () => {
   const { localLLMEnabled, baseUrl } = useSettingsStore((st) => st.settings)
   // FR-021a: a hosted learner's own local AI works even while the hosted tutor is off.
   const t = useT()
+  const { code } = useLanguage()
   const tutorEnabled = serverTutor || (hosted && !!localLLMEnabled && isLocalLLMUrl(baseUrl))
 
   // 1. Fetch canonical lesson metadata
@@ -45,7 +48,7 @@ export const Lesson: React.FC = () => {
         setErrorMessage(err instanceof ApiError ? err.message : t('lesson.loadFailed'))
         setLoading(false)
       })
-  }, [id])
+  }, [id, code])
 
   // 2. Fetch adaptive payload when mode changes
   useEffect(() => {
@@ -62,7 +65,7 @@ export const Lesson: React.FC = () => {
         console.warn('Could not load adaptive payload for mode:', audienceMode, err)
         setAdaptivePayload(null)
       })
-  }, [id, audienceMode])
+  }, [id, audienceMode, code])
 
   if (loading) {
     return (
@@ -162,6 +165,11 @@ export const Lesson: React.FC = () => {
 
       {/* Audience Mode Selector Toggle (FR-ADAPT-02) */}
       <AudienceModeSelector className="mb-6" />
+
+      {/* FR-009: the part on screen came back in English */}
+      {code !== 'en' && (isAdaptiveActive ? adaptivePayload?.servedLang : lesson.servedLang) !== code && (
+        <NotTranslatedNotice className="mb-6" />
+      )}
 
       {/* Lesson Header Bench (Standard Mode) */}
       {!isAdaptiveActive && (

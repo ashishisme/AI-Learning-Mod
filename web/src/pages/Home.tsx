@@ -3,7 +3,8 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { fetchLessons, LessonMeta, ApiError } from '../api'
 import { useProgressStore, useSettingsStore } from '../store'
-import { useT } from '../i18n'
+import { useLanguage, useT } from '../i18n'
+import { NotTranslatedNotice } from '../components/NotTranslatedNotice'
 
 export const Home: React.FC = () => {
   const [lessons, setLessons] = useState<LessonMeta[]>([])
@@ -16,11 +17,14 @@ export const Home: React.FC = () => {
   const { completedLessons, toggleLesson, isLessonCompleted } = useProgressStore()
   const { settings, setDrawerOpen } = useSettingsStore()
   const t = useT()
+  const { code } = useLanguage()
+  const [servedLang, setServedLang] = useState('en')
 
   useEffect(() => {
     fetchLessons()
       .then((data) => {
         setLessons(data.lessons || [])
+        setServedLang(data.servedLang || 'en')
         setLoading(false)
       })
       .catch((err) => {
@@ -32,7 +36,7 @@ export const Home: React.FC = () => {
         }
         setLoading(false)
       })
-  }, [])
+  }, [code])
 
   // Modules list for filtering
   const modules = useMemo(() => {
@@ -120,6 +124,7 @@ export const Home: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto py-10 px-4 sm:px-6">
+      {code !== 'en' && servedLang !== code && <NotTranslatedNotice className="mb-6" />}
       {/* Editorial Header */}
       <header className="mb-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">

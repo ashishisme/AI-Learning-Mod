@@ -5,6 +5,7 @@ import { ENGLISH_QUIZZES, loadQuizzes, LessonQuiz } from '../data/quizzes'
 import { useProgressStore } from '../store'
 import { askTutorStream } from '../api'
 import { useLanguage, useT } from '../i18n'
+import { NotTranslatedNotice } from '../components/NotTranslatedNotice'
 
 export const Quiz: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -12,9 +13,10 @@ export const Quiz: React.FC = () => {
   const t = useT()
   const { code } = useLanguage()
   const [quizzes, setQuizzes] = useState(ENGLISH_QUIZZES)
+  const [translated, setTranslated] = useState<Set<string>>(new Set())
   useEffect(() => {
     let live = true
-    void loadQuizzes(code).then((q) => { if (live) setQuizzes(q) })
+    void loadQuizzes(code).then((q) => { if (live) { setQuizzes(q.quizzes); setTranslated(q.translated) } })
     return () => { live = false }
   }, [code])
   const quiz: LessonQuiz | undefined = quizzes[lessonId]
@@ -149,6 +151,7 @@ export const Quiz: React.FC = () => {
           {t('quiz.lessonLabel', { id: quiz.lessonId })}
         </span>
       </div>
+      {code !== 'en' && !translated.has(lessonId) && <NotTranslatedNotice className="mb-6" />}
 
       {isCompleted ? (
         /* Quiz Completed Recap Card */

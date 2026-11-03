@@ -6,6 +6,7 @@ import { LocalLLMSettings } from './LocalLLMSettings'
 import pkg from '../../package.json'
 import { buildInfo, formatBuild } from '../buildInfo'
 import { useT } from '../i18n'
+import { LanguageSwitcher } from './LanguageSwitcher'
 
 export const SettingsModal: React.FC = () => {
   const { settings, isDrawerOpen, setDrawerOpen, updateSettings, resetDefaults } = useSettingsStore()
@@ -120,6 +121,8 @@ export const SettingsModal: React.FC = () => {
             ✕
           </button>
         </div>
+
+        <LanguageSwitcher variant="settings" />
 
         {/* Theme Preference (FR-UI-15) */}
         <div>

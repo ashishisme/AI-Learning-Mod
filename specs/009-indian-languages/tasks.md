@@ -180,7 +180,7 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 
 ### Tests for User Story 1
 
-- [ ] T044 [P] [US1] Create `web/tests/i18n.spec.ts`, mocking runtime `languages: [en, hi]`:
+- [X] T044 [P] [US1] Create `web/tests/i18n.spec.ts`, mocking runtime `languages: [en, hi]`:
   - **Switching:** the switcher in the header and in Settings switches in under 1 s, with no reload and no loss of progress. `<html lang="hi">` is set, and the choice persists across a reload.
   - **First visit:** with `navigator.languages = ['hi-IN','en']` the app opens in Hindi. With `['en','hi']` it opens in English.
   - **Fallback notice:** when the lesson response has `Content-Language: en` while Hindi is chosen, `[data-testid="not-translated-notice"]` shows in Hindi.
@@ -190,14 +190,14 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 
 ### Implementation for User Story 1
 
-- [ ] T046 [P] [US1] Create `web/src/components/LanguageSwitcher.tsx`. It renders only when `languages.length > 1`, shows each language's native `name`, uses `data-testid="language-switcher"` and has a 44 px minimum target and an accessible label. Place it in the header in `web/src/App.tsx` and in `web/src/components/SettingsModal.tsx`. Use the `impeccable` and `ui-ux-pro-max` skills for its design (CLAUDE.md).
-- [ ] T047 [P] [US1] Create `web/src/components/NotTranslatedNotice.tsx` (`data-testid="not-translated-notice"`, text `t('lesson.notTranslated')`). Show it in `web/src/pages/Lesson.tsx` and `web/src/components/AdaptiveLessonView.tsx` when `servedLang` differs from the chosen language, and in `web/src/pages/Quiz.tsx` when the quiz came from English.
-- [ ] T048 [US1] Make `loadQuizzes(code)` in `web/src/data/quizzes.ts` load `quizzes/<code>.json` dynamically, falling back per quiz to English and flagging it for the notice. In `web/src/pages/Home.tsx`, make search match titles in the chosen language and show reading time from the served content.
+- [X] T046 [P] [US1] Create `web/src/components/LanguageSwitcher.tsx`. It renders only when `languages.length > 1`, shows each language's native `name`, uses `data-testid="language-switcher"` and has a 44 px minimum target and an accessible label. Place it in the header in `web/src/App.tsx` and in `web/src/components/SettingsModal.tsx`. Use the `impeccable` and `ui-ux-pro-max` skills for its design (CLAUDE.md).
+- [X] T047 [P] [US1] Create `web/src/components/NotTranslatedNotice.tsx` (`data-testid="not-translated-notice"`, text `t('lesson.notTranslated')`). Show it in `web/src/pages/Lesson.tsx` and `web/src/components/AdaptiveLessonView.tsx` when `servedLang` differs from the chosen language, and in `web/src/pages/Quiz.tsx` when the quiz came from English.
+- [X] T048 [US1] Make `loadQuizzes(code)` in `web/src/data/quizzes.ts` load `quizzes/<code>.json` dynamically, falling back per quiz to English and flagging it for the notice. In `web/src/pages/Home.tsx`, make search match titles in the chosen language and show reading time from the served content.
 - [ ] T049 [US1] Run `go run ./cmd/ingest -lang hi` and `go run ./cmd/translate -lang hi -kind all`. This produces drafts for the 12 adaptive lessons under `public-content/lang/hi/lessons/`, for `web/src/data/quizzes/hi.json` and for `web/src/i18n/hi.json`. Add ledger `draft` entries for the 6 generated base lessons. Run `go run ./cmd/ingest -verify`, which should show warnings only, and commit the drafts.
 - [ ] T050 [US1] `[external]` The owner names the native-speaker reviewer. The reviewer corrects every Hindi file and `content/glossary/hi.json` in PRs, then sets each ledger entry to `approved` with `reviewer` and `date`. Rate 20 sampled sections natural and accurate for the age group, needing at least 18 (SC-010), and record the result in `specs/009-indian-languages/checklists/hindi-review.md`.
 - [ ] T051 [US1] Review the Hindi screens at 360 px and on desktop with the `impeccable` and `ui-ux-pro-max` skills: line height for Devanagari, wrapping of long words, and contrast in light and dark. Fix any styling in `web/src/index.css` or the affected components so T045 passes.
 - [ ] T052 [US1] Set Hindi to `"status": "approved"` in `public-content/languages.json`. `go run ./cmd/ingest -verify` must exit 0, and T044 and T045 must pass.
-- [ ] T053 [US1] Add FR-I18N-05 (learner language choice, browser-only, first-visit rule, not-translated notice) to `spec/SPEC.md`. Add AC-49 to `spec/ACCEPTANCE.md`, pointing at `web/tests/i18n.spec.ts`.
+- [X] T053 [US1] Add FR-I18N-06 (learner language choice, browser-only, first-visit rule, not-translated notice) to `spec/SPEC.md`. Add AC-49 to `spec/ACCEPTANCE.md`, pointing at `web/tests/i18n.spec.ts`.
 - [ ] T054 [US1] Release B3. Run the full suites, then commit, open a PR, merge and tag `v0.3.0`. On the live site, check `/api/runtime.languages` includes `hi`, and run the quickstart B3 checks in Chrome on desktop and Android.
 
 **Checkpoint**: Hindi text is live (MVP for learners).
@@ -256,7 +256,7 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
   3. `gcloud storage rsync .narration-cache gs://<cache-bucket>`
 
   Take the bucket from a new environment variable `GCP_NARRATION_CACHE_BUCKET`, and add it to the variable list in `scripts/automate_deployment.sh`.
-- [ ] T067 [US2] Add FR-I18N-06 (recorded narration per approved language, cache by text hash, release gate) and FR-I18N-07 (device-voice fallback, never another language's voice) to `spec/SPEC.md`, and AC-50 to `spec/ACCEPTANCE.md`
+- [ ] T067 [US2] Add FR-I18N-07 (recorded narration per approved language, cache by text hash, release gate) and FR-I18N-08 (device-voice fallback, never another language's voice) to `spec/SPEC.md`, and AC-50 to `spec/ACCEPTANCE.md`
 - [ ] T068 [US2] Release B4. Run the full suites, then commit, open a PR, merge and tag `v0.3.1`. Record the image size and cold-start time against `v0.3.0`, and the TTS characters billed, in `specs/009-indian-languages/checklists/hindi-review.md`. Re-tag a no-content-change release and confirm 0 characters are billed (SC-009).
 
 **Checkpoint**: Hindi audio is live.
@@ -277,7 +277,7 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 - [ ] T071 [US6] Add `Lang string \`json:"lang,omitempty"\`` to `TutorRequest` in `internal/api/tutor.go`, validated through `i18n.Resolve`. `loadTutorPrompt` reads from `lang/<code>/` with English fallback and appends "Answer in simple Hindi (Devanagari), keeping technical terms with English in brackets." Make `UncitedFallback` and `SafetyReply` come from `internal/i18n/messages.go`, and update `internal/api/tutor_prepare.go` so T070 passes.
 - [ ] T072 [US6] Send `lang` from `askTutorStream` and the local-AI path in `web/src/api.ts`. In `web/src/components/TutorPanel.tsx`, set speech recognition `lang` to the chosen language's `speechLang` (FR-026).
 - [ ] T073 [P] [US6] Add a Hindi case to `web/tests/cloud-hardening.spec.ts`. With Hindi chosen and a mocked `/api/tutor/prepare` and local AI, the request carries `lang: "hi"`, the answer streams and the Hindi citation is appended. Also check that the recognition `lang` is `hi-IN`.
-- [ ] T074 [US6] Add FR-I18N-08 (tutor in the learner's language) to `spec/SPEC.md` and AC-51 to `spec/ACCEPTANCE.md`. Release B5: run the full suites, commit, open a PR, merge and tag `v0.3.2`.
+- [ ] T074 [US6] Add FR-I18N-09 (tutor in the learner's language) to `spec/SPEC.md` and AC-51 to `spec/ACCEPTANCE.md`. Release B5: run the full suites, commit, open a PR, merge and tag `v0.3.2`.
 
 **Checkpoint**: All Hindi stories are live.
 

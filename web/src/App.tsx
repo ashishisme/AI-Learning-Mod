@@ -8,6 +8,7 @@ import { Invite } from './pages/Invite'
 import { AdminLayout } from './pages/admin/AdminLayout'
 import { ExpiryBanner } from './components/ExpiryBanner'
 import { FeedbackButton } from './components/FeedbackButton'
+import { LanguageSwitcher } from './components/LanguageSwitcher'
 import { AuthGate, SignOutControl } from './components/AuthGate'
 import { Attribution } from './components/Attribution'
 import { SettingsModal } from './components/SettingsModal'
@@ -62,6 +63,8 @@ export const App: React.FC = () => {
             >
               {t('nav.curriculum')}
             </Link>
+
+            <LanguageSwitcher />
 
             {/* FR-UI-15, AC-36: Quick Theme Toggle Button */}
             <button
