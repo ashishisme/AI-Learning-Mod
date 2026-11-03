@@ -19,6 +19,16 @@
 - Q: Who translates the app's own content? → A: **An AI drafts it, and a native-speaker reviewer must approve it** before a language is offered. Technical terms keep the English in brackets, for example तंत्रिका नेटवर्क (neural network).
 - Q: How is it delivered? → A: **As a series of incremental releases.** Every release keeps English working unchanged, and Hindi appears to learners only once it is approved.
 
+### Session 2026-11-03, later (owner decisions during implementation)
+
+- Q: Which service drafts the translations? → A: **Gemini on Google Vertex AI**, through the OpenAI-compatible endpoint, using the owner's short-lived `gcloud` token. The Google Cloud Translation API was reviewed and rejected: it is phrase-for-phrase, ignores the tone and bracket rules, breaks Markdown, and its Go client would be a new dependency. Working model: `google/gemini-3.8-flash` in region `global`. The `us-central1` region and `gemini-2.5-flash` return 404 for this project.
+- Q: Phone-size problems in the existing English app? → A: **Fix them app-wide now:** a 44 px minimum for every control, no clipped text, at 360 px.
+- Q: Narration approach? → A: **Device voices first, then recorded narration.**
+  - Device voices: a Hindi device voice is used for Hindi, never an English one.
+  - Recordings: **WaveNet/Neural2** voices for **all three personas** (Chip, Nova, Prof. Alan), generated **on the owner's Mac first**, kept in a private Cloud Storage bucket, and copied into the image at release. Generating them in CI comes later.
+- Q: The tutor's fallback is fixed English text in Constitution Principle II. → A: **Ratified:** it may be the approved translation in the learner's language. Constitution 2.4.0, FR-TUT-06 amended.
+- Q: Scope of Hindi content? → A: **Everything a learner sees is Hindi.** That covers all lessons in all three modes, quizzes, UI chrome, topic labels and the voice studio, with the narration voice also Hindi. Names (Chip, Nova, Prof. Alan) and code may stay as written.
+
 ## Context
 
 Today every part of the app is English only. The interface text is written in English throughout, the kids and plain-English lessons and the quizzes exist only in English, and narration uses the device's English voices. The course the app is based on already publishes translations of its base lessons for nine Indian languages (Hindi, Bengali, Marathi, Tamil, Telugu, Kannada, Malayalam, Punjabi, Urdu) at the version the app uses. The app does not use them yet.

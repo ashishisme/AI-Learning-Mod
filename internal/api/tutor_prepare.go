@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"ai-foundations-coach/internal/i18n"
 	"ai-foundations-coach/internal/usage"
 )
 
@@ -30,7 +31,7 @@ type TutorPrepareResponse struct {
 // TutorPrepareHandler serves POST /api/tutor/prepare on a hosted server (FR-021a). The learner's
 // browser sends the returned prompt to an AI on their own computer, so this handler never calls
 // a model, spends nothing and is available even when the hosted tutor is off.
-func TutorPrepareHandler(contentDir string, counter *usage.Recorder) http.HandlerFunc {
+func TutorPrepareHandler(contentDir string, counter *usage.Recorder, langs *i18n.Set) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		req, tone, status, msg := decodeTutorRequest(r)
@@ -40,13 +41,14 @@ func TutorPrepareHandler(contentDir string, counter *usage.Recorder) http.Handle
 			return
 		}
 		counter.Inc(usage.TutorQ) // a count only: the question itself is never recorded
+		language := tutorLanguage(langs, req.Lang)
 
 		// FR-REV-20: the same screen as the hosted tutor, before any prompt leaves the server.
 		if cat := ScreenQuestion(req.Question); cat != SafetyNone {
-			_ = json.NewEncoder(w).Encode(TutorPrepareResponse{SafetyReply: SafetyReply(cat)})
+			_ = json.NewEncoder(w).Encode(TutorPrepareResponse{SafetyReply: i18n.SafetyReply(language.Code, string(cat))})
 			return
 		}
-		p, status, msg := loadTutorPrompt(contentDir, req, tone, LocalLessonBytes, true)
+		p, status, msg := loadTutorPrompt(contentDir, req, tone, LocalLessonBytes, true, language)
 		if status != 0 {
 			w.WriteHeader(status)
 			_ = json.NewEncoder(w).Encode(TutorPrepareResponse{Error: msg})
@@ -56,7 +58,7 @@ func TutorPrepareHandler(contentDir string, counter *usage.Recorder) http.Handle
 			Messages:  []promptMessage{{Role: "system", Content: p.system}, {Role: "user", Content: p.user}},
 			MaxTokens: MaxCompletionTokens,
 			Citation:  p.citation(),
-			Fallback:  UncitedFallback,
+			Fallback:  i18n.UncitedFallback(language.Code),
 		})
 	}
 }

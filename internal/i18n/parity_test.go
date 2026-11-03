@@ -82,6 +82,7 @@ func TestPreserved(t *testing.T) {
 		{"## A", "क", "headings: 1 in English, 0 here"},
 		{"see https://x.y/z", "देखें https://x.y/z", ""},
 		{"see https://x.y/z", "देखें https://x.y", "URLs changed"},
+		{"such as http://localhost:11434/v1.", "जैसे http://localhost:11434/v1।", ""},
 		{"<b>{n}</b> left", "<b>{n}</b> बाकी", ""},
 		{"<b>{n}</b> left", "{n} बाकी", "<b> marks: 1 in English, 0 here"},
 	} {

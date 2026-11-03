@@ -1,4 +1,5 @@
 import React from 'react'
+import { useT } from '../i18n'
 
 interface Props {
   size?: number
@@ -6,6 +7,7 @@ interface Props {
 }
 
 export const ChipVectorAvatar: React.FC<Props> = ({ size = 64, className = '' }) => {
+  const t = useT()
   return (
     <svg
       width={size}
@@ -14,7 +16,7 @@ export const ChipVectorAvatar: React.FC<Props> = ({ size = 64, className = '' })
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={`select-none filter drop-shadow-md ${className}`}
-      aria-label="Chip the Robot Avatar"
+      aria-label={t('adaptive.chipAvatar')}
     >
       <defs>
         <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">

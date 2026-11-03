@@ -46,6 +46,7 @@ func run(root string, args []string, getenv func(string) string, stdout, stderr 
 	only := fs.String("only", "", "translate just this file, as its path in the review ledger")
 	force := fs.Bool("force", false, "overwrite a file even if it is approved and current")
 	dryRun := fs.Bool("dry-run", false, "count the fields and characters; make no request")
+	recordBase := fs.Bool("record-base", false, "record draft review entries for the ingested base lessons; make no request")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
@@ -86,6 +87,9 @@ func run(root string, args []string, getenv func(string) string, stdout, stderr 
 	if err != nil {
 		fmt.Fprintln(stderr, err)
 		return 2
+	}
+	if *recordBase {
+		return recordBaseLessons(root, targets, ledger, stdout, stderr)
 	}
 
 	var client *openai.Client
@@ -167,6 +171,38 @@ func run(root string, args []string, getenv func(string) string, stdout, stderr 
 	if failed {
 		return 1
 	}
+	return 0
+}
+
+// recordBaseLessons adds a draft ledger entry for each ingested base lesson (the course's own
+// translation), so a reviewer approves it like every other file. Approved and current entries stay.
+func recordBaseLessons(root string, targets []i18n.Target, ledger *i18n.Ledger, stdout, stderr io.Writer) int {
+	added := 0
+	for _, t := range targets {
+		if t.Kind != i18n.KindBase {
+			continue
+		}
+		file := filepath.Join(root, filepath.FromSlash(t.Path))
+		if _, err := os.Stat(file); err != nil || approvedAndCurrent(root, t, ledger) {
+			continue // not ingested yet, or already approved
+		}
+		src, err1 := i18n.SourceHash(root, t)
+		tr, err2 := i18n.HashFile(file)
+		if err := errors.Join(err1, err2); err != nil {
+			fmt.Fprintln(stderr, err)
+			return 1
+		}
+		if e := ledger.Find(t.Path); e != nil && e.Status == i18n.ReviewDraft && e.SourceHash == src && e.TranslationHash == tr {
+			continue // the same draft is already recorded
+		}
+		ledger.Upsert(i18n.Entry{Path: t.Path, Kind: t.Kind, SourceHash: src, TranslationHash: tr})
+		added++
+	}
+	if err := ledger.Save(root); err != nil {
+		fmt.Fprintln(stderr, err)
+		return 1
+	}
+	fmt.Fprintf(stdout, "%d base lessons recorded as drafts for review\n", added)
 	return 0
 }
 
@@ -260,6 +296,10 @@ func allowed(kind, pattern string) bool {
 	return false
 }
 
+// retryWaits are the pauses before each retry of a batch after a rate limit or server error. A batch
+// whose answer was incomplete or broke the structure is retried at once: the model's output varies.
+var retryWaits = []time.Duration{10 * time.Second, 30 * time.Second, 60 * time.Second}
+
 // translateFields sends the fields in batches and checks every answer before any file is written.
 func translateFields(client *openai.Client, model, system string, fields []field) ([]string, string) {
 	out := make([]string, len(fields))
@@ -269,46 +309,70 @@ func translateFields(client *openai.Client, model, system string, fields []field
 			size += len(fields[end].text)
 			end++
 		}
-		batch := map[string]string{}
-		for i := start; i < end; i++ {
-			batch[strconv.Itoa(i)] = fields[i].text
-		}
-		user, _ := json.Marshal(batch)
-		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
-		resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-			Model:       model,
-			Temperature: 0.2,
-			Messages: []openai.ChatCompletionMessage{
-				{Role: openai.ChatMessageRoleSystem, Content: system},
-				{Role: openai.ChatMessageRoleUser, Content: string(user)},
-			},
-		})
-		cancel()
-		if err != nil {
-			return nil, "model request failed: " + err.Error()
-		}
-		if len(resp.Choices) == 0 {
-			return nil, "the model sent no answer"
-		}
-		var got map[string]string
-		content := strings.TrimSpace(resp.Choices[0].Message.Content)
-		content = strings.TrimSuffix(strings.TrimPrefix(strings.TrimPrefix(content, "```json"), "```"), "```")
-		if err := json.Unmarshal([]byte(strings.TrimSpace(content)), &got); err != nil {
-			return nil, "the model's answer is not the JSON object asked for"
-		}
-		for i := start; i < end; i++ {
-			tr, ok := got[strconv.Itoa(i)]
-			if !ok || strings.TrimSpace(tr) == "" {
-				return nil, fmt.Sprintf("field %s has no translation", describe(fields[i].path))
+		var problem string
+		for attempt := 0; ; attempt++ {
+			var wait bool
+			problem, wait = translateBatch(client, model, system, fields, start, end, out)
+			if problem == "" || attempt == len(retryWaits) {
+				break
 			}
-			if r := i18n.Preserved(fields[i].text, tr); r != "" {
-				return nil, fmt.Sprintf("field %s: %s", describe(fields[i].path), r)
+			if wait {
+				time.Sleep(retryWaits[attempt])
 			}
-			out[i] = tr
+		}
+		if problem != "" {
+			return nil, problem
 		}
 		start = end
 	}
 	return out, ""
+}
+
+// translateBatch translates fields[start:end] into out. It reports a problem, and whether the
+// service asked to slow down (rate limit or server error), so the caller knows to wait.
+func translateBatch(client *openai.Client, model, system string, fields []field, start, end int, out []string) (string, bool) {
+	batch := map[string]string{}
+	for i := start; i < end; i++ {
+		batch[strconv.Itoa(i)] = fields[i].text
+	}
+	user, _ := json.Marshal(batch)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
+		Model:       model,
+		Temperature: 0.2,
+		Messages: []openai.ChatCompletionMessage{
+			{Role: openai.ChatMessageRoleSystem, Content: system},
+			{Role: openai.ChatMessageRoleUser, Content: string(user)},
+		},
+	})
+	cancel()
+	if err != nil {
+		var reqErr *openai.RequestError
+		var apiErr *openai.APIError
+		busy := (errors.As(err, &reqErr) && (reqErr.HTTPStatusCode == 429 || reqErr.HTTPStatusCode >= 500)) ||
+			(errors.As(err, &apiErr) && (apiErr.HTTPStatusCode == 429 || apiErr.HTTPStatusCode >= 500))
+		return "model request failed: " + err.Error(), busy
+	}
+	if len(resp.Choices) == 0 {
+		return "the model sent no answer", false
+	}
+	var got map[string]string
+	content := strings.TrimSpace(resp.Choices[0].Message.Content)
+	content = strings.TrimSuffix(strings.TrimPrefix(strings.TrimPrefix(content, "```json"), "```"), "```")
+	if err := json.Unmarshal([]byte(strings.TrimSpace(content)), &got); err != nil {
+		return "the model's answer is not the JSON object asked for", false
+	}
+	for i := start; i < end; i++ {
+		tr, ok := got[strconv.Itoa(i)]
+		if !ok || strings.TrimSpace(tr) == "" {
+			return fmt.Sprintf("field %s has no translation", describe(fields[i].path)), false
+		}
+		if r := i18n.Preserved(fields[i].text, tr); r != "" {
+			return fmt.Sprintf("field %s: %s", describe(fields[i].path), r), false
+		}
+		out[i] = tr
+	}
+	return "", false
 }
 
 func describe(path []any) string {

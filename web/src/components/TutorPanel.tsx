@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { askTutorStream, ApiError } from '../api'
 import { useAudienceModeStore } from '../store'
 import { speechService } from '../services/speechService'
-import { useT } from '../i18n'
+import { useLanguage, useT } from '../i18n'
 
 interface TutorPanelProps {
   lessonId: string
@@ -12,6 +12,7 @@ interface TutorPanelProps {
 export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
   const { mode: audienceMode } = useAudienceModeStore()
   const t = useT()
+  const { language } = useLanguage() // SPEC-009 FR-026: the microphone and read-aloud follow the learner's language
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -79,7 +80,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
       const recognition = new SpeechRecognition()
       recognition.continuous = false
       recognition.interimResults = false
-      recognition.lang = 'en-US'
+      recognition.lang = language.speechLang
 
       recognition.onstart = () => setIsListening(true)
       recognition.onend = () => {
@@ -121,7 +122,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
       setIsReadingAnswer(false)
     } else {
       setIsReadingAnswer(true)
-      speechService.speak(answer, { onEnd: () => setIsReadingAnswer(false), onError: () => setIsReadingAnswer(false) })
+      speechService.speak(answer, { speechLang: language.speechLang, onEnd: () => setIsReadingAnswer(false), onError: () => setIsReadingAnswer(false) })
     }
   }
 

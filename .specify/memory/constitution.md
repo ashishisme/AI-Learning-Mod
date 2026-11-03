@@ -10,7 +10,7 @@
 
 ### II. Grounded & Citable AI Responses (Non-Negotiable)
 - All AI tutor responses must strictly adhere to `FR-TUT-06` and `FR-TUT-12`.
-- Responses must be grounded in lesson content and provide section citations formatted as `[<lesson title> § <heading>]` or emit the fallback `"I couldn't find that in this lesson. Try rephrasing or ask about a different section."`.
+- Responses must be grounded in lesson content and provide section citations formatted as `[<lesson title> § <heading>]` or emit the fallback `"I couldn't find that in this lesson. Try rephrasing or ask about a different section."` or its approved translation in the learner's language (amended 2.4.0, 2026-11-03, SPEC-009: an approved language's fallback is reviewed like its other text; grounding and citations remain mandatory in every language).
 - Streaming token delivery (`FR-TUT-11`) over SSE must maintain write-deadline safety (`http.ResponseController.SetWriteDeadline(time.Time{})`) to prevent socket termination during CPU evaluation.
 
 ### III. Technology Constraints (DC-01 .. DC-11)
@@ -50,4 +50,4 @@ Every new phase, PR, or implementation task MUST pass the three-tier verificatio
 - This Constitution supersedes informal prompt requests. If an implementation plan conflicts with this Constitution, the Constitution takes precedence.
 - Proposed amendments to architecture constraints (DC-*) require updating `spec/SPEC.md §8` and this document simultaneously.
 
-**Version**: 2.3.0 | **Ratified**: 2026-10-26 | **Last Amended**: 2026-11-02 (DC-09 hosted store cost wording, 2.3.0; DC-02: Go 1.27.3, 2.2.1; DC-09 access records and feedback remain as ratified in 2.1.0 and 2.2.0) | **Governing Baseline**: `spec/SPEC.md`
+**Version**: 2.4.0 | **Ratified**: 2026-10-26 | **Last Amended**: 2026-11-03 (Principle II fallback may be the approved translation in the learner's language, ratified by the owner, 2.4.0; DC-09 hosted store cost wording, 2.3.0; DC-02: Go 1.27.3, 2.2.1; DC-09 access records and feedback remain as ratified in 2.1.0 and 2.2.0) | **Governing Baseline**: `spec/SPEC.md`

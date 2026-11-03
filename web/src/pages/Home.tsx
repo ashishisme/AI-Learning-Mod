@@ -17,6 +17,8 @@ export const Home: React.FC = () => {
   const { completedLessons, toggleLesson, isLessonCompleted } = useProgressStore()
   const { settings, setDrawerOpen } = useSettingsStore()
   const t = useT()
+  // Topic labels come from the course's folder names; the catalogue gives each a translation.
+  const moduleLabel = (id: string) => t(`module.${id}`) || id
   const { code } = useLanguage()
   const [servedLang, setServedLang] = useState('en')
 
@@ -54,7 +56,7 @@ export const Home: React.FC = () => {
         searchQuery === '' ||
         l.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         l.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (l.module && l.module.toLowerCase().includes(searchQuery.toLowerCase()))
+        (l.module && (l.module.toLowerCase().includes(searchQuery.toLowerCase()) || moduleLabel(l.module).toLowerCase().includes(searchQuery.toLowerCase())))
 
       const matchesModule =
         selectedModule === 'all' ||
@@ -257,7 +259,7 @@ export const Home: React.FC = () => {
                     : 'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                 }`}
               >
-                {mod}
+                {moduleLabel(mod)}
               </button>
             ))}
           </div>
@@ -309,7 +311,7 @@ export const Home: React.FC = () => {
                         </span>
                         {lesson.module && (
                           <span className="inline-block text-[11px] font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
-                            {lesson.module}
+                            {moduleLabel(lesson.module)}
                           </span>
                         )}
                       </div>

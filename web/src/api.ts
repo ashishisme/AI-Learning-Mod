@@ -96,6 +96,18 @@ function getAIHeaders(): Record<string, string> {
   return headers
 }
 
+// SPEC-009 FR-025: the tutor request names the learner's language, and only when it is not English,
+// so English requests are exactly as before. The server ignores a language it does not offer.
+function tutorBody(lessonId: string, question: string, mode?: string): string {
+  const lang = currentLanguage()
+  return JSON.stringify({
+    lessonId,
+    question,
+    ...(mode && mode !== 'standard' ? { mode } : {}),
+    ...(lang !== 'en' ? { lang } : {}),
+  })
+}
+
 export async function askTutor(lessonId: string, question: string): Promise<TutorResponse> {
   const res = await fetch('/api/tutor', {
     method: 'POST',
@@ -103,7 +115,7 @@ export async function askTutor(lessonId: string, question: string): Promise<Tuto
       'Content-Type': 'application/json',
       ...getAIHeaders(),
     },
-    body: JSON.stringify({ lessonId, question }),
+    body: tutorBody(lessonId, question),
   })
   if (!res.ok) {
     const body = await res.json().catch(() => null)
@@ -143,7 +155,7 @@ export async function askTutorStream(
       ...getAIHeaders(),
     },
     // The audience mode is sent separately so the server applies the tone; it is not part of the question.
-    body: JSON.stringify(mode && mode !== 'standard' ? { lessonId, question, mode } : { lessonId, question }),
+    body: tutorBody(lessonId, question, mode),
     signal: controller.signal,
   })
     .then(async (res) => {
@@ -248,7 +260,7 @@ async function askLocalLLMStream(
     const prep = await fetch('/api/tutor/prepare', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(mode && mode !== 'standard' ? { lessonId, question, mode } : { lessonId, question }),
+      body: tutorBody(lessonId, question, mode),
       signal,
     })
     const plan = await prep.json().catch(() => null)

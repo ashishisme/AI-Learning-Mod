@@ -193,9 +193,9 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 - [X] T046 [P] [US1] Create `web/src/components/LanguageSwitcher.tsx`. It renders only when `languages.length > 1`, shows each language's native `name`, uses `data-testid="language-switcher"` and has a 44 px minimum target and an accessible label. Place it in the header in `web/src/App.tsx` and in `web/src/components/SettingsModal.tsx`. Use the `impeccable` and `ui-ux-pro-max` skills for its design (CLAUDE.md).
 - [X] T047 [P] [US1] Create `web/src/components/NotTranslatedNotice.tsx` (`data-testid="not-translated-notice"`, text `t('lesson.notTranslated')`). Show it in `web/src/pages/Lesson.tsx` and `web/src/components/AdaptiveLessonView.tsx` when `servedLang` differs from the chosen language, and in `web/src/pages/Quiz.tsx` when the quiz came from English.
 - [X] T048 [US1] Make `loadQuizzes(code)` in `web/src/data/quizzes.ts` load `quizzes/<code>.json` dynamically, falling back per quiz to English and flagging it for the notice. In `web/src/pages/Home.tsx`, make search match titles in the chosen language and show reading time from the served content.
-- [ ] T049 [US1] Run `go run ./cmd/ingest -lang hi` and `go run ./cmd/translate -lang hi -kind all`. This produces drafts for the 12 adaptive lessons under `public-content/lang/hi/lessons/`, for `web/src/data/quizzes/hi.json` and for `web/src/i18n/hi.json`. Add ledger `draft` entries for the 6 generated base lessons. Run `go run ./cmd/ingest -verify`, which should show warnings only, and commit the drafts.
+- [ ] T049 [US1] *(2026-11-03, in progress: `ingest -lang hi` is done (6 base lessons). The 12 adaptive lessons are drafted with Vertex `google/gemini-3.8-flash` (`global`). `web/src/i18n/hi.json` and `web/src/data/quizzes/hi.json` were still being translated at handoff; see T080.)* Run `go run ./cmd/ingest -lang hi` and `go run ./cmd/translate -lang hi -kind all`. This produces drafts for the 12 adaptive lessons under `public-content/lang/hi/lessons/`, for `web/src/data/quizzes/hi.json` and for `web/src/i18n/hi.json`. Add ledger `draft` entries for the 6 generated base lessons. Run `go run ./cmd/ingest -verify`, which should show warnings only, and commit the drafts.
 - [ ] T050 [US1] `[external]` The owner names the native-speaker reviewer. The reviewer corrects every Hindi file and `content/glossary/hi.json` in PRs, then sets each ledger entry to `approved` with `reviewer` and `date`. Rate 20 sampled sections natural and accurate for the age group, needing at least 18 (SC-010), and record the result in `specs/009-indian-languages/checklists/hindi-review.md`.
-- [ ] T051 [US1] Review the Hindi screens at 360 px and on desktop with the `impeccable` and `ui-ux-pro-max` skills: line height for Devanagari, wrapping of long words, and contrast in light and dark. Fix any styling in `web/src/index.css` or the affected components so T045 passes.
+- [ ] T051 [US1] *(2026-11-03, partly done: the app-wide 44 px and clipping fixes are in commit 07a4a51. The Devanagari line-height and wrapping review waits for hi.json.)* Review the Hindi screens at 360 px and on desktop with the `impeccable` and `ui-ux-pro-max` skills: line height for Devanagari, wrapping of long words, and contrast in light and dark. Fix any styling in `web/src/index.css` or the affected components so T045 passes.
 - [ ] T052 [US1] Set Hindi to `"status": "approved"` in `public-content/languages.json`. `go run ./cmd/ingest -verify` must exit 0, and T044 and T045 must pass.
 - [X] T053 [US1] Add FR-I18N-06 (learner language choice, browser-only, first-visit rule, not-translated notice) to `spec/SPEC.md`. Add AC-49 to `spec/ACCEPTANCE.md`, pointing at `web/tests/i18n.spec.ts`.
 - [ ] T054 [US1] Release B3. Run the full suites, then commit, open a PR, merge and tag `v0.3.0`. On the live site, check `/api/runtime.languages` includes `hi`, and run the quickstart B3 checks in Chrome on desktop and Android.
@@ -269,15 +269,15 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 
 **Independent Test**: With a local AI and Hindi chosen, an answer about lesson 1 is in Hindi and cites a Hindi heading. A Hinglish address gets the Hindi safety reply, and no model is called.
 
-- [ ] T069 [US6] `[external]` Get the owner's ratification of a Constitution Principle II amendment in `.specify/memory/constitution.md`: the fallback is the quoted English text "or its approved translation in the learner's language". Add the matching note to FR-TUT-06 in `spec/SPEC.md`. **Blocks T071–T074.**
-- [ ] T070 [P] [US6] Extend `internal/api/tutor_prepare_test.go` and `internal/api/tutor_test.go`:
+- [X] T069 [US6] `[external]` Get the owner's ratification of a Constitution Principle II amendment in `.specify/memory/constitution.md`: the fallback is the quoted English text "or its approved translation in the learner's language". Add the matching note to FR-TUT-06 in `spec/SPEC.md`. **Blocks T071–T074.**
+- [X] T070 [P] [US6] Extend `internal/api/tutor_prepare_test.go` and `internal/api/tutor_test.go`:
   - With `"lang":"hi"`, the prompt uses `lang/hi/lessons/1-intro.json`, the system prompt has the Hindi-answer instruction, `citation` uses the Hindi title and heading, and `fallback` and the safety replies are the `hi` messages.
   - `"lang":"zz"` behaves as `en`.
   - Unknown fields are still rejected.
-- [ ] T071 [US6] Add `Lang string \`json:"lang,omitempty"\`` to `TutorRequest` in `internal/api/tutor.go`, validated through `i18n.Resolve`. `loadTutorPrompt` reads from `lang/<code>/` with English fallback and appends "Answer in simple Hindi (Devanagari), keeping technical terms with English in brackets." Make `UncitedFallback` and `SafetyReply` come from `internal/i18n/messages.go`, and update `internal/api/tutor_prepare.go` so T070 passes.
-- [ ] T072 [US6] Send `lang` from `askTutorStream` and the local-AI path in `web/src/api.ts`. In `web/src/components/TutorPanel.tsx`, set speech recognition `lang` to the chosen language's `speechLang` (FR-026).
-- [ ] T073 [P] [US6] Add a Hindi case to `web/tests/cloud-hardening.spec.ts`. With Hindi chosen and a mocked `/api/tutor/prepare` and local AI, the request carries `lang: "hi"`, the answer streams and the Hindi citation is appended. Also check that the recognition `lang` is `hi-IN`.
-- [ ] T074 [US6] Add FR-I18N-09 (tutor in the learner's language) to `spec/SPEC.md` and AC-51 to `spec/ACCEPTANCE.md`. Release B5: run the full suites, commit, open a PR, merge and tag `v0.3.2`.
+- [X] T071 [US6] Add `Lang string \`json:"lang,omitempty"\`` to `TutorRequest` in `internal/api/tutor.go`, validated through `i18n.Resolve`. `loadTutorPrompt` reads from `lang/<code>/` with English fallback and appends "Answer in simple Hindi (Devanagari), keeping technical terms with English in brackets." Make `UncitedFallback` and `SafetyReply` come from `internal/i18n/messages.go`, and update `internal/api/tutor_prepare.go` so T070 passes.
+- [X] T072 [US6] Send `lang` from `askTutorStream` and the local-AI path in `web/src/api.ts`. In `web/src/components/TutorPanel.tsx`, set speech recognition `lang` to the chosen language's `speechLang` (FR-026).
+- [X] T073 [P] [US6] Add a Hindi case to `web/tests/cloud-hardening.spec.ts`. With Hindi chosen and a mocked `/api/tutor/prepare` and local AI, the request carries `lang: "hi"`, the answer streams and the Hindi citation is appended. Also check that the recognition `lang` is `hi-IN`.
+- [ ] T074 [US6] *(2026-11-03: FR-I18N-09 and AC-51 are written in SPEC.md 2.7.0 and ACCEPTANCE.md, and the code is done and tested. Only the release part is left.)* Add FR-I18N-09 (tutor in the learner's language) to `spec/SPEC.md` and AC-51 to `spec/ACCEPTANCE.md`. Release B5: run the full suites, commit, open a PR, merge and tag `v0.3.2`.
 
 **Checkpoint**: All Hindi stories are live.
 
@@ -289,8 +289,8 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 
 **Independent Test**: A second fixture language is served, verified and listed with no code change.
 
-- [ ] T075 [P] [US7] Create `internal/i18n/second_language_test.go`. Using a temp `contentDir` with a fixture language `ta`, write `languages.json` (approved), a ledger with approved entries and current hashes, and translated files. Assert `/api/runtime.languages` lists it, the lessons API serves it with `Content-Language: ta`, `ingest -verify` passes, and no Go or TS source references `"hi"` outside catalogues and fixtures (grep the source tree).
-- [ ] T076 [US7] Write `docs/adding-a-language.md`:
+- [X] T075 [P] [US7] Create `internal/i18n/second_language_test.go`. Using a temp `contentDir` with a fixture language `ta`, write `languages.json` (approved), a ledger with approved entries and current hashes, and translated files. Assert `/api/runtime.languages` lists it, the lessons API serves it with `Content-Language: ta`, `ingest -verify` passes, and no Go or TS source references `"hi"` outside catalogues and fixtures (grep the source tree).
+- [X] T076 [US7] Write `docs/adding-a-language.md`:
   1. add the code to `languages.json` as hidden;
   2. `ingest -lang`;
   3. `translate`;
@@ -306,7 +306,7 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 
 ## Phase 10: Polish and cross-cutting concerns
 
-- [ ] T077 [P] Update `README.md` (language support, `cmd/translate`, `cmd/narrate`, owner-only key handling) and `APP_USAGE.md` (how learners switch language and use Hindi narration)
+- [X] T077 [P] Update `README.md` (language support, `cmd/translate`, `cmd/narrate`, owner-only key handling) and `APP_USAGE.md` (how learners switch language and use Hindi narration)
 - [ ] T078 Run `/speckit-converge` for `specs/009-indian-languages` after B5, and act on its findings
 - [ ] T079 [P] Review the whole Hindi learner journey against DC-11 in light and dark with the `impeccable` skill, in both themes, and fix any findings
 
@@ -378,3 +378,59 @@ then: "T037 ingest.go" ∥ "T038 ledger.go" ∥ "T039 parity.go"
 - Every release keeps all existing English tests green (SC-007). A change to an English test is allowed only where the string now comes through `t()` with the same text.
 - **Commits:** commit by explicit path only (Constitution V, Rule 10), with conventional commit prefixes.
 - **External tasks:** T050 (reviewer), T055 (listening test), T065 apply, and T069 (ratification) need people. Schedule them early so they don't block a build.
+
+---
+
+## Handoff (2026-11-03): where the work stands
+
+Read this first if you are picking the feature up.
+
+### Git
+
+- **Branch:** `009-indian-languages`.
+- **Pushed to origin:** B1 (`ae906bf`) and B2 (`e65edf4`) only. No PR yet, because the `gh` CLI isn't installed and the GitHub connector failed. Open the PR from https://github.com/ashishisme/AI-Learning-Mod/compare/cloud-beta...009-indian-languages.
+- **Committed locally, not pushed:**
+  - B3: `5bd7150` spec, `cd5da1d` code, `07a4a51` the 44 px fixes;
+  - B4: `2ec299e` spec, `6094eec` code.
+- **Uncommitted** (all tests pass): B5 (the tutor in Hindi), the Constitution 2.4.0 amendment, SPEC 2.7.0, the second-language test and guide (T075, T076), APP_USAGE and README updates (T077), the translator retry and `-record-base`, the URL-punctuation fix in parity, and the topic-label catalogue keys. Also uncommitted are the Hindi drafts under `public-content/lang/hi/` and `content/review/hi.json`.
+- **How to commit:** with explicit paths only (Rule 10), and the spec change in its own commit (`spec: add FR-I18N-09, AC-51, amend FR-TUT-06 and Constitution II …`).
+- **Delete before committing:** `web/zz-audit.mjs` is a throwaway audit script; delete it after T081.
+
+### Environment on the owner's Mac
+
+- **`gcloud`:** at `~/google-cloud-sdk/bin/gcloud` (not on PATH for agents), signed in as the owner, project `ai-learning-513415`.
+- **Terraform:** `/usr/local/bin/terraform` v1.9.8. The configuration validates, but has **not** been planned or applied (T065).
+- **GitHub token:** a working one is in `.env`, which is ignored by git.
+- **Translate env:**
+  - `TRANSLATE_BASE_URL=https://aiplatform.googleapis.com/v1/projects/ai-learning-513415/locations/global/endpoints/openapi`
+  - `TRANSLATE_MODEL=google/gemini-3.8-flash`
+  - `TRANSLATE_API_KEY=$(~/google-cloud-sdk/bin/gcloud auth print-access-token)`, valid for one hour.
+- **Hindi preview:**
+  - Run a server with `CONTENT_DIR` pointing at a copy of `public-content` whose `languages.json` marks `hi` approved, without the `.env` auth settings. Then run `vite` on port 3000.
+  - The repository's `languages.json` keeps Hindi **hidden** until T052.
+
+### What learners would see today, with Hindi switched on in the preview
+
+- **Hindi:** all 6 base lessons (the course's own translation) and all 12 Kids and Plain English lessons (AI drafts).
+- **English until T080 and T081:** UI chrome, quizzes, topic labels and voice-studio text.
+
+### Owner decisions already taken
+
+See spec.md "Clarifications, later session" and plan.md "Implementation decisions and deviations".
+
+### Next tasks
+
+- [ ] T080 Finish the Hindi UI catalogue and quizzes. The background run started at handoff may have written `web/src/i18n/hi.json` and `web/src/data/quizzes/hi.json`; check with `go run ./cmd/ingest -verify` (warnings list what's missing). Otherwise run `go run ./cmd/translate -lang hi -only web/src/i18n/hi.json` and `-only web/src/data/quizzes/hi.json` with the translate env above. Then rerun the UI file once, so it includes the `module.*` keys added after the run started.
+- [ ] T081 With the Hindi preview running, run `node web/zz-audit.mjs`, which lists visible English per page: Home, Settings, Help, the voice studio, every lesson in 3 modes, every quiz.
+  - Move every leftover string into `web/src/i18n/en.json` with the same English text, so the B1 baseline stays green, and render it through `t()`.
+  - Names (Chip, Nova, Prof. Alan) and code may stay.
+  - Then translate the UI file again, until the audit lists only names and code. The SC-001 test in `web/tests/i18n.spec.ts` then runs, because `hi.json` exists, and must pass, together with the 360 px test (T045).
+- [ ] T082 Run `go run ./cmd/translate -lang hi -record-base`. Then `go run ./cmd/ingest -verify` should list only drafts, plus "no recordings yet" for audio.
+- [ ] T083 Run the full suites (`go vet ./... && go test -race ./...`, and `cd web && npx tsc --noEmit -p . && npx playwright test --project=chromium`). Commit B5 (spec, then code), the docs and the Hindi drafts by explicit path. Ask the owner before pushing.
+- [ ] T084 `[external]` The owner reviews the 20 new translated images in `public-content/assets/*.webp` for Microsoft logos (NFR-LIC-02). Add any offending content hash to `brandedImages` in `internal/ingest/ingest.go`.
+- [ ] T085 `[external]` The owner applies Terraform in Cloud Shell (narration bucket, TTS and Storage APIs) and sets the GitHub variable `GCP_NARRATION_BUCKET` (`automate_deployment.sh` does this).
+- [ ] T086 Voice listening test (T055):
+  - Run `go run ./cmd/narrate -lang hi -sample <voice>` for a few `hi-IN` WaveNet or Neural2 voices, with `TTS_ACCESS_TOKEN` and `TTS_PROJECT=ai-learning-513415` set.
+  - The owner picks one voice per persona, and they go into `content/voices/hi.json`.
+  - Then run `narrate -lang hi` and `gcloud storage rsync` to the bucket. Re-record after the reviewer's corrections, because only changed text is recorded again.
+- [ ] T087 Releases, in order, with owner approval at each outward step: push the branch, PR to `cloud-beta`, merge, then tag `v0.2.0` (B1) through `v0.3.2` (B5) as the plan describes. Hindi stays hidden until T050 (reviewer approval) and T052 (status `approved`).

@@ -164,6 +164,8 @@ Review record for the current pin (2026-11-02): 22 images reviewed. 2 left out f
 
 Languages are listed in `public-content/languages.json`. A language marked `hidden` is built and checked but not offered to learners. Only a reviewed PR changes it to `approved`.
 
+To add a language, follow [docs/adding-a-language.md](docs/adding-a-language.md).
+
 - **Base lessons** come from the course's own translation at the same pin: `go run ./cmd/ingest` ingests every listed language, and `go run ./cmd/ingest -lang hi` ingests just one. Translated images are new images, so **review them for logos as above** before a language is approved.
 - **App-written content** (kids and plain-English lessons, quizzes, UI text) is drafted with `go run ./cmd/translate -lang hi [-kind adaptive|quiz|ui] [-only <path>] [-force] [-dry-run]`. It uses the glossary in `content/glossary/<code>.json` and records each draft in `content/review/<code>.json`.
 - **Review:** a native reviewer corrects each file in a PR and sets its ledger entry to `"status": "approved"` with their name and the date. Any later change to the file or its English source makes the entry stale.

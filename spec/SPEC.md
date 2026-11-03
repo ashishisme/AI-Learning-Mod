@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.6.0 |
+| Version | 2.7.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -157,6 +157,7 @@ delimiter.
 **FR-TUT-06.** If the model response does not contain a citation of the
 form `[<title> § …]`, the system shall replace it with
 `"I couldn't find that in this lesson. Try rephrasing or ask about a different section."`
+*Amended by SPEC-009, 2026-11-03 (Constitution 2.4.0):* for a learner whose request names an approved language other than English, the replacement is that language's approved translation of this text, and the citation keeps the form `[<title> § …]` using the translated lesson's title and headings.
 
 **FR-TUT-07.** Empty `question`, or `question` exceeding 500 characters,
 shall produce 400.
@@ -370,6 +371,14 @@ the recorder. The recording credential is a short-lived token on the owner's mac
 the language of the text on screen (English for content that fell back to English). A text is never
 read by a voice of another language: when the device has none, nothing is spoken and the learner is
 told that narration in their language is not available on this device. English narration is unchanged.
+
+**FR-I18N-09.** Added 2.7.0 (SPEC-009, build B5). `POST /api/tutor` and `POST /api/tutor/prepare` accept
+an optional `lang`. For an approved language other than English the tutor reads that language's
+lesson (English when it has none), tells the model to answer in that language with technical terms
+followed by the English in brackets, cites with that lesson's title and headings, and uses that
+language's FR-TUT-06 fallback and safety replies (Constitution II as amended 2.4.0). Any other value
+is English; unknown fields are still refused, and `lang` is never stored. The app sends `lang` only
+when it is not English, and the microphone listens in the chosen language.
 
 ---
 
@@ -860,6 +869,14 @@ the chosen persona and stops on request, an unrecorded one uses a Hindi device v
 no Hindi voice says so and speaks nothing, English content is read in English, and English narration
 is unchanged. Covered by `internal/narration/text_test.go`, `cmd/narrate/narrate_test.go`,
 `internal/api/audio_test.go`, `cmd/ingest/verify_lang_test.go` and `web/tests/narration-hi.spec.ts`.
+
+**AC-51 (FR-I18N-09, FR-TUT-06 amended).** With `lang` set to an approved Hindi, the prepared prompt uses
+the Hindi lesson and a Hindi-answer instruction, the citation uses the Hindi title and heading, and
+the fallback and safety replies are Hindi; the hosted tutor replaces an uncited answer with the Hindi
+fallback and never calls the model for a blocked question; unknown, unsafe and hidden languages
+behave as English and unknown fields are refused. In the app a Hindi learner's local-AI request
+carries `lang: "hi"`, the Hindi answer streams with its citation, and the microphone listens in
+`hi-IN`. Covered by `internal/api/tutor_lang_test.go` and `web/tests/cloud-hardening.spec.ts`.
 
 ---
 

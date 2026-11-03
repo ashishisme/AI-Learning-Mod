@@ -149,3 +149,27 @@ deploy/terraform/main.tf      # B4: texttospeech API, cache bucket, deploy SA ro
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
 | Principle II amendment (localised fallback text) before B5 | The spec requires the fallback in Hindi (FR-025) | Showing the English fallback in a Hindi session breaks FR-005 and confuses young learners. Deferring B5 indefinitely drops a spec requirement |
+
+## Implementation decisions and deviations (2026-11-03)
+
+Recorded during `/speckit-implement`. Each deviation is also noted on its task in `tasks.md`.
+
+- **FR-I18N numbering.**
+  - FR-I18N-05 is the Hindi personal-details and safety rules (B2).
+  - Learner language choice became FR-I18N-06 (B3), recorded narration FR-I18N-07 and the device-voice fallback FR-I18N-08 (B4), and the tutor FR-I18N-09 (B5).
+  - ACs: AC-47 (B1), AC-48 (B2), AC-49 (B3), AC-50 (B4), AC-51 (B5).
+  - SPEC.md is at 2.7.0; the Constitution is at 2.4.0.
+- **Dockerfile.** The build stage copies `content/`, `web/src/i18n` and `web/src/data/quizzes`, so the image's `ingest -verify` can check the language ledger and parity. T040 had assumed no change was needed.
+- **Translatable fields.** The adaptive allowlist covers every learner-visible string: jargon, diagrams and widget text. The original contract named a non-existent `intro`. The authoritative list is `Translatable` in `internal/i18n/parity.go`.
+- **Audio path.** Audio is served at `/api/audio/<lang>/…`, behind the session gate like the lessons, not outside `/api/`. The manifest hash covers voice, rate, pitch and text. The output folder is the cache, so there's no `-cache` flag. `-sample <voice>` exists for the listening test.
+- **Recordings storage.** Recordings are made on the owner's Mac and kept in the bucket `<project>-<service>-narration`. Terraform defines it and gives the deploy account read access.
+  - The release build job runs `gcloud storage rsync` into `public-content/audio`. Earlier `-verify` steps use `-audio=false`, and the Dockerfile's `-verify` is the audio gate.
+  - Synthesis in CI is deferred.
+- **Narration text rule.** Shared by `web/src/services/narrationText.ts` and `internal/narration`, checked by `content/fixtures/narration-text.json`. It also fixes an old bug where HTML stripping after `>` removal dropped text.
+- **Translation tooling.** `cmd/translate` has two additions:
+  - `-record-base` writes draft ledger entries for ingested base lessons.
+  - Batch retries: up to 3 retries, waiting 10, 30 and 60 seconds after a 429 or 5xx response, and retrying at once after an incomplete or broken answer.
+
+  The structure check also ignores sentence punctuation after a URL.
+- **Accessibility.** One base rule in `web/src/index.css` gives buttons, selects and links a 44 px minimum. Home lesson rows wrap on phones. The duplicate header "Curriculum" link hides below `sm`.
+- **Topic labels.** The course folder names (`intro`, `symbolic`, …) shown on Home and Lesson come from catalogue keys `module.<id>`, and English keeps the same text.

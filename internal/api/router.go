@@ -154,6 +154,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	tutorHandler.spend = cfg.Spend
 	tutorHandler.latch = cfg.TutorLatch
 	tutorHandler.usage = cfg.Usage
+	tutorHandler.langs = langs
 	mux.Handle("POST /api/tutor", limiter.Middleware(tutorHandler))
 	mux.Handle("POST /api/tutor/stream", limiter.Middleware(tutorHandler))
 
@@ -177,7 +178,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		// FR-020: unavailable to everyone, with no outbound call and no content change.
 		mux.HandleFunc("POST /api/config/test", hostedUnavailable)
 		// FR-021a: the prompt for a learner's own local AI. No model call, so no spend.
-		mux.Handle("POST /api/tutor/prepare", limiter.Middleware(TutorPrepareHandler(cfg.ContentDir, cfg.Usage)))
+		mux.Handle("POST /api/tutor/prepare", limiter.Middleware(TutorPrepareHandler(cfg.ContentDir, cfg.Usage, langs)))
 	} else {
 		// Config test handler (FR-SET-03)
 		mux.HandleFunc("POST /api/config/test", ConfigTestHandler)

@@ -158,7 +158,7 @@ export const Lesson: React.FC = () => {
 
         {lesson.module && (
           <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-            {lesson.module}
+            {t(`module.${lesson.module}`) || lesson.module}
           </span>
         )}
       </div>

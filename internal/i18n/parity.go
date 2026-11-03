@@ -17,7 +17,8 @@ import (
 // types, numbers, booleans, avatars, correct answers) must equal the English one.
 var Translatable = map[string][]string{
 	KindAdaptive: {
-		"title", "mascot.name", "mascot.greeting",
+		"title", "intro", "mascot.name", "mascot.greeting",
+		"sections[].realWorld", "recall[].question", "recall[].options[]", "recall[].explanation",
 		"sections[].heading", "sections[].chipQuote", "sections[].bodyMarkdown",
 		"sections[].analogy.metaphorName", "sections[].analogy.description",
 		"sections[].jargonBuster[].term", "sections[].jargonBuster[].simpleExplanation",
@@ -216,7 +217,7 @@ func Preserved(en, tr string) string {
 	}{
 		{"code spans changed", func(s string) []string { return codeSpanRe.FindAllString(s, -1) }},
 		{"links changed", func(s string) []string { return submatches(linkTargetRe, s) }},
-		{"URLs changed", func(s string) []string { return bareURLRe.FindAllString(s, -1) }},
+		{"URLs changed", func(s string) []string { return urls(s) }},
 		{"placeholders changed", func(s string) []string { return placeholderRe.FindAllString(s, -1) }},
 	}
 	for _, c := range checks {
@@ -239,6 +240,16 @@ func Preserved(en, tr string) string {
 		}
 	}
 	return ""
+}
+
+// urls lists the bare URLs in s, without the sentence punctuation that may follow one: a translation
+// may end the sentence with its own full stop (Hindi '।') after an unchanged URL.
+func urls(s string) []string {
+	var out []string
+	for _, u := range bareURLRe.FindAllString(s, -1) {
+		out = append(out, strings.TrimRight(u, ".,;:!?।॥"))
+	}
+	return out
 }
 
 func submatches(re *regexp.Regexp, s string) []string {

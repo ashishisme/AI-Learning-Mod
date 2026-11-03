@@ -111,6 +111,21 @@ Each lesson embeds a mathematical playground designed to build physical intuitio
 
 ---
 
+## 🌐 Learning in Hindi (and other languages)
+
+Once Hindi is switched on for the site, a **language menu** appears in the header and in **Settings**. Each language is shown in its own script, for example **हिन्दी**.
+
+1. **Switch language:** pick a language from the menu. The page changes at once, without reloading or losing your progress, and the app remembers your choice on this device only.
+2. **First visit:** if your browser prefers Hindi to English, the app opens in Hindi. Otherwise it opens in English.
+3. **Not translated yet:** if a lesson or quiz isn't available in your language yet, it's shown in English, with a blue note saying so.
+4. **Hindi narration:**
+   - Where recorded Hindi narration exists, the 🔊 buttons play it in your chosen narrator's voice.
+   - Otherwise the app uses a Hindi voice on your device, if it has one. Most Android phones and many Windows PCs do. On a Mac, add one in System Settings → Accessibility → Spoken Content.
+   - If your device has no Hindi voice, the app says so instead of reading Hindi with an English voice.
+5. **Tutor in Hindi:** with Hindi chosen, the tutor answers in Hindi, cites the Hindi lesson's sections, and the microphone listens for Hindi.
+
+---
+
 ## 🤖 AI Teaching Assistant & Speech-to-Text
 
 Scroll to the bottom of any lesson to chat with the AI Coach:

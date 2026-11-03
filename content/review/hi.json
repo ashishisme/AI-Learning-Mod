@@ -1,4 +1,103 @@
 {
   "language": "hi",
-  "entries": []
+  "entries": [
+    {
+      "path": "public-content/lang/hi/lessons/1-intro.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "c6f8839608f4b24e6430979d96c65620123702e312e7f3a86cd13c577d419340",
+      "translationHash": "a13417bc657b2add7e60862ccea478fc1f2ab4945333002d537bdeb221416b9a",
+      "status": "draft"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/1-intro.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "aca263d59d5f84741677201c2cdd81341f6f9fce075dbd9ce5300d8726254e0d",
+      "translationHash": "184e723c1e82c63207935f33a59b319f2d8425844772c97a9e6cd9cd494612e8",
+      "status": "draft"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/2-symbolic.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "c8f53d31a27ce345ed18ae61d20b93aad6d4bdc479c654e5c0a2887ff973bbae",
+      "translationHash": "2c820945565f0feba1cc5864bda7c1e711d4cb028323f4a24bc7760ef4924d9c",
+      "status": "draft"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/2-symbolic.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "ff606aa82e1704b5e057c1bd8e3f281872046defb9ebc559fa8e8a4c639835c3",
+      "translationHash": "bdde16e54d4316e8bf11e5cec2554794e01207d6bf82ea3af7299d7e501d2000",
+      "status": "draft"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/3-neuralnetworks.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "d148bd24e9999fa20be57dc98e41214f6e2978b247200283d3d702c5cdd58e9a",
+      "translationHash": "6c3da11eb30d6b5c7620601469a1303923a59c087caed9b24da66c43a9834925",
+      "status": "draft"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/3-neuralnetworks.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "47e1f1b860b9fa644a9169a80fd6dd43d54eaf43f0d278f28e1b79cbd415f55c",
+      "translationHash": "abef1dd8f991163c19355d1febaa07e4c91c853c1f69863fcc1ef932278a9982",
+      "status": "draft"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/4-computervision.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "bc8d91390ebd11542298a67180faaff7dbc469e90e581291bd3f4628c238bab3",
+      "translationHash": "62a79411262ce7e7dd4f757110f05d907167cb854d21e611567684545e35bce1",
+      "status": "draft"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/4-computervision.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "1ccda0520834d80da453516da95c92e3cc7ac30b42420b629a782906e9d6f643",
+      "translationHash": "eb831ae989fd862460b40cdcc333e8ac5b2f6f3d38b76904f8748d3508b48f30",
+      "status": "draft"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/5-nlp.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "59dad9fc7f2bfaf11ce3e8b05bbaa9a7df1ea3d6d1ad4eeabfc792f7f83a81ff",
+      "translationHash": "14facbb250048385c16043375b6bc3f297654c97fc9c4c0a178ae165deeaffec",
+      "status": "draft"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/5-nlp.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "c6a17fdaeab8bf103b08ce01a73d437f6e7987600210537ea557153993cdc3a2",
+      "translationHash": "63445a888519bacf96cf7b5eaddc86c900bd0533060d85cf2aa8405627213daf",
+      "status": "draft"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/7-ethics.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "ebd08f480c01d4ec956c44ff7a4fa513e4cfb2b2693c84a9fe727492553d65ee",
+      "translationHash": "b22b1a6c74e13a3f6b5a3f529bdf6fd581a0d5454818e7e7ef2680cea0c7ef9b",
+      "status": "draft"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/7-ethics.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "16b63add6ddc8f703c49aa332684500ee7326aaf13be8f0928b5fee86ab03c9a",
+      "translationHash": "9a2aa82798b2522911a1cb46a9860848a546f7d02c6ebcc2d2c7e3bf89bfaadd",
+      "status": "draft"
+    },
+    {
+      "path": "web/src/data/quizzes/hi.json",
+      "kind": "quiz",
+      "sourceHash": "4f04bb83cd618fb8a1d40f7a8657329b66f1ed68b0825632d513db23b567a82a",
+      "translationHash": "13db0f18d1e97617cc122f0971c748d41e63f2e64d83704ea041739ec50a98ff",
+      "status": "draft"
+    },
+    {
+      "path": "web/src/i18n/hi.json",
+      "kind": "ui",
+      "sourceHash": "13635e11dd3782fdb2348e889f1dd9fa249720098af88910df554fe53dc781f2",
+      "translationHash": "4abff1e7d0e6a73418e00350ff11fb40b51bffa91c5a2e3ac7ffb65be2757e55",
+      "status": "draft"
+    }
+  ]
 }

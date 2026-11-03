@@ -59,3 +59,28 @@ func SafetyReply(lang, category string) string {
 	}
 	return replies["other"]
 }
+
+// Tutor replies (FR-TUT-06 as amended by SPEC-009; Constitution II, 2.4.0). English is the exact text
+// the constitution fixes; another language's text ships only once that language is approved.
+var uncitedFallbacks = map[string]string{
+	"en": "I couldn't find that in this lesson. Try rephrasing or ask about a different section.",
+	"hi": "मुझे यह इस पाठ में नहीं मिला। सवाल को दूसरे शब्दों में पूछकर देखो, या किसी और हिस्से के बारे में पूछो।",
+}
+
+// UncitedFallback replaces a tutor answer that cites no lesson section.
+func UncitedFallback(lang string) string {
+	if s, ok := uncitedFallbacks[lang]; ok {
+		return s
+	}
+	return uncitedFallbacks[English.Code]
+}
+
+// AnswerInstruction tells the model which language to answer in; English needs none.
+func AnswerInstruction(l Language) string {
+	if l.Code == English.Code || l.Code == "" {
+		return ""
+	}
+	return "LANGUAGE: Answer in " + l.Name + " (" + l.Code + "), in simple everyday words a school student understands. " +
+		"Write a technical term in " + l.Name + " followed by the English term in brackets the first time you use it. " +
+		"Keep the citation format exactly as instructed, using the lesson title and heading as they appear in the lesson."
+}

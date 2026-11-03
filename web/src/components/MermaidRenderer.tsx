@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useRef, useState } from 'react'
 import mermaid from 'mermaid'
 import { useThemeStore } from '../store'
+import { useT } from '../i18n'
 
 interface Props {
   chart: string
@@ -15,6 +16,7 @@ export const MermaidRenderer: React.FC<Props> = ({ chart, caption, alt, classNam
   const [error, setError] = useState<string | null>(null)
   const uniqueId = useId().replace(/:/g, '_')
   const { theme } = useThemeStore()
+  const t = useT()
 
   useEffect(() => {
     let isMounted = true
@@ -82,7 +84,7 @@ export const MermaidRenderer: React.FC<Props> = ({ chart, caption, alt, classNam
           <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
             📊 {caption}
           </span>
-          <span className="text-[11px] font-medium text-slate-400">Diagram</span>
+          <span className="text-[11px] font-medium text-slate-400">{t('widget.diagram.label')}</span>
         </div>
       )}
 
@@ -101,7 +103,7 @@ export const MermaidRenderer: React.FC<Props> = ({ chart, caption, alt, classNam
         ) : (
           <div className="flex items-center gap-2 text-xs font-medium text-slate-400 animate-pulse">
             <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping"></span>
-            Rendering visual diagram...
+            {t('widget.diagram.rendering')}
           </div>
         )}
       </div>

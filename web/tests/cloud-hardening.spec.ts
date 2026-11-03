@@ -255,9 +255,9 @@ test.describe('Hosted deployment with the learner\'s own local AI', () => {
   const openAIStream = (...tokens: string[]) =>
     tokens.map((t) => `data: ${JSON.stringify({ choices: [{ delta: { content: t } }] })}\n\n`).join('') + 'data: [DONE]\n\n'
 
-  async function enableLocalAI(page: Page) {
+  async function enableLocalAI(page: Page, runtimeExtra: Record<string, unknown> = {}) {
     await mockLesson(page)
-    await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, tutorEnabled: false } }))
+    await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, tutorEnabled: false, ...runtimeExtra } }))
     await page.route(`${local}/models`, (r) => r.fulfill({ json: { data: [{ id: 'llama3.2:1b' }, { id: 'qwen2.5:0.5b' }] } }))
     await page.goto('/lesson/cloud-test')
     await expect(page.locator('[data-testid="tutor-panel"]')).toHaveCount(0) // hosted tutor is off
@@ -289,6 +289,34 @@ test.describe('Hosted deployment with the learner\'s own local AI', () => {
     expect(prepared).toMatchObject({ lessonId: 'cloud-test', question: 'What is a perceptron?' })
     expect(localBody).toMatchObject({ model: 'llama3.2:1b', messages: plan.messages, max_tokens: 800, stream: true })
     expect(serverTutorCalls).toBe(0)
+  })
+
+  // SPEC-009 FR-025, FR-026: in Hindi the request names the language, the Hindi answer streams with its
+  // Hindi citation, and the microphone listens for Hindi.
+  test('asks in Hindi, shows the Hindi answer and citation, and listens in Hindi', async ({ page }) => {
+    let prepared: any = null
+    await page.addInitScript(() => {
+      localStorage.setItem('ai-foundations-language', JSON.stringify({ state: { code: 'hi', chosenAt: '2026-11-03T00:00:00Z' }, version: 0 }))
+      sessionStorage.setItem('ai-coach-mic-consent', 'yes') // the learner already agreed to the microphone
+      const w = window as unknown as { __micLang: string; SpeechRecognition: unknown; webkitSpeechRecognition: unknown }
+      class FakeRecognition { lang = ''; continuous = false; interimResults = false; onstart: null | (() => void) = null; onend: null | (() => void) = null; onerror = null; onresult = null
+        start() { w.__micLang = this.lang; this.onstart?.() }
+        stop() { this.onend?.() } }
+      w.SpeechRecognition = FakeRecognition
+      w.webkitSpeechRecognition = FakeRecognition
+    })
+    await page.route('**/api/tutor/prepare', (r) => { prepared = r.request().postDataJSON(); return r.fulfill({ json: { ...plan, citation: '[क्लाउड पाठ § परिचय]' } }) })
+    await page.route(`${local}/chat/completions`, (r) => r.fulfill({ status: 200, headers: { 'Content-Type': 'text/event-stream', 'Access-Control-Allow-Origin': '*' }, body: openAIStream('परसेप्ट्रॉन (perceptron) ', 'एक कृत्रिम न्यूरॉन है।') }))
+    await enableLocalAI(page, { languages: [{ code: 'en', name: 'English', speechLang: 'en-US' }, { code: 'hi', name: 'हिन्दी', speechLang: 'hi-IN' }] })
+
+    await page.locator('[data-testid="tutor-input"]').fill('परसेप्ट्रॉन क्या है?')
+    await page.locator('[data-testid="tutor-submit"]').click()
+    await expect(page.locator('[data-testid="tutor-answer"]')).toContainText('परसेप्ट्रॉन (perceptron) एक कृत्रिम न्यूरॉन है।')
+    await expect(page.locator('[data-testid="tutor-answer"]')).toContainText('क्लाउड पाठ')
+    expect(prepared).toMatchObject({ lessonId: 'cloud-test', question: 'परसेप्ट्रॉन क्या है?', lang: 'hi' })
+
+    await page.locator('[data-testid="tutor-mic-btn"]').click()
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __micLang?: string }).__micLang)).toBe('hi-IN')
   })
 
   test('shows the safety reply without contacting the local AI', async ({ page }) => {

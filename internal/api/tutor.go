@@ -18,6 +18,7 @@ import (
 	"strings"
 	"time"
 
+	"ai-foundations-coach/internal/i18n"
 	"ai-foundations-coach/internal/netopt"
 	"ai-foundations-coach/internal/spend"
 	"ai-foundations-coach/internal/usage"
@@ -61,6 +62,9 @@ type TutorRequest struct {
 	// Mode selects the explanation style: "", "standard", "junior" or "plain-english".
 	// It is applied server-side so it cannot be mistaken for part of the question.
 	Mode string `json:"mode,omitempty"`
+	// Lang is the learner's language (SPEC-009 FR-025). Only an approved language counts; anything
+	// else is English. It picks the lesson text, the answer language and the fallback, and is never stored.
+	Lang string `json:"lang,omitempty"`
 }
 
 // toneForMode returns the extra system-prompt guidance for an audience mode.
@@ -125,6 +129,8 @@ type TutorHandler struct {
 	// latch switches the tutor off at the monthly budget until an admin resets it (FR-026).
 	latch *spend.Latch
 	usage *usage.Recorder
+	// langs are the approved languages (SPEC-009); nil means English only.
+	langs *i18n.Set
 }
 
 func NewTutorHandler(apiKey, contentDir string, client ModelClient) *TutorHandler {
@@ -247,10 +253,12 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.usage.Inc(usage.TutorQ) // a count only: the question itself is never recorded
+	language := tutorLanguage(h.langs, req.Lang)
+	fallback := i18n.UncitedFallback(language.Code)
 
 	// FR-REV-20: screen the question before it reaches the model; nothing is logged or echoed (FR-REV-21)
 	if cat := ScreenQuestion(req.Question); cat != SafetyNone {
-		writeSafetyReply(w, isStream, SafetyReply(cat))
+		writeSafetyReply(w, isStream, i18n.SafetyReply(language.Code, string(cat)))
 		return
 	}
 
@@ -270,7 +278,7 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if customBaseURL != "" && maxBytes > 3000 {
 		maxBytes = 3000
 	}
-	p, status, msg := loadTutorPrompt(h.contentDir, req, tone, maxBytes, customBaseURL != "")
+	p, status, msg := loadTutorPrompt(h.contentDir, req, tone, maxBytes, customBaseURL != "", language)
 	if status != 0 {
 		w.WriteHeader(status)
 		_ = json.NewEncoder(w).Encode(TutorResponse{Error: msg})
@@ -431,7 +439,7 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					payload, _ := json.Marshal(map[string]any{
 						"done":     true,
 						"cited":    false,
-						"fallback": UncitedFallback,
+						"fallback": fallback,
 					})
 					fmt.Fprintf(w, "data: %s\n\n", payload)
 				} else {
@@ -476,7 +484,7 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					payload, _ := json.Marshal(map[string]any{
 						"done":     true,
 						"cited":    false,
-						"fallback": UncitedFallback,
+						"fallback": fallback,
 					})
 					fmt.Fprintf(w, "data: %s\n\n", payload)
 				} else {
@@ -524,7 +532,7 @@ func (h *TutorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if citation := autoCite(answer); citation != "" {
 			answer += citation
 		} else {
-			answer = UncitedFallback
+			answer = fallback
 		}
 	}
 
@@ -587,11 +595,30 @@ type tutorPrompt struct{ title, section, system, user string }
 
 func (p tutorPrompt) citation() string { return fmt.Sprintf("[%s § %s]", p.title, p.section) }
 
+// tutorLanguage is the approved language a request names, or English.
+func tutorLanguage(langs *i18n.Set, code string) i18n.Language {
+	if l, ok := langs.Lookup(langs.Resolve(code)); ok {
+		return l
+	}
+	return i18n.English
+}
+
+func fileExists(p string) bool {
+	info, err := os.Stat(p)
+	return err == nil && !info.IsDir()
+}
+
 // loadTutorPrompt builds the prompt from the lesson on disk (FR-TUT-02, FR-TUT-04, §7.3).
 // emphaticCitation adds the explicit citation instruction that small local models need.
-func loadTutorPrompt(contentDir string, req TutorRequest, tone string, maxBytes int, emphaticCitation bool) (p tutorPrompt, status int, msg string) {
-	// Load lesson content from disk
+func loadTutorPrompt(contentDir string, req TutorRequest, tone string, maxBytes int, emphaticCitation bool, language i18n.Language) (p tutorPrompt, status int, msg string) {
+	// Load lesson content from disk: the learner's language first, then English (SPEC-009 FR-025).
+	// language.Code comes from the approved list, never from the request, so it is safe in a path.
 	lessonPath := filepath.Join(contentDir, "lessons", req.LessonID+".json")
+	if language.Code != i18n.English.Code && language.Code != "" {
+		if translated := filepath.Join(contentDir, "lang", language.Code, "lessons", req.LessonID+".json"); fileExists(translated) {
+			lessonPath = translated
+		}
+	}
 	lessonData, err := os.ReadFile(lessonPath)
 	if err != nil {
 		// Unknown lesson -> 404 per §7.1.3
@@ -658,6 +685,9 @@ func loadTutorPrompt(contentDir string, req TutorRequest, tone string, maxBytes 
 
 	if tone != "" {
 		systemPrompt += "\n\n" + tone
+	}
+	if instruction := i18n.AnswerInstruction(language); instruction != "" {
+		systemPrompt += "\n\n" + instruction
 	}
 	return tutorPrompt{title: lesson.Title, section: defaultSection, system: systemPrompt, user: userMessage}, 0, ""
 }
