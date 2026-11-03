@@ -168,6 +168,7 @@
   "invite.title": "अपना बीटा खाता सक्रिय करें",
   "invite.used": "यह आमंत्रण पहले ही इस्तेमाल हो चुका है। कृपया साइन इन करें।",
   "invite.validUntil": "आपका खाता <b>{date} (IST)</b> तक मान्य है (आज से {months})।",
+  "language.beta": "(बीटा)",
   "language.label": "भाषा",
   "lesson.back": "पाठ्यक्रम पर वापस जाएँ",
   "lesson.colab": "Colab में खोलें",

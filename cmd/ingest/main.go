@@ -117,9 +117,14 @@ func verify(contentDir string, out io.Writer, checkAudio bool) int {
 			continue
 		}
 		// SPEC-009 FR-012: an approved language ships with every narrated track recorded and current.
+		// FR-I18N-10: a beta language may launch on device voices, so its recordings only warn.
+		audioPrefix := prefix
+		if l.Beta {
+			audioPrefix = "warning: "
+		}
 		manifest, err := narration.LoadManifest(root, l.Code)
-		if err == nil && prefix != "" && len(manifest.Tracks) == 0 {
-			fmt.Fprintf(out, "%s%s audio: no recordings yet\n", prefix, l.Code)
+		if err == nil && audioPrefix != "" && len(manifest.Tracks) == 0 {
+			fmt.Fprintf(out, "%s%s audio: no recordings yet\n", audioPrefix, l.Code)
 			continue
 		}
 		problems, err := narration.Check(root, l.Code)
@@ -127,9 +132,9 @@ func verify(contentDir string, out io.Writer, checkAudio bool) int {
 			problems = []narration.Problem{{Key: "audio", Reason: err.Error()}}
 		}
 		for _, line := range narration.Summary(problems, 20) {
-			fmt.Fprintf(out, "%s%s audio %s\n", prefix, l.Code, line)
+			fmt.Fprintf(out, "%s%s audio %s\n", audioPrefix, l.Code, line)
 		}
-		if prefix == "" && len(problems) > 0 {
+		if audioPrefix == "" && len(problems) > 0 {
 			code = 1
 		}
 	}

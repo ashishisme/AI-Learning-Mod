@@ -185,3 +185,21 @@ func TestVerifyWithoutAudioSkipsOnlyTheRecordings(t *testing.T) {
 		t.Errorf("a draft must still fail without audio: exit %d", code)
 	}
 }
+
+// FR-I18N-10: an approved beta language may launch without recordings; review and parity still gate it.
+func TestVerifyBetaLanguageMayLaunchOnDeviceVoices(t *testing.T) {
+	root, dir := langRepo(t, "approved")
+	writeFile(t, filepath.Join(dir, "languages.json"), `{"languages":[{"code":"hi","name":"हिन्दी","speechLang":"hi-IN","status":"approved","beta":true}]}`)
+	_ = os.RemoveAll(narration.AudioDir(root, "hi"))
+	var out bytes.Buffer
+	if code := verify(dir, &out, true); code != 0 || !strings.Contains(out.String(), "warning: hi audio: no recordings yet") {
+		t.Errorf("beta without recordings: exit %d\n%s", code, out.String())
+	}
+	// A draft still fails a beta language.
+	l, _ := i18n.LoadLedger(root, "hi")
+	l.Upsert(*l.Find("web/src/i18n/hi.json"))
+	_ = l.Save(root)
+	if code := verify(dir, &bytes.Buffer{}, true); code != 1 {
+		t.Errorf("beta with a draft: exit %d", code)
+	}
+}

@@ -90,7 +90,14 @@ test.describe('Hindi narration on device voices (B4 step A)', () => {
       localStorage.setItem('ai-foundations-language', JSON.stringify({ state: { code: 'hi', chosenAt: '2026-11-03T00:00:00Z' }, version: 0 }))
       localStorage.setItem('ai-foundations-audience-mode', JSON.stringify({ state: { mode: 'junior' }, version: 0 }))
     })
-    await page.goto('/lesson/1-intro') // the real server has no Hindi file yet, so it serves English
+    // Ask for the Kids lesson without the language, so the server answers in English as for a part that
+    // is not translated yet.
+    await page.route('**/api/lessons/1-intro?mode=junior**', async (r) => {
+      const url = new URL(r.request().url())
+      url.searchParams.delete('lang')
+      await r.fulfill({ response: await r.fetch({ url: url.toString() }) })
+    })
+    await page.goto('/lesson/1-intro')
     await readFirstSection(page)
     await expect.poll(async () => (await spoken(page)).length).toBeGreaterThan(0)
     expect((await spoken(page)).every((u) => u.voice === 'Samantha' && u.lang === 'en-US')).toBe(true)

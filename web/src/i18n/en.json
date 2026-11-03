@@ -168,6 +168,7 @@
   "invite.title": "Activate your beta account",
   "invite.used": "This invite has already been used. Please sign in.",
   "invite.validUntil": "Your account is valid until <b>{date} (IST)</b> ({months} from today).",
+  "language.beta": "(beta)",
   "language.label": "Language",
   "lesson.back": "Back to Curriculum",
   "lesson.colab": "Open in Colab",

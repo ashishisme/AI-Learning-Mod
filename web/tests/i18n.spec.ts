@@ -48,6 +48,13 @@ test.describe('Hindi (B3)', () => {
     await expect(page.getByTestId('language-switcher').first()).toHaveValue('hi')
   })
 
+  // FR-I18N-10: a language launched as a beta says so in the menu.
+  test('a beta language is labelled in the menu', async ({ page }) => {
+    await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: false, authRequired: false, tutorEnabled: false, feedbackEnabled: false, languages: [EN, { ...HI, beta: true }] } }))
+    await page.goto('/')
+    await expect(page.getByTestId('language-switcher').first().locator('option')).toHaveText(['English', 'हिन्दी (beta)'])
+  })
+
   test('Settings has the same switcher', async ({ page }) => {
     await offerHindi(page)
     await page.goto('/')

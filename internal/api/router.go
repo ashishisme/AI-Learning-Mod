@@ -76,12 +76,13 @@ type LanguageInfo struct {
 	Code       string `json:"code"`
 	Name       string `json:"name"`
 	SpeechLang string `json:"speechLang"`
+	Beta       bool   `json:"beta,omitempty"`
 }
 
 func languageInfos(s *i18n.Set) []LanguageInfo {
 	var out []LanguageInfo
 	for _, l := range s.Approved() {
-		out = append(out, LanguageInfo{Code: l.Code, Name: l.Name, SpeechLang: l.SpeechLang})
+		out = append(out, LanguageInfo{Code: l.Code, Name: l.Name, SpeechLang: l.SpeechLang, Beta: l.Beta})
 	}
 	return out
 }

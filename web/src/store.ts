@@ -214,6 +214,8 @@ export interface RuntimeLanguage {
   code: string
   name: string
   speechLang: string
+  // SPEC-009 FR-I18N-10: launched on the owner's approval before native review; labelled in the menu.
+  beta?: boolean
 }
 
 export const ENGLISH: RuntimeLanguage = { code: 'en', name: 'English', speechLang: 'en-US' }

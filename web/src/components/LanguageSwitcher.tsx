@@ -33,7 +33,7 @@ export const LanguageSwitcher: React.FC<Props> = ({ variant = 'header' }) => {
     >
       {languages.map((l) => (
         <option key={l.code} value={l.code} lang={l.code}>
-          {l.name}
+          {l.name}{l.beta ? ` ${t('language.beta')}` : ''}
         </option>
       ))}
     </select>

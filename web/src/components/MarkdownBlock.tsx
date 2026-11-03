@@ -35,7 +35,7 @@ interface MarkdownBlockProps {
 export const MarkdownBlock: React.FC<MarkdownBlockProps> = ({ block }) => {
   if (block.type === 'markdown') {
     return (
-      <div className="prose prose-slate dark:prose-invert max-w-none my-4">
+      <div className="prose prose-slate dark:prose-invert max-w-none my-4 [overflow-wrap:anywhere] [&_pre]:overflow-x-auto [&_pre]:max-w-full">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema], rehypeHighlight]}

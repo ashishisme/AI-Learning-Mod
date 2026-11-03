@@ -29,6 +29,9 @@ type Language struct {
 	Name       string `json:"name"`
 	SpeechLang string `json:"speechLang"`
 	Status     string `json:"status"`
+	// Beta marks an approved language that launched on the owner's approval before native review and
+	// recorded narration (SPEC-009 FR-I18N-10). The switcher labels it; missing recordings only warn.
+	Beta bool `json:"beta,omitempty"`
 }
 
 // Set is the loaded language list. A nil *Set behaves as English only.

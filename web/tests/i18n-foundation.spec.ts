@@ -31,7 +31,18 @@ async function signedIn(p: Page, runtime: Record<string, unknown> = {}, session:
 }
 
 test.describe('English foundation (B1)', () => {
+  // The runtime filter below may still be in flight when a test ends.
+  test.afterEach(async ({ page }) => { await page.unrouteAll({ behavior: 'ignoreErrors' }) })
+
   test.beforeEach(async ({ page }) => {
+    // These tests check the site exactly as it was with only English offered (B1). Since Hindi went live
+    // (FR-I18N-10), the real runtime lists it, so it is filtered out here; a test that mocks the
+    // runtime itself overrides this.
+    await page.route('**/api/runtime', async (r) => {
+      const res = await r.fetch()
+      const body = await res.json()
+      await r.fulfill({ json: { ...body, languages: (body.languages ?? []).filter((l: { code: string }) => l.code === 'en') } })
+    })
     await page.goto('/')
     await page.evaluate(() => localStorage.clear())
   })
