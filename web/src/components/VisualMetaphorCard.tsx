@@ -13,7 +13,7 @@ export const VisualMetaphorCard: React.FC<Props> = ({ metaphorName, description,
   const renderIllustration = () => {
     if (metaphorName.toLowerCase().includes('martian puppy') || metaphorName.toLowerCase().includes('puppy')) {
       return (
-        <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-indigo-100 dark:bg-indigo-950/80 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl shadow-inner border border-indigo-200 dark:border-indigo-800">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-indigo-100 dark:bg-indigo-950/80 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shadow-inner border border-indigo-200 dark:border-indigo-800">
           🛸🐶
         </div>
       )
@@ -21,7 +21,7 @@ export const VisualMetaphorCard: React.FC<Props> = ({ metaphorName, description,
 
     if (metaphorName.toLowerCase().includes('chess') || metaphorName.toLowerCase().includes('wizard')) {
       return (
-        <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-purple-100 dark:bg-purple-950/80 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl shadow-inner border border-purple-200 dark:border-purple-800">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-purple-100 dark:bg-purple-950/80 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shadow-inner border border-purple-200 dark:border-purple-800">
           🧙‍♂️♟️
         </div>
       )
@@ -29,7 +29,7 @@ export const VisualMetaphorCard: React.FC<Props> = ({ metaphorName, description,
 
     if (metaphorName.toLowerCase().includes('calculator') || metaphorName.toLowerCase().includes('apprentice')) {
       return (
-        <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-blue-100 dark:bg-blue-950/80 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl shadow-inner border border-blue-200 dark:border-blue-800">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-blue-100 dark:bg-blue-950/80 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shadow-inner border border-blue-200 dark:border-blue-800">
           📟👨‍🍳
         </div>
       )
@@ -37,14 +37,14 @@ export const VisualMetaphorCard: React.FC<Props> = ({ metaphorName, description,
 
     if (metaphorName.toLowerCase().includes('rulebook') || metaphorName.toLowerCase().includes('photo')) {
       return (
-        <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-amber-100 dark:bg-amber-950/80 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl shadow-inner border border-amber-200 dark:border-amber-800">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-amber-100 dark:bg-amber-950/80 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shadow-inner border border-amber-200 dark:border-amber-800">
           📚📸
         </div>
       )
     }
 
     return (
-      <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-blue-100 dark:bg-blue-950/80 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl shadow-inner">
+      <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-blue-100 dark:bg-blue-950/80 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shadow-inner">
         ✨💡
       </div>
     )

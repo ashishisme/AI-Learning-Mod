@@ -4,6 +4,10 @@ import { mockAdmin } from './helpers/admin-mock'
 const session = { authenticated: true, betaId: 'BETA-7KQ3-M9XP', label: 'School A', expiresAt: '2027-01-01T08:30:00Z', daysLeft: 61, expiringSoon: false }
 const runtime = (feedbackEnabled = false) => ({ hosted: true, authRequired: true, tutorEnabled: false, feedbackEnabled })
 
+// Colours are read straight after the theme changes, so transitions must not be mid-fade: reduced motion
+// makes them instant (index.css). Slower CI machines otherwise read a half-faded colour.
+test.use({ reducedMotion: 'reduce' })
+
 async function checkSurface(page: import('@playwright/test').Page, buttonName: string) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)
   expect(overflow).toBe(false)
