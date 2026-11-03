@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.7.0 |
+| Version | 2.8.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -379,6 +379,14 @@ followed by the English in brackets, cites with that lesson's title and headings
 language's FR-TUT-06 fallback and safety replies (Constitution II as amended 2.4.0). Any other value
 is English; unknown fields are still refused, and `lang` is never stored. The app sends `lang` only
 when it is not English, and the microphone listens in the chosen language.
+
+**FR-I18N-10.** Added 2.8.0 (SPEC-009; owner exception, 2026-11-03). A language marked `"beta": true` in
+`languages.json` may be approved and offered before native-speaker review and before its narration is
+recorded. Every file still needs an approved, current review entry: the owner may approve, and the
+entry names that approval as a beta. Structure checks (parity) are unchanged. Missing or out-of-date
+recordings are warnings, and narration uses a device voice in the language or says it is not
+available (FR-I18N-08). The language menu labels it as beta. Removing `beta` restores the full gate
+(native review and recordings) for that language.
 
 ---
 
@@ -877,6 +885,11 @@ fallback and never calls the model for a blocked question; unknown, unsafe and h
 behave as English and unknown fields are refused. In the app a Hindi learner's local-AI request
 carries `lang: "hi"`, the Hindi answer streams with its citation, and the microphone listens in
 `hi-IN`. Covered by `internal/api/tutor_lang_test.go` and `web/tests/cloud-hardening.spec.ts`.
+
+**AC-52 (FR-I18N-10).** A beta language with every file approved and no recordings passes `-verify` with
+an audio warning; a draft still fails it; the runtime marks it `beta` and the menu labels it. Covered by
+`cmd/ingest/verify_lang_test.go::TestVerifyBetaLanguageMayLaunchOnDeviceVoices` and
+`web/tests/i18n.spec.ts`.
 
 ---
 
