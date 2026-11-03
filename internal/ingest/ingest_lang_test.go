@@ -199,3 +199,13 @@ func writeJSON(t *testing.T, path string, v any) {
 		t.Fatal(err)
 	}
 }
+
+// A left-out image takes its credit line with it, in English and in Hindi.
+func TestDroppedImageTakesItsCredit(t *testing.T) {
+	for _, credit := range []string{"> Sketchnote by [Tomomi Imura](https://twitter.com/girlie_mac)", "> स्केचनोट द्वारा [Tomomi Imura](https://twitter.com/girlie_mac)"} {
+		got := dropRe.ReplaceAllString("# शीर्षक\n\n"+droppedImage+"\n\n"+credit+"\n\nपाठ यहाँ।", "")
+		if strings.Contains(got, "Tomomi") || !strings.Contains(got, "पाठ यहाँ।") {
+			t.Errorf("%q left %q", credit, got)
+		}
+	}
+}

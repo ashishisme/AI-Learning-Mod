@@ -372,6 +372,9 @@ var (
 var brandedImages = map[string]string{
 	"34c718c74e361ac078620316175d4425": "Symbolic AI sketchnote: logo beside \"Concept Graph\"",
 	"e8c2816e2bb1aea82dd6f321b225c501": "NLP sketchnote: logo beside \"2014 CEO India\"",
+	// Hindi translations of the same two sketchnotes (logo review of translated images, 2026-11-03).
+	"967d9e6416fd789dbb6c79ce17eaa9ba": "Hindi Symbolic AI sketchnote: logo beside \"संकल्पना ग्राफ\" (Concept Graph)",
+	"bee42a76a95887dba71d27e96505eeff": "Hindi NLP sketchnote: logo beside \"2014 सीईओ भारत\" (2014 CEO India)",
 }
 
 func contentHash(data []byte) string {
@@ -383,7 +386,8 @@ func contentHash(data []byte) string {
 // it, which would otherwise describe a picture that is no longer there.
 const droppedImage = "\x00dropped-image\x00"
 
-var dropRe = regexp.MustCompile(droppedImage + `(\s*\n> Sketchnote by [^\n]*)?\n?`)
+// The credit is matched in each language the course is translated into that has one (Hindi so far).
+var dropRe = regexp.MustCompile(droppedImage + `(\s*\n> (?:Sketchnote by|स्केचनोट द्वारा)[^\n]*)?\n?`)
 
 // imageBundle downloads each upstream image once and holds it until the whole run has succeeded.
 type imageBundle struct {
