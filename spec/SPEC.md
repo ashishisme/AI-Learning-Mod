@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.4.0 |
+| Version | 2.5.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -348,6 +348,15 @@ as in English, with Devanagari digits and spelling variants (nukta, chandrabindu
 explicit word boundaries rather than ASCII-only `\b`. `POST /api/feedback` accepts an optional
 `lang`, used only to choose the language of the rejection message and never stored; a language
 that is not approved gets English. No reply ever repeats the learner's text.
+
+**FR-I18N-06.** Added 2.5.0 (SPEC-009, build B3). When more than one language is approved, the
+header and Settings shall offer a language switcher listing each language by its own name, with a
+44 px target and an accessible name. The choice is kept only in the browser (never sent to or stored
+by the server except as the `lang` of a request) and applies at once, without a reload or loss of
+progress; `<html lang>` follows it. On a first visit the app opens in an approved language only when
+the browser lists it before English, and otherwise in English. A stored choice that is no longer
+approved shows English and is kept. Whenever the chosen language is not English and the lesson list,
+lesson, adaptive lesson or quiz on screen came back in English, a notice in the chosen language says so.
 
 ---
 
@@ -819,6 +828,14 @@ Covered by `internal/ingest/ingest_lang_test.go`, `internal/i18n/ledger_test.go`
 `internal/i18n/parity_test.go`, `cmd/ingest/verify_lang_test.go`, `cmd/translate/translate_test.go`,
 `internal/feedback/check_hi_test.go`, `internal/api/safety_hi_test.go`,
 `internal/api/feedback_lang_test.go` and `web/tests/feedback.spec.ts`.
+
+**AC-49 (FR-I18N-06).** With English and Hindi offered, the header and Settings switchers change the
+language in under a second without a reload, keep progress, set `<html lang>` and survive a reload;
+a first visit opens in Hindi only for a browser that prefers Hindi to English; a lesson served in
+English to a Hindi learner shows the notice, one served in Hindi or to an English learner does not,
+and a quiz without a Hindi version shows it and still scores. Once the Hindi catalogue exists, no
+English interface string remains on Home, Lesson (three modes), Quiz or Settings, and those pages
+fit 360 px with 44 px targets. Covered by `web/tests/i18n.spec.ts`.
 
 ---
 
