@@ -1,5 +1,14 @@
 // SPEC: SPEC-008 FR-019, FR-021; NFR-SEC-05, AC-27; FR-TUT-04; FR-ADAPT; FR-REV-22; FR-UI-15
 import { test, expect, Page } from '@playwright/test'
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+
+// A label as the Hindi UI shows it: the Hindi catalogue once it exists, else the English fallback.
+const catalogueFile = (code: string) => join(process.cwd(), 'src', 'i18n', `${code}.json`)
+const hindiLabel = (key: string): string => {
+  const read = (code: string) => (existsSync(catalogueFile(code)) ? JSON.parse(readFileSync(catalogueFile(code), 'utf8')) : {})
+  return { ...read('en'), ...read('hi') }[key]
+}
 
 const lesson = {
   id: 'cloud-test',
@@ -255,7 +264,7 @@ test.describe('Hosted deployment with the learner\'s own local AI', () => {
   const openAIStream = (...tokens: string[]) =>
     tokens.map((t) => `data: ${JSON.stringify({ choices: [{ delta: { content: t } }] })}\n\n`).join('') + 'data: [DONE]\n\n'
 
-  async function enableLocalAI(page: Page, runtimeExtra: Record<string, unknown> = {}) {
+  async function enableLocalAI(page: Page, runtimeExtra: Record<string, unknown> = {}, verified = 'Connection Verified') {
     await mockLesson(page)
     await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, tutorEnabled: false, ...runtimeExtra } }))
     await page.route(`${local}/models`, (r) => r.fulfill({ json: { data: [{ id: 'llama3.2:1b' }, { id: 'qwen2.5:0.5b' }] } }))
@@ -265,7 +274,7 @@ test.describe('Hosted deployment with the learner\'s own local AI', () => {
     await page.locator('#local-llm-enabled').check()
     await expect(page.locator('#local-llm-base-url')).toHaveValue(local)
     await page.locator('#local-llm-test-btn').click()
-    await expect(page.getByText('Connection Verified')).toBeVisible()
+    await expect(page.getByText(verified)).toBeVisible()
     await page.locator('#save-settings-btn').click()
     await expect(page.locator('[data-testid="tutor-panel"]')).toBeVisible()
   }
@@ -307,7 +316,7 @@ test.describe('Hosted deployment with the learner\'s own local AI', () => {
     })
     await page.route('**/api/tutor/prepare', (r) => { prepared = r.request().postDataJSON(); return r.fulfill({ json: { ...plan, citation: '[क्लाउड पाठ § परिचय]' } }) })
     await page.route(`${local}/chat/completions`, (r) => r.fulfill({ status: 200, headers: { 'Content-Type': 'text/event-stream', 'Access-Control-Allow-Origin': '*' }, body: openAIStream('परसेप्ट्रॉन (perceptron) ', 'एक कृत्रिम न्यूरॉन है।') }))
-    await enableLocalAI(page, { languages: [{ code: 'en', name: 'English', speechLang: 'en-US' }, { code: 'hi', name: 'हिन्दी', speechLang: 'hi-IN' }] })
+    await enableLocalAI(page, { languages: [{ code: 'en', name: 'English', speechLang: 'en-US' }, { code: 'hi', name: 'हिन्दी', speechLang: 'hi-IN' }] }, hindiLabel('settings.verified').replace(/^🟢s*/, ''))
 
     await page.locator('[data-testid="tutor-input"]').fill('परसेप्ट्रॉन क्या है?')
     await page.locator('[data-testid="tutor-submit"]').click()

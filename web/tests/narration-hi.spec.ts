@@ -1,6 +1,6 @@
 // SPEC: SPEC-009 FR-013 (device voices: the learner's language or none, never another language's voice)
 import { test, expect, Page } from '@playwright/test'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { cleanForSpeech, sectionNarration } from '../src/services/narrationText'
 
@@ -50,8 +50,16 @@ async function hindiLesson(page: Page) {
   await page.goto('/lesson/1-intro')
 }
 
+// Labels in the UI language: Hindi once its catalogue exists, else the English fallback the app shows.
+const catalogue = (code: string) => {
+  const p = join(process.cwd(), 'src', 'i18n', `${code}.json`)
+  return existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as Record<string, string>) : {}
+}
+const en = catalogue('en')
+const hi = { ...en, ...catalogue('hi') }
+
 const spoken = (page: Page) => page.evaluate(() => (window as unknown as { __spoken: Array<{ text: string; lang: string; voice: string }> }).__spoken)
-const readFirstSection = (page: Page) => page.getByRole('button', { name: 'Read section' }).first().click()
+const readFirstSection = (page: Page, labels = hi) => page.getByRole('button', { name: labels['narration.readSection'] }).first().click()
 
 test.describe('Hindi narration on device voices (B4 step A)', () => {
   test('a Hindi lesson is read by a Hindi voice, sentence by sentence at ।', async ({ page }) => {
@@ -62,17 +70,17 @@ test.describe('Hindi narration on device voices (B4 step A)', () => {
     const said = await spoken(page)
     expect(said.every((u) => u.voice === 'Lekha' && u.lang === 'hi-IN')).toBe(true)
     expect(said.map((u) => u.text)).toEqual(['एआई क्या है.', 'पहला वाक्य यहाँ है।', 'दूसरा वाक्य यहाँ है।'])
-    await expect(page.getByRole('status').filter({ hasText: 'not available on this device' })).toHaveCount(0)
+    await expect(page.getByRole('status').filter({ hasText: hi['narration.unavailable'] })).toHaveCount(0)
   })
 
   test('with no Hindi voice nothing is spoken and the learner is told why', async ({ page }) => {
     await fakeSpeech(page, [{ name: 'Samantha', lang: 'en-US' }, { name: 'Daniel', lang: 'en-GB' }])
     await hindiLesson(page)
     await readFirstSection(page)
-    await expect(page.getByRole('status').filter({ hasText: 'Narration in your language is not available on this device.' })).toBeVisible()
+    await expect(page.getByRole('status').filter({ hasText: hi['narration.unavailable'] })).toBeVisible()
     expect(await spoken(page)).toEqual([])
     // The button is usable again.
-    await expect(page.getByRole('button', { name: 'Read section' }).first()).toBeVisible()
+    await expect(page.getByRole('button', { name: hi['narration.readSection'] }).first()).toBeVisible()
   })
 
   test('a lesson that fell back to English is read by an English voice even in Hindi', async ({ page }) => {
@@ -92,7 +100,7 @@ test.describe('Hindi narration on device voices (B4 step A)', () => {
     await fakeSpeech(page, [{ name: 'Lekha', lang: 'hi-IN' }, { name: 'Samantha', lang: 'en-US' }])
     await page.addInitScript(() => localStorage.setItem('ai-foundations-audience-mode', JSON.stringify({ state: { mode: 'junior' }, version: 0 })))
     await page.goto('/lesson/1-intro')
-    await readFirstSection(page)
+    await readFirstSection(page, en)
     await expect.poll(async () => (await spoken(page)).length).toBeGreaterThan(0)
     expect((await spoken(page)).every((u) => u.voice === 'Samantha')).toBe(true)
   })
@@ -122,13 +130,16 @@ test.describe('Hindi recorded narration (B4 step B)', () => {
       manifestAsked++
       return r.fulfill({ json: { language: 'hi', tracks: { [key]: { chip: { file: `${key}-chip.mp3`, hash: 'h', bytes: 1 }, nova: { file: `${key}-nova.mp3`, hash: 'h', bytes: 1 } } } } })
     })
+    // Hold the file request open: the player is stubbed, and a failed load would (rightly) fall back
+    // to the device voice, which this test is not about.
+    await page.route('**/api/audio/hi/**/*.mp3', () => {})
     await hindiLesson(page)
     await readFirstSection(page)
     await expect.poll(() => page.evaluate(() => (window as unknown as { __played: string[] }).__played)).toEqual([
       expect.stringMatching(new RegExp(`/api/audio/hi/${key}-chip\\.mp3$`)),
     ])
     expect(await spoken(page)).toEqual([]) // no device speech on top of the recording
-    await page.getByRole('button', { name: 'Stop', exact: false }).first().click()
+    await page.getByRole('button', { name: hi['narration.stopSection'] }).first().click()
     expect(await page.evaluate(() => (window as unknown as { __paused: number }).__paused)).toBeGreaterThan(0)
 
     await readFirstSection(page)

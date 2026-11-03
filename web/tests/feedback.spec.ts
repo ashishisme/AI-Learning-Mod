@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { mockAdmin } from './helpers/admin-mock'
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 const session = { authenticated: true, betaId: 'BETA-7KQ3-M9XP', label: 'School A', expiresAt: '2027-01-01T08:30:00Z', daysLeft: 61, expiringSoon: false }
 
@@ -73,8 +75,10 @@ test('feedback sends the language and shows the localised rejection', async ({ p
     return r.fulfill({ status: 422, json: { code: 'pii_detected', kind: 'phone', error: 'कृपया निजी जानकारी (फ़ोन नंबर) हटाकर फिर से भेजें।' } })
   })
   await page.goto('/')
-  // No Hindi catalogue ships before B3, so the labels are still English here.
-  await page.getByRole('button', { name: 'Feedback' }).click()
+  // The button label is whatever the Hindi catalogue says (English until it exists).
+  const hiFile = join(process.cwd(), 'src', 'i18n', 'hi.json')
+  const label = existsSync(hiFile) ? JSON.parse(readFileSync(hiFile, 'utf8'))['feedback.button'] : 'Feedback'
+  await page.getByRole('button', { name: label }).click()
   await page.getByRole('radio', { name: '4' }).check()
   await page.getByRole('dialog').getByRole('textbox').fill('मेरा नंबर ९८७६५४३२१० है')
   await page.locator('form button[type="submit"]').click()
