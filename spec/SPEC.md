@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.3.0 |
+| Version | 2.4.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -74,6 +74,14 @@ tutor endpoint; single-binary deployment.
 `^(\d+[-_]\w+)/README\.md$` and does not reside under `translations/`,
 the command shall fetch the raw Markdown from
 `https://raw.githubusercontent.com/microsoft/AI-For-Beginners/<sha>/<path>`.
+*Amended by SPEC-009, 2026-11-03 (2.4.0):* for each language listed in
+`public-content/languages.json` (hidden or approved), the command shall also fetch
+`translations/<code>/<path>` at the same pinned SHA for each English lesson, and write it to
+`public-content/lang/<code>/lessons/<id>.json` with the English `id`, `module`, order and Colab link,
+the `sourceHash` (SHA-256) of the upstream README, and its images bundled as in FR-033. A translated
+image missing upstream is replaced by the English image of the same name; a lesson with no
+translation is skipped and logged. `-lang <code>` runs only that language. The English output is
+unchanged.
 
 **FR-ING-03.** For each lesson, the command shall derive:
 - `id` = lowercase folder segment (`\w+` portion)
@@ -319,6 +327,27 @@ Existing 400 and 404 responses are unchanged.
 English first, each with `code`, `name` and `speechLang`. Languages come from
 `public-content/languages.json`; a language listed with status `hidden` is not offered,
 a missing file means English only, and an invalid file is logged and also means English only.
+
+**FR-I18N-04.** Added 2.4.0 (SPEC-009, build B2). Each language has a review ledger,
+`content/review/<code>.json`, with one entry per translated file (UI catalogue, quizzes, each adaptive
+lesson, each base lesson): its kind (`base`, `adaptive`, `quiz` or `ui`), the SHA-256 of its English
+source (for `base`, of the upstream README) and of the translation, a status of `draft` or `approved`,
+and for an approved entry a reviewer and date. An approved entry whose hashes no longer match is
+stale and counts as not approved. `ingest -verify` shall check every listed language: a missing
+translation, a missing, draft, stale or malformed entry, or a parity problem (a missing key or field,
+a never-translated value changed, or changed code, links, URLs, placeholders, `<b>` marks, `§`
+citations, headings or list items) prints one `LANG PATH: reason` line. For an `approved` language
+any such line fails the build; for a `hidden` language it is a warning. `cmd/translate` drafts
+translations of the allowlisted fields only, refuses an answer that breaks that structure, never
+overwrites an approved and current file without `-force`, records drafts in the ledger, and runs
+only on the owner's machine: its key is never set in CI, Terraform or the image.
+
+**FR-I18N-05.** Added 2.4.0 (SPEC-009, build B2). The FR-048 feedback rule check and the
+FR-REV-20 tutor safety screen shall catch the same categories in Hindi (Devanagari) and Hinglish
+as in English, with Devanagari digits and spelling variants (nukta, chandrabindu) folded first and
+explicit word boundaries rather than ASCII-only `\b`. `POST /api/feedback` accepts an optional
+`lang`, used only to choose the language of the rejection message and never stored; a language
+that is not approved gets English. No reply ever repeats the learner's text.
 
 ---
 
@@ -775,6 +804,21 @@ unknown and unsafe values as English. `/api/runtime` lists only approved languag
 Covered by `internal/api/lessons_lang_test.go`, `internal/i18n/languages_test.go`,
 `internal/api/hosted_test.go::TestRuntimeListsApprovedLanguages` and
 `web/tests/i18n-foundation.spec.ts`.
+
+**AC-48 (FR-ING-02 amended, FR-I18N-04, FR-I18N-05).** Ingest with a language writes its base lessons
+from `translations/<code>/` with English ids, a `sourceHash`, bundled `.webp` images served as
+`image/webp`, the English image for a missing translated one, and untranslated lessons skipped;
+with no language the English output is unchanged. The ledger reports missing, draft, stale and
+malformed entries and parity problems; `-verify` exits 1 for an approved language with any and only
+warns for a hidden one; `cmd/translate` sends only allowlisted fields with the glossary, refuses a
+broken answer, leaves approved files alone without `-force`, makes no request on `-dry-run` and never
+prints its key. The Hindi and Hinglish personal-details corpus is rejected in full with the expected
+categories, at least 95% of clean Hindi passes, the Hindi safety corpus maps to its categories with no
+clean lesson question blocked, and the rejection is in the requested approved language.
+Covered by `internal/ingest/ingest_lang_test.go`, `internal/i18n/ledger_test.go`,
+`internal/i18n/parity_test.go`, `cmd/ingest/verify_lang_test.go`, `cmd/translate/translate_test.go`,
+`internal/feedback/check_hi_test.go`, `internal/api/safety_hi_test.go`,
+`internal/api/feedback_lang_test.go` and `web/tests/feedback.spec.ts`.
 
 ---
 
