@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.2.1 |
+| Version | 2.3.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -296,6 +296,29 @@ state and the current index.
 
 **FR-ATT-01.** The application shall display the attribution string in
 §5.6 NFR-LIC-01 on every route.
+
+### 4.9 Interface languages — `FR-I18N-*`
+
+Added 2.3.0 (SPEC-009, build B1). English is the reference language and is always offered.
+
+**FR-I18N-01.** Every learner-facing interface string (pages, dialogs, the tutor, feedback,
+sign-in, adaptive lessons, narration controls and widgets) shall come from a per-language
+catalogue keyed by a stable dotted key. English is bundled with the app; any other catalogue
+is fetched only when that language is chosen. A key missing from the chosen catalogue shows
+the English text, and a key missing from English renders as an empty string, never as the
+raw key. The admin console is out of scope and stays English.
+
+**FR-I18N-02.** `GET /api/lessons` and `GET /api/lessons/{id}` shall accept an optional
+`lang` query parameter. A `lang` that is not an approved language, including malformed
+values, is treated as English and is never used to build a file path. For an approved
+language each file falls back to English independently (index, base lesson, and each adaptive
+mode), and every response carries `Content-Language` naming the language actually served.
+Existing 400 and 404 responses are unchanged.
+
+**FR-I18N-03.** `GET /api/runtime` shall include `languages`: the approved languages,
+English first, each with `code`, `name` and `speechLang`. Languages come from
+`public-content/languages.json`; a language listed with status `hidden` is not offered,
+a missing file means English only, and an invalid file is logged and also means English only.
 
 ---
 
@@ -742,6 +765,16 @@ longer than 20 characters that lacks a citation has
 ` [<lesson title> § <heading>]` appended and completes with `"cited":true`;
 a shorter uncited answer completes with `"cited":false` and the FR-TUT-06
 fallback. Covered by `TestAC38_CustomProviderAutoCitation`.
+
+**AC-47 (FR-I18N-01, FR-I18N-02, FR-I18N-03).** With only English approved, the visible English
+text of every learner page, dialog and adaptive lesson matches the baseline recorded before the
+strings moved into the catalogue, every literal key used in the source exists in English, and
+English pages never request another catalogue or the Devanagari font. `?lang=` serves an
+approved language with per-file English fallback and `Content-Language`, and treats hidden,
+unknown and unsafe values as English. `/api/runtime` lists only approved languages.
+Covered by `internal/api/lessons_lang_test.go`, `internal/i18n/languages_test.go`,
+`internal/api/hosted_test.go::TestRuntimeListsApprovedLanguages` and
+`web/tests/i18n-foundation.spec.ts`.
 
 ---
 

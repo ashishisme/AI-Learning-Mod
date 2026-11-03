@@ -48,3 +48,4 @@
 | AC-44 | FR-026..FR-028 | `internal/spend/tally_test.go`, `internal/api/abuse_test.go` | PASS | Daily spend reservations prevent overshoot |
 | AC-45 | FR-041..FR-046 | `internal/api/admin_insights_test.go`, `web/tests/admin-insights.spec.ts` | PASS | Overview, usage, activity and honest cost reporting |
 | AC-46 | FR-047..FR-059 | `internal/feedback/*_test.go`, `internal/api/feedback_handlers_test.go`, `web/tests/feedback.spec.ts` | PASS | Rule check, AI audit, inbox and retention |
+| AC-47 | FR-I18N-01, FR-I18N-02, FR-I18N-03 | `internal/api/lessons_lang_test.go`, `internal/i18n/languages_test.go`, `internal/api/hosted_test.go::TestRuntimeListsApprovedLanguages`, `web/tests/i18n-foundation.spec.ts` | PASS | SPEC-009 B1: English text unchanged after moving to catalogues; `?lang=` allowlist with per-file fallback; runtime lists approved languages |
