@@ -75,7 +75,7 @@ gcloud storage rsync --recursive public-content/audio gs://<narration bucket>/au
 - **Re-record after the review.** Run `narrate` again after step 6, because corrected text has to be recorded again. It only records the tracks whose text changed.
 
 **6. Review.** The reviewer corrects every file and the glossary in a pull request.
-- **Approve each file:** in `content/review/ta.json`, they set `"status": "approved"` with their name and the date.
+- **Approve each file:** run `go run ./cmd/review -lang ta -reviewer "Name" -approve <path>…` for each file they have checked. It records the hashes, their name and the date in `content/review/ta.json`, and refuses a file whose structure differs from English. `go run ./cmd/review -lang ta` shows what is still draft or stale.
 - **Sample check:** rate 20 sampled sections for naturalness and accuracy for the age group.
 - **Stale approvals:** any later change to a file or its English source makes its approval stale, and the release gate will say so.
 

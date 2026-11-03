@@ -168,7 +168,7 @@ To add a language, follow [docs/adding-a-language.md](docs/adding-a-language.md)
 
 - **Base lessons** come from the course's own translation at the same pin: `go run ./cmd/ingest` ingests every listed language, and `go run ./cmd/ingest -lang hi` ingests just one. Translated images are new images, so **review them for logos as above** before a language is approved.
 - **App-written content** (kids and plain-English lessons, quizzes, UI text) is drafted with `go run ./cmd/translate -lang hi [-kind adaptive|quiz|ui] [-only <path>] [-force] [-dry-run]`. It uses the glossary in `content/glossary/<code>.json` and records each draft in `content/review/<code>.json`.
-- **Review:** a native reviewer corrects each file in a PR and sets its ledger entry to `"status": "approved"` with their name and the date. Any later change to the file or its English source makes the entry stale.
+- **Review:** a native reviewer corrects each file in a PR, then approves it with `go run ./cmd/review -lang hi -reviewer "Name" -approve <path>…`. `go run ./cmd/review -lang hi` lists every file as draft, approved, stale or missing. Any later change to the file or its English source makes the approval stale.
 - **Release gate:** `go run ./cmd/ingest -verify` prints `LANG PATH: reason` for anything missing, draft, stale or structurally different from English. Such a line fails the build for an approved language and is a warning for a hidden one.
 
 **Recorded narration** (Google Cloud Text-to-Speech) is made on the owner's machine and kept in the private bucket that Terraform creates (output `github_variables.GCP_NARRATION_BUCKET`). The release build copies it into the image.
