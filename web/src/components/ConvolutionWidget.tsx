@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { speechService } from '../services/speechService';
+import { rich, useT } from '../i18n';
 
 type PresetType = 'vertical-edge' | 'horizontal-edge' | 'sharpen' | 'blur' | 'ridge';
 
@@ -118,6 +119,7 @@ const DRAWINGS: Record<string, { name: string; emoji: string; pixels: number[][]
 };
 
 export const ConvolutionWidget: React.FC = () => {
+  const t = useT();
   const [selectedPreset, setSelectedPreset] = useState<PresetType>('vertical-edge');
   const [activeWindow, setActiveWindow] = useState<{ r: number; c: number }>({ r: 1, c: 1 });
   const [image, setImage] = useState<number[][]>(DRAWINGS.cross.pixels);
@@ -210,11 +212,11 @@ export const ConvolutionWidget: React.FC = () => {
           <div className="flex items-center gap-2.5">
             <span className="text-2xl animate-bounce">👁️</span>
             <h3 className="text-lg sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
-              Interactive Convolution & Filter Lab
+              {t('widget.conv.title')}
             </h3>
           </div>
           <p className="mt-1 text-xs sm:text-sm text-slate-300">
-            See how AI cameras slide a 3×3 magnifying filter across pixels to detect edges and shapes!
+            {t('widget.conv.intro')}
           </p>
         </div>
 
@@ -222,14 +224,14 @@ export const ConvolutionWidget: React.FC = () => {
           onClick={resetImage}
           className="text-xs px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all shadow-sm"
         >
-          🔄 Reset Drawing
+          {t('widget.conv.reset')}
         </button>
       </div>
 
       {/* Kid Drawing Preset Chooser */}
       <div className="mt-5 p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/80 relative z-10 flex flex-wrap items-center justify-between gap-3">
         <span className="text-xs font-bold uppercase tracking-wider text-cyan-300">
-          🎨 Choose a Pixel Drawing (or click pixels below to draw):
+          {t('widget.conv.chooseDrawing')}
         </span>
         <div className="flex items-center gap-2">
           {Object.entries(DRAWINGS).map(([key, draw]) => (
@@ -239,7 +241,7 @@ export const ConvolutionWidget: React.FC = () => {
               className="px-3 py-1 rounded-xl bg-slate-900 border border-slate-700 hover:border-cyan-400 text-xs font-semibold text-slate-200 transition-all flex items-center gap-1.5 shadow-xs"
             >
               <span>{draw.emoji}</span>
-              <span>{draw.name}</span>
+              <span>{t(`widget.conv.drawing.${key}`)}</span>
             </button>
           ))}
         </div>
@@ -248,7 +250,7 @@ export const ConvolutionWidget: React.FC = () => {
       {/* Preset Filter Lenses */}
       <div className="mt-6 relative z-10">
         <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2.5">
-          Select a 3×3 Filter Lens:
+          {t('widget.conv.chooseFilter')}
         </label>
         <div className="flex flex-wrap gap-2.5">
           {PRESETS.map((preset) => {
@@ -264,9 +266,9 @@ export const ConvolutionWidget: React.FC = () => {
                 }`}
               >
                 <span className="text-sm">{preset.emoji}</span>
-                <span>{preset.name}</span>
+                <span>{t(`widget.conv.preset.${preset.id}.name`)}</span>
                 <span className="text-[10px] opacity-80 bg-black/40 px-1.5 py-0.5 rounded-md font-mono">
-                  {preset.badge}
+                  {t(`widget.conv.preset.${preset.id}.badge`)}
                 </span>
               </button>
             );
@@ -274,7 +276,7 @@ export const ConvolutionWidget: React.FC = () => {
         </div>
         <p className="mt-2.5 text-xs sm:text-sm text-cyan-200/90 italic flex items-center gap-1.5">
           <span>💡</span>
-          <span>{activePreset.description}</span>
+          <span>{t(`widget.conv.preset.${activePreset.id}.description`)}</span>
         </p>
       </div>
 
@@ -283,9 +285,9 @@ export const ConvolutionWidget: React.FC = () => {
         {/* 1. Input Image Grid (6x6) */}
         <div className="flex flex-col items-center bg-slate-950/80 p-5 rounded-2xl border border-slate-800 shadow-md">
           <div className="flex items-center justify-between w-full mb-3">
-            <span className="text-xs font-extrabold text-cyan-300">1. Input Image (6×6)</span>
+            <span className="text-xs font-extrabold text-cyan-300">{t('widget.conv.input')}</span>
             <span className="text-[11px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded-md">
-              Tap square to toggle
+              {t('widget.conv.tapToggle')}
             </span>
           </div>
 
@@ -302,7 +304,7 @@ export const ConvolutionWidget: React.FC = () => {
                   <button
                     key={`${rIdx}-${cIdx}`}
                     onClick={() => togglePixel(rIdx, cIdx)}
-                    title={`Pixel (${rIdx},${cIdx}) = ${val}`}
+                    title={t('widget.conv.pixelTitle', { r: rIdx, c: cIdx, v: val })}
                     className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-[9px] font-mono flex items-center justify-center transition-all ${
                       val === 255
                         ? 'bg-amber-400 text-slate-950 font-black shadow-sm'
@@ -321,13 +323,13 @@ export const ConvolutionWidget: React.FC = () => {
           </div>
           <div className="mt-3 flex items-center gap-1.5 text-[11px] text-cyan-300">
             <span className="inline-block w-3 h-3 border-2 border-cyan-400 rounded-sm"></span>
-            <span>Cyan outline = Active 3×3 Robot Lens</span>
+            <span>{t('widget.conv.activeLens')}</span>
           </div>
         </div>
 
         {/* 2. Kernel Matrix (3x3) & Live Calculation */}
         <div data-math="true" className="flex flex-col items-center bg-slate-950/80 p-5 rounded-2xl border border-cyan-500/30 shadow-md">
-          <span className="text-xs font-extrabold text-cyan-300 mb-3">2. Robot Lens Weights (3×3)</span>
+          <span className="text-xs font-extrabold text-cyan-300 mb-3">{t('widget.conv.weights')}</span>
 
           <div className="grid grid-cols-3 gap-1.5 bg-slate-900 p-2.5 rounded-xl border border-cyan-500/40 shadow-inner">
             {activePreset.kernel.map((row, kr) =>
@@ -344,16 +346,16 @@ export const ConvolutionWidget: React.FC = () => {
 
           <div className="mt-4 w-full bg-slate-900 p-3.5 rounded-xl border border-slate-700/80 text-center">
             <span className="text-[10px] uppercase tracking-wider text-slate-400 block mb-1">
-              Live Lens Math
+              {t('widget.conv.liveMath')}
             </span>
             <div className="text-xs font-mono text-cyan-200">
-              Sum = <strong className="text-cyan-300">{mathDetails.total}</strong>
+              {rich(t('widget.conv.sum', { total: mathDetails.total }), 'text-cyan-300')}
             </div>
             {activePreset.divisor && activePreset.divisor > 1 && (
-              <div className="text-[10px] text-slate-400">Averaged by {activePreset.divisor}</div>
+              <div className="text-[10px] text-slate-400">{t('widget.conv.averaged', { n: activePreset.divisor })}</div>
             )}
             <div className="mt-1.5 text-sm sm:text-base font-black text-amber-300">
-              Output Pixel Value = {mathDetails.finalVal}
+              {t('widget.conv.output', { n: mathDetails.finalVal })}
             </div>
           </div>
         </div>
@@ -361,9 +363,9 @@ export const ConvolutionWidget: React.FC = () => {
         {/* 3. Output Feature Map (4x4) */}
         <div className="flex flex-col items-center bg-slate-950/80 p-5 rounded-2xl border border-slate-800 shadow-md">
           <div className="flex items-center justify-between w-full mb-3">
-            <span className="text-xs font-extrabold text-indigo-300">3. Filtered Feature Map (4×4)</span>
+            <span className="text-xs font-extrabold text-indigo-300">{t('widget.conv.featureMap')}</span>
             <span className="text-[11px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded-md">
-              Click to slide lens
+              {t('widget.conv.clickSlide')}
             </span>
           </div>
 
@@ -381,7 +383,7 @@ export const ConvolutionWidget: React.FC = () => {
                       speechService.playChime('click');
                       setActiveWindow({ r: rIdx, c: cIdx });
                     }}
-                    title={`Output (${rIdx},${cIdx}) = ${val} - Click to slide lens here`}
+                    title={t('widget.conv.outputTitle', { r: rIdx, c: cIdx, v: val })}
                     style={{ backgroundColor: bgColor }}
                     className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg text-[10px] font-mono flex items-center justify-center transition-all border ${
                       isSelected
@@ -396,7 +398,7 @@ export const ConvolutionWidget: React.FC = () => {
             )}
           </div>
           <div className="mt-3 text-[11px] text-slate-300 text-center">
-            ✨ Glowing squares show where the lens spotted an edge!
+            {t('widget.conv.glow')}
           </div>
         </div>
       </div>

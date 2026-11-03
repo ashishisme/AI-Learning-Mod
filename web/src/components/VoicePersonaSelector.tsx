@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useAudioStore, VoicePersonaId } from '../store';
 import { speechService, VOICE_PERSONAS } from '../services/speechService';
+import { useT } from '../i18n';
 
 export const VoicePersonaSelector: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const t = useT();
   const { persona, setPersona, speechRate, setSpeechRate, isMuted, toggleMute, stopAudio } = useAudioStore();
 
   const activePersona = VOICE_PERSONAS[persona] || VOICE_PERSONAS.chip;
@@ -15,11 +17,7 @@ export const VoicePersonaSelector: React.FC = () => {
 
     // Quick friendly sample greeting
     const p = VOICE_PERSONAS[pId];
-    const previewText = pId === 'chip'
-      ? "Hi, I'm Chip! Let's explore AI together!"
-      : pId === 'nova'
-      ? "Hello, I'm Nova. I'll guide you through these concepts in plain English."
-      : "Greetings. I am Professor Alan. Let us study the foundations of artificial intelligence.";
+    const previewText = t(`narration.persona.${pId}.preview`);
 
     speechService.speak(previewText, {
       personaId: pId,
@@ -33,12 +31,12 @@ export const VoicePersonaSelector: React.FC = () => {
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Voice Studio Settings"
+        aria-label={t('narration.studioLabel')}
         className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 shadow-xs transition-colors"
       >
         <span className="text-sm">{activePersona.avatar}</span>
         <span className="hidden sm:inline text-slate-700 dark:text-slate-200 font-medium">
-          Voice: <strong className="font-bold text-slate-900 dark:text-white">{activePersona.name}</strong>
+          {t('narration.voice')} <strong className="font-bold text-slate-900 dark:text-white">{t(`narration.persona.${activePersona.id}.name`)}</strong>
         </span>
         <span className="text-slate-400 text-[10px]">⚙️</span>
       </button>
@@ -53,7 +51,7 @@ export const VoicePersonaSelector: React.FC = () => {
           <div className="absolute right-0 mt-2 w-80 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl z-50 animate-fadeIn">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                🎙️ Audio Studio Settings
+                {t('narration.studioTitle')}
               </span>
               <button
                 onClick={() => setIsOpen(false)}
@@ -66,7 +64,7 @@ export const VoicePersonaSelector: React.FC = () => {
             {/* Persona Cards */}
             <div className="space-y-2 mb-4">
               <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block mb-1">
-                Select Narrator Persona:
+                {t('narration.selectPersona')}
               </span>
               {(Object.keys(VOICE_PERSONAS) as VoicePersonaId[]).map((pId) => {
                 const p = VOICE_PERSONAS[pId];
@@ -87,16 +85,16 @@ export const VoicePersonaSelector: React.FC = () => {
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <strong className="text-xs font-bold text-slate-900 dark:text-white">
-                          {p.title}
+                          {t(`narration.persona.${pId}.title`)}
                         </strong>
                         {isSelected && (
                           <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
-                            Active
+                            {t('narration.active')}
                           </span>
                         )}
                       </div>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 leading-snug">
-                        {p.description}
+                        {t(`narration.persona.${pId}.description`)}
                       </p>
                     </div>
                   </button>
@@ -107,7 +105,7 @@ export const VoicePersonaSelector: React.FC = () => {
             {/* Speed Slider */}
             <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
               <div className="flex items-center justify-between text-xs font-medium text-slate-700 dark:text-slate-300">
-                <span>Reading Pace:</span>
+                <span>{t('narration.pace')}</span>
                 <span className="font-bold text-blue-600 dark:text-blue-400">{speechRate}x</span>
               </div>
               <div className="flex items-center gap-3">
@@ -128,7 +126,7 @@ export const VoicePersonaSelector: React.FC = () => {
             {/* Mute Toggle */}
             <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between mt-3">
               <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
-                Mute All Audio:
+                {t('narration.muteAll')}
               </span>
               <button
                 onClick={toggleMute}
@@ -138,7 +136,7 @@ export const VoicePersonaSelector: React.FC = () => {
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'
                 }`}
               >
-                {isMuted ? '🔇 Muted' : '🔊 Sound On'}
+                {t(isMuted ? 'narration.muted' : 'narration.soundOn')}
               </button>
             </div>
           </div>

@@ -445,4 +445,5 @@ cd web && npm test
 - **Developed and distributed as freeware by Qunisphere Pvt Limited, Bangalore.**
 - Curriculum content is derived from [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners) under the [MIT License](https://github.com/microsoft/AI-For-Beginners/blob/main/LICENSE). This project is independent and not affiliated with, sponsored by, or endorsed by Microsoft.
 - Application source code, simulators, and architecture are released under the [MIT License](LICENSE).
+- Hindi text uses [Noto Sans Devanagari](https://github.com/notofonts/devanagari) (Devanagari subset, variable weight), © 2022 The Noto Project Authors, under the [SIL Open Font License 1.1](web/public/fonts/OFL.txt). It is served from the app's own origin and loaded only when Devanagari text is on screen (SPEC-009 R12).
 

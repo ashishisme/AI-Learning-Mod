@@ -18,6 +18,7 @@ import { useAudioStore, useProgressStore } from '../store'
 import { StepperDiagram } from './StepperDiagram'
 import { WidgetFrame } from './WidgetFrame'
 import { ChoiceCard } from './ChoiceCard'
+import { useT } from '../i18n'
 
 interface Props {
   payload: AdaptiveLessonPayload
@@ -25,6 +26,7 @@ interface Props {
 
 export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({})
+  const t = useT()
   const { activeTrackId, currentSentence, isPlaying } = useAudioStore()
 
   const isJunior = payload.mode === 'junior'
@@ -53,7 +55,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
               <span className="text-2xl flex-shrink-0">💡</span>
               <div>
                 <span className="block font-bold text-xs uppercase tracking-wider text-blue-800 dark:text-blue-300 mb-1">
-                  Course Guide Note
+                  {t('adaptive.guideNote')}
                 </span>
                 <p>{payload.intro}</p>
               </div>
@@ -61,7 +63,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
             <AudioNarrationButton
               id="intro-guide-note"
               textToRead={payload.intro}
-              label="Listen"
+              label={t('narration.listen')}
               variant="pill"
             />
           </div>
@@ -73,7 +75,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
         <ChoiceCard
           key={`recall-${i}`}
           testId="recall-card"
-          heading="Warm-up: do you remember?"
+          heading={t('adaptive.warmUp')}
           emoji="🧠"
           question={q}
         />
@@ -83,11 +85,11 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
       <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
         <div className="flex flex-wrap items-center gap-3 mb-3">
           <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">
-            {isJunior ? '🌟 Junior AI Explorer' : '📘 Plain English Track'}
+            {t(isJunior ? 'adaptive.trackJunior' : 'adaptive.trackPlain')}
           </span>
           {payload.readingTimeMinutes && (
             <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              ⏱️ {payload.readingTimeMinutes} min read
+              ⏱️ {t('adaptive.minRead', { n: payload.readingTimeMinutes })}
             </span>
           )}
         </div>
@@ -118,8 +120,8 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                 </h2>
                 <AudioNarrationButton
                   id={sectionTrackId}
-                  textToRead={`${section.heading}. ${section.chipQuote ? 'Chip says: ' + section.chipQuote + '. ' : ''}${section.bodyMarkdown}`}
-                  label="Read section"
+                  textToRead={`${section.heading}. ${section.chipQuote ? t('narration.chipSays') + section.chipQuote + '. ' : ''}${section.bodyMarkdown}`}
+                  label={t('narration.readSection')}
                   variant="pill"
                 />
               </div>
@@ -132,7 +134,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                   </span>
                   <span className="font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider text-[10px] flex-shrink-0">
-                    Speaking:
+                    {t('narration.speaking')}
                   </span>
                   <span className="italic line-clamp-2">"{currentSentence}"</span>
                 </div>
@@ -232,7 +234,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                   data-testid="real-world"
                   className="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/60 text-sm text-emerald-950 dark:text-emerald-100"
                 >
-                  <span className="font-bold">Where you'll see this: </span>
+                  <span className="font-bold">{t('adaptive.realWorld')}</span>
                   {section.realWorld}
                 </p>
               )}
@@ -241,7 +243,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
               {section.jargonBuster && section.jargonBuster.length > 0 && (
                 <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80">
                   <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2.5">
-                    💡 Jargon Buster
+                    💡 {t('adaptive.jargonBuster')}
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {section.jargonBuster.map((jb, jIdx) => (
@@ -256,9 +258,9 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                           <button
                             type="button"
                             onClick={() => speechService.speak(jb.term)}
-                            title={`Hear pronunciation for ${jb.term}`}
+                            title={t('adaptive.hearPronunciation', { term: jb.term })}
                             className="p-1 rounded-md text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 transition-colors text-xs"
-                            aria-label={`Pronounce ${jb.term}`}
+                            aria-label={t('adaptive.pronounce', { term: jb.term })}
                           >
                             🔊
                           </button>
@@ -280,7 +282,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
       {payload.teachBack && (
         <ChoiceCard
           testId="teach-back"
-          heading={isJunior ? 'Teach it back to Chip' : 'Teach it back'}
+          heading={t(isJunior ? 'adaptive.teachBackJunior' : 'adaptive.teachBack')}
           emoji="🗣️"
           question={payload.teachBack}
         />
@@ -293,10 +295,10 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
             <span className="text-3xl">🎯</span>
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white leading-none">
-                Quick Comprehension Check
+                {t('adaptive.checkTitle')}
               </h2>
               <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                Test your knowledge of the lesson
+                {t('adaptive.checkSubtitle')}
               </span>
             </div>
           </div>
@@ -351,8 +353,8 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                       }`}
                     >
                       {isCorrect
-                        ? q.praise || q.explanation || 'Great job! You nailed it!'
-                        : q.explanation || 'Not quite! Review the section above and try again.'}
+                        ? q.praise || q.explanation || t('adaptive.praise')
+                        : q.explanation || t('adaptive.tryAgain')}
                     </div>
                   )}
                 </div>

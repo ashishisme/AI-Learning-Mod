@@ -1,5 +1,6 @@
 // SPEC: FR-CNT-01, FR-CNT-02, FR-TUT-01, FR-TUT-07, FR-TUT-08, FR-SET-03, FR-SET-04, NFR-REL-01, NFR-REL-02
 import { useSettingsStore, useRuntimeStore, useAuthStore, AuthSessionInfo } from './store'
+import { currentLanguage } from './i18n'
 
 export interface LessonMeta {
   id: string
@@ -48,22 +49,38 @@ export class ApiError extends Error {
   }
 }
 
-export async function fetchLessons(): Promise<LessonIndex> {
-  const res = await fetch('/api/lessons')
+// SPEC-009 FR-009: lesson requests carry the learner's language; the server answers with the
+// language it actually served (Content-Language), so the UI can say when a part is still English.
+export interface Served {
+  servedLang?: string
+}
+
+function withLang(url: string): string {
+  const lang = currentLanguage()
+  if (lang === 'en') return url
+  return url + (url.includes('?') ? '&' : '?') + 'lang=' + encodeURIComponent(lang)
+}
+
+function servedLang(res: Response): string {
+  return res.headers.get('Content-Language') || 'en'
+}
+
+export async function fetchLessons(): Promise<LessonIndex & Served> {
+  const res = await fetch(withLang('/api/lessons'))
   if (!res.ok) {
     const body = await res.json().catch(() => null)
     throw new ApiError(res.status, body?.error || `Failed to fetch lessons (${res.status})`, body)
   }
-  return res.json()
+  return { ...(await res.json()), servedLang: servedLang(res) }
 }
 
-export async function fetchLesson(id: string): Promise<Lesson> {
-  const res = await fetch(`/api/lessons/${encodeURIComponent(id)}`)
+export async function fetchLesson(id: string): Promise<Lesson & Served> {
+  const res = await fetch(withLang(`/api/lessons/${encodeURIComponent(id)}`))
   if (!res.ok) {
     const body = await res.json().catch(() => null)
     throw new ApiError(res.status, body?.error || `Failed to fetch lesson (${res.status})`, body)
   }
-  return res.json()
+  return { ...(await res.json()), servedLang: servedLang(res) }
 }
 
 function getAIHeaders(): Record<string, string> {
@@ -422,14 +439,14 @@ export interface AdaptiveLessonPayload {
 
 // Returns null when the lesson has no adaptive version: the server then answers 200 with the
 // standard lesson, which has blocks instead of sections.
-export async function fetchAdaptiveLesson(id: string, mode: "junior" | "plain-english"): Promise<AdaptiveLessonPayload | null> {
-  const res = await fetch(`/api/lessons/${encodeURIComponent(id)}?mode=${encodeURIComponent(mode)}`)
+export async function fetchAdaptiveLesson(id: string, mode: "junior" | "plain-english"): Promise<(AdaptiveLessonPayload & Served) | null> {
+  const res = await fetch(withLang(`/api/lessons/${encodeURIComponent(id)}?mode=${encodeURIComponent(mode)}`))
   if (!res.ok) {
     const body = await res.json().catch(() => null)
     throw new ApiError(res.status, body?.error || `Failed to fetch adaptive lesson (${res.status})`, body)
   }
   const payload = await res.json()
-  return Array.isArray(payload?.sections) ? payload : null
+  return Array.isArray(payload?.sections) ? { ...payload, servedLang: servedLang(res) } : null
 }
 
 

@@ -10,6 +10,7 @@ import {
   isLocalLLMUrl,
 } from '../api'
 import { useProgressStore, useAudienceModeStore, useRuntimeStore, useSettingsStore } from '../store'
+import { useT } from '../i18n'
 import { MarkdownBlock } from '../components/MarkdownBlock'
 import { TutorPanel } from '../components/TutorPanel'
 import { AudienceModeSelector } from '../components/AudienceModeSelector'
@@ -28,6 +29,7 @@ export const Lesson: React.FC = () => {
   const hosted = useRuntimeStore((st) => st.hosted)
   const { localLLMEnabled, baseUrl } = useSettingsStore((st) => st.settings)
   // FR-021a: a hosted learner's own local AI works even while the hosted tutor is off.
+  const t = useT()
   const tutorEnabled = serverTutor || (hosted && !!localLLMEnabled && isLocalLLMUrl(baseUrl))
 
   // 1. Fetch canonical lesson metadata
@@ -40,7 +42,7 @@ export const Lesson: React.FC = () => {
         setLoading(false)
       })
       .catch((err) => {
-        setErrorMessage(err instanceof ApiError ? err.message : 'Failed to load lesson')
+        setErrorMessage(err instanceof ApiError ? err.message : t('lesson.loadFailed'))
         setLoading(false)
       })
   }, [id])
@@ -66,7 +68,7 @@ export const Lesson: React.FC = () => {
     return (
       <div className="max-w-3xl mx-auto py-24 px-4 text-center">
         <div className="inline-block w-8 h-8 border-2 border-slate-300 border-t-blue-600 rounded-full animate-spin mb-4" />
-        <p className="text-sm font-medium text-slate-500">Loading lesson content...</p>
+        <p className="text-sm font-medium text-slate-500">{t('lesson.loading')}</p>
       </div>
     )
   }
@@ -79,11 +81,11 @@ export const Lesson: React.FC = () => {
           data-testid="back-link"
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 mb-6 transition"
         >
-          <span>&larr;</span> Back to Curriculum
+          <span>&larr;</span> {t('lesson.back')}
         </Link>
         <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-red-800">
-          <h2 className="text-base font-bold mb-1">Lesson Unavailable</h2>
-          <p className="text-sm">{errorMessage || 'The requested lesson could not be found.'}</p>
+          <h2 className="text-base font-bold mb-1">{t('lesson.unavailable')}</h2>
+          <p className="text-sm">{errorMessage || t('lesson.notFound')}</p>
         </div>
       </div>
     )
@@ -106,7 +108,7 @@ export const Lesson: React.FC = () => {
           className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
         >
           <span>🎯</span>
-          <span>Take Quiz</span>
+          <span>{t('lesson.takeQuiz')}</span>
         </Link>
 
         {hasNotebook && (
@@ -118,7 +120,7 @@ export const Lesson: React.FC = () => {
             className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
           >
             <span>⚡</span>
-            <span>Open in Colab</span>
+            <span>{t('lesson.colab')}</span>
           </a>
         )}
 
@@ -133,7 +135,7 @@ export const Lesson: React.FC = () => {
           }`}
         >
           <span>{isCompleted ? '✅' : '⬜'}</span>
-          <span>{isCompleted ? 'Completed' : 'Mark Complete'}</span>
+          <span>{isCompleted ? t('lesson.completed') : t('lesson.markComplete')}</span>
         </button>
       </div>
   )
@@ -148,7 +150,7 @@ export const Lesson: React.FC = () => {
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition group"
         >
           <span className="group-hover:-translate-x-0.5 transition-transform">&larr;</span>
-          <span>Back to Curriculum</span>
+          <span>{t('lesson.back')}</span>
         </Link>
 
         {lesson.module && (
@@ -192,7 +194,7 @@ export const Lesson: React.FC = () => {
         >
           {audienceMode !== 'standard' && !adaptivePayload && (
             <div className="p-3 mb-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 text-amber-800 dark:text-amber-300 text-xs font-medium">
-              ℹ️ Adaptive mode "{audienceMode}" isn't available for this lesson yet. Showing standard curriculum for this lesson.
+              {t('lesson.modeUnavailable', { mode: audienceMode })}
             </div>
           )}
           {lesson.blocks.map((block, idx) => (

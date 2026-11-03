@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { speechService } from '../services/speechService'
+import { useT } from '../i18n'
 
 interface Scenario {
   userPrompt: string
@@ -15,11 +16,12 @@ interface Props {
   scenario: Scenario
 }
 
-export const TuringWidget: React.FC<Props> = ({
-  title = "🎮 Mini-Game: Can You Spot the Bot?",
-  instruction = "Read the dialogue below and decide which participant is the AI!",
-  scenario,
-}) => {
+export const TuringWidget: React.FC<Props> = ({ title: givenTitle, instruction: givenInstruction, scenario }) => {
+  const t = useT()
+  const title = givenTitle ?? t('widget.turing.title')
+  const instruction = givenInstruction ?? t('widget.turing.instruction')
+  // 'Terminal A' / 'Terminal B' are content values; the learner sees the translated name.
+  const terminalName = (value: string) => t('widget.turing.terminal', { x: value.slice(-1) })
   const [selected, setSelected] = useState<string | null>(null)
 
   const isRevealed = selected !== null
@@ -56,7 +58,7 @@ export const TuringWidget: React.FC<Props> = ({
           </p>
         </div>
         <span className="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
-          The Turing Test Stage
+          {t('widget.turing.stage')}
         </span>
       </div>
 
@@ -65,7 +67,7 @@ export const TuringWidget: React.FC<Props> = ({
         <div className="flex items-center gap-2 mb-2">
           <span className="text-lg">🕵️‍♂️</span>
           <span className="text-xs font-bold uppercase tracking-wider text-purple-300">
-            Detective Interrogator asks both contestants behind the curtain:
+            {t('widget.turing.interrogator')}
           </span>
         </div>
         <div className="p-3.5 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-100 text-sm sm:text-base font-medium italic">
@@ -89,7 +91,7 @@ export const TuringWidget: React.FC<Props> = ({
           <div>
             <div className="flex items-center justify-between mb-3 border-b border-slate-700/60 pb-2">
               <span className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-                📟 Terminal A
+                📟 {terminalName('Terminal A')}
               </span>
               {isRevealed ? (
                 <span
@@ -99,11 +101,11 @@ export const TuringWidget: React.FC<Props> = ({
                       : 'bg-emerald-500/30 text-emerald-200 border border-emerald-500/50'
                   }`}
                 >
-                  {scenario.correctAnswer === 'Terminal A' ? '🤖 AI Machine Behind Curtain' : '👤 Real Human'}
+                  {t(scenario.correctAnswer === 'Terminal A' ? 'widget.turing.ai' : 'widget.turing.human')}
                 </span>
               ) : (
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-700/70 text-slate-300 flex items-center gap-1">
-                  🔒 Curtain Closed
+                  {t('widget.turing.closed')}
                 </span>
               )}
             </div>
@@ -128,11 +130,11 @@ export const TuringWidget: React.FC<Props> = ({
               onClick={() => handleSelect('Terminal A')}
               className="mt-5 w-full py-2.5 px-4 text-xs sm:text-sm font-bold rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-md transition-all transform hover:scale-[1.02]"
             >
-              👉 Vote: Terminal A is AI
+              👉 {t('widget.turing.vote', { terminal: terminalName('Terminal A') })}
             </button>
           ) : (
             <div className="mt-3 text-[11px] text-center font-medium text-slate-400">
-              {scenario.correctAnswer === 'Terminal A' ? 'Identified as AI' : 'Identified as Human'}
+              {t(scenario.correctAnswer === 'Terminal A' ? 'widget.turing.identifiedAi' : 'widget.turing.identifiedHuman')}
             </div>
           )}
         </div>
@@ -151,7 +153,7 @@ export const TuringWidget: React.FC<Props> = ({
           <div>
             <div className="flex items-center justify-between mb-3 border-b border-slate-700/60 pb-2">
               <span className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-                📟 Terminal B
+                📟 {terminalName('Terminal B')}
               </span>
               {isRevealed ? (
                 <span
@@ -161,11 +163,11 @@ export const TuringWidget: React.FC<Props> = ({
                       : 'bg-emerald-500/30 text-emerald-200 border border-emerald-500/50'
                   }`}
                 >
-                  {scenario.correctAnswer === 'Terminal B' ? '🤖 AI Machine Behind Curtain' : '👤 Real Human'}
+                  {t(scenario.correctAnswer === 'Terminal B' ? 'widget.turing.ai' : 'widget.turing.human')}
                 </span>
               ) : (
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-700/70 text-slate-300 flex items-center gap-1">
-                  🔒 Curtain Closed
+                  {t('widget.turing.closed')}
                 </span>
               )}
             </div>
@@ -190,11 +192,11 @@ export const TuringWidget: React.FC<Props> = ({
               onClick={() => handleSelect('Terminal B')}
               className="mt-5 w-full py-2.5 px-4 text-xs sm:text-sm font-bold rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-md transition-all transform hover:scale-[1.02]"
             >
-              👉 Vote: Terminal B is AI
+              👉 {t('widget.turing.vote', { terminal: terminalName('Terminal B') })}
             </button>
           ) : (
             <div className="mt-3 text-[11px] text-center font-medium text-slate-400">
-              {scenario.correctAnswer === 'Terminal B' ? 'Identified as AI' : 'Identified as Human'}
+              {t(scenario.correctAnswer === 'Terminal B' ? 'widget.turing.identifiedAi' : 'widget.turing.identifiedHuman')}
             </div>
           )}
         </div>
@@ -209,17 +211,17 @@ export const TuringWidget: React.FC<Props> = ({
         }`}>
           <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
             <span className="text-base sm:text-lg font-black flex items-center gap-2">
-              {isCorrect ? '🎉 Spot On!' : '🤖 Fooled by the Bot!'} You selected {selected}.
+              {t(isCorrect ? 'widget.turing.spotOn' : 'widget.turing.fooled')} {t('widget.turing.youSelected', { choice: terminalName(selected ?? '') })}
             </span>
             <button
               onClick={handleReset}
               className="px-3.5 py-1.5 rounded-xl bg-white text-slate-900 hover:bg-slate-100 text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 transform hover:scale-105"
             >
-              🔄 Play Again
+              {t('widget.turing.playAgain')}
             </button>
           </div>
           <p className="text-xs sm:text-sm leading-relaxed opacity-95">
-            <strong className="text-white">Why:</strong> {scenario.explanation}
+            <strong className="text-white">{t('widget.turing.why')}</strong> {scenario.explanation}
           </p>
         </div>
       )}

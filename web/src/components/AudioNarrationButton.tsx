@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAudioStore, useAudienceModeStore, VoicePersonaId } from '../store';
 import { speechService, VOICE_PERSONAS } from '../services/speechService';
+import { useT } from '../i18n';
 
 interface AudioNarrationButtonProps {
   id: string;
@@ -13,10 +14,12 @@ interface AudioNarrationButtonProps {
 export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
   id,
   textToRead,
-  label = 'Read aloud',
+  label: givenLabel,
   size = 'sm',
   variant = 'subtle',
 }) => {
+  const t = useT();
+  const label = givenLabel ?? t('narration.readAloud');
   const {
     activeTrackId,
     isPlaying,
@@ -102,7 +105,7 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
     return (
       <button
         onClick={handleToggle}
-        aria-label={isCurrentActive ? `Stop listening to Chip` : `Listen to Chip`}
+        aria-label={t(isCurrentActive ? 'narration.stopListeningChip' : 'narration.listenToChip')}
         className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full font-bold text-xs shadow-sm transition-all duration-200 ${
           isCurrentActive
             ? 'bg-amber-500 text-white shadow-amber-500/40 animate-pulse ring-2 ring-amber-300'
@@ -110,7 +113,7 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
         }`}
       >
         <span className="text-base">{isCurrentActive ? '⏹️' : '🔊'}</span>
-        <span>{isCurrentActive ? 'Stop Chip' : label}</span>
+        <span>{isCurrentActive ? t('narration.stopChip') : label}</span>
         {isCurrentActive && (
           <span className="flex gap-0.5 items-center">
             <span className="w-1 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
@@ -126,7 +129,7 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
     return (
       <button
         onClick={handleToggle}
-        aria-label={isCurrentActive ? `Stop reading section` : label}
+        aria-label={isCurrentActive ? t('narration.stopSection') : label}
         className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
           isCurrentActive
             ? 'bg-blue-600 text-white ring-2 ring-blue-300 shadow-sm'
@@ -134,7 +137,7 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
         }`}
       >
         <span>{isCurrentActive ? '⏹' : '🔊'}</span>
-        <span>{isCurrentActive ? 'Stop' : label}</span>
+        <span>{isCurrentActive ? t('narration.stop') : label}</span>
         {isCurrentActive && (
           <span className="flex gap-0.5 items-center ml-1">
             <span className="w-0.5 h-2.5 bg-white rounded-full animate-pulse" />
@@ -149,8 +152,8 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
   return (
     <button
       onClick={handleToggle}
-      aria-label={isCurrentActive ? `Stop reading section` : label}
-      title={isCurrentActive ? `Stop audio` : label}
+      aria-label={isCurrentActive ? t('narration.stopSection') : label}
+      title={isCurrentActive ? t('narration.stopAudio') : label}
       className={`p-1.5 rounded-md transition-colors ${
         size === 'sm' ? 'text-xs' : 'text-sm'
       } ${
@@ -165,7 +168,7 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
           </svg>
-          <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400">Playing</span>
+          <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400">{t('narration.playing')}</span>
         </span>
       ) : (
         <span className="flex items-center gap-1">

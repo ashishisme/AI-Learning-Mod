@@ -1,14 +1,15 @@
 import React from 'react'
 import { ChipVectorAvatar } from './ChipVectorAvatar'
 import { AudioNarrationButton } from './AudioNarrationButton'
+import { useT } from '../i18n'
 
 interface Props {
   greeting?: string
 }
 
-export const ChipMascotBanner: React.FC<Props> = ({
-  greeting = "Hey there, Future Explorer! I'm Chip. Ever wonder how computers can spot your dog in a photo or beat grown-ups at chess? Let's crack the code together!",
-}) => {
+export const ChipMascotBanner: React.FC<Props> = ({ greeting: given }) => {
+  const t = useT()
+  const greeting = given || t('adaptive.chipGreeting')
   return (
     <div className="relative overflow-hidden p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-amber-50 via-orange-50 to-amber-100/60 dark:from-amber-950/40 dark:via-orange-950/20 dark:to-slate-900 border-2 border-amber-300 dark:border-amber-700/60 shadow-lg mb-8">
       {/* Decorative background glow circle */}
@@ -29,20 +30,20 @@ export const ChipMascotBanner: React.FC<Props> = ({
           <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-amber-900 dark:text-amber-200 text-sm tracking-wide">
-                Chip the Robot
+                {t('adaptive.chipName')}
               </span>
               <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-amber-200/90 dark:bg-amber-800 text-amber-900 dark:text-amber-100 shadow-xs">
-                AI Guide
+                {t('adaptive.chipRole')}
               </span>
               <span className="text-xs text-amber-600 dark:text-amber-400 font-semibold hidden md:inline">
-                ✨ Ready to explore
+                {t('adaptive.chipReady')}
               </span>
             </div>
 
             <AudioNarrationButton
               id="chip-mascot-greeting"
               textToRead={greeting}
-              label="Listen to Chip! 🔊"
+              label={t('narration.listenChip')}
               variant="chip"
             />
           </div>

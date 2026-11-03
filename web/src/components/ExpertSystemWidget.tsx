@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { speechService } from '../services/speechService';
+import { rich, useT } from '../i18n';
 
 interface SensorFacts {
   dustyPanels: boolean;
@@ -9,6 +10,7 @@ interface SensorFacts {
 }
 
 export const ExpertSystemWidget: React.FC = () => {
+  const t = useT();
   const [sensors, setSensors] = useState<SensorFacts>({
     dustyPanels: true,
     lowBattery: true,
@@ -51,33 +53,33 @@ export const ExpertSystemWidget: React.FC = () => {
   const rule4Fires = safeMode && commSignalLost;
 
   // Determine Final Diagnosis & Rover Expressions
-  let diagnosis = "✅ All Systems Nominal: Mars Rover is exploring smoothly.";
-  let recommendation = "All systems operating at 100%! Geological drill and rock scanner active.";
+  let diagnosis = t('widget.expert.nominal');
+  let recommendation = t('widget.expert.nominalAction');
   let statusTone = "border-emerald-500/80 bg-emerald-500/10 text-emerald-900 dark:text-emerald-100 ring-2 ring-emerald-400/40";
   let roverMood: 'happy' | 'warning' | 'emergency' | 'night' = 'happy';
   let roverMouth = '( ^‿^ )';
 
   if (rule4Fires) {
-    diagnosis = "🚨 Critical Rover Emergency: Safe Mode + Communications Failure!";
-    recommendation = "Command: Emergency halt! Brush solar panels and re-aim antenna immediately!";
+    diagnosis = t('widget.expert.emergency');
+    recommendation = t('widget.expert.emergencyAction');
     statusTone = "border-rose-500/80 bg-rose-500/10 text-rose-900 dark:text-rose-100 ring-2 ring-rose-500/40 animate-pulse";
     roverMood = 'emergency';
     roverMouth = '( >_< 🚨 )';
   } else if (safeMode) {
-    diagnosis = "⚠️ Warning: Low-Power Safe Mode Activated.";
-    recommendation = "Command: Motors halted to conserve power. Solar arrays require cleaning.";
+    diagnosis = t('widget.expert.safeMode');
+    recommendation = t('widget.expert.safeModeAction');
     statusTone = "border-amber-500/80 bg-amber-500/10 text-amber-900 dark:text-amber-100 ring-2 ring-amber-400/40";
     roverMood = 'warning';
     roverMouth = '( •_• )';
   } else if (commSignalLost) {
-    diagnosis = "📡 Advisory: High Communication Signal Attenuation.";
-    recommendation = "Command: Realign parabolic dish toward Mars Reconnaissance Orbiter.";
+    diagnosis = t('widget.expert.signal');
+    recommendation = t('widget.expert.signalAction');
     statusTone = "border-blue-500/80 bg-blue-500/10 text-blue-900 dark:text-blue-100 ring-2 ring-blue-400/40";
     roverMood = 'warning';
     roverMouth = '( ⚆_⚆ )';
   } else if (sensors.isNighttime && sensors.lowBattery) {
-    diagnosis = "🌙 Martian Nightfall: Hibernation Cycle.";
-    recommendation = "Command: Night heaters on. Sleeping under Phobos until dawn.";
+    diagnosis = t('widget.expert.night');
+    recommendation = t('widget.expert.nightAction');
     statusTone = "border-indigo-500/80 bg-indigo-500/10 text-indigo-900 dark:text-indigo-100 ring-2 ring-indigo-400/40";
     roverMood = 'night';
     roverMouth = '( -_- )zzZ';
@@ -97,11 +99,11 @@ export const ExpertSystemWidget: React.FC = () => {
           <div className="flex items-center gap-2.5">
             <span className="text-2xl animate-bounce">🤖</span>
             <h4 className="text-lg sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
-              The Mars Rover Expert System: Live Lab
+              {t('widget.expert.title')}
             </h4>
           </div>
           <p className="text-xs sm:text-sm text-slate-300 mt-1">
-            See how Symbolic AI uses <strong>If-Then Rules</strong> like a robot brain to diagnose and fix rover problems in real time!
+            {rich(t('widget.expert.intro'))}
           </p>
         </div>
 
@@ -109,14 +111,14 @@ export const ExpertSystemWidget: React.FC = () => {
           {isNominal ? (
             <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5 shadow-sm">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              Rover 100% Operational
+              {t('widget.expert.operational')}
             </span>
           ) : (
             <button
               onClick={handleFixAll}
               className="text-xs font-bold px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white shadow-md transition-all flex items-center gap-1.5 transform hover:scale-105"
             >
-              🛠️ Quick Auto-Fix Rover
+              {t('widget.expert.autoFix')}
             </button>
           )}
         </div>
@@ -290,7 +292,7 @@ export const ExpertSystemWidget: React.FC = () => {
                     <circle cx="140" cy="6" r="4" fill="#78350f" />
                     <circle cx="175" cy="9" r="3" fill="#b45309" />
                     <text x="95" y="12" textAnchor="middle" fill="#fef3c7" fontSize="9" fontWeight="bold">
-                      🧹 DUSTY (CLICK TO CLEAN)
+                      {t('widget.expert.dusty')}
                     </text>
                   </g>
                 ) : (
@@ -336,7 +338,7 @@ export const ExpertSystemWidget: React.FC = () => {
 
           {/* Quick Click Hint under the Rover */}
           <div className="flex flex-wrap items-center justify-center gap-2 mt-2 text-[11px] text-slate-400">
-            <span>💡 <strong>Kid Tip:</strong> Click the Solar Panels or Dish directly on the rover, or use the toolbelt switches below!</span>
+            <span>💡 {rich(t('widget.expert.kidTip'))}</span>
           </div>
         </div>
       </div>
@@ -347,10 +349,10 @@ export const ExpertSystemWidget: React.FC = () => {
         <div className="p-5 rounded-2xl bg-slate-800/80 border border-slate-700/80 shadow-md">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold uppercase tracking-wider text-indigo-300 block">
-              1. Working Memory (Active Sensor Facts)
+              {t('widget.expert.memory')}
             </span>
             <span className="text-[10px] bg-indigo-900/60 text-indigo-200 px-2 py-0.5 rounded-full font-mono">
-              Sensors → Input
+              {t('widget.expert.sensorsInput')}
             </span>
           </div>
 
@@ -366,10 +368,10 @@ export const ExpertSystemWidget: React.FC = () => {
             >
               <span className="flex items-center gap-2">
                 <span>☀️</span>
-                <span>Solar Panels:</span>
+                <span>{t('widget.expert.solar')}</span>
               </span>
               <span className={`font-bold px-2.5 py-1 rounded-lg ${sensors.dustyPanels ? 'bg-amber-500/30 text-amber-200' : 'bg-emerald-500/20 text-emerald-300'}`}>
-                {sensors.dustyPanels ? '🧹 Dusty (Blocked)' : '✨ Clean & Clear'}
+                {sensors.dustyPanels ? t('widget.expert.solarDusty') : t('widget.expert.solarClean')}
               </span>
             </button>
 
@@ -384,10 +386,10 @@ export const ExpertSystemWidget: React.FC = () => {
             >
               <span className="flex items-center gap-2">
                 <span>🔋</span>
-                <span>Battery Voltage:</span>
+                <span>{t('widget.expert.battery')}</span>
               </span>
               <span className={`font-bold px-2.5 py-1 rounded-lg ${sensors.lowBattery ? 'bg-rose-500/30 text-rose-200' : 'bg-emerald-500/20 text-emerald-300'}`}>
-                {sensors.lowBattery ? '⚡ Low (<10V)' : '🔋 Normal (14V)'}
+                {sensors.lowBattery ? t('widget.expert.batteryLow') : t('widget.expert.batteryNormal')}
               </span>
             </button>
 
@@ -402,10 +404,10 @@ export const ExpertSystemWidget: React.FC = () => {
             >
               <span className="flex items-center gap-2">
                 <span>📡</span>
-                <span>Antenna Dish:</span>
+                <span>{t('widget.expert.dish')}</span>
               </span>
               <span className={`font-bold px-2.5 py-1 rounded-lg ${sensors.dishMisaligned ? 'bg-indigo-500/30 text-indigo-200' : 'bg-emerald-500/20 text-emerald-300'}`}>
-                {sensors.dishMisaligned ? '❌ Misaligned' : '🎯 Aligned to Orbiter'}
+                {sensors.dishMisaligned ? t('widget.expert.dishMisaligned') : t('widget.expert.dishAligned')}
               </span>
             </button>
 
@@ -420,16 +422,16 @@ export const ExpertSystemWidget: React.FC = () => {
             >
               <span className="flex items-center gap-2">
                 <span>{sensors.isNighttime ? '🌙' : '☀️'}</span>
-                <span>Environment:</span>
+                <span>{t('widget.expert.environment')}</span>
               </span>
               <span className={`font-bold px-2.5 py-1 rounded-lg ${sensors.isNighttime ? 'bg-purple-500/30 text-purple-200' : 'bg-amber-500/20 text-amber-200'}`}>
-                {sensors.isNighttime ? '🌙 Martian Night' : '☀️ Daytime Sun'}
+                {sensors.isNighttime ? t('widget.expert.envNight') : t('widget.expert.envDay')}
               </span>
             </button>
           </div>
 
           <span className="text-[11px] text-slate-400 block mt-3 italic">
-            👉 Tap any sensor switch above to change facts in working memory.
+            {t('widget.expert.tapHint')}
           </span>
         </div>
 
@@ -437,10 +439,10 @@ export const ExpertSystemWidget: React.FC = () => {
         <div className="p-5 rounded-2xl bg-slate-800/80 border border-slate-700/80 shadow-md">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold uppercase tracking-wider text-purple-300 block">
-              2. Knowledge Base (Production Rules)
+              {t('widget.expert.knowledge')}
             </span>
             <span className="text-[10px] bg-purple-900/60 text-purple-200 px-2 py-0.5 rounded-full font-mono">
-              Inference Engine
+              {t('widget.expert.engine')}
             </span>
           </div>
 
@@ -455,11 +457,11 @@ export const ExpertSystemWidget: React.FC = () => {
             >
               <div className="flex items-center justify-between mb-1.5">
                 <span className="font-bold flex items-center gap-1.5">
-                  <span>📜 Rule 1: Solar Power</span>
+                  <span>{t('widget.expert.rule1')}</span>
                 </span>
                 {rule1Fires && (
                   <span className="text-[10px] font-extrabold text-emerald-300 uppercase px-2 py-0.5 rounded-full bg-emerald-500/30 flex items-center gap-1">
-                    Fired 🔥
+                    {t('widget.expert.fired')}
                   </span>
                 )}
               </div>
@@ -478,11 +480,11 @@ export const ExpertSystemWidget: React.FC = () => {
             >
               <div className="flex items-center justify-between mb-1.5">
                 <span className="font-bold flex items-center gap-1.5">
-                  <span>📜 Rule 2: Safety Lock</span>
+                  <span>{t('widget.expert.rule2')}</span>
                 </span>
                 {rule2Fires && (
                   <span className="text-[10px] font-extrabold text-emerald-300 uppercase px-2 py-0.5 rounded-full bg-emerald-500/30 flex items-center gap-1">
-                    Fired 🔥
+                    {t('widget.expert.fired')}
                   </span>
                 )}
               </div>
@@ -501,11 +503,11 @@ export const ExpertSystemWidget: React.FC = () => {
             >
               <div className="flex items-center justify-between mb-1.5">
                 <span className="font-bold flex items-center gap-1.5">
-                  <span>📜 Rule 3: Telemetry</span>
+                  <span>{t('widget.expert.rule3')}</span>
                 </span>
                 {rule3Fires && (
                   <span className="text-[10px] font-extrabold text-emerald-300 uppercase px-2 py-0.5 rounded-full bg-emerald-500/30 flex items-center gap-1">
-                    Fired 🔥
+                    {t('widget.expert.fired')}
                   </span>
                 )}
               </div>
@@ -524,11 +526,11 @@ export const ExpertSystemWidget: React.FC = () => {
             >
               <div className="flex items-center justify-between mb-1.5">
                 <span className="font-bold flex items-center gap-1.5">
-                  <span>🚨 Rule 4: Compound Emergency</span>
+                  <span>{t('widget.expert.rule4')}</span>
                 </span>
                 {rule4Fires && (
                   <span className="text-[10px] font-extrabold text-rose-300 uppercase px-2 py-0.5 rounded-full bg-rose-500/40 flex items-center gap-1 animate-pulse">
-                    EMERGENCY FIRED 💥
+                    {t('widget.expert.emergencyFired')}
                   </span>
                 )}
               </div>
@@ -548,7 +550,7 @@ export const ExpertSystemWidget: React.FC = () => {
           </span>
           <div className="flex-1">
             <span className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
-              Inference Engine Diagnostic Conclusion:
+              {t('widget.expert.conclusion')}
             </span>
             <strong className="block text-base sm:text-lg mb-1">{diagnosis}</strong>
             <p className="text-xs sm:text-sm font-medium opacity-90">{recommendation}</p>

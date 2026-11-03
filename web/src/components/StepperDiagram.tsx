@@ -1,5 +1,6 @@
 // SPEC-006 FR-REV-05: junior-track "stepper" diagram, one idea revealed per tap.
 import React, { useState } from 'react'
+import { useT } from '../i18n'
 
 interface Props {
   caption?: string
@@ -9,6 +10,7 @@ interface Props {
 
 export const StepperDiagram: React.FC<Props> = ({ caption, alt, steps }) => {
   const [shown, setShown] = useState(1)
+  const t = useT()
   const done = shown >= steps.length
 
   return (
@@ -51,14 +53,14 @@ export const StepperDiagram: React.FC<Props> = ({ caption, alt, steps }) => {
               data-testid="stepper-next"
               className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
             >
-              Next step ➜
+              {t('widget.stepNext')}
             </button>
             <button
               type="button"
               onClick={() => setShown(steps.length)}
               className="px-3 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
             >
-              Show all
+              {t('widget.stepShowAll')}
             </button>
           </>
         ) : (
@@ -67,11 +69,11 @@ export const StepperDiagram: React.FC<Props> = ({ caption, alt, steps }) => {
             onClick={() => setShown(1)}
             className="px-3 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
           >
-            ↺ Start again
+            {t('widget.stepRestart')}
           </button>
         )}
         <span className="text-xs text-slate-500 dark:text-slate-400">
-          Step {Math.min(shown, steps.length)} of {steps.length}
+          {t('widget.stepOf', { n: Math.min(shown, steps.length), total: steps.length })}
         </span>
       </div>
     </figure>

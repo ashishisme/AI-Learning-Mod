@@ -1,5 +1,6 @@
 // SPEC-006 FR-REV-10, FR-REV-11: predict -> act -> compare -> explain around any widget.
 import React, { useState } from 'react'
+import { useT } from '../i18n'
 
 export interface WidgetFrameMeta {
   goal?: string
@@ -28,6 +29,7 @@ export const WidgetFrame: React.FC<Props> = ({
   children,
 }) => {
   const [phase, setPhase] = useState<Phase>(predictionPrompt ? 'predict' : 'play')
+  const t = useT()
   const [prediction, setPrediction] = useState('')
   const [lockedPrediction, setLockedPrediction] = useState<string | null>(null)
   const [hintsShown, setHintsShown] = useState(0)
@@ -45,12 +47,12 @@ export const WidgetFrame: React.FC<Props> = ({
   }
 
   return (
-    <section aria-label="Interactive activity" data-testid="widget-frame" className="my-6">
+    <section aria-label={t('widget.activity')} data-testid="widget-frame" className="my-6">
       <div
         data-testid="widget-goal"
         className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/60 text-sm text-amber-950 dark:text-amber-100"
       >
-        <span className="font-bold">🎯 {isJunior ? 'Your mission: ' : 'Goal: '}</span>
+        <span className="font-bold">🎯 {t(isJunior ? 'widget.mission' : 'widget.goal')}</span>
         {goal}
       </div>
 
@@ -68,7 +70,7 @@ export const WidgetFrame: React.FC<Props> = ({
             value={prediction}
             onChange={(e) => setPrediction(e.target.value)}
             maxLength={160}
-            placeholder="Type your guess (it is fine to be wrong!)"
+            placeholder={t('widget.guessPlaceholder')}
             className="w-full px-3 py-2 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
           />
           <div className="mt-3 flex flex-wrap gap-3">
@@ -79,7 +81,7 @@ export const WidgetFrame: React.FC<Props> = ({
               data-testid="widget-lock-prediction"
               className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
             >
-              Lock in my guess 🔒
+              {t('widget.lockGuess')}
             </button>
             {allowFreePlay && (
               <button
@@ -88,7 +90,7 @@ export const WidgetFrame: React.FC<Props> = ({
                 data-testid="widget-skip-predict"
                 className="px-4 py-2 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-white/70 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
-                Skip, just play
+                {t('widget.skip')}
               </button>
             )}
           </div>
@@ -100,7 +102,7 @@ export const WidgetFrame: React.FC<Props> = ({
           {scaffold === 'guided' && (
             <div className="mt-3 flex items-center justify-between gap-3 text-xs">
               <span className="text-slate-500 dark:text-slate-400">
-                {freePlay ? 'Free play: nothing is scored.' : 'Try it, then check your guess.'}
+                {t(freePlay ? 'widget.freePlay' : 'widget.tryIt')}
               </span>
               <button
                 type="button"
@@ -109,7 +111,7 @@ export const WidgetFrame: React.FC<Props> = ({
                 data-testid="widget-show-math"
                 className="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
               >
-                {showMath ? 'Hide the math' : 'Show me the math'}
+                {t(showMath ? 'widget.hideMath' : 'widget.showMath')}
               </button>
             </div>
           )}
@@ -138,7 +140,7 @@ export const WidgetFrame: React.FC<Props> = ({
                       data-testid="widget-hint-btn"
                       className="px-3 py-1.5 rounded-lg text-sm font-medium text-sky-800 dark:text-sky-200 hover:bg-sky-100 dark:hover:bg-sky-950/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
                     >
-                      Need a hint?
+                      {t('widget.needHint')}
                     </button>
                   )}
                 </div>
@@ -151,7 +153,7 @@ export const WidgetFrame: React.FC<Props> = ({
                   data-testid="widget-check"
                   className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
                 >
-                  I tried it. Check my guess ✅
+                  {t('widget.check')}
                 </button>
               ) : (
                 <div
@@ -161,7 +163,7 @@ export const WidgetFrame: React.FC<Props> = ({
                 >
                   {lockedPrediction && (
                     <p>
-                      <span className="font-semibold">You guessed:</span> “{lockedPrediction}”. Compare it with what you saw.
+                      <span className="font-semibold">{t('widget.youGuessed')}</span> {t('widget.compareGuess', { guess: lockedPrediction })}
                     </p>
                   )}
                   {successMessage && <p>🎉 {successMessage}</p>}

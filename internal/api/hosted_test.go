@@ -5,6 +5,8 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -57,9 +59,9 @@ func TestRuntimeEndpointReportsHostedMode(t *testing.T) {
 		router := NewRouter(RouterConfig{ContentDir: t.TempDir(), Hosted: hosted})
 		rec := httptest.NewRecorder()
 		router.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/api/runtime", nil))
-		want := `{"hosted":false,"authRequired":false,"tutorEnabled":true,"feedbackEnabled":false}`
+		want := `{"hosted":false,"authRequired":false,"tutorEnabled":true,"feedbackEnabled":false,"languages":[{"code":"en","name":"English","speechLang":"en-US"}]}`
 		if hosted {
-			want = `{"hosted":true,"authRequired":false,"tutorEnabled":true,"feedbackEnabled":false}`
+			want = `{"hosted":true,"authRequired":false,"tutorEnabled":true,"feedbackEnabled":false,"languages":[{"code":"en","name":"English","speechLang":"en-US"}]}`
 		}
 		if rec.Code != http.StatusOK || rec.Body.String() != want {
 			t.Errorf("hosted=%v: got %d %q, want %q", hosted, rec.Code, rec.Body.String(), want)
@@ -239,5 +241,28 @@ func TestRateLimiterCountsVisitorsBehindProxySeparately(t *testing.T) {
 	}
 	if hit("203.0.113.2") != http.StatusOK {
 		t.Error("visitor B must not be limited by visitor A")
+	}
+}
+
+// SPEC-009 FR-001: only approved languages are listed, English first.
+func TestRuntimeListsApprovedLanguages(t *testing.T) {
+	for status, want := range map[string]string{
+		"hidden":   `"languages":[{"code":"en","name":"English","speechLang":"en-US"}]`,
+		"approved": `"languages":[{"code":"en","name":"English","speechLang":"en-US"},{"code":"hi","name":"हिन्दी","speechLang":"hi-IN"}]`,
+	} {
+		router := NewRouter(RouterConfig{ContentDir: langContent(t, status)})
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/api/runtime", nil))
+		if !strings.Contains(rec.Body.String(), want) {
+			t.Errorf("%s: %s, want it to contain %s", status, rec.Body.String(), want)
+		}
+	}
+	// A broken list offers English only instead of failing.
+	dir := t.TempDir()
+	_ = os.WriteFile(filepath.Join(dir, "languages.json"), []byte("{"), 0o644)
+	rec := httptest.NewRecorder()
+	NewRouter(RouterConfig{ContentDir: dir}).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/api/runtime", nil))
+	if !strings.Contains(rec.Body.String(), `"languages":[{"code":"en"`) || strings.Contains(rec.Body.String(), `"hi"`) {
+		t.Errorf("broken list: %s", rec.Body.String())
 	}
 }

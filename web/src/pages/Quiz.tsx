@@ -1,14 +1,23 @@
 // SPEC: FR-UI-05, FR-QZ-01, FR-QZ-02, FR-QZ-03, FR-QZ-04, AC-25, AC-35
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { QUIZ_DATA, LessonQuiz } from '../data/quizzes'
+import { ENGLISH_QUIZZES, loadQuizzes, LessonQuiz } from '../data/quizzes'
 import { useProgressStore } from '../store'
 import { askTutorStream } from '../api'
+import { useLanguage, useT } from '../i18n'
 
 export const Quiz: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const lessonId = id || ''
-  const quiz: LessonQuiz | undefined = QUIZ_DATA[lessonId]
+  const t = useT()
+  const { code } = useLanguage()
+  const [quizzes, setQuizzes] = useState(ENGLISH_QUIZZES)
+  useEffect(() => {
+    let live = true
+    void loadQuizzes(code).then((q) => { if (live) setQuizzes(q) })
+    return () => { live = false }
+  }, [code])
+  const quiz: LessonQuiz | undefined = quizzes[lessonId]
   const countedQuiz = useRef<string | null>(null)
 
   useEffect(() => {
@@ -42,9 +51,9 @@ export const Quiz: React.FC = () => {
           <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl font-bold">
             ?
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 mb-2">Quiz: {id}</h1>
+          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 mb-2">{t('quiz.placeholderTitle', { id: id ?? '' })}</h1>
           <p className="text-slate-600 dark:text-slate-300 text-sm mb-8 leading-relaxed max-w-sm mx-auto">
-            Quizzes are not yet available for this lesson. Please review the lesson material and check back soon!
+            {t('quiz.notAvailable')}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
@@ -53,13 +62,13 @@ export const Quiz: React.FC = () => {
               className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-semibold rounded-xl shadow-sm transition-all"
             >
               <span>&larr;</span>
-              <span>Back to Curriculum</span>
+              <span>{t('quiz.backToCurriculum')}</span>
             </Link>
             <Link
               to="/quiz/1-intro"
               className="inline-flex items-center gap-2 px-6 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-xl transition-all"
             >
-              <span>Try Intro to AI Quiz</span>
+              <span>{t('quiz.tryIntro')}</span>
               <span>&rarr;</span>
             </Link>
           </div>
@@ -100,7 +109,7 @@ export const Quiz: React.FC = () => {
         (token) => setHintText((prev) => prev + token),
         () => setHintLoading(false),
         (err) => {
-          setHintText(`Hint unavailable: ${err.message}`)
+          setHintText(t('quiz.hintUnavailable', { message: err.message }))
           setHintLoading(false)
         }
       )
@@ -122,6 +131,8 @@ export const Quiz: React.FC = () => {
     ([idx, choice]) => choice === quiz.questions[Number(idx)]?.correctIndex
   ).length
   const scorePercent = Math.round((correctCount / totalQuestions) * 100)
+  // The title is styled, so the sentence is split around its placeholder (word order can differ by language).
+  const completedFor = t('quiz.completedFor').split('{title}')
 
   return (
     <div className="max-w-3xl mx-auto py-10 px-4 sm:px-6" data-testid="quiz-interactive">
@@ -132,10 +143,10 @@ export const Quiz: React.FC = () => {
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
         >
           <span>&larr;</span>
-          <span>Back to Lesson</span>
+          <span>{t('quiz.backToLesson')}</span>
         </Link>
         <span className="text-xs font-mono text-slate-400">
-          Lesson: {quiz.lessonId}
+          {t('quiz.lessonLabel', { id: quiz.lessonId })}
         </span>
       </div>
 
@@ -148,17 +159,17 @@ export const Quiz: React.FC = () => {
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-500 dark:text-amber-400 flex items-center justify-center text-3xl shadow-sm">
             🏆
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">Quiz Completed!</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">{t('quiz.completed')}</h2>
           <p className="text-slate-600 dark:text-slate-300 text-sm mb-6">
-            You completed the comprehension check for <span className="font-semibold text-slate-800 dark:text-slate-200">{quiz.title}</span>.
+            {completedFor[0]}<span className="font-semibold text-slate-800 dark:text-slate-200">{quiz.title}</span>{completedFor[1]}
           </p>
 
           <div className="inline-block bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-8 py-5 mb-8">
             <div className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-1" data-testid="quiz-final-score">
-              {correctCount} / {totalQuestions}
+              {t('quiz.score', { count: correctCount, total: totalQuestions })}
             </div>
             <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              {scorePercent}% Accuracy
+              {t('quiz.accuracy', { percent: scorePercent })}
             </div>
           </div>
 
@@ -167,19 +178,19 @@ export const Quiz: React.FC = () => {
               onClick={handleRetake}
               className="w-full sm:w-auto px-6 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl transition"
             >
-              🔄 Retake Quiz
+              {t('quiz.retake')}
             </button>
             <button
               onClick={() => setLessonCompleted(quiz.lessonId, true)}
               className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl shadow-sm transition"
             >
-              {isLessonCompleted(quiz.lessonId) ? 'Marked Complete ✅' : 'Mark Lesson Complete ✅'}
+              {t(isLessonCompleted(quiz.lessonId) ? 'quiz.markedComplete' : 'quiz.markComplete')}
             </button>
             <Link
               to="/"
               className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-sm transition"
             >
-              Curriculum Home &rarr;
+              {t('quiz.home')}
             </Link>
           </div>
         </div>
@@ -189,10 +200,10 @@ export const Quiz: React.FC = () => {
           {/* Header & Stepper */}
           <div className="flex items-center justify-between mb-4">
             <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-1 rounded-full">
-              Question {currentIdx + 1} of {totalQuestions}
+              {t('quiz.questionOf', { n: currentIdx + 1, total: totalQuestions })}
             </span>
             <span className="text-xs font-medium text-slate-400">
-              {Math.round(((currentIdx) / totalQuestions) * 100)}% progress
+              {t('quiz.progress', { percent: Math.round((currentIdx / totalQuestions) * 100) })}
             </span>
           </div>
 
@@ -266,7 +277,7 @@ export const Quiz: React.FC = () => {
               }`}
             >
               <div className="font-bold mb-1 flex items-center gap-1.5 text-sm">
-                <span>{isCorrect ? '✅ Correct!' : '❌ Incorrect'}</span>
+                <span>{t(isCorrect ? 'quiz.correct' : 'quiz.incorrect')}</span>
               </div>
               <p>{currentQ.rationale}</p>
             </div>
@@ -279,7 +290,7 @@ export const Quiz: React.FC = () => {
               className="p-4 rounded-2xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/60 dark:bg-indigo-950/50 text-indigo-950 dark:text-indigo-200 text-xs leading-relaxed mb-6 animate-fade-in"
             >
               <div className="font-bold text-indigo-900 dark:text-indigo-200 flex items-center gap-1.5 mb-1">
-                <span>💡 AI Tutor Hint:</span>
+                <span>{t('quiz.hintTitle')}</span>
               </div>
               <p>{hintText}</p>
             </div>
@@ -294,7 +305,7 @@ export const Quiz: React.FC = () => {
               disabled={hintLoading || hasAnswered}
               className="px-3.5 py-2 text-xs font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 disabled:opacity-50 rounded-xl transition flex items-center gap-1.5"
             >
-              <span>{hintLoading ? '⏳ Thinking...' : '💡 Get AI Hint'}</span>
+              <span>{t(hintLoading ? 'quiz.thinking' : 'quiz.getHint')}</span>
             </button>
 
             {hasAnswered ? (
@@ -304,10 +315,10 @@ export const Quiz: React.FC = () => {
                 onClick={handleNext}
                 className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-sm transition flex items-center gap-1.5"
               >
-                <span>{currentIdx < totalQuestions - 1 ? 'Next Question →' : 'See Results 🏆'}</span>
+                <span>{t(currentIdx < totalQuestions - 1 ? 'quiz.next' : 'quiz.seeResults')}</span>
               </button>
             ) : (
-              <span className="text-xs text-slate-400 italic">Select an option to continue</span>
+              <span className="text-xs text-slate-400 italic">{t('quiz.selectOption')}</span>
             )}
           </div>
         </div>

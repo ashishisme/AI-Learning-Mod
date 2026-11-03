@@ -13,11 +13,14 @@ import { Attribution } from './components/Attribution'
 import { SettingsModal } from './components/SettingsModal'
 import { HelpModal } from './components/HelpModal'
 import { useSettingsStore, useHelpStore, useThemeStore, useRuntimeStore, applyThemeClass, resolveTheme } from './store'
+import { useApplyLanguage, useT } from './i18n'
 
 export const App: React.FC = () => {
   const { setDrawerOpen, settings } = useSettingsStore()
   const { setHelpOpen } = useHelpStore()
   const { theme, setTheme } = useThemeStore()
+  useApplyLanguage() // SPEC-009 FR-004: <html lang> and the chosen catalogue
+  const t = useT()
 
   // Apply theme class on mount
   useEffect(() => {
@@ -48,7 +51,7 @@ export const App: React.FC = () => {
               AI
             </div>
             <span className="font-semibold text-sm tracking-tight text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
-              Foundations Coach
+              {t('nav.brand')}
             </span>
           </Link>
 
@@ -57,7 +60,7 @@ export const App: React.FC = () => {
               to="/"
               className="px-2.5 py-1.5 rounded-md hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
             >
-              Curriculum
+              {t('nav.curriculum')}
             </Link>
 
             {/* FR-UI-15, AC-36: Quick Theme Toggle Button */}
@@ -65,9 +68,9 @@ export const App: React.FC = () => {
               id="theme-toggle-btn"
               data-testid="theme-toggle-btn"
               onClick={toggleTheme}
-              aria-label="Toggle dark/light theme"
+              aria-label={t('nav.toggleTheme')}
               className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-              title={`Current theme: ${theme}. Click to toggle.`}
+              title={t('nav.themeTitle', { theme })}
             >
               {shownTheme === 'dark' ? '🌙' : '☀️'}
             </button>
@@ -77,11 +80,11 @@ export const App: React.FC = () => {
               id="open-help-btn"
               data-testid="open-help-btn"
               onClick={() => setHelpOpen(true)}
-              aria-label="Open help and user guide"
+              aria-label={t('nav.openHelp')}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-xs transition"
             >
               <span className="text-sm">❓</span>
-              <span className="font-semibold hidden sm:inline">Help</span>
+              <span className="font-semibold hidden sm:inline">{t('nav.help')}</span>
             </button>
 
             {/* FR-UI-14, AC-34: Global Settings Drawer Trigger */}
@@ -89,15 +92,15 @@ export const App: React.FC = () => {
               id="open-settings-btn"
               data-testid="open-settings-btn"
               onClick={() => setDrawerOpen(true)}
-              aria-label="Open settings and AI configuration"
+              aria-label={t('nav.openSettings')}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-xs transition"
             >
               <span className="text-sm">⚙️</span>
-              <span className="font-semibold hidden sm:inline">Settings</span>
+              <span className="font-semibold hidden sm:inline">{t('nav.settings')}</span>
               {settings.provider === 'local' ? (
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" title="Local Ollama Active" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" title={t('nav.localActive')} />
               ) : (
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" title="Cloud AI Active" />
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" title={t('nav.cloudActive')} />
               )}
             </button>
             <SignOutControl />

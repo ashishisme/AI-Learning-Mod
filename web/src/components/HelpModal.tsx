@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useHelpStore } from '../store'
+import { rich, useT } from '../i18n'
 
 export const HelpModal: React.FC = () => {
   const { isHelpOpen, setHelpOpen } = useHelpStore()
+  const t = useT()
   const [activeTab, setActiveTab] = useState<'usage' | 'ollama' | 'about'>('usage')
   const [copiedCmd, setCopiedCmd] = useState<string | null>(null)
 
@@ -17,6 +19,8 @@ export const HelpModal: React.FC = () => {
   }, [isHelpOpen, setHelpOpen])
 
   if (!isHelpOpen) return null
+  // The repository link sits inside the sentence, so the sentence is split around its placeholder.
+  const curriculum = t('help.licenseCurriculum').split('{link}')
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text)
@@ -42,16 +46,16 @@ export const HelpModal: React.FC = () => {
             <span className="text-2xl">❓</span>
             <div>
               <h3 id="help-modal-title" className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">
-                Help & Getting Started
+                {t('help.title')}
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                AI Foundations Coach User Manual & Local AI Setup
+                {t('help.subtitle')}
               </p>
             </div>
           </div>
           <button
             onClick={() => setHelpOpen(false)}
-            aria-label="Close help modal"
+            aria-label={t('help.close')}
             className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition"
           >
             ✕
@@ -69,7 +73,7 @@ export const HelpModal: React.FC = () => {
             }`}
           >
             <span>📖</span>
-            <span>How to Use the App</span>
+            <span>{t('help.tabUsage')}</span>
           </button>
           <button
             onClick={() => setActiveTab('ollama')}
@@ -80,7 +84,7 @@ export const HelpModal: React.FC = () => {
             }`}
           >
             <span>🦙</span>
-            <span>How to Use Local LLM</span>
+            <span>{t('help.tabOllama')}</span>
           </button>
           <button
             onClick={() => setActiveTab('about')}
@@ -91,7 +95,7 @@ export const HelpModal: React.FC = () => {
             }`}
           >
             <span>🏢</span>
-            <span>About & Freeware</span>
+            <span>{t('help.tabAbout')}</span>
           </button>
         </div>
 
@@ -102,52 +106,52 @@ export const HelpModal: React.FC = () => {
             <div className="space-y-5 animate-fadeIn">
               <div className="p-4 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-900/40">
                 <h4 className="font-bold text-blue-900 dark:text-blue-200 text-sm mb-1 flex items-center gap-1.5">
-                  <span>🎚️</span> 3 Adaptive Learning Modes
+                  <span>🎚️</span> {t('help.modesTitle')}
                 </h4>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-xs">
-                  At the top of any lesson, switch between <strong>Standard</strong> (academic depth), <strong>Kids (8–14)</strong> with <strong>Chip the Robot 🤖</strong> (friendly metaphors & simplified text), or <strong>Plain English</strong> with <strong>Nova 🎙️</strong> (intuitive workplace analogies).
+                  {rich(t('help.modesBody'))}
                 </p>
               </div>
 
               <div className="space-y-3">
                 <h4 className="font-extrabold text-slate-900 dark:text-white text-sm">
-                  🕹️ 6 Interactive Simulators
+                  {t('help.simulators')}
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-                    <span className="font-bold text-slate-900 dark:text-white block">Module 1: The Turing Test</span>
+                    <span className="font-bold text-slate-900 dark:text-white block">{t('help.module1')}</span>
                     <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Vote on mystery dialogues and slide open the curtain to spot the bot!
+                      {t('help.module1Body')}
                     </span>
                   </div>
                   <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-                    <span className="font-bold text-slate-900 dark:text-white block">Module 2: Mars Rover Lab</span>
+                    <span className="font-bold text-slate-900 dark:text-white block">{t('help.module2')}</span>
                     <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Sweep dust off solar panels and watch if-then rules fix the rover!
+                      {t('help.module2Body')}
                     </span>
                   </div>
                   <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-                    <span className="font-bold text-slate-900 dark:text-white block">Module 3: Sparky Fruit Sorter</span>
+                    <span className="font-bold text-slate-900 dark:text-white block">{t('help.module3')}</span>
                     <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Drop apples & lemons onto the scale to make the neuron fire!
+                      {t('help.module3Body')}
                     </span>
                   </div>
                   <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-                    <span className="font-bold text-slate-900 dark:text-white block">Module 4: Robot Magic Lenses</span>
+                    <span className="font-bold text-slate-900 dark:text-white block">{t('help.module4')}</span>
                     <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Draw pixel cats and rockets; slide 3×3 convolution filters live!
+                      {t('help.module4Body')}
                     </span>
                   </div>
                   <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-                    <span className="font-bold text-slate-900 dark:text-white block">Module 5: Word Constellations</span>
+                    <span className="font-bold text-slate-900 dark:text-white block">{t('help.module5')}</span>
                     <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Solve word vector equations in a glowing 2D galaxy space!
+                      {t('help.module5Body')}
                     </span>
                   </div>
                   <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-                    <span className="font-bold text-slate-900 dark:text-white block">Module 6: AI Fairness See-Saw</span>
+                    <span className="font-bold text-slate-900 dark:text-white block">{t('help.module6')}</span>
                     <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Balance applicant data and watch the scale level out!
+                      {t('help.module6Body')}
                     </span>
                   </div>
                 </div>
@@ -155,20 +159,20 @@ export const HelpModal: React.FC = () => {
 
               <div className="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-800">
                 <h4 className="font-extrabold text-slate-900 dark:text-white text-sm">
-                  🎙️ Audio Studio & AI Teaching Assistant
+                  {t('help.audioTitle')}
                 </h4>
                 <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
                   <li className="flex items-start gap-2">
                     <span>🔊</span>
-                    <span><strong>Read Aloud:</strong> Tap any speaker icon or the floating audio bar to hear Chip, Nova, or Prof. Alan narrate with real-time glowing sentence tracking.</span>
+                    <span>{rich(t('help.readAloud'))}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span>🎙️</span>
-                    <span><strong>Talk to Chip (Voice Mic):</strong> Click the microphone icon at the bottom of any lesson to speak your question aloud using Speech-to-Text.</span>
+                    <span>{rich(t('help.voiceMic'))}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span>📚</span>
-                    <span><strong>Grounded Answers:</strong> The AI tutor only answers with verified citations from the curriculum modules to prevent hallucinations.</span>
+                    <span>{rich(t('help.grounded'))}</span>
                   </li>
                 </ul>
               </div>
@@ -180,10 +184,10 @@ export const HelpModal: React.FC = () => {
             <div className="space-y-5 animate-fadeIn">
               <div className="p-4 rounded-2xl bg-purple-50/80 dark:bg-purple-950/40 border border-purple-200/80 dark:border-purple-800/50">
                 <h4 className="font-bold text-purple-900 dark:text-purple-200 text-sm mb-1 flex items-center gap-1.5">
-                  <span>🔒</span> 100% Free, Private & Offline
+                  <span>🔒</span> {t('help.privateTitle')}
                 </h4>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-xs">
-                  Running a local AI model means your questions and data never leave your computer. You don't need any API key, internet connection, or paid subscription!
+                  {t('help.privateBody')}
                 </p>
               </div>
 
@@ -192,10 +196,10 @@ export const HelpModal: React.FC = () => {
                 <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className="w-5 h-5 rounded-full bg-purple-600 text-white font-bold text-xs flex items-center justify-center">1</span>
-                    <strong className="text-slate-900 dark:text-white text-sm">Download & Install Ollama</strong>
+                    <strong className="text-slate-900 dark:text-white text-sm">{t('help.step1')}</strong>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">
-                    Visit the official Ollama website to download the installer for macOS, Windows, or Linux:
+                    {t('help.step1Body')}
                   </p>
                   <a
                     href="https://ollama.com/download"
@@ -203,7 +207,7 @@ export const HelpModal: React.FC = () => {
                     rel="noreferrer"
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs transition"
                   >
-                    <span>Download Ollama (ollama.com)</span>
+                    <span>{t('help.download')}</span>
                     <span>↗</span>
                   </a>
                 </div>
@@ -212,10 +216,10 @@ export const HelpModal: React.FC = () => {
                 <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className="w-5 h-5 rounded-full bg-purple-600 text-white font-bold text-xs flex items-center justify-center">2</span>
-                    <strong className="text-slate-900 dark:text-white text-sm">Start the Ollama Service</strong>
+                    <strong className="text-slate-900 dark:text-white text-sm">{t('help.step2')}</strong>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">
-                    Open your terminal and start the background Ollama runner:
+                    {t('help.step2Body')}
                   </p>
                   <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 text-purple-200 font-mono text-xs border border-slate-800">
                     <code>ollama serve</code>
@@ -223,7 +227,7 @@ export const HelpModal: React.FC = () => {
                       onClick={() => handleCopy('ollama serve', 'serve')}
                       className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white text-[10px] transition"
                     >
-                      {copiedCmd === 'serve' ? 'Copied! ✓' : 'Copy'}
+                      {t(copiedCmd === 'serve' ? 'help.copied' : 'help.copy')}
                     </button>
                   </div>
                 </div>
@@ -232,35 +236,35 @@ export const HelpModal: React.FC = () => {
                 <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className="w-5 h-5 rounded-full bg-purple-600 text-white font-bold text-xs flex items-center justify-center">3</span>
-                    <strong className="text-slate-900 dark:text-white text-sm">Download a Recommended Model</strong>
+                    <strong className="text-slate-900 dark:text-white text-sm">{t('help.step3')}</strong>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">
-                    In a second terminal window, pull any of these fast, lightweight models:
+                    {t('help.step3Body')}
                   </p>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 text-purple-200 font-mono text-xs border border-slate-800">
                       <div>
                         <code>ollama pull llama3.2:1b</code>
-                        <span className="block text-[10px] text-slate-400 font-sans mt-0.5">🌟 Recommended (Super fast, ~1.3 GB)</span>
+                        <span className="block text-[10px] text-slate-400 font-sans mt-0.5">{t('help.modelLlama')}</span>
                       </div>
                       <button
                         onClick={() => handleCopy('ollama pull llama3.2:1b', 'llama')}
                         className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white text-[10px] transition"
                       >
-                        {copiedCmd === 'llama' ? 'Copied! ✓' : 'Copy'}
+                        {t(copiedCmd === 'llama' ? 'help.copied' : 'help.copy')}
                       </button>
                     </div>
 
                     <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 text-purple-200 font-mono text-xs border border-slate-800">
                       <div>
                         <code>ollama pull deepseek-r1:1.5b</code>
-                        <span className="block text-[10px] text-slate-400 font-sans mt-0.5">🧠 Reasoning specialist (~1.5 GB)</span>
+                        <span className="block text-[10px] text-slate-400 font-sans mt-0.5">{t('help.modelDeepseek')}</span>
                       </div>
                       <button
                         onClick={() => handleCopy('ollama pull deepseek-r1:1.5b', 'deepseek')}
                         className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white text-[10px] transition"
                       >
-                        {copiedCmd === 'deepseek' ? 'Copied! ✓' : 'Copy'}
+                        {t(copiedCmd === 'deepseek' ? 'help.copied' : 'help.copy')}
                       </button>
                     </div>
                   </div>
@@ -270,10 +274,10 @@ export const HelpModal: React.FC = () => {
                 <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className="w-5 h-5 rounded-full bg-purple-600 text-white font-bold text-xs flex items-center justify-center">4</span>
-                    <strong className="text-slate-900 dark:text-white text-sm">Connect in Settings</strong>
+                    <strong className="text-slate-900 dark:text-white text-sm">{t('help.step4')}</strong>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-400">
-                    Click <strong>⚙️ Settings</strong> in the top navigation, select the <strong>Local Ollama</strong> preset button, and click <strong>Save Settings</strong>. You are now 100% self-hosted!
+                    {rich(t('help.step4Body'))}
                   </p>
                 </div>
               </div>
@@ -293,42 +297,42 @@ export const HelpModal: React.FC = () => {
                       Qunisphere Pvt Limited
                     </h4>
                     <span className="text-xs text-emerald-700 dark:text-emerald-300 font-semibold">
-                      Bangalore, India
+                      {t('help.location')}
                     </span>
                   </div>
                 </div>
                 <p className="text-slate-700 dark:text-slate-200 leading-relaxed text-xs mt-3">
-                  <strong>Developed and distributed as freeware by Qunisphere Pvt Limited, Bangalore.</strong>
+                  {rich(t('help.freeware'))}
                 </p>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-xs mt-2">
-                  Our mission is to democratize artificial intelligence education by creating tactile, visual, and multimodal learning experiences that empower kids, students, and professionals to build strong mental models of AI.
+                  {t('help.mission')}
                 </p>
               </div>
 
               <div className="space-y-3">
                 <h4 className="font-extrabold text-slate-900 dark:text-white text-sm">
-                  📜 License & Curriculum Attribution
+                  {t('help.licenseTitle')}
                 </h4>
                 <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 text-xs space-y-2 text-slate-600 dark:text-slate-300">
                   <p>
-                    • <strong>Application Code & Interactive Simulators:</strong> Released under the <strong>MIT License</strong>. Free to use, study, modify, and distribute.
+                    {rich(t('help.licenseCode'))}
                   </p>
                   <p>
-                    • <strong>Curriculum Foundations:</strong> Derived from <a href="https://github.com/microsoft/AI-For-Beginners" target="_blank" rel="noreferrer" className="text-blue-600 dark:text-blue-400 underline font-semibold">microsoft/AI-For-Beginners</a> under the MIT License.
+                    {rich(curriculum[0])}<a href="https://github.com/microsoft/AI-For-Beginners" target="_blank" rel="noreferrer" className="text-blue-600 dark:text-blue-400 underline font-semibold">microsoft/AI-For-Beginners</a>{rich(curriculum[1])}
                   </p>
                   <p className="text-[11px] text-slate-500">
-                    * This software is an independent educational initiative and is not affiliated with, sponsored by, or endorsed by Microsoft.
+                    {t('help.disclaimer')}
                   </p>
                 </div>
               </div>
 
               <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 flex items-center justify-between">
                 <div>
-                  <span className="text-[11px] text-slate-400 block">Version & Edition</span>
-                  <span className="font-bold text-slate-800 dark:text-slate-200 text-xs">v3.2.0 (Curriculum & Audio Studio Edition)</span>
+                  <span className="text-[11px] text-slate-400 block">{t('help.versionLabel')}</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200 text-xs">{t('help.edition')}</span>
                 </div>
                 <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold uppercase">
-                  Freeware Release
+                  {t('help.release')}
                 </span>
               </div>
             </div>
@@ -337,12 +341,12 @@ export const HelpModal: React.FC = () => {
 
         {/* Modal Footer */}
         <div className="px-6 py-3.5 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex items-center justify-between text-xs text-slate-500">
-          <span>Qunisphere Pvt Limited • Bangalore</span>
+          <span>{t('help.footer')}</span>
           <button
             onClick={() => setHelpOpen(false)}
             className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition shadow-xs"
           >
-            Got it, Let's Learn!
+            {t('help.gotIt')}
           </button>
         </div>
       </div>

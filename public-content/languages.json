@@ -1,0 +1,5 @@
+{
+  "languages": [
+    { "code": "hi", "name": "हिन्दी", "speechLang": "hi-IN", "status": "hidden" }
+  ]
+}

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { activateInvite, refreshAuthSession, ApiError } from '../api'
+import { formatDate, rich, t, useT } from '../i18n'
 
 interface Creds {
   betaId: string
@@ -13,17 +14,17 @@ function errorText(err: unknown): string {
   if (err instanceof ApiError) {
     switch (err.code) {
       case 'invite_used':
-        return 'This invite has already been used. Please sign in.'
+        return t('invite.used')
       case 'invite_expired':
       case 'invite_revoked':
       case 'invite_invalid':
-        return 'This invite link cannot be used any more. Please ask your teacher or admin for a new link.'
+        return t('invite.invalid')
       case 'rate_limited':
-        return 'Too many requests. Please try again shortly.'
+        return t('invite.rateLimited')
     }
     return err.message
   }
-  return 'Could not reach the server. Check your connection and try again.'
+  return t('auth.offline')
 }
 
 export async function copyText(text: string): Promise<void> {
@@ -44,6 +45,9 @@ export async function copyText(text: string): Promise<void> {
   document.body.removeChild(ta)
 }
 
+// The saved file and clipboard text carry the same labels the learner sees.
+const credsText = (c: Creds) => `${t('auth.betaId')}: ${c.betaId}\n${t('auth.password')}: ${c.password}`
+
 const btn =
   'min-h-11 min-w-11 px-4 rounded-lg border border-slate-400 dark:border-slate-500 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600'
 const primary =
@@ -52,6 +56,7 @@ const primary =
 export const Invite: React.FC = () => {
   const { token = '' } = useParams()
   const navigate = useNavigate()
+  const tr = useT()
   const [creds, setCreds] = useState<Creds | null>(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -77,7 +82,7 @@ export const Invite: React.FC = () => {
     if (!creds) return
     const text =
       key === 'both'
-        ? `Beta ID: ${creds.betaId}\nPassword: ${creds.password}`
+        ? credsText(creds)
         : creds[key]
     await copyText(text)
     setCopied(key)
@@ -86,7 +91,7 @@ export const Invite: React.FC = () => {
 
   const download = () => {
     if (!creds) return
-    const blob = new Blob([`Beta ID: ${creds.betaId}\nPassword: ${creds.password}\n`], { type: 'text/plain' })
+    const blob = new Blob([credsText(creds) + '\n'], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -106,7 +111,7 @@ export const Invite: React.FC = () => {
 
   if (creds) {
     const exp = new Date(creds.expiresAt)
-    const date = exp.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'long', year: 'numeric' })
+    const date = formatDate(exp, { day: 'numeric', month: 'long', year: 'numeric' })
     const months = Math.max(1, Math.round((exp.getTime() - Date.now()) / (30.44 * 86400000)))
     const field = (label: string, value: string, key: 'betaId' | 'password') => (
       <div className="mb-4">
@@ -116,55 +121,54 @@ export const Invite: React.FC = () => {
             {value}
           </code>
           <button type="button" className={btn} onClick={() => copy(key)}>
-            {copied === key || (key === 'password' && copied === 'both') ? 'Copied' : `Copy ${key === 'betaId' ? 'Beta ID' : 'password'}`}
+            {tr(copied === key || (key === 'password' && copied === 'both') ? 'invite.copied' : key === 'betaId' ? 'invite.copyBetaId' : 'invite.copyPassword')}
           </button>
         </div>
       </div>
     )
     return (
       <div className="max-w-xl mx-auto px-4 py-10" data-testid="invite-credentials">
-        <h1 className="text-2xl font-bold mb-4">Your account is ready</h1>
-        {field('Beta ID', creds.betaId, 'betaId')}
-        {field('Password', creds.password, 'password')}
+        <h1 className="text-2xl font-bold mb-4">{tr('invite.ready')}</h1>
+        {field(tr('auth.betaId'), creds.betaId, 'betaId')}
+        {field(tr('auth.password'), creds.password, 'password')}
         <p className="mb-4 text-sm">
-          Your account is valid until <strong>{date} (IST)</strong> ({months} {months === 1 ? 'month' : 'months'} from today).
+          {rich(tr('invite.validUntil', { date, months: tr('invite.months', { count: months }) }))}
         </p>
         <p role="alert" className="mb-4 p-3 rounded-lg border border-amber-400 bg-amber-50 dark:bg-amber-950 text-amber-950 dark:text-amber-100 text-sm">
-          This password is shown only once. It cannot be looked up again, so save it now before you leave this page.
+          {tr('invite.onceWarning')}
         </p>
         <div className="flex flex-wrap gap-2 mb-4">
           <button type="button" className={btn} onClick={() => copy('both')}>
-            {copied === 'both' ? 'Copied both' : 'Copy both'}
+            {tr(copied === 'both' ? 'invite.copiedBoth' : 'invite.copyBoth')}
           </button>
           <button type="button" className={btn} onClick={download}>
-            Download as text file
+            {tr('invite.download')}
           </button>
         </div>
         <button type="button" data-testid="invite-saved" className={primary} disabled={!saved} onClick={done}>
-          I&apos;ve saved it
+          {tr('invite.saved')}
         </button>
-        {!saved && <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">Copy the password or download the file to continue.</p>}
+        {!saved && <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">{tr('invite.savePrompt')}</p>}
       </div>
     )
   }
 
   return (
     <div className="max-w-xl mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold mb-3">Activate your beta account</h1>
+      <h1 className="text-2xl font-bold mb-3">{tr('invite.title')}</h1>
       <p className="mb-6 text-sm">
-        You have been invited to the Foundations Coach beta. Press the button to create your account. You will be shown a
-        Beta ID and a password once, so have somewhere ready to save them.
+        {tr('invite.body')}
       </p>
       {error && (
         <p role="alert" data-testid="invite-error" className="mb-4 text-sm font-medium text-red-800 dark:text-red-300">
           {error}{' '}
           <Link to="/" className="underline">
-            Go to sign in
+            {tr('invite.goSignIn')}
           </Link>
         </p>
       )}
       <button type="button" data-testid="invite-activate" className={primary} disabled={busy} onClick={activate}>
-        {busy ? 'Activating...' : 'Activate my account'}
+        {tr(busy ? 'invite.activating' : 'invite.activate')}
       </button>
     </div>
   )

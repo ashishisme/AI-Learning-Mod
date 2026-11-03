@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { speechService } from '../services/speechService';
+import { rich, useT } from '../i18n';
 
 export const PerceptronWidget: React.FC = () => {
+  const t = useT();
   // Input features: Sweetness (0-10) and Roundness (0-10)
   const [sweetness, setSweetness] = useState<number>(8);
   const [roundness, setRoundness] = useState<number>(7);
@@ -53,22 +55,22 @@ export const PerceptronWidget: React.FC = () => {
           <div className="flex items-center gap-2.5">
             <span className="text-2xl animate-bounce">⚡</span>
             <h4 className="text-lg sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
-              The Single Neuron Fruit Sorter
+              {t('widget.perceptron.title')}
             </h4>
           </div>
           <p className="text-xs sm:text-sm text-slate-300 mt-1">
-            Meet <strong>Sparky the Brain Cell</strong>! Adjust his sensitivity dials to teach him how to tell apples from lemons!
+            {rich(t('widget.perceptron.intro'))}
           </p>
         </div>
         <span className="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-          Interactive Perceptron
+          {t('widget.perceptron.badge')}
         </span>
       </div>
 
       {/* Preset Fruit Buttons (Conveyor Belt Selector) */}
       <div className="mb-6 p-4 rounded-2xl bg-slate-800/80 border border-slate-700/80 relative z-10">
         <span className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2.5">
-          🛒 Step 1: Drop a Fruit onto the Conveyor Belt:
+          {t('widget.perceptron.step1')}
         </span>
         <div className="flex flex-wrap items-center gap-2.5">
           <button
@@ -79,7 +81,7 @@ export const PerceptronWidget: React.FC = () => {
                 : 'border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700'
             }`}
           >
-            🍎 Sweet & Round Apple
+            {t('widget.perceptron.apple')}
           </button>
           <button
             onClick={() => handleFruitPreset('lemon')}
@@ -89,7 +91,7 @@ export const PerceptronWidget: React.FC = () => {
                 : 'border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700'
             }`}
           >
-            🍋 Sour & Oblong Lemon
+            {t('widget.perceptron.lemon')}
           </button>
           <button
             onClick={() => handleFruitPreset('grape')}
@@ -99,7 +101,7 @@ export const PerceptronWidget: React.FC = () => {
                 : 'border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700'
             }`}
           >
-            🍇 Mystery Fruit
+            {t('widget.perceptron.mystery')}
           </button>
         </div>
       </div>
@@ -113,7 +115,7 @@ export const PerceptronWidget: React.FC = () => {
             <g transform="translate(40, 45)">
               <rect x="0" y="0" width="85" height="32" rx="10" fill="#1e293b" stroke="#38bdf8" strokeWidth="2" />
               <text x="42" y="20" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="bold">
-                🍬 Sugar: {sweetness}
+                {t('widget.perceptron.sugar', { n: sweetness })}
               </text>
               {/* Wire leading to Sparky */}
               <path d="M 85,16 Q 140,16 175,80" fill="none" stroke="#38bdf8" strokeWidth={Math.max(1.5, weightSweet * 2.5)} strokeDasharray="4 2" />
@@ -123,7 +125,7 @@ export const PerceptronWidget: React.FC = () => {
             <g transform="translate(40, 125)">
               <rect x="0" y="0" width="85" height="32" rx="10" fill="#1e293b" stroke="#818cf8" strokeWidth="2" />
               <text x="42" y="20" textAnchor="middle" fill="#818cf8" fontSize="11" fontWeight="bold">
-                ⚽ Round: {roundness}
+                {t('widget.perceptron.round', { n: roundness })}
               </text>
               {/* Wire leading to Sparky */}
               <path d="M 85,16 Q 140,16 175,110" fill="none" stroke="#818cf8" strokeWidth={Math.max(1.5, weightRound * 2.5)} strokeDasharray="4 2" />
@@ -225,7 +227,7 @@ export const PerceptronWidget: React.FC = () => {
                 fontSize="11"
                 fontWeight="extrabold"
               >
-                {isFired ? 'APPLE' : 'LEMON'}
+                {t(isFired ? 'widget.perceptron.appleLabel' : 'widget.perceptron.lemonLabel')}
               </text>
             </g>
           </svg>
@@ -238,17 +240,17 @@ export const PerceptronWidget: React.FC = () => {
         <div className="p-5 rounded-2xl bg-slate-800/80 border border-slate-700/80 shadow-md space-y-4">
           <div className="flex items-center justify-between border-b border-slate-700/60 pb-2">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">
-              2. Sparky's Brain Sensitivity Dials
+              {t('widget.perceptron.dials')}
             </span>
             <span className="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full font-mono">
-              Weights (w) & Bias (b)
+              {t('widget.perceptron.weights')}
             </span>
           </div>
 
           {/* Dial 1: Sweetness Weight */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs font-semibold">
-              <span className="text-slate-200">🍬 How much does Sparky love sugar? (Weight w₁):</span>
+              <span className="text-slate-200">{t('widget.perceptron.w1')}</span>
               <span className="text-blue-400 font-bold">{weightSweet.toFixed(1)}</span>
             </div>
             <input
@@ -265,7 +267,7 @@ export const PerceptronWidget: React.FC = () => {
           {/* Dial 2: Roundness Weight */}
           <div className="space-y-1.5 pt-2 border-t border-slate-700/60">
             <div className="flex justify-between text-xs font-semibold">
-              <span className="text-slate-200">⚽ How much does Sparky love roundness? (Weight w₂):</span>
+              <span className="text-slate-200">{t('widget.perceptron.w2')}</span>
               <span className="text-indigo-400 font-bold">{weightRound.toFixed(1)}</span>
             </div>
             <input
@@ -282,7 +284,7 @@ export const PerceptronWidget: React.FC = () => {
           {/* Dial 3: Bias / Pickiness */}
           <div className="space-y-1.5 pt-2 border-t border-slate-700/60">
             <div className="flex justify-between text-xs font-semibold">
-              <span className="text-slate-200">⚖️ How picky is Sparky? (Threshold Bias b):</span>
+              <span className="text-slate-200">{t('widget.perceptron.bias')}</span>
               <span className="text-purple-400 font-bold">{bias.toFixed(1)}</span>
             </div>
             <input
@@ -302,32 +304,32 @@ export const PerceptronWidget: React.FC = () => {
           <div>
             <div className="flex items-center justify-between border-b border-slate-700/60 pb-2 mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">
-                3. Activation Score & Decision
+                {t('widget.perceptron.score')}
               </span>
               <span className="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full font-mono">
-                Threshold = 0
+                {t('widget.perceptron.threshold')}
               </span>
             </div>
 
             {/* Kid Explanation Score Bar */}
             <div data-math="true" className="p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs space-y-1.5 font-sans">
-              <div className="text-slate-400">Total Fruit Delight Score:</div>
+              <div className="text-slate-400">{t('widget.perceptron.delight')}</div>
               <div className="text-base sm:text-lg font-black flex items-center gap-2">
                 <span className={isFired ? 'text-emerald-400' : 'text-rose-400'}>
-                  {weightedSum >= 0 ? `+${weightedSum.toFixed(1)} (Above 0)` : `${weightedSum.toFixed(1)} (Below 0)`}
+                  {t(weightedSum >= 0 ? 'widget.perceptron.above' : 'widget.perceptron.below', { score: weightedSum.toFixed(1) })}
                 </span>
               </div>
               <div className="text-[11px] text-slate-400">
-                Formula: ({sweetness} × {weightSweet.toFixed(1)}) + ({roundness} × {weightRound.toFixed(1)}) + ({bias.toFixed(1)})
+                {t('widget.perceptron.formula')} ({sweetness} × {weightSweet.toFixed(1)}) + ({roundness} × {weightRound.toFixed(1)}) + ({bias.toFixed(1)})
               </div>
             </div>
 
             {/* Threshold Progress Bar */}
             <div className="my-4">
               <div className="flex justify-between text-[11px] font-semibold text-slate-400 mb-1">
-                <span>Sour Lemon (&lt; 0)</span>
-                <span className="text-white font-bold">Goal Line: 0.0</span>
-                <span>Sweet Apple (≥ 0)</span>
+                <span>{t('widget.perceptron.sourSide')}</span>
+                <span className="text-white font-bold">{t('widget.perceptron.goalLine')}</span>
+                <span>{t('widget.perceptron.sweetSide')}</span>
               </div>
               <div className="relative h-6 bg-slate-900 rounded-full overflow-hidden p-1 border border-slate-700">
                 <div className="absolute inset-y-0 left-1/2 w-1 bg-white z-10 shadow-sm" />
@@ -354,12 +356,12 @@ export const PerceptronWidget: React.FC = () => {
             <span className="text-3xl flex-shrink-0">{isFired ? '🍎' : '🍋'}</span>
             <div>
               <strong className="block text-sm sm:text-base font-extrabold">
-                {isFired ? 'Neuron Fired! Classified as APPLE' : 'Neuron Dormant: Classified as LEMON'}
+                {isFired ? t('widget.perceptron.fired') : t('widget.perceptron.dormant')}
               </strong>
               <p className="text-xs font-medium opacity-90 mt-0.5">
                 {isFired
-                  ? 'Sparky reached his threshold and fired! The fruit goes straight to the Apple basket!'
-                  : 'Not enough sweetness or roundness to trigger Sparky. Sorted into the Lemon crate!'}
+                  ? t('widget.perceptron.firedBody')
+                  : t('widget.perceptron.dormantBody')}
               </p>
             </div>
           </div>

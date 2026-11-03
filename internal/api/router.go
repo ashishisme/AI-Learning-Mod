@@ -4,6 +4,7 @@ package api
 import (
 	"encoding/json"
 	"io/fs"
+	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -12,6 +13,7 @@ import (
 	"ai-foundations-coach/internal/auth"
 	"ai-foundations-coach/internal/cost"
 	"ai-foundations-coach/internal/feedback"
+	"ai-foundations-coach/internal/i18n"
 	"ai-foundations-coach/internal/ingest"
 	"ai-foundations-coach/internal/spend"
 	"ai-foundations-coach/internal/usage"
@@ -65,6 +67,23 @@ type RuntimeInfo struct {
 	TutorEnabled    bool   `json:"tutorEnabled"`
 	FeedbackEnabled bool   `json:"feedbackEnabled"`
 	Release         string `json:"release,omitempty"`
+	// Languages lists the approved interface languages, English first (SPEC-009 FR-001).
+	Languages []LanguageInfo `json:"languages"`
+}
+
+// LanguageInfo is one approved language as the UI needs it.
+type LanguageInfo struct {
+	Code       string `json:"code"`
+	Name       string `json:"name"`
+	SpeechLang string `json:"speechLang"`
+}
+
+func languageInfos(s *i18n.Set) []LanguageInfo {
+	var out []LanguageInfo
+	for _, l := range s.Approved() {
+		out = append(out, LanguageInfo{Code: l.Code, Name: l.Name, SpeechLang: l.SpeechLang})
+	}
+	return out
 }
 
 // RuntimeHandler reports deployment facts the UI needs. It is separate from /api/health,
@@ -91,6 +110,14 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	// Content handler
 	lessonsHandler := NewLessonsHandler(cfg.ContentDir)
 	lessonsHandler.usage = cfg.Usage
+	// SPEC-009: languages offered to learners. A broken list must not take the site down, so it
+	// falls back to English only and says why.
+	langs, err := i18n.Load(lessonsHandler.contentDir)
+	if err != nil {
+		slog.Error("Offering English only: cannot read languages.json", "error", err.Error())
+		langs = nil
+	}
+	lessonsHandler.langs = langs
 	mux.HandleFunc("GET /api/lessons", lessonsHandler.GetIndex)
 	mux.HandleFunc("GET /api/lessons/{id}", lessonsHandler.GetLesson)
 
@@ -142,6 +169,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		Hosted: cfg.Hosted, AuthRequired: cfg.Auth != nil, TutorEnabled: !cfg.TutorDisabled,
 		FeedbackEnabled: cfg.Auth != nil && cfg.FeedbackEnabled,
 		Release:         cfg.Release,
+		Languages:       languageInfos(langs),
 	}))
 
 	if cfg.Hosted {

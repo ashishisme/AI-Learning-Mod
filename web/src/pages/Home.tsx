@@ -3,6 +3,7 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { fetchLessons, LessonMeta, ApiError } from '../api'
 import { useProgressStore, useSettingsStore } from '../store'
+import { useT } from '../i18n'
 
 export const Home: React.FC = () => {
   const [lessons, setLessons] = useState<LessonMeta[]>([])
@@ -14,6 +15,7 @@ export const Home: React.FC = () => {
 
   const { completedLessons, toggleLesson, isLessonCompleted } = useProgressStore()
   const { settings, setDrawerOpen } = useSettingsStore()
+  const t = useT()
 
   useEffect(() => {
     fetchLessons()
@@ -26,7 +28,7 @@ export const Home: React.FC = () => {
           // FR-UI-06, AC-23: operator message to run ingest
           setIngestRequired(true)
         } else {
-          setErrorMessage(err instanceof Error ? err.message : 'Failed to load lessons')
+          setErrorMessage(err instanceof Error ? err.message : t('home.loadFailed'))
         }
         setLoading(false)
       })
@@ -68,7 +70,7 @@ export const Home: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto py-24 px-4 text-center">
         <div className="inline-block w-8 h-8 border-2 border-slate-300 border-t-blue-600 rounded-full animate-spin mb-4" />
-        <p className="text-sm font-medium text-slate-500">Loading curriculum...</p>
+        <p className="text-sm font-medium text-slate-500">{t('home.loading')}</p>
       </div>
     )
   }
@@ -86,9 +88,9 @@ export const Home: React.FC = () => {
               !
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">Content Ingestion Required</h2>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">{t('home.ingest.title')}</h2>
               <p className="text-sm text-slate-600 dark:text-slate-300 mb-5 leading-relaxed">
-                The curriculum lessons have not been ingested yet. Please run the ingestion CLI command with your GitHub token to generate local lesson JSON artifacts:
+                {t('home.ingest.body')}
               </p>
               <div className="relative group">
                 <code className="block bg-slate-900 dark:bg-slate-950 text-slate-100 font-mono text-xs px-4 py-3 rounded-lg overflow-x-auto shadow-inner border border-slate-800">
@@ -96,7 +98,7 @@ export const Home: React.FC = () => {
                 </code>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-4">
-                Once the ingestion completes, refresh this page to begin your learning track. Please run ingest before continuing.
+                {t('home.ingest.after')}
               </p>
             </div>
           </div>
@@ -109,7 +111,7 @@ export const Home: React.FC = () => {
     return (
       <div className="max-w-2xl mx-auto my-16 px-4">
         <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-2xl p-6 text-red-800 dark:text-red-200">
-          <h2 className="text-base font-bold mb-1">Failed to Connect</h2>
+          <h2 className="text-base font-bold mb-1">{t('home.connectFailed')}</h2>
           <p className="text-sm">{errorMessage}</p>
         </div>
       </div>
@@ -123,10 +125,10 @@ export const Home: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs font-semibold mb-3">
-              <span>✦ Comprehensive Self-Paced Track</span>
+              <span>{t('home.badge')}</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
-              Artificial Intelligence Foundations
+              {t('home.title')}
             </h1>
           </div>
 
@@ -136,14 +138,14 @@ export const Home: React.FC = () => {
             className="self-start md:self-auto flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm text-xs transition"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-semibold text-slate-700 dark:text-slate-300">Model:</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300">{t('home.model')}</span>
             <span className="font-mono text-slate-600 dark:text-slate-400 font-medium">{settings.model}</span>
             <span className="text-slate-400">⚙️</span>
           </button>
         </div>
 
         <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base max-w-3xl leading-relaxed mb-6">
-          Explore machine learning, neural network architectures, computer vision, natural language transformers, and grounded AI tutoring.
+          {t('home.intro')}
         </p>
 
         {/* FR-UI-02, FR-PRG-03, AC-19: overall done / total summary */}
@@ -151,17 +153,17 @@ export const Home: React.FC = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3">
             <div>
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-400 block mb-0.5">
-                Curriculum Mastery
+                {t('home.mastery')}
               </span>
               <span
                 data-testid="progress-summary"
                 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-tight"
               >
-                {done} / {total} completed
+                {t('home.progress', { done, total })}
               </span>
             </div>
             <span className="text-sm font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-3.5 py-1 rounded-full self-start sm:self-auto border border-blue-100 dark:border-blue-900">
-              {percentComplete}% finished
+              {t('home.percent', { percent: percentComplete })}
             </span>
           </div>
 
@@ -188,7 +190,7 @@ export const Home: React.FC = () => {
               data-testid="search-lessons-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search lessons by title, topic, or keyword..."
+              placeholder={t('home.search')}
               className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition shadow-sm"
             />
             {searchQuery && (
@@ -211,7 +213,7 @@ export const Home: React.FC = () => {
                   : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
-              All ({lessons.length})
+              {t('home.filter.all', { n: lessons.length })}
             </button>
             <button
               onClick={() => setSelectedModule('completed')}
@@ -221,7 +223,7 @@ export const Home: React.FC = () => {
                   : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
-              Completed ({done})
+              {t('home.filter.completed', { n: done })}
             </button>
             <button
               onClick={() => setSelectedModule('incomplete')}
@@ -231,7 +233,7 @@ export const Home: React.FC = () => {
                   : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
-              To Do ({total - done})
+              {t('home.filter.todo', { n: total - done })}
             </button>
           </div>
         </div>
@@ -239,7 +241,7 @@ export const Home: React.FC = () => {
         {/* Module Topic Tags */}
         {modules.length > 0 && (
           <div className="flex items-center gap-1.5 flex-wrap pt-1 text-xs">
-            <span className="text-slate-400 text-[11px] font-semibold uppercase mr-1">Modules:</span>
+            <span className="text-slate-400 text-[11px] font-semibold uppercase mr-1">{t('home.modules')}</span>
             {modules.map((mod) => (
               <button
                 key={mod}
@@ -258,11 +260,11 @@ export const Home: React.FC = () => {
       </div>
 
       {/* Lesson Index List */}
-      <section aria-label="Curriculum Modules">
+      <section aria-label={t('home.listLabel')}>
         {filteredLessons.length === 0 ? (
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center shadow-sm">
-            <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">No lessons match your filter</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">Try clearing the search query or selecting "All".</p>
+            <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">{t('home.empty.title')}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">{t('home.empty.body')}</p>
             <button
               onClick={() => {
                 setSearchQuery('')
@@ -270,7 +272,7 @@ export const Home: React.FC = () => {
               }}
               className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 rounded-lg transition"
             >
-              Reset Filters
+              {t('home.empty.reset')}
             </button>
           </div>
         ) : (
@@ -289,7 +291,7 @@ export const Home: React.FC = () => {
                       type="button"
                       data-testid={`toggle-complete-${lesson.id}`}
                       onClick={() => toggleLesson(lesson.id)}
-                      aria-label={`Mark ${lesson.title} as ${completed ? 'incomplete' : 'complete'}`}
+                      aria-label={t(completed ? 'home.markIncomplete' : 'home.markComplete', { title: lesson.title })}
                       className="flex-shrink-0 text-xl leading-none select-none hover:scale-110 active:scale-95 transition-transform duration-100 p-1 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
                     >
                       {completed ? '✅' : '⬜'}
@@ -321,10 +323,10 @@ export const Home: React.FC = () => {
                       to={`/quiz/${lesson.id}`}
                       data-testid={`quiz-link-${lesson.id}`}
                       className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 rounded-lg transition"
-                      title="Take interactive comprehension quiz"
+                      title={t('home.quizTitle')}
                     >
                       <span>🎯</span>
-                      <span className="hidden sm:inline">Quiz</span>
+                      <span className="hidden sm:inline">{t('home.quiz')}</span>
                     </Link>
 
                     {/* Open Lesson Link */}
@@ -332,7 +334,7 @@ export const Home: React.FC = () => {
                       to={`/lesson/${lesson.id}`}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 group-hover:bg-blue-600 dark:group-hover:bg-blue-600 group-hover:text-white rounded-lg transition-colors duration-150"
                     >
-                      <span>Open</span>
+                      <span>{t('home.open')}</span>
                       <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
                     </Link>
                   </div>

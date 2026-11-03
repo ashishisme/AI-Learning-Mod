@@ -2,14 +2,15 @@
 import React, { useState } from 'react'
 import { login, ApiError, AuthSessionResponse } from '../api'
 import { useAuthStore, AuthSessionInfo } from '../store'
+import { t, useT } from '../i18n'
 
 function messageFor(err: unknown): string {
   if (err instanceof ApiError) {
     switch (err.code) {
       case 'locked':
-        return 'Too many attempts. Try again in 15 minutes.'
+        return t('auth.locked')
       case 'rate_limited':
-        return 'Please wait a moment and try again.'
+        return t('auth.rateLimited')
       case 'bad_credentials':
       case 'account_expired':
       case 'account_revoked':
@@ -17,7 +18,7 @@ function messageFor(err: unknown): string {
     }
     return err.message
   }
-  return 'Could not reach the server. Check your connection and try again.'
+  return t('auth.offline')
 }
 
 const inputCls =
@@ -25,6 +26,7 @@ const inputCls =
 
 export const SignIn: React.FC = () => {
   const notice = useAuthStore((s) => s.message)
+  const tr = useT()
   const [betaId, setBetaId] = useState('')
   const [password, setPassword] = useState('')
   const [show, setShow] = useState(false)
@@ -46,13 +48,12 @@ export const SignIn: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold tracking-tight mb-2">Sign in to Foundations Coach</h1>
+      <h1 className="text-2xl font-bold tracking-tight mb-2">{tr('auth.signInTitle')}</h1>
       <p
         data-testid="invite-only-notice"
         className="mb-6 p-3 rounded-lg border border-blue-300 dark:border-blue-700 bg-blue-50 dark:bg-blue-950 text-blue-950 dark:text-blue-100 text-sm"
       >
-        This is an invite-only beta. You need an invite link from your teacher or admin to create an account. Already
-        have an account? Sign in below.
+        {tr('auth.inviteOnly')}
       </p>
       {notice && (
         <p role="status" data-testid="signin-message" className="mb-4 p-3 rounded-lg border border-amber-400 bg-amber-50 dark:bg-amber-950 text-amber-950 dark:text-amber-100 text-sm">
@@ -62,7 +63,7 @@ export const SignIn: React.FC = () => {
       <form data-testid="signin-form" onSubmit={submit} className="space-y-4">
         <div>
           <label htmlFor="signin-betaid" className="block text-sm font-semibold mb-1">
-            Beta ID
+            {tr('auth.betaId')}
           </label>
           <input
             id="signin-betaid"
@@ -79,7 +80,7 @@ export const SignIn: React.FC = () => {
         </div>
         <div>
           <label htmlFor="signin-password" className="block text-sm font-semibold mb-1">
-            Password
+            {tr('auth.password')}
           </label>
           <div className="flex gap-2">
             <input
@@ -98,7 +99,7 @@ export const SignIn: React.FC = () => {
               aria-pressed={show}
               className="min-h-11 min-w-11 px-3 rounded-lg border border-slate-400 dark:border-slate-500 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
             >
-              {show ? 'Hide' : 'Show'}
+              {tr(show ? 'auth.hide' : 'auth.show')}
             </button>
           </div>
         </div>
@@ -113,7 +114,7 @@ export const SignIn: React.FC = () => {
           disabled={busy}
           className="w-full min-h-11 rounded-lg bg-blue-700 hover:bg-blue-800 disabled:opacity-60 text-white font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600"
         >
-          {busy ? 'Signing in...' : 'Sign in'}
+          {tr(busy ? 'auth.signingIn' : 'auth.signIn')}
         </button>
       </form>
     </div>

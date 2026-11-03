@@ -1,0 +1,8 @@
+{
+  "language": "hi",
+  "personas": {
+    "chip": { "voice": "", "speakingRate": 1.0, "pitch": 0 },
+    "nova": { "voice": "", "speakingRate": 1.0, "pitch": 0 },
+    "alan": { "voice": "", "speakingRate": 1.0, "pitch": 0 }
+  }
+}

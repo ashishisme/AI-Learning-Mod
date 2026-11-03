@@ -209,13 +209,32 @@ export const useHelpStore = create<HelpState>((set) => ({
 // Deployment facts reported by the server (GET /api/runtime). On a hosted deployment the AI
 // endpoint, key, model and certificate options are controlled by the server only.
 // The defaults keep today's behaviour until the server answers: no sign-in, tutor on, no feedback.
+// SPEC-009 FR-001: an interface language the server offers. English is always first.
+export interface RuntimeLanguage {
+  code: string
+  name: string
+  speechLang: string
+}
+
+export const ENGLISH: RuntimeLanguage = { code: 'en', name: 'English', speechLang: 'en-US' }
+
 export interface RuntimeState {
   hosted: boolean
   authRequired: boolean
   tutorEnabled: boolean
   feedbackEnabled: boolean
+  languages: RuntimeLanguage[]
   loaded: boolean
   load: () => Promise<void>
+}
+
+function readLanguages(raw: unknown): RuntimeLanguage[] {
+  const list = Array.isArray(raw) ? raw : []
+  const ok = list.filter(
+    (l): l is RuntimeLanguage =>
+      !!l && typeof l.code === 'string' && /^[a-z]{2,3}$/.test(l.code) && typeof l.name === 'string' && typeof l.speechLang === 'string'
+  )
+  return ok.some((l) => l.code === 'en') ? ok : [ENGLISH, ...ok]
 }
 
 export const useRuntimeStore = create<RuntimeState>()((set) => ({
@@ -223,6 +242,7 @@ export const useRuntimeStore = create<RuntimeState>()((set) => ({
   authRequired: false,
   tutorEnabled: true,
   feedbackEnabled: false,
+  languages: [ENGLISH],
   loaded: false,
   load: async () => {
     try {
@@ -235,6 +255,7 @@ export const useRuntimeStore = create<RuntimeState>()((set) => ({
           // Only an explicit false hides the tutor, so older servers keep working.
           tutorEnabled: data?.tutorEnabled !== false,
           feedbackEnabled: data?.feedbackEnabled === true,
+          languages: readLanguages(data?.languages),
           loaded: true,
         })
         return
@@ -291,3 +312,22 @@ export const useAuthStore = create<AuthState>()((set) => ({
     set({ status: 'anonymous', betaId: '', label: '', expiresAt: '', daysLeft: 0, expiringSoon: false, message: message ?? null }),
   setLoading: () => set({ status: 'loading' }),
 }))
+
+// SPEC-009 FR-002: the learner's language, kept only in this browser. null means "not chosen yet",
+// so the first-visit rule (FR-003) can apply.
+export interface LanguageState {
+  code: string | null
+  chosenAt: string | null
+  setLanguage: (code: string) => void
+}
+
+export const useLanguageStore = create<LanguageState>()(
+  persist(
+    (set) => ({
+      code: null,
+      chosenAt: null,
+      setLanguage: (code: string) => set({ code, chosenAt: new Date().toISOString() }),
+    }),
+    { name: 'ai-foundations-language' }
+  )
+)

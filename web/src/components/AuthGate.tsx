@@ -4,12 +4,14 @@ import { useLocation } from 'react-router-dom'
 import { SignIn } from '../pages/SignIn'
 import { logout, refreshAuthSession } from '../api'
 import { useAuthStore, useRuntimeStore } from '../store'
+import { useT } from '../i18n'
 
 export const AuthGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname } = useLocation()
   const loaded = useRuntimeStore((s) => s.loaded)
   const authRequired = useRuntimeStore((s) => s.authRequired)
   const status = useAuthStore((s) => s.status)
+  const t = useT()
 
   useEffect(() => {
     if (loaded && authRequired) void refreshAuthSession()
@@ -19,7 +21,7 @@ export const AuthGate: React.FC<{ children: React.ReactNode }> = ({ children }) 
   if (!loaded || (authRequired && status === 'loading')) {
     return (
       <div role="status" aria-live="polite" data-testid="auth-loading" className="p-10 text-center text-sm text-slate-700 dark:text-slate-300">
-        Loading...
+        {t('auth.loading')}
       </div>
     )
   }
@@ -31,6 +33,7 @@ export const SignOutControl: React.FC = () => {
   const authRequired = useRuntimeStore((s) => s.authRequired)
   const { status, betaId } = useAuthStore()
   const [open, setOpen] = useState(false)
+  const t = useT()
   const firstRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -68,23 +71,23 @@ export const SignOutControl: React.FC = () => {
         {betaId}
       </span>
       <button type="button" data-testid="signout-btn" className={cls} onClick={() => setOpen(true)}>
-        Sign out
+        {t('auth.signOut')}
       </button>
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
           <div role="dialog" aria-modal="true" aria-labelledby="signout-title" data-testid="signout-dialog" className="w-full max-w-sm rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 p-5 shadow-xl">
             <h2 id="signout-title" className="text-lg font-bold mb-3">
-              Sign out?
+              {t('auth.signOutTitle')}
             </h2>
             <div className="flex flex-col gap-2">
               <button ref={firstRef} type="button" data-testid="signout-confirm" className={cls} onClick={() => signOut(false)}>
-                Sign out
+                {t('auth.signOut')}
               </button>
               <button type="button" data-testid="signout-clear" className={cls} onClick={() => signOut(true)}>
-                Sign out and clear my progress on this device
+                {t('auth.signOutClear')}
               </button>
               <button type="button" className={cls} onClick={() => setOpen(false)}>
-                Cancel
+                {t('auth.cancel')}
               </button>
             </div>
           </div>

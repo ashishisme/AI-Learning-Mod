@@ -1,4 +1,5 @@
 import React from 'react'
+import { useT } from '../i18n'
 
 interface Props {
   metaphorName: string
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export const VisualMetaphorCard: React.FC<Props> = ({ metaphorName, description, isJunior = true }) => {
+  const t = useT()
   // Render custom vector illustration accents based on metaphorName
   const renderIllustration = () => {
     if (metaphorName.toLowerCase().includes('martian puppy') || metaphorName.toLowerCase().includes('puppy')) {
@@ -54,10 +56,10 @@ export const VisualMetaphorCard: React.FC<Props> = ({ metaphorName, description,
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-1">
           <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-200/80 dark:bg-indigo-900/80 text-indigo-900 dark:text-indigo-200">
-            {isJunior ? 'Fun Metaphor' : 'Everyday Analogy'}
+            {t(isJunior ? 'widget.funMetaphor' : 'widget.everydayAnalogy')}
           </span>
           <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
-            Everyday Metaphor: {metaphorName}
+            {t('widget.metaphorTitle', { name: metaphorName })}
           </h4>
         </div>
         <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">

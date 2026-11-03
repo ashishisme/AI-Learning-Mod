@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { speechService } from '../services/speechService';
+import { useT } from '../i18n';
 
 interface Candidate {
   id: number;
@@ -27,6 +28,7 @@ const APPLICANTS: Candidate[] = [
 ];
 
 export const BiasDetectiveWidget: React.FC = () => {
+  const t = useT();
   const [fairnessMode, setFairnessMode] = useState<'raw' | 'mitigated'>('raw');
   const [datasetSkew, setDatasetSkew] = useState<number>(80);
 
@@ -70,7 +72,7 @@ export const BiasDetectiveWidget: React.FC = () => {
           <div className="flex items-center gap-2.5">
             <span className="text-2xl animate-bounce">🧭</span>
             <h3 className="text-lg sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
-              Interactive Bias Detective: AI Fairness Auditor
+              {t('widget.bias.title')}
             </h3>
             <span
               className={`rounded-full px-3 py-1 text-xs font-bold border ${
@@ -79,11 +81,11 @@ export const BiasDetectiveWidget: React.FC = () => {
                   : 'bg-rose-500/20 text-rose-300 border-rose-500/30'
               }`}
             >
-              {isCompliant ? '🟢 Fair & Balanced' : '🔴 Skewed Disparity'}
+              {isCompliant ? t('widget.bias.fair') : t('widget.bias.skewed')}
             </span>
           </div>
           <p className="mt-1 text-xs sm:text-sm text-slate-300">
-            See how past data prejudices can accidentally train unfair models—and how ethical AI audits fix them!
+            {t('widget.bias.intro')}
           </p>
         </div>
 
@@ -97,7 +99,7 @@ export const BiasDetectiveWidget: React.FC = () => {
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            Raw Historical Model
+            {t('widget.bias.raw')}
           </button>
           <button
             onClick={() => handleModeChange('mitigated')}
@@ -107,7 +109,7 @@ export const BiasDetectiveWidget: React.FC = () => {
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            Audited & Mitigated
+            {t('widget.bias.mitigated')}
           </button>
         </div>
       </div>
@@ -115,7 +117,7 @@ export const BiasDetectiveWidget: React.FC = () => {
       {/* Animated Visual See-Saw Scale */}
       <div className="mt-6 p-5 rounded-2xl bg-slate-950 border border-slate-800 relative z-10 shadow-inner flex flex-col items-center justify-center">
         <span className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-          ⚖️ Fairness Balance Scale:
+          {t('widget.bias.scale')}
         </span>
         <svg viewBox="0 0 400 120" className="w-full max-w-sm h-auto select-none">
           {/* Fulcrum Stand */}
@@ -134,14 +136,14 @@ export const BiasDetectiveWidget: React.FC = () => {
             <line x1="70" y1="65" x2="70" y2="90" stroke="#94a3b8" strokeWidth="2" />
             <ellipse cx="70" cy="95" rx="35" ry="8" fill="#1e293b" stroke="#3b82f6" strokeWidth="2" />
             <text x="70" y="85" textAnchor="middle" fill="#93c5fd" fontSize="10" fontWeight="bold">
-              🌍 Group A ({rateA.toFixed(0)}%)
+              {t('widget.bias.panA', { n: rateA.toFixed(0) })}
             </text>
 
             {/* Right Pan (Group B / Mars) */}
             <line x1="330" y1="65" x2="330" y2="90" stroke="#94a3b8" strokeWidth="2" />
             <ellipse cx="330" cy="95" rx="35" ry="8" fill="#1e293b" stroke={isCompliant ? '#10b981' : '#f43f5e'} strokeWidth="2" />
             <text x="330" y="85" textAnchor="middle" fill={isCompliant ? '#a7f3d0' : '#fca5a5'} fontSize="10" fontWeight="bold">
-              🪐 Group B ({rateB.toFixed(0)}%)
+              {t('widget.bias.panB', { n: rateB.toFixed(0) })}
             </text>
           </g>
         </svg>
@@ -150,12 +152,12 @@ export const BiasDetectiveWidget: React.FC = () => {
           {isMitigated ? (
             <span className="text-emerald-300 flex items-center gap-1.5 justify-center">
               <span>✅</span>
-              <span>Both groups have equal opportunities! Scale is balanced!</span>
+              <span>{t('widget.bias.balanced')}</span>
             </span>
           ) : (
             <span className="text-rose-400 flex items-center gap-1.5 justify-center animate-pulse">
               <span>⚠️</span>
-              <span>Unfair balance! Group A was chosen 4x more because of biased past records!</span>
+              <span>{t('widget.bias.unfair')}</span>
             </span>
           )}
         </div>
@@ -164,9 +166,9 @@ export const BiasDetectiveWidget: React.FC = () => {
       {/* Dataset Skew Slider */}
       <div className="mt-6 p-4 rounded-2xl bg-slate-950/70 border border-slate-800 relative z-10">
         <div className="flex items-center justify-between text-xs text-slate-200 mb-2 font-semibold">
-          <span>Historical Training Data Mix:</span>
+          <span>{t('widget.bias.mix')}</span>
           <span className="font-mono text-cyan-300 font-bold">
-            {datasetSkew}% Group A vs {100 - datasetSkew}% Group B
+            {t('widget.bias.mixValue', { a: datasetSkew, b: 100 - datasetSkew })}
           </span>
         </div>
         <input
@@ -183,8 +185,8 @@ export const BiasDetectiveWidget: React.FC = () => {
         />
         <p className="mt-2 text-[11px] text-slate-400">
           {datasetSkew > 70
-            ? '⚠️ High dataset imbalance: The algorithm was fed 4x more historical records from Group A, reinforcing historical bias.'
-            : '✅ Balanced dataset: Training data evenly represents different applicant backgrounds.'}
+            ? t('widget.bias.imbalance')
+            : t('widget.bias.balancedData')}
         </p>
       </div>
 
@@ -193,16 +195,16 @@ export const BiasDetectiveWidget: React.FC = () => {
         {/* Metric 1 */}
         <div className="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 text-center shadow-md">
           <span className="text-[11px] uppercase tracking-wider text-slate-400 block mb-1">
-            Group A Selection Rate
+            {t('widget.bias.rateA')}
           </span>
           <div className="text-2xl font-black font-mono text-blue-300">{rateA.toFixed(0)}%</div>
-          <div className="text-[11px] text-slate-400 mt-1">({groupASelected} of {groupACount} chosen)</div>
+          <div className="text-[11px] text-slate-400 mt-1">{t('widget.bias.chosen', { n: groupASelected, total: groupACount })}</div>
         </div>
 
         {/* Metric 2 */}
         <div className="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 text-center shadow-md">
           <span className="text-[11px] uppercase tracking-wider text-slate-400 block mb-1">
-            Group B Selection Rate
+            {t('widget.bias.rateB')}
           </span>
           <div
             className={`text-2xl font-black font-mono ${
@@ -211,13 +213,13 @@ export const BiasDetectiveWidget: React.FC = () => {
           >
             {rateB.toFixed(0)}%
           </div>
-          <div className="text-[11px] text-slate-400 mt-1">({groupBSelected} of {groupBCount} chosen)</div>
+          <div className="text-[11px] text-slate-400 mt-1">{t('widget.bias.chosen', { n: groupBSelected, total: groupBCount })}</div>
         </div>
 
         {/* Metric 3 */}
         <div className="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 text-center shadow-md">
           <span className="text-[11px] uppercase tracking-wider text-slate-400 block mb-1">
-            Disparate Impact Ratio
+            {t('widget.bias.impact')}
           </span>
           <div
             className={`text-2xl font-black font-mono ${
@@ -227,7 +229,7 @@ export const BiasDetectiveWidget: React.FC = () => {
             {disparateImpactRatio}
           </div>
           <div className="text-[11px] font-bold mt-1">
-            {isCompliant ? '✅ Meets EEOC 80% Rule' : '❌ Violates 80% Rule (< 0.80)'}
+            {isCompliant ? t('widget.bias.meets') : t('widget.bias.violates')}
           </div>
         </div>
       </div>
@@ -235,7 +237,7 @@ export const BiasDetectiveWidget: React.FC = () => {
       {/* Candidate Pool Cards */}
       <div className="mt-8 relative z-10">
         <span className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-3">
-          Space Cadet Applicant Pool ({selectedCandidates.length} Selected):
+          {t('widget.bias.pool', { n: selectedCandidates.length })}
         </span>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           {APPLICANTS.map((c) => {
@@ -256,13 +258,13 @@ export const BiasDetectiveWidget: React.FC = () => {
                       isChosen ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-slate-800 text-slate-500'
                     }`}
                   >
-                    {isChosen ? 'ACCEPTED' : 'REJECTED'}
+                    {t(isChosen ? 'widget.bias.accepted' : 'widget.bias.rejected')}
                   </span>
                 </div>
                 <div className="mt-2 text-xs font-bold text-white">{c.name}</div>
-                <div className="text-[10px] text-slate-400">{c.shortGroup}</div>
+                <div className="text-[10px] text-slate-400">{t(c.shortGroup === 'Group A' ? 'widget.bias.groupA' : 'widget.bias.groupB')}</div>
                 <div className="mt-1 text-[10px] font-mono text-cyan-300">
-                  GPA: {c.gpa} • {c.experienceYears}y exp
+                  {t('widget.bias.profile', { gpa: c.gpa, years: c.experienceYears })}
                 </div>
               </div>
             );

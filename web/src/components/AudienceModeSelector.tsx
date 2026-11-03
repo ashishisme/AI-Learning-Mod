@@ -1,6 +1,7 @@
 import React from 'react'
 import { AudienceMode, useAudienceModeStore } from '../store'
 import { VoicePersonaSelector } from './VoicePersonaSelector'
+import { useT } from '../i18n'
 
 interface Props {
   className?: string
@@ -8,18 +9,19 @@ interface Props {
 
 export const AudienceModeSelector: React.FC<Props> = ({ className = '' }) => {
   const { mode, setMode } = useAudienceModeStore()
+  const t = useT()
 
   const options: Array<{ id: AudienceMode; label: string; icon: string; desc: string }> = [
-    { id: 'standard', label: 'Standard', icon: '🎓', desc: 'Original technical curriculum' },
-    { id: 'junior', label: 'Kids (8–14)', icon: '🚀', desc: 'Story-driven with Chip the Robot' },
-    { id: 'plain-english', label: 'Plain English', icon: '💡', desc: 'Everyday non-technical analogies' },
+    { id: 'standard', label: t('adaptive.modeStandard'), icon: '🎓', desc: t('adaptive.modeStandardDesc') },
+    { id: 'junior', label: t('adaptive.modeJunior'), icon: '🚀', desc: t('adaptive.modeJuniorDesc') },
+    { id: 'plain-english', label: t('adaptive.modePlain'), icon: '💡', desc: t('adaptive.modePlainDesc') },
   ]
 
   return (
     <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm ${className}`}>
       <div className="flex items-center gap-2">
         <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-          Reading Mode:
+          {t('adaptive.readingMode')}
         </span>
         <span className="text-xs text-slate-400 dark:text-slate-500 hidden md:inline">
           {options.find((o) => o.id === mode)?.desc}
@@ -29,7 +31,7 @@ export const AudienceModeSelector: React.FC<Props> = ({ className = '' }) => {
       <div className="flex flex-wrap items-center gap-2.5">
         <div
           role="tablist"
-          aria-label="Reading presentation mode"
+          aria-label={t('adaptive.modeLabel')}
           className="inline-flex p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs font-medium"
         >
           {options.map((opt) => {

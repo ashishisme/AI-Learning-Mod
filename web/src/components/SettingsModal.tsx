@@ -5,11 +5,13 @@ import { testAIConfig, testLocalLLM, ConfigTestResult } from '../api'
 import { LocalLLMSettings } from './LocalLLMSettings'
 import pkg from '../../package.json'
 import { buildInfo, formatBuild } from '../buildInfo'
+import { useT } from '../i18n'
 
 export const SettingsModal: React.FC = () => {
   const { settings, isDrawerOpen, setDrawerOpen, updateSettings, resetDefaults } = useSettingsStore()
   const { theme, setTheme } = useThemeStore()
   const hosted = useRuntimeStore((st) => st.hosted)
+  const t = useT()
 
   const [form, setForm] = useState<AISettings>(settings)
   const [showApiKey, setShowApiKey] = useState(false)
@@ -26,6 +28,8 @@ export const SettingsModal: React.FC = () => {
   }, [isDrawerOpen, settings])
 
   if (!isDrawerOpen) return null
+  // The model name is styled, so the sentence is split around its placeholder.
+  const modelReady = t('settings.modelReady').split('{model}')
 
   const handlePreset = (preset: 'local' | 'openai' | 'custom') => {
     if (preset === 'local') {
@@ -72,7 +76,7 @@ export const SettingsModal: React.FC = () => {
       setTestResult({
         ok: false,
         latencyMs: 0,
-        error: err.message || 'Connection test failed',
+        error: err.message || t('settings.testFailed'),
       })
     } finally {
       setTesting(false)
@@ -91,7 +95,7 @@ export const SettingsModal: React.FC = () => {
   return (
     <div
       role="dialog"
-      aria-label="Settings and AI Configuration"
+      aria-label={t('settings.dialogLabel')}
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in"
       onClick={() => setDrawerOpen(false)}
     >
@@ -104,14 +108,14 @@ export const SettingsModal: React.FC = () => {
           <div className="flex items-center gap-3">
             <span className="text-2xl">⚙️</span>
             <div>
-              <h2 className="text-lg font-semibold text-slate-100">AI & Learning Settings</h2>
-              <p className="text-xs text-slate-400">Configure theme, local Ollama and cloud endpoints</p>
+              <h2 className="text-lg font-semibold text-slate-100">{t('settings.title')}</h2>
+              <p className="text-xs text-slate-400">{t('settings.subtitle')}</p>
             </div>
           </div>
           <button
             onClick={() => setDrawerOpen(false)}
             className="text-slate-400 hover:text-slate-200 text-lg font-bold p-1 rounded-lg hover:bg-slate-800 transition"
-            aria-label="Close settings"
+            aria-label={t('settings.close')}
           >
             ✕
           </button>
@@ -120,7 +124,7 @@ export const SettingsModal: React.FC = () => {
         {/* Theme Preference (FR-UI-15) */}
         <div>
           <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-            Color Theme
+            {t('settings.theme')}
           </label>
           <div className="grid grid-cols-3 gap-2">
             <button
@@ -134,7 +138,7 @@ export const SettingsModal: React.FC = () => {
               }`}
             >
               <span>☀️</span>
-              <span>Light</span>
+              <span>{t('settings.themeLight')}</span>
             </button>
             <button
               type="button"
@@ -147,7 +151,7 @@ export const SettingsModal: React.FC = () => {
               }`}
             >
               <span>🌙</span>
-              <span>Dark</span>
+              <span>{t('settings.themeDark')}</span>
             </button>
             <button
               type="button"
@@ -160,7 +164,7 @@ export const SettingsModal: React.FC = () => {
               }`}
             >
               <span>🖥️</span>
-              <span>System</span>
+              <span>{t('settings.themeSystem')}</span>
             </button>
           </div>
         </div>
@@ -180,7 +184,7 @@ export const SettingsModal: React.FC = () => {
         {/* Provider Presets */}
         <div>
           <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-            AI Provider Preset
+            {t('settings.preset')}
           </label>
           <div className="grid grid-cols-3 gap-2">
             <button
@@ -193,7 +197,7 @@ export const SettingsModal: React.FC = () => {
               }`}
             >
               <span className="text-lg">🦙</span>
-              <span>Local Ollama</span>
+              <span>{t('settings.presetLocal')}</span>
             </button>
             <button
               type="button"
@@ -205,7 +209,7 @@ export const SettingsModal: React.FC = () => {
               }`}
             >
               <span className="text-lg">⚡</span>
-              <span>OpenAI Cloud</span>
+              <span>{t('settings.presetOpenai')}</span>
             </button>
             <button
               type="button"
@@ -217,7 +221,7 @@ export const SettingsModal: React.FC = () => {
               }`}
             >
               <span className="text-lg">🛠️</span>
-              <span>Custom API</span>
+              <span>{t('settings.presetCustom')}</span>
             </button>
           </div>
         </div>
@@ -227,14 +231,14 @@ export const SettingsModal: React.FC = () => {
           {/* Base URL */}
           <div>
             <label className="block font-semibold text-slate-300 mb-1">
-              API Base Endpoint URL
+              {t('settings.baseUrl')}
             </label>
             <input
               type="text"
               id="settings-base-url"
               value={form.baseUrl}
               onChange={(e) => setForm({ ...form, baseUrl: e.target.value })}
-              placeholder="e.g. http://localhost:11434/v1"
+              placeholder={t('settings.baseUrlPlaceholder')}
               className="w-full px-3 py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition font-mono"
             />
           </div>
@@ -251,11 +255,10 @@ export const SettingsModal: React.FC = () => {
               />
               <span>
                 <span className="block font-semibold text-slate-200">
-                  Allow self-signed certificate (skip TLS verification)
+                  {t('settings.insecureTls')}
                 </span>
                 <span className="block text-[11px] text-slate-400 mt-0.5">
-                  For https AI servers with a self-signed or company certificate. Not needed for local http
-                  endpoints such as Ollama.
+                  {t('settings.insecureTlsHelp')}
                 </span>
               </span>
             </label>
@@ -265,8 +268,7 @@ export const SettingsModal: React.FC = () => {
                 data-testid="insecure-tls-warning"
                 className="mt-2 text-[11px] text-amber-300"
               >
-                ⚠️ Anyone on the network could read or change what is sent to this server, including lesson
-                text and your API key. Only use it on a network you trust.
+                {t('settings.insecureTlsWarning')}
               </p>
             )}
           </div>
@@ -275,11 +277,11 @@ export const SettingsModal: React.FC = () => {
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="block font-semibold text-slate-300">
-                Model Identifier
+                {t('settings.model')}
               </label>
               {testResult?.models && testResult.models.length > 0 && (
                 <span className="text-[11px] text-indigo-400">
-                  {testResult.models.length} model(s) discovered
+                  {t('settings.modelsFound', { count: testResult.models.length })}
                 </span>
               )}
             </div>
@@ -300,7 +302,7 @@ export const SettingsModal: React.FC = () => {
                   type="text"
                   value={form.model}
                   onChange={(e) => setForm({ ...form, model: e.target.value })}
-                  placeholder="Or custom model"
+                  placeholder={t('settings.customModel')}
                   className="w-1/2 px-3 py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-slate-100 focus:outline-none focus:border-indigo-500 transition font-mono"
                 />
               </div>
@@ -310,7 +312,7 @@ export const SettingsModal: React.FC = () => {
                 id="settings-model"
                 value={form.model}
                 onChange={(e) => setForm({ ...form, model: e.target.value })}
-                placeholder="e.g. llama3.2:1b, mistral:latest, or gpt-4o-mini"
+                placeholder={t('settings.modelPlaceholder')}
                 className="w-full px-3 py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition font-mono"
               />
             )}
@@ -320,14 +322,14 @@ export const SettingsModal: React.FC = () => {
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="font-semibold text-slate-300">
-                AI API Key / Token
+                {t('settings.apiKey')}
               </label>
               <button
                 type="button"
                 onClick={() => setShowApiKey(!showApiKey)}
                 className="text-[11px] text-indigo-400 hover:underline"
               >
-                {showApiKey ? 'Hide' : 'Show'}
+                {t(showApiKey ? 'settings.hide' : 'settings.show')}
               </button>
             </div>
             <input
@@ -335,7 +337,7 @@ export const SettingsModal: React.FC = () => {
               id="settings-api-key"
               value={form.apiKey}
               onChange={(e) => setForm({ ...form, apiKey: e.target.value })}
-              placeholder="Leave blank for Ollama (or enter sk-... for OpenAI)"
+              placeholder={t('settings.apiKeyPlaceholder')}
               className="w-full px-3 py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition font-mono"
             />
           </div>
@@ -344,9 +346,9 @@ export const SettingsModal: React.FC = () => {
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="font-semibold text-slate-300">
-                Lesson Context Truncation Budget
+                {t('settings.budget')}
               </label>
-              <span className="text-[11px] text-slate-400 font-mono">{form.maxBytes} bytes</span>
+              <span className="text-[11px] text-slate-400 font-mono">{t('settings.bytes', { n: form.maxBytes })}</span>
             </div>
             <div className="flex gap-2">
               <button
@@ -358,7 +360,7 @@ export const SettingsModal: React.FC = () => {
                     : 'border-slate-800 bg-slate-800/40 text-slate-400 hover:border-slate-700'
                 }`}
               >
-                Fast CPU (1.5 KB)
+                {t('settings.budgetFast')}
               </button>
               <button
                 type="button"
@@ -369,7 +371,7 @@ export const SettingsModal: React.FC = () => {
                     : 'border-slate-800 bg-slate-800/40 text-slate-400 hover:border-slate-700'
                 }`}
               >
-                Balanced (4 KB)
+                {t('settings.budgetBalanced')}
               </button>
               <button
                 type="button"
@@ -380,7 +382,7 @@ export const SettingsModal: React.FC = () => {
                     : 'border-slate-800 bg-slate-800/40 text-slate-400 hover:border-slate-700'
                 }`}
               >
-                Full Spec (12 KB)
+                {t('settings.budgetFull')}
               </button>
             </div>
           </div>
@@ -400,17 +402,17 @@ export const SettingsModal: React.FC = () => {
           >
             <div className="flex items-center justify-between font-semibold">
               <span className="flex items-center gap-1.5">
-                {testResult.ok ? '🟢 Connection Verified' : '🔴 Connection Failed'}
+                {t(testResult.ok ? 'settings.verified' : 'settings.failed')}
               </span>
               <span className="font-mono text-[11px]">
-                {testResult.latencyMs}ms roundtrip
+                {t('settings.latency', { ms: testResult.latencyMs })}
               </span>
             </div>
             {testResult.error ? (
               <p className="text-[11px] text-rose-300 mt-1">{testResult.error}</p>
             ) : (
               <p className="text-[11px] text-emerald-300">
-                Model <span className="font-mono font-semibold">{testResult.activeModel}</span> is ready for streaming tutor queries.
+                {modelReady[0]}<span className="font-mono font-semibold">{testResult.activeModel}</span>{modelReady[1]}
               </p>
             )}
           </div>
@@ -420,7 +422,7 @@ export const SettingsModal: React.FC = () => {
         <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between text-xs" data-testid="settings-version-info">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
-            <span className="font-semibold text-slate-300">AI Foundations Coach</span>
+            <span className="font-semibold text-slate-300">{t('app.name')}</span>
             <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800/60 font-bold">
               {buildInfo.release || `v${pkg.version}`}
             </span>
@@ -437,7 +439,7 @@ export const SettingsModal: React.FC = () => {
             onClick={resetDefaults}
             className="text-xs text-slate-500 hover:text-slate-300 transition"
           >
-            Reset Defaults
+            {t('settings.reset')}
           </button>
 
           <div className="flex items-center gap-2">
@@ -452,12 +454,12 @@ export const SettingsModal: React.FC = () => {
               {testing ? (
                 <>
                   <span className="animate-spin">⏳</span>
-                  <span>Testing...</span>
+                  <span>{t('settings.testing')}</span>
                 </>
               ) : (
                 <>
                   <span>⚡</span>
-                  <span>Test Connection</span>
+                  <span>{t('settings.test')}</span>
                 </>
               )}
             </button>
@@ -469,7 +471,7 @@ export const SettingsModal: React.FC = () => {
               onClick={handleSave}
               className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg shadow-lg shadow-indigo-600/30 transition flex items-center gap-1.5"
             >
-              {saveToast ? 'Saved ✓' : 'Save Settings'}
+              {t(saveToast ? 'settings.saved' : 'settings.save')}
             </button>
           </div>
         </div>

@@ -27,3 +27,6 @@ Dockerfile
 .dockerignore
 .DS_Store
 coverage.out
+
+# SPEC-009: build-time recording cache (synced from Cloud Storage in CI)
+.narration-cache/

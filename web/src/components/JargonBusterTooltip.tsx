@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useT } from '../i18n'
 
 interface Props {
   term: string
@@ -7,6 +8,7 @@ interface Props {
 
 export const JargonBusterTooltip: React.FC<Props> = ({ term, explanation }) => {
   const [open, setOpen] = useState(false)
+  const t = useT()
 
   return (
     <span className="relative inline-block">
@@ -25,7 +27,7 @@ export const JargonBusterTooltip: React.FC<Props> = ({ term, explanation }) => {
           role="tooltip"
           className="absolute z-30 bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 rounded-xl bg-slate-900 text-white text-xs shadow-xl leading-relaxed animate-fadeIn pointer-events-none"
         >
-          <span className="block font-bold text-amber-300 mb-1">💡 Jargon Buster: {term}</span>
+          <span className="block font-bold text-amber-300 mb-1">💡 {t('adaptive.jargonTerm', { term })}</span>
           <span className="block text-slate-200">{explanation}</span>
           <span className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
         </span>

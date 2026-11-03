@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { speechService } from '../services/speechService';
+import { rich, useT } from '../i18n';
 
 interface WordPoint {
   word: string;
@@ -82,6 +83,8 @@ const PRESETS: VectorEquation[] = [
 ];
 
 export const VectorMathWidget: React.FC = () => {
+  const t = useT();
+  const w = (word: string) => t(`widget.vector.word.${word}`);
   const [selectedEquation, setSelectedEquation] = useState<VectorEquation>(PRESETS[0]);
   const [highlightedWord, setHighlightedWord] = useState<string | null>(null);
 
@@ -136,22 +139,22 @@ export const VectorMathWidget: React.FC = () => {
           <div className="flex items-center gap-2.5">
             <span className="text-2xl animate-bounce">✨</span>
             <h3 className="text-lg sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
-              Word Constellations: Calculating with Meaning
+              {t('widget.vector.title')}
             </h3>
           </div>
           <p className="mt-1 text-xs sm:text-sm text-slate-300">
-            AI turns words into points in space like stars in a galaxy. Watch arithmetic unlock word meanings!
+            {t('widget.vector.intro')}
           </p>
         </div>
         <span className="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-          Word2Vec Space
+          {t('widget.vector.badge')}
         </span>
       </div>
 
       {/* Equation Presets */}
       <div className="mt-6 relative z-10">
         <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2.5">
-          Pick a Word Math Puzzle:
+          {t('widget.vector.pick')}
         </label>
         <div className="flex flex-wrap gap-2.5">
           {PRESETS.map((p) => {
@@ -167,9 +170,9 @@ export const VectorMathWidget: React.FC = () => {
                 }`}
               >
                 <span>{p.emoji}</span>
-                <span>{p.name}</span>
+                <span>{t(`widget.vector.eq.${p.id}.name`)}</span>
                 <span className="text-[11px] opacity-80 font-mono bg-black/40 px-2 py-0.5 rounded-md">
-                  {p.a} - {p.b} + {p.c}
+                  {w(p.a)} - {w(p.b)} + {w(p.c)}
                 </span>
               </button>
             );
@@ -181,33 +184,33 @@ export const VectorMathWidget: React.FC = () => {
       <div className="mt-6 p-4 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 text-sm sm:text-base font-mono relative z-10 shadow-md">
         <span className="px-3.5 py-2 rounded-xl bg-indigo-900/70 border border-indigo-500/50 text-indigo-100 font-bold flex items-center gap-1.5 shadow-sm">
           <span>{aPoint?.emoji}</span>
-          <span>{selectedEquation.a}</span>
+          <span>{w(selectedEquation.a)}</span>
         </span>
         <span className="text-rose-400 font-black text-xl">-</span>
         <span className="px-3.5 py-2 rounded-xl bg-rose-950/70 border border-rose-500/50 text-rose-100 font-bold flex items-center gap-1.5 shadow-sm">
           <span>{bPoint?.emoji}</span>
-          <span>{selectedEquation.b}</span>
+          <span>{w(selectedEquation.b)}</span>
         </span>
         <span className="text-emerald-400 font-black text-xl">+</span>
         <span className="px-3.5 py-2 rounded-xl bg-emerald-950/70 border border-emerald-500/50 text-emerald-100 font-bold flex items-center gap-1.5 shadow-sm">
           <span>{cPoint?.emoji}</span>
-          <span>{selectedEquation.c}</span>
+          <span>{w(selectedEquation.c)}</span>
         </span>
         <span className="text-slate-400 font-black text-xl">=</span>
         <span className="px-4 py-2 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-300 font-extrabold shadow-lg shadow-amber-500/20 animate-pulse flex items-center gap-1.5">
           <span>{expectedPoint?.emoji}</span>
-          <span>{nearest.word}</span>
-          <span className="text-xs font-mono opacity-90">({similarityScore}% match!)</span>
+          <span>{w(nearest.word)}</span>
+          <span className="text-xs font-mono opacity-90">{t('widget.vector.match', { n: similarityScore })}</span>
         </span>
       </div>
 
       <p className="mt-2.5 text-center text-xs sm:text-sm text-indigo-200/90 italic relative z-10">
-        💡 {selectedEquation.explanation}
+        💡 {t(`widget.vector.eq.${selectedEquation.id}.explanation`)}
       </p>
 
       {highlightedWord && (
         <div className="mt-3 p-3 rounded-xl bg-indigo-900/40 border border-indigo-400/30 text-center text-xs text-indigo-200 relative z-10">
-          Selected Star Node: <strong className="text-white">{highlightedWord}</strong> (Space Coordinates: x={VOCABULARY.find(v => v.word === highlightedWord)?.x.toFixed(1)}, y={VOCABULARY.find(v => v.word === highlightedWord)?.y.toFixed(1)})
+          {rich(t('widget.vector.selected', { word: w(highlightedWord), x: VOCABULARY.find(v => v.word === highlightedWord)?.x.toFixed(1) ?? '', y: VOCABULARY.find(v => v.word === highlightedWord)?.y.toFixed(1) ?? '' }), 'text-white')}
         </div>
       )}
 
@@ -227,8 +230,8 @@ export const VectorMathWidget: React.FC = () => {
 
         {/* Axis Labels */}
         <div className="relative z-10 flex justify-between text-[11px] text-slate-400">
-          <span>🌌 Y: Feminine / Youth / City Meaning →</span>
-          <span>✨ Semantic Constellation Map</span>
+          <span>{t('widget.vector.yAxis')}</span>
+          <span>{t('widget.vector.mapTitle')}</span>
         </div>
 
         {/* Word Star Nodes */}
@@ -261,7 +264,7 @@ export const VectorMathWidget: React.FC = () => {
                 className={`absolute -translate-x-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all duration-300 z-10 shadow-sm ${badgeClass}`}
               >
                 <span>{item.emoji}</span>
-                <span>{item.word}</span>
+                <span>{w(item.word)}</span>
               </button>
             );
           })}
@@ -278,8 +281,8 @@ export const VectorMathWidget: React.FC = () => {
 
         {/* Bottom Axis Label */}
         <div className="relative z-10 flex justify-between text-[11px] text-slate-400">
-          <span>← Origin Point (0,0)</span>
-          <span>X: Royalty / Animals / Nations →</span>
+          <span>{t('widget.vector.origin')}</span>
+          <span>{t('widget.vector.xAxis')}</span>
         </div>
       </div>
     </div>

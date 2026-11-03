@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { askTutorStream, ApiError } from '../api'
 import { useAudienceModeStore } from '../store'
 import { speechService } from '../services/speechService'
+import { useT } from '../i18n'
 
 interface TutorPanelProps {
   lessonId: string
@@ -10,6 +11,7 @@ interface TutorPanelProps {
 
 export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
   const { mode: audienceMode } = useAudienceModeStore()
+  const t = useT()
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -153,7 +155,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
           setIsOffline(true)
           setErrorMessage(null)
         } else {
-          const msg = err instanceof Error ? err.message : 'An unexpected error occurred'
+          const msg = err instanceof Error ? err.message : t('tutor.unexpectedError')
           setErrorMessage(msg)
         }
       },
@@ -165,7 +167,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
     <aside
       data-testid="tutor-panel"
       className="mt-10 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-7 shadow-sm transition-all"
-      aria-label="AI Teaching Assistant"
+      aria-label={t('tutor.label')}
     >
       {/* Panel Header */}
       <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-100 dark:border-slate-800">
@@ -175,10 +177,10 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
           </div>
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 leading-none">
-              {audienceMode === "junior" ? "Chip the AI Robot 🤖" : audienceMode === "plain-english" ? "Plain English Assistant 💡" : "Lesson Assistant"}
+              {t(audienceMode === 'junior' ? 'tutor.titleJunior' : audienceMode === 'plain-english' ? 'tutor.titlePlain' : 'tutor.title')}
             </h3>
             <span className="text-[11px] text-slate-400 font-medium">
-              {audienceMode === "junior" ? "Ask Chip anything! No question is too silly." : audienceMode === "plain-english" ? "Practical everyday answers without jargon" : "Grounded exclusively in this module"}
+              {t(audienceMode === 'junior' ? 'tutor.subtitleJunior' : audienceMode === 'plain-english' ? 'tutor.subtitlePlain' : 'tutor.subtitle')}
             </span>
           </div>
         </div>
@@ -188,12 +190,12 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
             data-testid="tutor-offline-badge"
             className="text-xs font-semibold px-2.5 py-1 rounded-full bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800"
           >
-            Tutor offline
+            {t('tutor.offline')}
           </span>
         ) : (
           <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-200/60 dark:border-emerald-800">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Online
+            {t('tutor.online')}
           </span>
         )}
       </div>
@@ -206,9 +208,9 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
         >
           <span className="text-base leading-none">⚠️</span>
           <div>
-            <p className="font-semibold mb-0.5">Tutor offline</p>
+            <p className="font-semibold mb-0.5">{t('tutor.offline')}</p>
             <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
-              The AI Teaching Assistant service is currently unavailable or disabled. All other curriculum content remains fully accessible.
+              {t('tutor.offlineBody')}
             </p>
           </div>
         </div>
@@ -251,7 +253,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
                 data-testid="tutor-read-answer-btn"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs font-medium transition-colors"
               >
-                <span>{isReadingAnswer ? '⏹️ Stop Reading' : '🔊 Read Answer Aloud'}</span>
+                <span>{t(isReadingAnswer ? 'tutor.stopReading' : 'tutor.readAloud')}</span>
               </button>
             </div>
           )}
@@ -261,7 +263,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
       {/* Question Form */}
       <form onSubmit={handleSubmit} className="space-y-3">
         <label htmlFor="tutor-question" className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-          Have a question about this lesson?
+          {t('tutor.question')}
         </label>
         <div className="flex flex-col sm:flex-row gap-2.5">
           <div className="relative flex-1">
@@ -272,7 +274,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               disabled={isOffline || loading}
-              placeholder={isOffline ? 'Tutor is offline' : 'e.g. Can you explain the core concepts simply?'}
+              placeholder={t(isOffline ? 'tutor.offlinePlaceholder' : 'tutor.placeholder')}
               maxLength={500}
               className="w-full px-4 py-2.5 pr-11 border border-slate-300 dark:border-slate-400 bg-white dark:bg-white text-slate-900 dark:text-slate-900 placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed transition rounded-xl text-sm font-medium shadow-2xs"
             />
@@ -282,7 +284,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
                 type="button"
                 onClick={toggleSpeechRecognition}
                 data-testid="tutor-mic-btn"
-                title={isListening ? 'Listening... click to stop' : 'Talk to Chip (Voice Input)'}
+                title={t(isListening ? 'tutor.listeningStop' : 'tutor.talk')}
                 className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-colors ${
                   isListening
                     ? 'bg-rose-500 text-white animate-pulse'
@@ -303,24 +305,23 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
             {loading ? (
               <span className="inline-flex items-center gap-1.5">
                 <span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                Thinking...
+                {t('tutor.thinking')}
               </span>
             ) : (
-              <span>Ask Tutor</span>
+              <span>{t('tutor.ask')}</span>
             )}
           </button>
         </div>
         {showMicConsent && (
           <div
             role="alertdialog"
-            aria-label="Microphone permission for a grown-up"
+            aria-label={t('tutor.micLabel')}
             data-testid="mic-consent"
             className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-950 space-y-2"
           >
-            <p className="font-semibold">Grown-up check 🎙️</p>
+            <p className="font-semibold">{t('tutor.micTitle')}</p>
             <p>
-              Voice input uses your browser's speech recognition. Depending on the browser, your voice may be sent to the
-              browser company's servers to turn it into text. This app does not record or save your voice.
+              {t('tutor.micBody')}
             </p>
             <div className="flex gap-2">
               <button
@@ -329,20 +330,20 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
                 data-testid="mic-consent-accept"
                 className="px-3 py-1.5 rounded-lg bg-amber-600 text-white font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
               >
-                I am an adult, turn it on
+                {t('tutor.micAccept')}
               </button>
               <button
                 type="button"
                 onClick={() => setShowMicConsent(false)}
                 className="px-3 py-1.5 rounded-lg font-medium hover:bg-amber-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
               >
-                No thanks
+                {t('tutor.micDecline')}
               </button>
             </div>
           </div>
         )}
         <div className="flex items-center justify-between text-[11px] text-slate-400">
-          <span>{isListening ? '🎙️ Listening to your voice...' : 'Responses include citations: [Lesson Title § Section]'}</span>
+          <span>{t(isListening ? 'tutor.listening' : 'tutor.citations')}</span>
           <span>{question.length}/500</span>
         </div>
       </form>
