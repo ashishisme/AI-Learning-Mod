@@ -1,8 +1,9 @@
 {
   "language": "hi",
+  "note": "Chosen by the owner from a listening test of the hi-IN WaveNet and Neural2 voices, 2026-11-03 (T055). Rate and pitch as heard in the samples.",
   "personas": {
-    "chip": { "voice": "", "speakingRate": 1.0, "pitch": 0 },
-    "nova": { "voice": "", "speakingRate": 1.0, "pitch": 0 },
-    "alan": { "voice": "", "speakingRate": 1.0, "pitch": 0 }
+    "chip": { "voice": "hi-IN-Neural2-A", "speakingRate": 1.0, "pitch": 0 },
+    "nova": { "voice": "hi-IN-Wavenet-D", "speakingRate": 1.0, "pitch": 0 },
+    "alan": { "voice": "hi-IN-Wavenet-C", "speakingRate": 1.0, "pitch": 0 }
   }
 }

@@ -212,7 +212,7 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 
 ### Tests for User Story 2
 
-- [ ] T055 [P] [US2] `[external]` Run a listening test of candidate `hi-IN` voices with `go run ./cmd/narrate -lang hi -cache .narration-cache -only global/chip-mascot-greeting` once T059 exists, one candidate per persona. Record the chosen voices in `content/voices/hi.json`, and recheck current Cloud TTS prices and the 5,000-byte limit (R9).
+- [X] T055 *(2026-11-03: listening test of the 10 hi-IN WaveNet and Neural2 voices. The owner chose Chip hi-IN-Neural2-A, Nova hi-IN-Wavenet-D and Prof. Alan hi-IN-Wavenet-C, recorded in content/voices/hi.json.)* [P] [US2] `[external]` Run a listening test of candidate `hi-IN` voices with `go run ./cmd/narrate -lang hi -cache .narration-cache -only global/chip-mascot-greeting` once T059 exists, one candidate per persona. Record the chosen voices in `content/voices/hi.json`, and recheck current Cloud TTS prices and the 5,000-byte limit (R9).
 - [X] T056 [P] [US2] Create `internal/narration/text_test.go` from the shared fixture `content/fixtures/narration-text.json` (input fields and expected text). It covers heading plus the Chip quote plus body, link stripping, removal of `*_#`~>`, HTML stripping and keeping list numbering, matching `web/src/services/speechService.ts:169-172`.
 - [X] T057 [P] [US2] Create `cmd/narrate/narrate_test.go` with a fake TTS server:
   - Splitting stays under 5,000 bytes at `।`, `.`, `?` and `!` boundaries.
@@ -428,8 +428,8 @@ See spec.md "Clarifications, later session" and plan.md "Implementation decision
 - [X] T082 Run `go run ./cmd/translate -lang hi -record-base`. Then `go run ./cmd/ingest -verify` should list only drafts, plus "no recordings yet" for audio.
 - [ ] T083 Run the full suites (`go vet ./... && go test -race ./...`, and `cd web && npx tsc --noEmit -p . && npx playwright test --project=chromium`). Commit B5 (spec, then code), the docs and the Hindi drafts by explicit path. Ask the owner before pushing.
 - [X] T084 *(2026-11-03: all 20 translated images reviewed. The Hindi Symbolic AI (967d9e64…) and NLP (bee42a76…) sketchnotes carry the Microsoft logo and are now in `brandedImages`, with their Hindi credit line dropped. The other 18 are clean. Third-party framework logos (TensorFlow, PyTorch, Keras, Lightning) are allowed, as in English.)* `[external]` The owner reviews the 20 new translated images in `public-content/assets/*.webp` for Microsoft logos (NFR-LIC-02). Add any offending content hash to `brandedImages` in `internal/ingest/ingest.go`.
-- [ ] T085 `[external]` The owner applies Terraform in Cloud Shell (narration bucket, TTS and Storage APIs) and sets the GitHub variable `GCP_NARRATION_BUCKET` (`automate_deployment.sh` does this).
-- [ ] T086 Voice listening test (T055):
+- [X] T085 *(2026-11-03: applied from the owner's Cloud Shell via `gcloud cloud-shell ssh`, targeting only the narration bucket, its deploy read access and the TTS API (3 added, 0 changed, 0 destroyed). `GCP_NARRATION_BUCKET` is set on staging and staging-promote.)* `[external]` The owner applies Terraform in Cloud Shell (narration bucket, TTS and Storage APIs) and sets the GitHub variable `GCP_NARRATION_BUCKET` (`automate_deployment.sh` does this).
+- [X] T086 *(2026-11-03: 171 recordings (57 tracks x 3 personas), 83,718 characters, 48 MB, synced to gs://ai-learning-513415-ai-foundations-coach-narration/audio. `narrate -check` passes.)* Voice listening test (T055):
   - Run `go run ./cmd/narrate -lang hi -sample <voice>` for a few `hi-IN` WaveNet or Neural2 voices, with `TTS_ACCESS_TOKEN` and `TTS_PROJECT=ai-learning-513415` set.
   - The owner picks one voice per persona, and they go into `content/voices/hi.json`.
   - Then run `narrate -lang hi` and `gcloud storage rsync` to the bucket. Re-record after the reviewer's corrections, because only changed text is recorded again.
