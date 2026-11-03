@@ -161,7 +161,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		registerAdmin(mux, cfg)
 	}
 
-	registerLearnerExtras(mux, cfg)
+	registerLearnerExtras(mux, cfg, langs)
 	registerBudgetPush(mux, cfg)
 
 	// Lets the UI hide controls that do not apply on a hosted deployment (FR-021).

@@ -31,9 +31,9 @@ content/review/<code>.json                                 # committed (ledger)
 
 These have the same JSON shape as the English file of the same name. Translations change only string values in these allowlisted fields:
 
-- **adaptive:** `title`, `intro`, `sections[].heading`, `sections[].chipQuote`, `sections[].analogy.metaphorName`, `sections[].analogy.description`, `sections[].bodyMarkdown`, `miniQuiz.*.question`, `miniQuiz.*.options[]`, `miniQuiz.*.explanation`, `teachBack.*`, and `mascot.*` text fields.
+- **adaptive** (every learner-visible string; the code list is `Translatable` in `internal/i18n/parity.go`): `title`, `mascot.name`, `mascot.greeting`; in `sections[]`: `heading`, `chipQuote`, `bodyMarkdown`, `analogy.metaphorName`, `analogy.description`, `jargonBuster[].term`, `jargonBuster[].simpleExplanation`, `diagram.caption`, `diagram.alt`, `diagram.content`, `diagram.steps[]`, and the `interactiveWidget` texts (`title`, `instruction`, `goal`, `scaffold`, `predictionPrompt`, `successMessage`, `hints[]`, `scenario.userPrompt`, `scenario.terminalA`, `scenario.terminalB`, `scenario.explanation`); `miniQuiz[].question`, `miniQuiz[].options[]`, `miniQuiz[].praise`, `miniQuiz[].explanation`; `teachBack.prompt`, `teachBack.options[]`, `teachBack.explanation`. Never translated: `lessonId`, `mode`, `sections[].id`, every `type`, `mascot.avatar`, `scenario.correctAnswer`, numbers and booleans. (Corrected 2026-11-03 in B2: the first draft named a non-existent `intro` and left out the jargon, diagram and widget text.)
 - **quiz** (per `LessonQuiz` in `web/src/data/quizzes.ts`): `title`, `description`, `questions[].prompt`, `questions[].options[]` (strings), `questions[].rationale`, `questions[].hintKeyword`. Never translated: `lessonId`, `questions[].id`, `correctIndex`.
-- **Never translated:** IDs, `lessonId`, `mode`, numbers, booleans, URLs, code spans and fenced code. A `§` and the text after it in an existing citation is translated only as part of its heading.
+- **Never translated (all kinds):** IDs, `lessonId`, `mode`, numbers, booleans, URLs, code spans and fenced code. A `§` and the text after it in an existing citation is translated only as part of its heading.
 
 ## `web/src/i18n/<code>.json`
 

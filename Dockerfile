@@ -25,6 +25,11 @@ COPY cmd/ ./cmd/
 COPY internal/ ./internal/
 # FR-033: refuse to build an image with missing lessons or damaged or forbidden images.
 COPY public-content ./public-content
+# SPEC-009 FR-017: the language gate compares each translation with its English source and its review
+# ledger. These files are read here only; none of them reaches the runtime image from this stage.
+COPY content ./content
+COPY web/src/i18n ./web/src/i18n
+COPY web/src/data/quizzes ./web/src/data/quizzes
 RUN CONTENT_DIR=public-content go run ./cmd/ingest -verify
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=$TARGETARCH go build -trimpath -ldflags="-w -s" -o /app/server ./cmd/server
 

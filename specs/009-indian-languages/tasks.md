@@ -103,7 +103,7 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 
 ### Tests for User Story 4
 
-- [ ] T025 [P] [US4] Create `internal/feedback/testdata/hi_personal_details.json`, with at least 60 examples across every FR-048 category:
+- [X] T025 [P] [US4] Create `internal/feedback/testdata/hi_personal_details.json`, with at least 60 examples across every FR-048 category:
   - phone numbers in Devanagari, ASCII and mixed digits;
   - Hindi addresses (मकान नं, गली, पिन कोड);
   - Aadhaar and PAN;
@@ -114,15 +114,15 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
   - links.
 
   Also create `internal/feedback/testdata/hi_clean.json`, with at least 60 clean Hindi and Hinglish feedback messages about lessons, including ones with lesson numbers and years that must pass.
-- [ ] T026 [P] [US4] Create `internal/feedback/check_hi_test.go`. Every `hi_personal_details.json` item is rejected with its expected category, and at least 95% of `hi_clean.json` is accepted. The existing English corpus results are unchanged.
-- [ ] T027 [P] [US4] Create `internal/api/testdata/hi_safety.json`, with Hindi and Hinglish examples for each `SafetyCategory`, including self-harm, explicit, violence and personal details. Create `internal/api/safety_hi_test.go`: each example maps to its category, and no clean Hindi lesson question is blocked.
+- [X] T026 [P] [US4] Create `internal/feedback/check_hi_test.go`. Every `hi_personal_details.json` item is rejected with its expected category, and at least 95% of `hi_clean.json` is accepted. The existing English corpus results are unchanged.
+- [X] T027 [P] [US4] Create `internal/api/testdata/hi_safety.json`, with Hindi and Hinglish examples for each `SafetyCategory`, including self-harm, explicit, violence and personal details. Create `internal/api/safety_hi_test.go`: each example maps to its category, and no clean Hindi lesson question is blocked.
 
 ### Implementation for User Story 4
 
-- [ ] T028 [US4] Add Hindi and Hinglish patterns to `internal/feedback/check.go`. Use explicit boundaries `(?:^|[\s\p{P}])…(?:$|[\s\p{P}])` rather than `\b`, which in Go RE2 is ASCII-only (R13). Keep `normalizeForCheck` digit folding. Make T026 pass.
-- [ ] T029 [US4] Add Hindi and Hinglish patterns to each category in `internal/api/safety.go` with the same boundary rule, so T027 passes. `normalizeForScreening` must keep Devanagari letters and fold digits.
-- [ ] T030 [US4] Add `internal/i18n/messages.go` with per-language feedback rejection messages (one per category, never echoing text) and safety replies, for `en` and `hi`. Use `en` when `lang` isn't approved. Accept an optional allowlisted `lang` field on `POST /api/feedback` in its handler under `internal/api/`, use it only for the reply language, and extend that handler's tests.
-- [ ] T031 [US4] Send `lang` from `web/src/components/FeedbackDialog.tsx`, and show the localised rejection message it returns
+- [X] T028 [US4] Add Hindi and Hinglish patterns to `internal/feedback/check.go`. Use explicit boundaries `(?:^|[\s\p{P}])…(?:$|[\s\p{P}])` rather than `\b`, which in Go RE2 is ASCII-only (R13). Keep `normalizeForCheck` digit folding. Make T026 pass.
+- [X] T029 [US4] Add Hindi and Hinglish patterns to each category in `internal/api/safety.go` with the same boundary rule, so T027 passes. `normalizeForScreening` must keep Devanagari letters and fold digits.
+- [X] T030 [US4] Add `internal/i18n/messages.go` with per-language feedback rejection messages (one per category, never echoing text) and safety replies, for `en` and `hi`. Use `en` when `lang` isn't approved. Accept an optional allowlisted `lang` field on `POST /api/feedback` in its handler under `internal/api/`, use it only for the reply language, and extend that handler's tests.
+- [X] T031 [US4] Send `lang` from `web/src/components/FeedbackDialog.tsx`, and show the localised rejection message it returns
 
 **Checkpoint**: The safety rules work for Hindi. Hindi is still hidden.
 
@@ -136,14 +136,14 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 
 ### Tests for User Story 5
 
-- [ ] T032 [P] [US5] Create `internal/ingest/ingest_lang_test.go` with a fake upstream (an `httptest` server for the tree and raw files). Ingest with `lang=hi` writes `public-content/lang/hi/index.json` and `lang/hi/lessons/<id>.json` from `translations/hi/lessons/<folder>/README.md`. It resolves `../../../../translated_images/hi/<name>.webp` into the shared asset store with `image/webp`, uses the English image when a translated one is missing (FR-006), and skips missing translated lessons with a log line.
-- [ ] T033 [P] [US5] Create `internal/i18n/ledger_test.go` covering states `draft` → `approved` and `stale` when `sourceHash` or `translationHash` changes. A missing entry for any English file of an approved language is reported. Status values are exactly `draft` | `approved`, and kinds are exactly `base` | `adaptive` | `quiz` | `ui`.
-- [ ] T034 [P] [US5] Create `internal/i18n/parity_test.go`. A UI catalogue missing a key, a quiz missing a question or option, or an adaptive lesson missing an allowlisted field is reported. So is a translation that changes an ID, URL, code span, fenced code or the number of `§` citations. A plural set may differ in categories only per `Intl` rules.
-- [ ] T035 [P] [US5] Create `cmd/ingest/verify_lang_test.go`:
+- [X] T032 [P] [US5] Create `internal/ingest/ingest_lang_test.go` with a fake upstream (an `httptest` server for the tree and raw files). Ingest with `lang=hi` writes `public-content/lang/hi/index.json` and `lang/hi/lessons/<id>.json` from `translations/hi/lessons/<folder>/README.md`. It resolves `../../../../translated_images/hi/<name>.webp` into the shared asset store with `image/webp`, uses the English image when a translated one is missing (FR-006), and skips missing translated lessons with a log line.
+- [X] T033 [P] [US5] Create `internal/i18n/ledger_test.go` covering states `draft` → `approved` and `stale` when `sourceHash` or `translationHash` changes. A missing entry for any English file of an approved language is reported. Status values are exactly `draft` | `approved`, and kinds are exactly `base` | `adaptive` | `quiz` | `ui`.
+- [X] T034 [P] [US5] Create `internal/i18n/parity_test.go`. A UI catalogue missing a key, a quiz missing a question or option, or an adaptive lesson missing an allowlisted field is reported. So is a translation that changes an ID, URL, code span, fenced code or the number of `§` citations. A plural set may differ in categories only per `Intl` rules.
+- [X] T035 [P] [US5] Create `cmd/ingest/verify_lang_test.go`:
   - **Approved:** `-verify` exits 1 for an approved language with a draft, stale or missing entry or a parity failure. It prints one `LANG PATH: reason` line each.
   - **Hidden:** it exits 0 and prints the same lines as warnings.
   - **No Hindi:** the English-only checks are unchanged.
-- [ ] T036 [P] [US5] Create `cmd/translate/translate_test.go` with a fake OpenAI-compatible server:
+- [X] T036 [P] [US5] Create `cmd/translate/translate_test.go` with a fake OpenAI-compatible server:
   - Only allowlisted fields are sent.
   - Glossary terms appear in the prompt.
   - A response that breaks the Markdown structure is rejected and nothing is written.
@@ -153,11 +153,11 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 
 ### Implementation for User Story 5
 
-- [ ] T037 [US5] Add the language pass in `internal/ingest/ingest.go`: walk `translations/<lang>/lessons/*` at the pinned SHA, resolve repo-root `translated_images/<lang>/` and `.webp`, and write under `lang/<code>/`. Add the `-lang` flag in `cmd/ingest/main.go`; with no flag, run every language in `languages.json`. Make T032 pass, and keep FR-ING-02's English behaviour unchanged.
-- [ ] T038 [US5] Implement `internal/i18n/ledger.go`: load `content/review/<code>.json`, SHA-256 hex hashes, and the `Check(contentRoot, code) []Problem` function that T033 tests
-- [ ] T039 [US5] Implement `internal/i18n/parity.go` with the field allowlists from contracts/content-files.md (adaptive, quiz, ui) and the preservation checks, so T034 passes
-- [ ] T040 [US5] Wire ledger and parity into `go run ./cmd/ingest -verify` in `cmd/ingest/main.go`. Approved problems fail and hidden ones warn, so T035 passes. The Dockerfile already runs `ingest -verify`, so no Dockerfile change is needed.
-- [ ] T041 [US5] Implement `cmd/translate/main.go` per contracts/cli.md:
+- [X] T037 [US5] Add the language pass in `internal/ingest/ingest.go`: walk `translations/<lang>/lessons/*` at the pinned SHA, resolve repo-root `translated_images/<lang>/` and `.webp`, and write under `lang/<code>/`. Add the `-lang` flag in `cmd/ingest/main.go`; with no flag, run every language in `languages.json`. Make T032 pass, and keep FR-ING-02's English behaviour unchanged.
+- [X] T038 [US5] Implement `internal/i18n/ledger.go`: load `content/review/<code>.json`, SHA-256 hex hashes, and the `Check(contentRoot, code) []Problem` function that T033 tests
+- [X] T039 [US5] Implement `internal/i18n/parity.go` with the field allowlists from contracts/content-files.md (adaptive, quiz, ui) and the preservation checks, so T034 passes
+- [X] T040 [US5] Wire ledger and parity into `go run ./cmd/ingest -verify` in `cmd/ingest/main.go`. Approved problems fail and hidden ones warn, so T035 passes. The Dockerfile already runs `ingest -verify`, so no Dockerfile change is needed. *(2026-11-03: it was needed after all. The build stage now copies `content/`, `web/src/i18n` and `web/src/data/quizzes`, which the gate reads.)*
+- [X] T041 [US5] Implement `cmd/translate/main.go` per contracts/cli.md:
   - flags `-lang`, `-kind adaptive|quiz|ui|all`, `-only`, `-force` and `-dry-run`;
   - environment `TRANSLATE_BASE_URL`, `TRANSLATE_API_KEY` and `TRANSLATE_MODEL`;
   - uses `go-openai`;
@@ -165,7 +165,7 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
   - upserts `draft` ledger entries.
 
   Make T036 pass. Document in `README.md` that it runs only on the owner's machine and that the key is never put in CI, Terraform or the image (FR-021).
-- [ ] T042 [US5] Amend `spec/SPEC.md`: FR-ING-02 now allows `translations/<lang>/` for languages in `languages.json` (marked "amended by SPEC-009, 2026-11-03"), and FR-I18N-04 adds the review ledger and release gate. Add AC-48 to `spec/ACCEPTANCE.md`, pointing at `cmd/ingest/verify_lang_test.go`, `internal/i18n/ledger_test.go` and `internal/feedback/check_hi_test.go`.
+- [X] T042 [US5] Amend `spec/SPEC.md`: FR-ING-02 now allows `translations/<lang>/` for languages in `languages.json` (marked "amended by SPEC-009, 2026-11-03"), and FR-I18N-04 adds the review ledger and release gate. Add AC-48 to `spec/ACCEPTANCE.md`, pointing at `cmd/ingest/verify_lang_test.go`, `internal/i18n/ledger_test.go` and `internal/feedback/check_hi_test.go`.
 - [ ] T043 [US5] Release B2. Run `go run ./cmd/ingest -lang hi` and `go run ./cmd/translate -lang hi -dry-run` locally to confirm both run cleanly, then the full suites. Commit, open a PR and merge, then tag `v0.2.1`. Confirm the live `/api/runtime.languages` is still `[en]` (Hindi hidden).
 
 **Checkpoint**: B2 is live. The Hindi pipeline and safety rules are in production, with Hindi still hidden.

@@ -1,13 +1,18 @@
 // SPEC: FR-ING-01, FR-ING-02, FR-ING-03, FR-ING-04, FR-ING-05, FR-ING-06, FR-ING-07, FR-ING-08, NFR-SEC-09, DC-03, DC-07
+// SPEC-009: FR-005 (-lang), FR-017..FR-019 (the language release gate in -verify)
 package main
 
 import (
-	"flag"
 	"context"
+	"flag"
+	"fmt"
+	"io"
 	"log/slog"
 	"os"
+	"path/filepath"
 	"strings"
 
+	"ai-foundations-coach/internal/i18n"
 	"ai-foundations-coach/internal/ingest"
 )
 
@@ -18,7 +23,7 @@ type Lesson = ingest.Lesson
 type LessonIndex = ingest.LessonIndex
 
 var (
-	Run            = func(ctx context.Context, cfg Config) error {
+	Run = func(ctx context.Context, cfg Config) error {
 		_, _, err := ingest.Run(ctx, cfg)
 		return err
 	}
@@ -26,19 +31,16 @@ var (
 )
 
 func main() {
-	verify := flag.Bool("verify", false, "check that the content directory is complete and self-contained, then exit")
+	verifyOnly := flag.Bool("verify", false, "check that the content directory is complete and self-contained, then exit")
+	lang := flag.String("lang", "", "ingest only this language from languages.json, for example hi")
 	flag.Parse()
-	if *verify {
-		dir := os.Getenv("CONTENT_DIR")
-		if strings.TrimSpace(dir) == "" {
-			dir = "public-content"
-		}
-		if err := ingest.VerifyContent(dir); err != nil {
-			slog.Error("Content check failed", "error", err.Error())
-			os.Exit(1)
-		}
-		slog.Info("Content check passed", "contentDir", dir)
-		return
+
+	contentDir := os.Getenv("CONTENT_DIR")
+	if strings.TrimSpace(contentDir) == "" {
+		contentDir = "public-content"
+	}
+	if *verifyOnly {
+		os.Exit(verify(contentDir, os.Stderr))
 	}
 
 	token := os.Getenv("GITHUB_TOKEN")
@@ -47,22 +49,71 @@ func main() {
 		os.Exit(1)
 	}
 
-	contentDir := os.Getenv("CONTENT_DIR")
-	if strings.TrimSpace(contentDir) == "" {
-		contentDir = "public-content"
+	langs, err := i18n.Load(contentDir)
+	if err != nil {
+		slog.Error("Language list is invalid", "error", err.Error())
+		os.Exit(2)
 	}
-
 	cfg := Config{
 		GitHubToken: token,
 		ContentDir:  contentDir,
 		PinnedSHA:   strings.TrimSpace(os.Getenv("INGEST_PINNED_SHA")),
 	}
+	// Every listed language is ingested, hidden or approved, so a reviewer can work on it.
+	for _, l := range langs.All() {
+		if l.Code != i18n.English.Code && (*lang == "" || *lang == l.Code) {
+			cfg.Languages = append(cfg.Languages, l.Code)
+		}
+	}
+	if *lang != "" {
+		if len(cfg.Languages) == 0 {
+			slog.Error("Language is not in languages.json", "lang", *lang)
+			os.Exit(2)
+		}
+		cfg.SkipEnglish = true
+	}
 
-	ctx := context.Background()
-	sha, count, err := ingest.Run(ctx, cfg)
+	sha, count, err := ingest.Run(context.Background(), cfg)
 	if err != nil {
 		slog.Error("Ingestion failed", "error", err.Error())
 		os.Exit(1)
 	}
-	slog.Info("Ingestion completed successfully", "contentDir", contentDir, "commitSha", sha, "lessonsCount", count)
+	slog.Info("Ingestion completed successfully", "contentDir", contentDir, "commitSha", sha, "lessonsCount", count, "languages", cfg.Languages)
+}
+
+// verify is the release gate. The English content checks come first (FR-033). Then each listed
+// language is checked against its review ledger and English (SPEC-009 FR-017..FR-019): a problem in
+// an approved language fails the build, and one in a hidden language is only a warning, so drafts
+// can ship hidden. It prints one "LANG PATH: reason" line per problem and returns the exit code.
+func verify(contentDir string, out io.Writer) int {
+	if err := ingest.VerifyContent(contentDir); err != nil {
+		slog.Error("Content check failed", "error", err.Error())
+		return 1
+	}
+	langs, err := i18n.Load(contentDir)
+	if err != nil {
+		slog.Error("Language list is invalid", "error", err.Error())
+		return 1
+	}
+	root := filepath.Dir(filepath.Clean(contentDir)) // public-content sits at the repository root
+	code := 0
+	for _, l := range langs.All() {
+		if l.Code == i18n.English.Code {
+			continue
+		}
+		prefix := "warning: "
+		if l.Status == i18n.StatusApproved {
+			prefix = ""
+		}
+		for _, p := range i18n.Check(root, l.Code) {
+			fmt.Fprintf(out, "%s%s %s: %s\n", prefix, l.Code, p.Path, p.Reason)
+			if prefix == "" {
+				code = 1
+			}
+		}
+	}
+	if code == 0 {
+		slog.Info("Content check passed", "contentDir", contentDir)
+	}
+	return code
 }

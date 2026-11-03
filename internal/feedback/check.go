@@ -4,6 +4,8 @@ package feedback
 import (
 	"regexp"
 	"strings"
+
+	"ai-foundations-coach/internal/i18n"
 )
 
 // Kinds of personal detail the rule check reports. The matched text itself is never returned.
@@ -43,18 +45,65 @@ var (
 	datePart = `(?:\d{1,2}(?:st|nd|rd|th)?[\s/\-.]+(?:\d{1,2}|` + monthName + `)(?:[\s/\-.,]+\d{2,4})?|` + monthName + `\s+\d{1,2}(?:st|nd|rd|th)?(?:[\s,]+\d{2,4})?|\d{4}[\-/.]\d{1,2}[\-/.]\d{1,2})`
 	dobRe    = regexp.MustCompile(`\b(?:my birthday|my birth\s?date|my date of birth|date of birth|my dob|dob|born on|i was born)\b(?:\s*(?:is|was|:|-|on|in))*\s*(?:` + datePart + `|\d{4}\b)`)
 
-	digitTokenRe = regexp.MustCompile(`[a-z]+|\d+`)
+	digitTokenRe = regexp.MustCompile(`[a-z]+|\d+|\p{Devanagari}+`)
 
-	numberWords = map[string]int{"zero": 1, "oh": 1, "one": 1, "two": 1, "three": 1, "four": 1, "five": 1, "six": 1, "seven": 1, "eight": 1, "nine": 1}
+	numberWords = map[string]int{"zero": 1, "oh": 1, "one": 1, "two": 1, "three": 1, "four": 1, "five": 1, "six": 1, "seven": 1, "eight": 1, "nine": 1,
+		// Hindi and Hinglish. "do" (two) is left out: it is also an English word.
+		"शून्य": 1, "एक": 1, "दो": 1, "तीन": 1, "चार": 1, "पांच": 1, "छह": 1, "छः": 1, "सात": 1, "आठ": 1, "नौ": 1,
+		"shunya": 1, "ek": 1, "teen": 1, "chaar": 1, "char": 1, "paanch": 1, "panch": 1, "chhe": 1, "chhah": 1, "saat": 1, "aath": 1, "nau": 1}
 	repeatWords = map[string]int{"double": 2, "triple": 3}
+)
+
+// Hindi and Hinglish rules (SPEC-009 FR-022). RE2's \b only knows ASCII word characters, so rules
+// that start or end on Devanagari use hiStart and hiEnd as their boundaries (research R13).
+// Text has been through normalizeForCheck, so nukta and chandrabindu spellings are already folded.
+const (
+	hiStart = `(?:^|[\s\p{P}])`
+	hiEnd   = `(?:$|[\s\p{P}])`
+	hiMonth = `(?:जनवरी|फरवरी|मार्च|अप्रैल|अप्रेल|मई|जून|जुलाई|अगस्त|सितंबर|सितम्बर|अक्टूबर|अक्तूबर|नवंबर|नवम्बर|दिसंबर|दिसम्बर)`
+	hiDate  = `(?:\d{1,2}[\s/\-.]+(?:\d{1,2}|` + hiMonth + `|` + monthName + `)(?:[\s/\-.,]+\d{2,4})?|` + hiMonth + `\s+\d{1,2}|\d{4}[\-/.]\d{1,2}[\-/.]\d{1,2}|\d{4})`
+	hiApps  = `(?:इंस्टा|इंस्टाग्राम|स्नैपचैट|स्नैप|टेलीग्राम|व्हाट्सएप|व्हाट्सऐप|फेसबुक|यूट्यूब)`
+	enApps  = `(?:insta(?:gram)?|snap(?:chat)?|telegram|whatsapp|facebook|fb|youtube|yt|discord)`
+)
+
+var (
+	// "आशा@gmail.com", and "आशा एट जीमेल डॉट कॉम"
+	hiEmailRe = regexp.MustCompile(`[^\s@]+@[a-z0-9\-]+(?:\.[a-z0-9\-]+)*\.[a-z]{2,}|` +
+		hiStart + `\S+\s+(?:एट|ऐट)\s+\S+\s+(?:डॉट|डोट)\s+(?:कॉम|इन|ऑर्ग|नेट|com|in|org|net)` + hiEnd)
+
+	hiLinkRe = regexp.MustCompile(hiStart + `डॉट\s*(?:कॉम|इन|ऑर्ग|नेट)` + hiEnd + `|` +
+		// "मेरा इंस्टा", "व्हाट्सएप पर मैसेज करो", "mera insta", "snapchat pe add karo"
+		hiStart + `(?:(?:मेरा|मेरी|मेरे)\s+` + hiApps + `|` + hiApps + `\s+(?:पर|पे)\s+(?:मुझे\s+)?(?:फॉलो|ऐड|एड|मैसेज|जोड))|` +
+		`\b(?:mera|meri|mere)\s+` + enApps + `\b|\b` + enApps + `\s+(?:pe|par)\s+(?:mujhe\s+)?(?:follow|add|message|msg|dm|text)\b`)
+
+	// "मकान नं. 27", "गली नंबर 4", "सेक्टर 9", "makaan no 15". घर and गली need a number word,
+	// so "गली क्रिकेट" and "घर 2 बजे" pass.
+	hiPremisesRe = regexp.MustCompile(hiStart + `(?:(?:मकान|फ्लैट|प्लॉट|प्लाट|सेक्टर|वार्ड)\s*(?:नं\.?|नंबर|संख्या|क्रमांक)?|(?:घर|गली)\s*(?:नं\.?|नंबर|संख्या))\s*[:\-]?\s*\d+|` +
+		`\b(?:(?:makaan|makan)\s*(?:no\.?|number|nambar)?|(?:ghar|gali|galli)\s*(?:no\.?|number|nambar))\s*[:\-]?\s*\d+`)
+	hiPostcodeRe = regexp.MustCompile(hiStart + `(?:पिन\s?कोड|पिनकोड|पिन|जिप\s?कोड|जिप)\s*(?:है|:|-)?\s*\d{5,6}\b|\b(?:pin\s?code|pincode|pin|zip)\s*(?:hai|:|-)\s*\d{5,6}\b`)
+	// "मेरा पता", "घर का पता", "mera address". A bare पता also means "know" ("मुझे नहीं पता"), so it needs an owner.
+	hiStatedAddr = regexp.MustCompile(hiStart + `(?:(?:मेरा|हमारा)\s+पता|घर\s+का\s+पता)` + hiEnd + `|\b(?:mera|hamara)\s+(?:pata|address)\b|\bghar\s+ka\s+(?:pata|address)\b`)
+	// "45 शांति नगर": a number, one or two words, then a street word, as streetRe.
+	hiStreetRe = regexp.MustCompile(`\d+[a-z]?(?:[\s,/\-]+[\p{Devanagari}a-z.']+){1,2}[\s,]+(?:रोड|मार्ग|नगर|कॉलोनी|कालोनी|गली|मोहल्ला|विहार|एन्क्लेव|अपार्टमेंट|लेन|स्ट्रीट|चौक)` + hiEnd)
+
+	// A date after "मेरा जन्मदिन", "जन्म तिथि" or "mera birthday", or "मैं 2014 में पैदा हुआ".
+	// Someone else's birth ("ट्यूरिंग का जन्म 1912 में") passes, as in English.
+	hiDobRe = regexp.MustCompile(hiStart + `(?:(?:मेरा|मेरी|मेरे)\s+(?:जन्मदिन|जन्म\s?दिन|जन्म\s?तिथि|जन्म|बर्थडे|बर्थ\s?डे|डेट\s+ऑफ\s+बर्थ)|जन्म\s?तिथि|डीओबी)(?:\s*(?:है|था|थी|हुआ|हुई|का|की|को|तारीख|:|-))*\s*` + hiDate + `|` +
+		hiStart + `मैं\s+` + hiDate + `\s+(?:में|को)\s+पैदा|` +
+		`\b(?:mera|meri|mere)\s+(?:birthday|bday|janamdin|janmdin|janam\s?din|dob|date of birth|janm\s?tithi|janam)\b(?:\s*(?:hai|tha|thi|ko|ka|ki|is|:|-))*\s*(?:` + datePart + `|\d{4}\b)|` +
+		`\bmain\s+(?:` + datePart + `|\d{4})\s+(?:mein|me|main|ko)\s+paida\b`)
 )
 
 // Other scripts' digits an Indian learner may type, by the code point of their zero.
 var digitZeros = []rune{0x0660, 0x06F0, 0x0966, 0x09E6, 0x0A66, 0x0AE6, 0x0B66, 0x0BE6, 0x0C66, 0x0CE6, 0x0D66, 0xFF10}
 
-// normalizeForCheck lower-cases, removes invisible characters and turns other digits into ASCII.
+// normalizeForCheck lower-cases, removes invisible characters, turns other digits into ASCII and
+// folds Devanagari spelling variants.
 func normalizeForCheck(s string) string {
 	return strings.ToLower(strings.Map(func(r rune) rune {
+		if f := i18n.FoldDevanagari(r); f != r {
+			return f
+		}
 		switch r {
 		case 0x200B, 0x200C, 0x200D, 0x2060, 0xFEFF, 0x00AD:
 			return -1
@@ -167,13 +216,14 @@ func Check(message string) (kind string, found bool) {
 	s := normalizeForCheck(message)
 	squeezed := strings.Join(strings.Fields(s), "") // "a . b @ g m a i l . c o m"
 	switch {
-	case emailRe.MatchString(s), emailRe.MatchString(squeezed), spokenEmailRe.MatchString(s):
+	case emailRe.MatchString(s), emailRe.MatchString(squeezed), spokenEmailRe.MatchString(s), hiEmailRe.MatchString(s):
 		return KindEmail, true
-	case dobRe.MatchString(s):
+	case dobRe.MatchString(s), hiDobRe.MatchString(s):
 		return KindDateOfBirth, true
-	case linkRe.MatchString(s), handleRe.MatchString(s):
+	case linkRe.MatchString(s), handleRe.MatchString(s), hiLinkRe.MatchString(s):
 		return KindLink, true
-	case streetRe.MatchString(s), premisesRe.MatchString(s), postcodeRe.MatchString(s), statedAddr.MatchString(s):
+	case streetRe.MatchString(s), premisesRe.MatchString(s), postcodeRe.MatchString(s), statedAddr.MatchString(s),
+		hiPremisesRe.MatchString(s), hiPostcodeRe.MatchString(s), hiStatedAddr.MatchString(s), hiStreetRe.MatchString(s):
 		return KindAddress, true
 	case panRe.MatchString(s):
 		return KindIDNumber, true

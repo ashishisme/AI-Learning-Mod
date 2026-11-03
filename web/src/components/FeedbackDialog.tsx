@@ -3,10 +3,11 @@ import { useLocation } from 'react-router-dom'
 import { ApiError } from '../api'
 import { useAudienceModeStore } from '../store'
 import pkg from '../../package.json'
-import { useT } from '../i18n'
+import { useLanguage, useT } from '../i18n'
 
 export const FeedbackDialog: React.FC<{ close: () => void }> = ({ close }) => {
   const t = useT()
+  const { code: lang } = useLanguage()
   const [rating, setRating] = useState(0)
   const [category, setCategory] = useState('content')
   const [message, setMessage] = useState('')
@@ -35,7 +36,7 @@ export const FeedbackDialog: React.FC<{ close: () => void }> = ({ close }) => {
     if (!rating || busy) return
     setBusy(true); setNotice('')
     try {
-      const response = await fetch('/api/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ rating, category, message, lessonId, mode, appVersion: pkg.version }) })
+      const response = await fetch('/api/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ rating, category, message, lessonId, mode, appVersion: pkg.version, lang }) })
       if (!response.ok) {
         const body = await response.json().catch(() => ({}))
         throw new ApiError(response.status, body.error || t('feedback.sendFailedShort'), body)
@@ -44,6 +45,9 @@ export const FeedbackDialog: React.FC<{ close: () => void }> = ({ close }) => {
       setMessage('')
     } catch (error) {
       if (error instanceof ApiError && error.code === 'pii_detected') {
+        // The server writes the rejection in the learner's language (SPEC-009 FR-022). English keeps the
+        // client's own wording, which names the kind.
+        if (lang !== 'en' && error.message) { setNotice(error.message); return }
         const kind = String((error.data as { kind?: string } | undefined)?.kind || t('feedback.piiDefault')).replace(/_/g, ' ')
         setNotice(t('feedback.pii', { kind }))
       } else if (error instanceof ApiError && error.code === 'feedback_limit') {

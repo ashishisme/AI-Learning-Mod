@@ -58,3 +58,26 @@ test('learner sees the hourly feedback limit without losing the draft', async ({
   await expect(page.getByRole('status')).toContainText('try again later')
   await expect(page.getByRole('textbox', { name: 'Message (optional)' })).toHaveValue('Please add more quizzes')
 })
+
+// SPEC-009 FR-022: the learner's language goes with the feedback, and a non-English rejection is
+// the server's own localised text.
+test('feedback sends the language and shows the localised rejection', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('ai-foundations-language', JSON.stringify({ state: { code: 'hi' }, version: 0 })))
+  await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, authRequired: true, tutorEnabled: false, feedbackEnabled: true,
+    languages: [{ code: 'en', name: 'English', speechLang: 'en-US' }, { code: 'hi', name: 'हिन्दी', speechLang: 'hi-IN' }] } }))
+  await page.route('**/api/auth/session', (r) => r.fulfill({ json: session }))
+  await page.route('**/api/lessons**', (r) => r.fulfill({ json: { commitSha: '', lessons: [] } }))
+  let sent: Record<string, unknown> = {}
+  await page.route('**/api/feedback', (r) => {
+    sent = r.request().postDataJSON()
+    return r.fulfill({ status: 422, json: { code: 'pii_detected', kind: 'phone', error: 'कृपया निजी जानकारी (फ़ोन नंबर) हटाकर फिर से भेजें।' } })
+  })
+  await page.goto('/')
+  // No Hindi catalogue ships before B3, so the labels are still English here.
+  await page.getByRole('button', { name: 'Feedback' }).click()
+  await page.getByRole('radio', { name: '4' }).check()
+  await page.getByRole('dialog').getByRole('textbox').fill('मेरा नंबर ९८७६५४३२१० है')
+  await page.locator('form button[type="submit"]').click()
+  await expect(page.getByRole('status')).toContainText('कृपया निजी जानकारी (फ़ोन नंबर)')
+  expect(sent.lang).toBe('hi')
+})

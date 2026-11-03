@@ -44,6 +44,10 @@ type Config struct {
 	BaseURL     string // optional override for testing
 	RawBaseURL  string // optional override for testing
 	PinnedSHA   string // upstream commit to ingest, so a release is reproducible (NFR-LIC-03); empty means current main
+	// Languages lists the translations to ingest from translations/<code>/ (SPEC-009 FR-005). SkipEnglish
+	// leaves the English lessons alone, for a run of one language (`ingest -lang hi`).
+	Languages   []string
+	SkipEnglish bool
 	Client      *http.Client
 }
 
@@ -68,7 +72,10 @@ type Block struct {
 
 type Lesson struct {
 	LessonMeta
-	Blocks []Block `json:"blocks"`
+	// SourceHash is the SHA-256 of the upstream README a translated lesson was made from, so the review
+	// ledger can tell when upstream changed (SPEC-009 FR-019). English lessons leave it out.
+	SourceHash string  `json:"sourceHash,omitempty"`
+	Blocks     []Block `json:"blocks"`
 }
 
 type LessonIndex struct {
@@ -143,14 +150,16 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 		notebooks  []string
 	}
 	matches := make(map[string]*matchItem)
+	inTree := make(map[string]bool, len(tree.Entries))
 
 	for _, entry := range tree.Entries {
 		if entry.Path == nil {
 			continue
 		}
 		p := *entry.Path
+		inTree[p] = true
 
-		// Exclude translations (FR-ING-02)
+		// Translations are read by the language pass, not as English lessons (FR-ING-02, amended by SPEC-009)
 		if strings.HasPrefix(p, "translations/") {
 			continue
 		}
@@ -179,12 +188,6 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 	}
 
 	// Sort folders naturally / by lesson number
-	type lessonCandidate struct {
-		folder     string
-		readmePath string
-		num        int
-		notebooks  []string
-	}
 	var candidates []lessonCandidate
 	for folder, item := range matches {
 		num := 9999
@@ -206,16 +209,41 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 		return candidates[i].folder < candidates[j].folder
 	})
 
-	var lessons []LessonMeta
 	rawHost := "https://raw.githubusercontent.com"
 	if cfg.RawBaseURL != "" {
 		rawHost = strings.TrimRight(cfg.RawBaseURL, "/")
 	}
 
+	count := 0
+	if !cfg.SkipEnglish {
+		if count, err = writeEnglish(ctx, cfg, client, rawHost, pinnedSHA, candidates); err != nil {
+			return "", 0, err
+		}
+	}
+	// SPEC-009 FR-005: each language is a separate pass, so a failed one never leaves English half-written.
+	for _, code := range cfg.Languages {
+		if err := writeLanguage(ctx, cfg, client, rawHost, pinnedSHA, code, candidates, inTree); err != nil {
+			return "", 0, fmt.Errorf("language %s: %w", code, err)
+		}
+	}
+	return pinnedSHA, count, nil
+}
+
+type lessonCandidate struct {
+	folder     string
+	readmePath string
+	num        int
+	notebooks  []string
+}
+
+// writeEnglish writes the English lessons, images and index (FR-ING-02..FR-ING-08).
+func writeEnglish(ctx context.Context, cfg Config, client *http.Client, rawHost, pinnedSHA string, candidates []lessonCandidate) (int, error) {
+	var lessons []LessonMeta
+
 	// Ensure output directories exist
 	lessonsDir := filepath.Join(cfg.ContentDir, "lessons")
 	if err := os.MkdirAll(lessonsDir, 0755); err != nil {
-		return "", 0, fmt.Errorf("failed to create lessons directory: %w", err)
+		return 0, fmt.Errorf("failed to create lessons directory: %w", err)
 	}
 
 	// Lessons are held in memory until every fetch has succeeded, so a failed or
@@ -229,28 +257,13 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 	images := &imageBundle{client: client, rawHost: rawHost, byURL: map[string]string{}, files: map[string][]byte{}}
 
 	for order, cand := range candidates {
-		// FR-ING-03: Derivations
-		// id = lowercase folder segment (valid identifier)
-		id := strings.ToLower(cand.folder)
-		regID := regexp.MustCompile(`^[a-z0-9][a-z0-9_-]{0,63}$`)
-		if !regID.MatchString(id) {
-			id = regexp.MustCompile(`[^a-z0-9_-]`).ReplaceAllString(id, "-")
-		}
-
-		// module derivation: second and third hyphen segments
-		parts := strings.Split(cand.folder, "-")
-		module := "general"
-		if len(parts) >= 3 {
-			module = strings.ToLower(parts[1] + "-" + parts[2])
-		} else if len(parts) >= 2 {
-			module = strings.ToLower(parts[1])
-		}
+		id, module := lessonID(cand.folder), lessonModule(cand.folder)
 
 		// Fetch raw Markdown (FR-ING-02)
 		rawURL := fmt.Sprintf("%s/%s/%s/%s/%s", rawHost, RepoOwner, RepoName, pinnedSHA, cand.readmePath)
 		rawMD, err := FetchWithRetry(ctx, client, rawURL)
 		if err != nil {
-			return "", 0, fmt.Errorf("failed to fetch %s: %w", rawURL, err)
+			return 0, fmt.Errorf("failed to fetch %s: %w", rawURL, err)
 		}
 
 		// FR-ING-06: strip javascript: href/src
@@ -263,18 +276,13 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 		// FR-033: images ship with the release and are served from the app's own origin.
 		cleanMD, err = images.bundle(ctx, cleanMD)
 		if err != nil {
-			return "", 0, fmt.Errorf("lesson %s: %w", id, err)
+			return 0, fmt.Errorf("lesson %s: %w", id, err)
 		}
 
 		// FR-ING-03: title = first # heading, else title-cased id
 		title := ExtractTitle(cleanMD, id)
 
-		// Colab URL derivation if notebook exists
-		colabURL := ""
-		if len(cand.notebooks) > 0 {
-			sort.Strings(cand.notebooks)
-			colabURL = fmt.Sprintf("https://colab.research.google.com/github/%s/%s/blob/main/%s", RepoOwner, RepoName, cand.notebooks[0])
-		}
+		colabURL := colabURLFor(cand.notebooks)
 
 		meta := LessonMeta{
 			ID:        id,
@@ -301,7 +309,7 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 		lessonFile := filepath.Join(lessonsDir, id+".json")
 		data, err := json.MarshalIndent(lessonObj, "", "  ")
 		if err != nil {
-			return "", 0, fmt.Errorf("failed to marshal lesson %s: %w", id, err)
+			return 0, fmt.Errorf("failed to marshal lesson %s: %w", id, err)
 		}
 		pending = append(pending, pendingFile{id: id, path: lessonFile, data: data})
 
@@ -311,18 +319,18 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 	if len(images.files) > 0 {
 		assetsDir := filepath.Join(cfg.ContentDir, AssetDir)
 		if err := os.MkdirAll(assetsDir, 0755); err != nil {
-			return "", 0, fmt.Errorf("failed to create assets directory: %w", err)
+			return 0, fmt.Errorf("failed to create assets directory: %w", err)
 		}
 		for name, data := range images.files {
 			if err := writeFileAtomic(filepath.Join(assetsDir, name), data); err != nil {
-				return "", 0, fmt.Errorf("failed to write image %s: %w", name, err)
+				return 0, fmt.Errorf("failed to write image %s: %w", name, err)
 			}
 		}
 	}
 
 	for _, f := range pending {
 		if err := writeFileAtomic(f.path, f.data); err != nil {
-			return "", 0, fmt.Errorf("failed to write lesson %s: %w", f.id, err)
+			return 0, fmt.Errorf("failed to write lesson %s: %w", f.id, err)
 		}
 	}
 
@@ -333,14 +341,14 @@ func Run(ctx context.Context, cfg Config) (string, int, error) {
 	}
 	indexData, err := json.MarshalIndent(indexObj, "", "  ")
 	if err != nil {
-		return "", 0, fmt.Errorf("failed to marshal index: %w", err)
+		return 0, fmt.Errorf("failed to marshal index: %w", err)
 	}
 	indexFile := filepath.Join(cfg.ContentDir, "index.json")
 	if err := writeFileAtomic(indexFile, indexData); err != nil {
-		return "", 0, fmt.Errorf("failed to write index file: %w", err)
+		return 0, fmt.Errorf("failed to write index file: %w", err)
 	}
 
-	return pinnedSHA, len(lessons), nil
+	return len(lessons), nil
 }
 
 // AssetDir holds bundled images under the content directory, and AssetURLPrefix is where the server
@@ -539,7 +547,16 @@ func VerifyContent(contentDir string) error {
 			return fmt.Errorf("the release contains an image that NFR-LIC-02 forbids: %s", reason)
 		}
 	}
-	files, err := filepath.Glob(filepath.Join(contentDir, "lessons", "*.json"))
+	if err := verifyLessonFiles(contentDir, filepath.Join(contentDir, "lessons")); err != nil {
+		return err
+	}
+	return VerifyContentLanguages(contentDir)
+}
+
+// verifyLessonFiles checks that every lesson file in lessonsDir loads its images only from the bundled
+// asset store under contentDir, and that each one is present, unchanged, undamaged and allowed.
+func verifyLessonFiles(contentDir, lessonsDir string) error {
+	files, err := filepath.Glob(filepath.Join(lessonsDir, "*.json"))
 	if err != nil {
 		return err
 	}

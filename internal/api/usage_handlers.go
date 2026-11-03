@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"ai-foundations-coach/internal/feedback"
+	"ai-foundations-coach/internal/i18n"
 	"ai-foundations-coach/internal/usage"
 )
 
@@ -75,7 +76,7 @@ func notAvailable(w http.ResponseWriter, _ *http.Request) {
 }
 
 // registerLearnerExtras adds the routes a signed-in learner's app calls besides lessons.
-func registerLearnerExtras(mux *http.ServeMux, cfg RouterConfig) {
+func registerLearnerExtras(mux *http.ServeMux, cfg RouterConfig, langs *i18n.Set) {
 	if cfg.Usage == nil {
 		mux.HandleFunc("POST /api/usage/event", notAvailable)
 	} else {
@@ -101,12 +102,12 @@ func registerLearnerExtras(mux *http.ServeMux, cfg RouterConfig) {
 	}
 	limiter := NewRateLimiter(20, time.Minute)
 	limiter.SetTrustedProxyHops(cfg.TrustedProxyHops)
-	mux.Handle("POST /api/feedback", limiter.Middleware(requireJSON(submitFeedback(cfg.Feedback))))
+	mux.Handle("POST /api/feedback", limiter.Middleware(requireJSON(submitFeedback(cfg.Feedback, langs))))
 }
 
-const msgPII = "Please remove personal details (like phone numbers, emails or addresses) and send again."
-
-func submitFeedback(fb *feedback.Service) http.Handler {
+// submitFeedback takes an optional "lang". It only picks the language of the reply, falls back to English
+// unless the language is approved, and is never stored (SPEC-009 FR-002, FR-022).
+func submitFeedback(fb *feedback.Service, langs *i18n.Set) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sess, ok := SessionFrom(r.Context())
 		if !ok {
@@ -120,6 +121,7 @@ func submitFeedback(fb *feedback.Service) http.Handler {
 			LessonID   string `json:"lessonId"`
 			Mode       string `json:"mode"`
 			AppVersion string `json:"appVersion"`
+			Lang       string `json:"lang"`
 		}
 		if !decodeBody(w, r, &in) {
 			return
@@ -133,7 +135,7 @@ func submitFeedback(fb *feedback.Service) http.Handler {
 			writeSecretJSONStatus(w, http.StatusCreated, map[string]bool{"ok": true})
 		case errors.As(err, &pii):
 			// The kind is a fixed label. The matched text is neither echoed nor logged (FR-048).
-			writeSecretJSONStatus(w, http.StatusUnprocessableEntity, map[string]string{"error": msgPII, "code": "pii_detected", "kind": pii.Kind})
+			writeSecretJSONStatus(w, http.StatusUnprocessableEntity, map[string]string{"error": i18n.FeedbackRejection(langs.Resolve(in.Lang), pii.Kind), "code": "pii_detected", "kind": pii.Kind})
 		case errors.Is(err, feedback.ErrInvalid):
 			writeAuthError(w, http.StatusBadRequest, "invalid", "That feedback is not valid")
 		case errors.Is(err, feedback.ErrLimit):

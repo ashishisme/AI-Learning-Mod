@@ -160,6 +160,17 @@ A release ingests `microsoft/AI-For-Beginners` at commit `392d0df1b2647cbee10494
 
 Review record for the current pin (2026-11-02): 22 images reviewed. 2 left out for a Microsoft logo (the Symbolic AI and NLP sketchnotes), 20 kept. Licensing beyond the upstream MIT grant was not checked for each image.
 
+### Languages (SPEC-009)
+
+Languages are listed in `public-content/languages.json`. A language marked `hidden` is built and checked but not offered to learners. Only a reviewed PR changes it to `approved`.
+
+- **Base lessons** come from the course's own translation at the same pin: `go run ./cmd/ingest` ingests every listed language, and `go run ./cmd/ingest -lang hi` ingests just one. Translated images are new images, so **review them for logos as above** before a language is approved.
+- **App-written content** (kids and plain-English lessons, quizzes, UI text) is drafted with `go run ./cmd/translate -lang hi [-kind adaptive|quiz|ui] [-only <path>] [-force] [-dry-run]`. It uses the glossary in `content/glossary/<code>.json` and records each draft in `content/review/<code>.json`.
+- **Review:** a native reviewer corrects each file in a PR and sets its ledger entry to `"status": "approved"` with their name and the date. Any later change to the file or its English source makes the entry stale.
+- **Release gate:** `go run ./cmd/ingest -verify` prints `LANG PATH: reason` for anything missing, draft, stale or structurally different from English. Such a line fails the build for an approved language and is a warning for a hidden one.
+
+**`cmd/translate` runs only on the owner's machine.** It reads `TRANSLATE_API_KEY`, `TRANSLATE_MODEL` and (for a non-OpenAI endpoint) `TRANSLATE_BASE_URL` from the environment, never prints the key, and sends only the text being translated. Never put this key in GitHub Actions, Terraform, Secret Manager or the image (SPEC-009 FR-021). `-dry-run` needs no key and shows the field and character counts.
+
 ### 1. Docker Deployment (Single Multi-Stage Container)
 The application compiles into an optimized non-root container (`UID 10001`):
 
