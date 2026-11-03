@@ -158,25 +158,31 @@ test.describe('Hindi (B3)', () => {
     needsHindi(hiUI)
     await page.setViewportSize({ width: 360, height: 740 })
     await offerHindi(page, { stored: 'hi' })
-    for (const path of ['/', '/lesson/1-intro', '/quiz/1-intro']) {
+    for (const [path, tab] of [['/'], ['/lesson/1-intro'], ['/lesson/1-intro', 1], ['/lesson/1-intro', 2], ['/quiz/1-intro']] as Array<[string, number?]>) {
       await page.goto(path)
       await page.getByRole('heading').first().waitFor()
+      if (tab !== undefined) {
+        await page.locator('button[role="tab"]').nth(tab).click()
+        await page.waitForTimeout(1000)
+      }
       const problems = await page.evaluate(() => {
         const out: string[] = []
         if (document.documentElement.scrollWidth > document.documentElement.clientWidth) out.push('page scrolls sideways')
         for (const el of Array.from(document.querySelectorAll<HTMLElement>('body *'))) {
           const s = getComputedStyle(el)
-          if (s.overflowX === 'visible' && el.scrollWidth > el.clientWidth + 1 && el.clientWidth > 0 && s.display !== 'inline') out.push(`overflow: ${el.tagName} ${el.textContent?.slice(0, 30)}`)
+          // Clipped text only: a decoration that hangs past its box on purpose is not a problem.
+          const ownText = Array.from(el.childNodes).some((n) => n.nodeType === 3 && n.textContent!.trim() !== '')
+          if (ownText && s.display !== 'inline' && el.scrollWidth > el.clientWidth + 1 && el.clientWidth > 1) out.push(`overflow: ${el.tagName} ${el.textContent?.slice(0, 30)}`)
         }
         for (const el of Array.from(document.querySelectorAll<HTMLElement>('button, a[href], select'))) {
-          // WCAG 2.5.8: a link inside a sentence of lesson text is exempt from the target size.
-          if (el.tagName === 'A' && el.closest('p, li, td, blockquote, figcaption')) continue
+          // WCAG 2.5.8: a link inside a sentence of text is exempt from the target size.
+          if (getComputedStyle(el).display === 'inline') continue
           const r = el.getBoundingClientRect()
           if (r.width > 0 && (r.width < 44 || r.height < 44)) out.push(`small target ${Math.round(r.width)}x${Math.round(r.height)}: ${el.textContent?.trim().slice(0, 30)}`)
         }
         return out
       })
-      expect(problems, path).toEqual([])
+      expect(problems, `${path} ${tab ?? ''}`).toEqual([])
     }
   })
 })

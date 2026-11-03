@@ -106,7 +106,7 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
       <button
         onClick={handleToggle}
         aria-label={t(isCurrentActive ? 'narration.stopListeningChip' : 'narration.listenToChip')}
-        className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full font-bold text-xs shadow-sm transition-all duration-200 ${
+        className={`inline-flex flex-shrink-0 items-center gap-2 px-3.5 py-1.5 rounded-full font-bold text-xs shadow-sm transition-all duration-200 ${
           isCurrentActive
             ? 'bg-amber-500 text-white shadow-amber-500/40 animate-pulse ring-2 ring-amber-300'
             : 'bg-amber-100 hover:bg-amber-200 text-amber-900 dark:bg-amber-950/60 dark:hover:bg-amber-900/80 dark:text-amber-200'
@@ -130,7 +130,7 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
       <button
         onClick={handleToggle}
         aria-label={isCurrentActive ? t('narration.stopSection') : label}
-        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+        className={`inline-flex flex-shrink-0 items-center gap-1.5 px-3 py-1.5 rounded-full whitespace-nowrap text-xs font-semibold transition-colors ${
           isCurrentActive
             ? 'bg-blue-600 text-white ring-2 ring-blue-300 shadow-sm'
             : 'bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200'

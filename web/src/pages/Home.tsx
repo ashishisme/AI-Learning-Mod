@@ -288,9 +288,9 @@ export const Home: React.FC = () => {
                 <div
                   key={lesson.id}
                   data-testid={`lesson-item-${lesson.id}`}
-                  className="group flex items-center justify-between p-4 sm:p-5 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-all duration-150"
+                  className="group flex flex-wrap items-center justify-between gap-x-4 gap-y-2 p-4 sm:p-5 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-all duration-150"
                 >
-                  <div className="flex items-center gap-3.5 min-w-0 pr-4">
+                  <div className="flex flex-1 basis-56 items-center gap-3.5 min-w-0">
                     {/* FR-UI-02 completion indicator: ✅ / ⬜ */}
                     <button
                       type="button"
@@ -315,20 +315,21 @@ export const Home: React.FC = () => {
                       </div>
                       <Link
                         to={`/lesson/${lesson.id}`}
-                        className="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1"
+                        className="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2"
                       >
                         {lesson.title}
                       </Link>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 flex-shrink-0">
+                  <div className="flex items-center gap-2 flex-shrink-0 ml-auto">
                     {/* Interactive Quiz Link (FR-QZ-01, AC-35) */}
                     <Link
                       to={`/quiz/${lesson.id}`}
                       data-testid={`quiz-link-${lesson.id}`}
                       className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 rounded-lg transition"
                       title={t('home.quizTitle')}
+                      aria-label={t('home.quizTitle')}
                     >
                       <span>🎯</span>
                       <span className="hidden sm:inline">{t('home.quiz')}</span>

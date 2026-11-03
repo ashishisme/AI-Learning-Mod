@@ -14,6 +14,15 @@
 @tailwind utilities;
 
 @layer base {
+  /* DC-11: every control is at least 44 by 44 px. Inline text links (display: inline) are not affected,
+     because min-height and min-width do not apply to inline boxes (WCAG 2.5.8 inline exception). */
+  button,
+  select,
+  a[href] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
   :root {
     --color-surface-bg: #f8fafc;
     --color-surface-card: #ffffff;

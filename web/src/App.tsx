@@ -59,7 +59,7 @@ export const App: React.FC = () => {
           <nav className="flex min-w-0 overflow-x-auto items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
             <Link
               to="/"
-              className="px-2.5 py-1.5 rounded-md hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              className="hidden sm:inline-flex items-center flex-shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-md hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
             >
               {t('nav.curriculum')}
             </Link>
