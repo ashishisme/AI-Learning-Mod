@@ -6,140 +6,180 @@
       "kind": "base",
       "sourceHash": "607132fd6fb64c229060dee60ad25c7ecec300a08dcae86f0d355d7dcea34042",
       "translationHash": "93a0129be58b517599ff8e7d12f522c454cf0c538352235f9a05fe82c534d290",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/1-intro.junior.json",
       "kind": "adaptive",
       "sourceHash": "c6f8839608f4b24e6430979d96c65620123702e312e7f3a86cd13c577d419340",
       "translationHash": "a13417bc657b2add7e60862ccea478fc1f2ab4945333002d537bdeb221416b9a",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/1-intro.plain-english.json",
       "kind": "adaptive",
       "sourceHash": "aca263d59d5f84741677201c2cdd81341f6f9fce075dbd9ce5300d8726254e0d",
       "translationHash": "13c9104af03392c1cc3c32da72c2ff2ec75e7dc7007e61ea5701b47abf4df40f",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/2-symbolic.json",
       "kind": "base",
       "sourceHash": "0b01a7473fc709eae59a0171a89066a393074c3c008c4e8ebba677963874173c",
       "translationHash": "63f8689b78ed7532db560a2a9d3fc80ac5c6ceb49c9387f447714c40e7efa2e1",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/2-symbolic.junior.json",
       "kind": "adaptive",
       "sourceHash": "c8f53d31a27ce345ed18ae61d20b93aad6d4bdc479c654e5c0a2887ff973bbae",
       "translationHash": "7583dff8151ab469f54797a13ce42e9511cc83ef3d3e938f9c6d0d10c5c0f034",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/2-symbolic.plain-english.json",
       "kind": "adaptive",
       "sourceHash": "ff606aa82e1704b5e057c1bd8e3f281872046defb9ebc559fa8e8a4c639835c3",
-      "translationHash": "f78ce0e3bace145e7059b3b971628646c2e722189f8f64d57cb08c722de53cae",
-      "status": "draft"
+      "translationHash": "80dce044bdbf26fcb9a12055198ab001edddc7e8c5e15e6132152a673a0e2967",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/3-neuralnetworks.json",
       "kind": "base",
       "sourceHash": "144685b1d8d7f647b7114b53361ae85cae4eef74c368d77548cfb7486d51b6e5",
       "translationHash": "e871e06c521bfb2eeeaf6fb7c4da6477389a2655df67088d04e35d0f5622044a",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/3-neuralnetworks.junior.json",
       "kind": "adaptive",
       "sourceHash": "d148bd24e9999fa20be57dc98e41214f6e2978b247200283d3d702c5cdd58e9a",
       "translationHash": "94afd862f7a8d8b07ee08f70c7b8a86a673ef9fda061b2adecbc65396a08e618",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/3-neuralnetworks.plain-english.json",
       "kind": "adaptive",
       "sourceHash": "47e1f1b860b9fa644a9169a80fd6dd43d54eaf43f0d278f28e1b79cbd415f55c",
       "translationHash": "98ca84c6eb8d267dcaf080b0edc9f68d905cae5dcf0342e83c3d5bdbbe263844",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/4-computervision.json",
       "kind": "base",
       "sourceHash": "abce615b0d5a25861843338c5197b3b4623e6c52a4f205fc68cda9a034d69f9a",
       "translationHash": "b5e5f707c3033ff99a4e8c4f0d5cd016a1a9576a2c265aaec5899a7c2b26f48f",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/4-computervision.junior.json",
       "kind": "adaptive",
       "sourceHash": "bc8d91390ebd11542298a67180faaff7dbc469e90e581291bd3f4628c238bab3",
       "translationHash": "a17b11e2c62037c2bcd8e43ffd33c0d6030fce473cdcb7bd7802cfb47fa0c439",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/4-computervision.plain-english.json",
       "kind": "adaptive",
       "sourceHash": "1ccda0520834d80da453516da95c92e3cc7ac30b42420b629a782906e9d6f643",
       "translationHash": "a9dff46441b8bf4d1b36fa171533ad784382b55595d4cea0c90f2cbfa4cffb81",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/5-nlp.json",
       "kind": "base",
       "sourceHash": "79e84c4c22d018b8fe4c8e67c4f7440540d6d4ad2950f6d4284cc4a61d7939e1",
       "translationHash": "259990f6f51640cd7f4ae1a065037951b261601cc6065f69ff84498dac5872b5",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/5-nlp.junior.json",
       "kind": "adaptive",
       "sourceHash": "59dad9fc7f2bfaf11ce3e8b05bbaa9a7df1ea3d6d1ad4eeabfc792f7f83a81ff",
-      "translationHash": "0def17fe3470eaca1e90584184be0415d126a9aa9bfd143d1567ed7e7dad74ea",
-      "status": "draft"
+      "translationHash": "a92927f65b18084a645e852f7e846107a3055547b5555a1bab3def07beffcb0b",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/5-nlp.plain-english.json",
       "kind": "adaptive",
       "sourceHash": "c6a17fdaeab8bf103b08ce01a73d437f6e7987600210537ea557153993cdc3a2",
       "translationHash": "ff9a08bed92c559ee64272251c3f8463e3dc30888c99946cb4456f2b3dd88fd4",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/7-ethics.json",
       "kind": "base",
       "sourceHash": "8be976b3d21888bc78b3d95a01712240cbfa7db00f901c2f6e9a721ebd21c286",
       "translationHash": "2b3c6fa933909a2752833a90b369a9fc884c86a4dcefb501b47cf8d172d010a9",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/7-ethics.junior.json",
       "kind": "adaptive",
       "sourceHash": "ebd08f480c01d4ec956c44ff7a4fa513e4cfb2b2693c84a9fe727492553d65ee",
       "translationHash": "8ee6bc8ad49555f7bca63f4b557030678774349567a31f4a24ad4758db9603c1",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/7-ethics.plain-english.json",
       "kind": "adaptive",
       "sourceHash": "16b63add6ddc8f703c49aa332684500ee7326aaf13be8f0928b5fee86ab03c9a",
       "translationHash": "64c6ef1c732ab5e200957be6614619f68aea1ed1ed2de9e630567534e6e4b96b",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "web/src/data/quizzes/hi.json",
       "kind": "quiz",
       "sourceHash": "4f04bb83cd618fb8a1d40f7a8657329b66f1ed68b0825632d513db23b567a82a",
       "translationHash": "13db0f18d1e97617cc122f0971c748d41e63f2e64d83704ea041739ec50a98ff",
-      "status": "draft"
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     },
     {
       "path": "web/src/i18n/hi.json",
       "kind": "ui",
-      "sourceHash": "13635e11dd3782fdb2348e889f1dd9fa249720098af88910df554fe53dc781f2",
-      "translationHash": "4abff1e7d0e6a73418e00350ff11fb40b51bffa91c5a2e3ac7ffb65be2757e55",
-      "status": "draft"
+      "sourceHash": "68eb94ea393982f4a542867cb18f2e492fee82cefc6cf807cdda4fae418f02b9",
+      "translationHash": "fe1dd9b45fbcbf41080997a8e3e1a646ab354eecdb0879399b2a82bbc6945b68",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-03"
     }
   ]
 }
