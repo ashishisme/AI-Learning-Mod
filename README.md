@@ -169,6 +169,20 @@ Languages are listed in `public-content/languages.json`. A language marked `hidd
 - **Review:** a native reviewer corrects each file in a PR and sets its ledger entry to `"status": "approved"` with their name and the date. Any later change to the file or its English source makes the entry stale.
 - **Release gate:** `go run ./cmd/ingest -verify` prints `LANG PATH: reason` for anything missing, draft, stale or structurally different from English. Such a line fails the build for an approved language and is a warning for a hidden one.
 
+**Recorded narration** (Google Cloud Text-to-Speech) is made on the owner's machine and kept in the private bucket that Terraform creates (output `github_variables.GCP_NARRATION_BUCKET`). The release build copies it into the image.
+
+```bash
+B=gs://<project>-ai-foundations-coach-narration
+gcloud storage rsync --recursive "$B/audio" public-content/audio   # what is already recorded
+export TTS_ACCESS_TOKEN="$(gcloud auth print-access-token)" TTS_PROJECT=<project>
+go run ./cmd/narrate -lang hi -sample hi-IN-Wavenet-A             # listening test for one voice
+go run ./cmd/narrate -lang hi -dry-run                            # what would be recorded, characters billed
+go run ./cmd/narrate -lang hi                                     # records only new or changed text
+gcloud storage rsync --recursive public-content/audio "$B/audio"
+```
+
+Choose one voice per persona (Chip, Nova, Prof. Alan) in `content/voices/<code>.json` before the first full run. An approved language fails the release build if any narrated track is missing or out of date. On a device without recordings, the app uses a voice in the learner's language if the device has one, and otherwise says so. It never reads Hindi in an English voice.
+
 **`cmd/translate` runs only on the owner's machine.** It reads `TRANSLATE_API_KEY`, `TRANSLATE_MODEL` and (for a non-OpenAI endpoint) `TRANSLATE_BASE_URL` from the environment, never prints the key, and sends only the text being translated. Never put this key in GitHub Actions, Terraform, Secret Manager or the image (SPEC-009 FR-021). `-dry-run` needs no key and shows the field and character counts.
 
 ### 1. Docker Deployment (Single Multi-Stage Container)

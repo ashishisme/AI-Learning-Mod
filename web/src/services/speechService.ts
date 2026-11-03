@@ -10,6 +10,8 @@
  * Strict Zero-Asset Bloat: 100% client-side zero external audio binary download.
  */
 
+import { cleanForSpeech } from './narrationText';
+
 export type VoicePersonaId = 'chip' | 'nova' | 'alan';
 
 export interface VoicePersona {
@@ -32,7 +34,9 @@ export const VOICE_PERSONAS: Record<VoicePersonaId, VoicePersona> = {
     avatar: '🤖',
     pitch: 1.12, // Warm, pleasant lift without tinny or squeaky distortion
     rate: 1.02,
-    preferredKeywords: ['Google US English', 'Samantha', 'Victoria', 'Karen', 'Zira', 'Natural'],
+    preferredKeywords: ['Google US English', 'Samantha', 'Victoria', 'Karen', 'Zira', 'Natural',
+      // Hindi device voices (SPEC-009 FR-013): Windows, macOS, Android
+      'Kalpana', 'Google हिन्दी', 'Lekha'],
   },
   nova: {
     id: 'nova',
@@ -42,7 +46,7 @@ export const VOICE_PERSONAS: Record<VoicePersonaId, VoicePersona> = {
     avatar: '🎙️',
     pitch: 1.0,
     rate: 0.95, // Relaxed storytelling tempo
-    preferredKeywords: ['Samantha', 'Google UK English Female', 'Serena', 'Natural', 'Fiona', 'Moira'],
+    preferredKeywords: ['Samantha', 'Google UK English Female', 'Serena', 'Natural', 'Fiona', 'Moira', 'Swara', 'Lekha', 'Google हिन्दी'],
   },
   alan: {
     id: 'alan',
@@ -52,7 +56,7 @@ export const VOICE_PERSONAS: Record<VoicePersonaId, VoicePersona> = {
     avatar: '🎓',
     pitch: 0.98,
     rate: 0.98,
-    preferredKeywords: ['Daniel', 'Google UK English Male', 'Oliver', 'Alex', 'David', 'George'],
+    preferredKeywords: ['Daniel', 'Google UK English Male', 'Oliver', 'Alex', 'David', 'George', 'Madhur', 'Hemant', 'Rishi'],
   },
 };
 
@@ -65,6 +69,11 @@ export interface SpeechOptions {
   onStart?: () => void;
   onEnd?: () => void;
   onError?: (err: any) => void;
+  // SPEC-009 FR-013: the language of the text, such as 'hi-IN'. Without it, English voices are used as
+  // before. A non-English text is never read by a voice of another language: when the device has none
+  // for it, nothing is spoken and onUnavailable is called instead.
+  speechLang?: string;
+  onUnavailable?: () => void;
 }
 
 class SpeechService {
@@ -77,6 +86,8 @@ class SpeechService {
   // so they can neither queue more speech nor report a stale end.
   private generation: number = 0;
   private activeChunkTimeout: any = null;
+  // SPEC-009 FR-012: one player for recorded narration, stopped by stop() like device speech.
+  private player: HTMLAudioElement | null = null;
 
   constructor() {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -109,21 +120,25 @@ class SpeechService {
   }
 
   public isSpeaking(): boolean {
+    if (this.player && !this.player.paused) return true;
     return this.currentUtterance !== null || (this.synth ? this.synth.speaking : false);
   }
 
   /**
    * Selects best ranked voice for given persona
    */
-  public getBestVoiceForPersona(personaId: VoicePersonaId = 'chip'): SpeechSynthesisVoice | null {
+  public getBestVoiceForPersona(personaId: VoicePersonaId = 'chip', speechLang = 'en'): SpeechSynthesisVoice | null {
     if (this.voices.length === 0 && this.synth) {
       this.refreshVoices();
     }
     if (this.voices.length === 0) return null;
 
     const persona = VOICE_PERSONAS[personaId] || VOICE_PERSONAS.chip;
-    const englishVoices = this.voices.filter(v => v.lang.startsWith('en'));
-    const candidates = englishVoices.length > 0 ? englishVoices : this.voices;
+    const primary = speechLang.toLowerCase().split(/[-_]/)[0];
+    const sameLanguage = this.voices.filter(v => v.lang.toLowerCase().split(/[-_]/)[0] === primary);
+    // English keeps its old fallback to any voice; another language never borrows a voice.
+    const candidates = sameLanguage.length > 0 ? sameLanguage : primary === 'en' ? this.voices : [];
+    if (candidates.length === 0) return null;
 
     // Score and rank candidates
     let bestScore = -100;
@@ -165,17 +180,12 @@ class SpeechService {
    * Clean and split text into natural punctuation-bounded sentences
    */
   private cleanAndChunkText(rawText: string): string[] {
-    const cleaned = rawText
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // strip links
-      .replace(/[*_#`~>]/g, '')                // strip markdown formatting
-      .replace(/<\/?[^>]+(>|$)/g, '')          // strip HTML tags
-      .replace(/([0-9]+)\.\s+/g, '$1. ')       // preserve list numbering
-      .trim();
+    const cleaned = cleanForSpeech(rawText); // the shared rule, so recordings say the same
 
     if (!cleaned) return [];
 
     // Split on punctuation boundaries: ., !, ?, semicolons, or double newlines
-    const rawChunks = cleaned.split(/(?<=[.!?;\n])\s+/);
+    const rawChunks = cleaned.split(/(?<=[.!?;\n।॥])\s+/); // ।॥: Devanagari full stops
     const chunks: string[] = [];
 
     for (const chunk of rawChunks) {
@@ -216,7 +226,14 @@ class SpeechService {
 
     const personaId = options.personaId || 'chip';
     const persona = VOICE_PERSONAS[personaId] || VOICE_PERSONAS.chip;
-    const selectedVoice = this.getBestVoiceForPersona(personaId);
+    const speechLang = options.speechLang;
+    const selectedVoice = this.getBestVoiceForPersona(personaId, speechLang || 'en');
+    // Voices are loaded: none speaks this language, so say nothing rather than mispronounce it. While
+    // the list is still empty (some Android browsers), utterance.lang below lets the device choose.
+    if (speechLang && !selectedVoice && this.voices.length > 0) {
+      if (options.onUnavailable) options.onUnavailable();
+      return;
+    }
 
     const pitch = options.pitch ?? persona.pitch;
     const rate = options.rate ?? persona.rate;
@@ -247,6 +264,7 @@ class SpeechService {
       utterance.pitch = pitch;
       utterance.rate = rate;
       utterance.volume = volume;
+      if (speechLang) utterance.lang = speechLang;
 
       if (selectedVoice) {
         utterance.voice = selectedVoice;
@@ -281,10 +299,31 @@ class SpeechService {
   }
 
   /**
+   * Play a recorded narration file (SPEC-009 FR-012). Stopping, or starting other speech, ends it.
+   */
+  public playRecording(url: string, options: { rate?: number; onStart?: () => void; onEnd?: () => void; onError?: (err: unknown) => void } = {}): void {
+    this.stop();
+    const gen = ++this.generation;
+    const player = this.player ?? (this.player = new Audio());
+    player.src = url;
+    player.playbackRate = options.rate ?? 1;
+    player.onended = () => { if (gen === this.generation && options.onEnd) options.onEnd(); };
+    player.onerror = (e) => { if (gen === this.generation && options.onError) options.onError(e); };
+    player.play().then(
+      () => { if (gen === this.generation && options.onStart) options.onStart(); },
+      (err) => { if (gen === this.generation && options.onError) options.onError(err); },
+    );
+  }
+
+  /**
    * Stop current speech and cancel pending sentence timeouts
    */
   public stop(): void {
     this.generation++;
+    if (this.player) {
+      this.player.pause();
+      this.player.removeAttribute('src');
+    }
     if (this.activeChunkTimeout) {
       clearTimeout(this.activeChunkTimeout);
       this.activeChunkTimeout = null;

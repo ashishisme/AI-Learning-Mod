@@ -24,6 +24,8 @@ locals {
     "run.googleapis.com",
     "secretmanager.googleapis.com",
     "sts.googleapis.com",
+    "storage.googleapis.com",
+    "texttospeech.googleapis.com", # SPEC-009 B4: the owner records narration with it
   ])
   # Known before the service exists, so the app can be told its own address.
   public_url        = "https://${var.service_name}-${data.google_project.this.number}.${var.region}.run.app"
@@ -190,6 +192,24 @@ resource "google_firestore_backup_schedule" "daily" {
   database  = google_firestore_database.default.name
   retention = var.backup_retention
   daily_recurrence {}
+}
+
+# ---- recorded narration (SPEC-009 B4)
+
+# The owner records narration on their own machine and syncs it here; the release build copies it into
+# the image. Private: learners get the files from the app, behind the session gate.
+resource "google_storage_bucket" "narration" {
+  name                        = "${var.project_id}-${var.service_name}-narration"
+  location                    = var.region
+  uniform_bucket_level_access = true
+  public_access_prevention    = "enforced"
+  depends_on                  = [google_project_service.apis]
+}
+
+resource "google_storage_bucket_iam_member" "deploy_reads_narration" {
+  bucket = google_storage_bucket.narration.name
+  role   = "roles/storage.objectViewer"
+  member = "serviceAccount:${google_service_account.deploy.email}"
 }
 
 # ---- images

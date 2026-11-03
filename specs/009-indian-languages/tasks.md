@@ -213,8 +213,8 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 ### Tests for User Story 2
 
 - [ ] T055 [P] [US2] `[external]` Run a listening test of candidate `hi-IN` voices with `go run ./cmd/narrate -lang hi -cache .narration-cache -only global/chip-mascot-greeting` once T059 exists, one candidate per persona. Record the chosen voices in `content/voices/hi.json`, and recheck current Cloud TTS prices and the 5,000-byte limit (R9).
-- [ ] T056 [P] [US2] Create `internal/narration/text_test.go` from the shared fixture `content/fixtures/narration-text.json` (input fields and expected text). It covers heading plus the Chip quote plus body, link stripping, removal of `*_#`~>`, HTML stripping and keeping list numbering, matching `web/src/services/speechService.ts:169-172`.
-- [ ] T057 [P] [US2] Create `cmd/narrate/narrate_test.go` with a fake TTS server:
+- [X] T056 [P] [US2] Create `internal/narration/text_test.go` from the shared fixture `content/fixtures/narration-text.json` (input fields and expected text). It covers heading plus the Chip quote plus body, link stripping, removal of `*_#`~>`, HTML stripping and keeping list numbering, matching `web/src/services/speechService.ts:169-172`.
+- [X] T057 [P] [US2] Create `cmd/narrate/narrate_test.go` with a fake TTS server:
   - Splitting stays under 5,000 bytes at `।`, `.`, `?` and `!` boundaries.
   - Parts are joined into one MP3.
   - A cache hit makes 0 requests (SC-009).
@@ -222,7 +222,7 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
   - `-check` fails for a missing or stale track and passes when current.
   - `-dry-run` makes no request.
   - The token is never printed.
-- [ ] T058 [P] [US2] Create `web/tests/narration-hi.spec.ts`:
+- [X] T058 [P] [US2] Create `web/tests/narration-hi.spec.ts`:
   - With Hindi and a mocked manifest and MP3, the section button plays an `<audio>` source `/audio/hi/...-<persona>.mp3`, and the stop control works.
   - With the track missing and a mocked `speechSynthesis` that has a `hi-IN` voice, it speaks with that voice.
   - With no Hindi voice, `t('narration.unavailable')` shows and no English voice is used.
@@ -231,32 +231,32 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 
 ### Implementation for User Story 2
 
-- [ ] T059 [US2] Implement `internal/narration/text.go` (track keys `<lessonId>/<mode>/<trackId>` and `global/<trackId>`, and the text rule) and `cmd/narrate/main.go` per contracts/cli.md:
+- [X] T059 [US2] Implement `internal/narration/text.go` (track keys `<lessonId>/<mode>/<trackId>` and `global/<trackId>`, and the text rule) and `cmd/narrate/main.go` per contracts/cli.md:
   - flags `-lang`, `-cache`, `-check`, `-dry-run` and `-only`;
   - environment `TTS_ACCESS_TOKEN` and `TTS_ENDPOINT`;
   - REST `v1/text:synthesize` with MP3 output through `net/http`;
   - output to `public-content/audio/<lang>/` and `manifest.json`.
 
   Make T056 and T057 pass.
-- [ ] T060 [US2] Have `go run ./cmd/ingest -verify` in `cmd/ingest/main.go` run the `narrate -check` logic for every approved language that has narrated tracks, so the Dockerfile's verify step blocks a release with missing or stale audio (FR-012)
-- [ ] T061 [P] [US2] Create `web/src/services/narrationText.ts` (the same rule as T059, using `t('narration.chipSays')`) and use it in `web/src/components/AdaptiveLessonView.tsx` and `web/src/components/ChipMascotBanner.tsx` in place of the inline string building
-- [ ] T062 [US2] Create `web/src/services/narration.ts`, which loads `/audio/<code>/manifest.json` once per language and caches it. Update `web/src/components/AudioNarrationButton.tsx` to play the recorded track for the selected persona through `HTMLAudioElement`. Reuse the active-track and stop handling, and add loading, stop and error states. Fall back to `speechService` when the manifest lacks the track.
-- [ ] T063 [US2] Update `web/src/services/speechService.ts` so voice choice prefers voices whose `lang` starts with the chosen `speechLang`. The English-only filter at line 125 applies only for `en`. A non-English text with no matching voice returns "unavailable" and is never spoken with an English voice (FR-013).
-- [ ] T064 [US2] Make sure `.mp3`, `.webp`, `.woff2` and the manifest are served with `audio/mpeg`, `image/webp`, `font/woff2` and `application/json`, and that `/audio/` is reachable like `/assets/`. Check `openPath` in `internal/api/session_gate.go` and the static handler in `internal/api/router.go`, and add a test in `internal/api/spa_fallback_test.go`.
-- [ ] T065 [US2] In `deploy/terraform/main.tf` and `deploy/terraform/variables.tf`, add:
+- [X] T060 [US2] Have `go run ./cmd/ingest -verify` in `cmd/ingest/main.go` run the `narrate -check` logic for every approved language that has narrated tracks, so the Dockerfile's verify step blocks a release with missing or stale audio (FR-012)
+- [X] T061 [P] [US2] Create `web/src/services/narrationText.ts` (the same rule as T059, using `t('narration.chipSays')`) and use it in `web/src/components/AdaptiveLessonView.tsx` and `web/src/components/ChipMascotBanner.tsx` in place of the inline string building
+- [X] T062 [US2] Create `web/src/services/narration.ts`, which loads `/audio/<code>/manifest.json` once per language and caches it. Update `web/src/components/AudioNarrationButton.tsx` to play the recorded track for the selected persona through `HTMLAudioElement`. Reuse the active-track and stop handling, and add loading, stop and error states. Fall back to `speechService` when the manifest lacks the track.
+- [X] T063 [US2] Update `web/src/services/speechService.ts` so voice choice prefers voices whose `lang` starts with the chosen `speechLang`. The English-only filter at line 125 applies only for `en`. A non-English text with no matching voice returns "unavailable" and is never spoken with an English voice (FR-013).
+- [X] T064 [US2] Make sure `.mp3`, `.webp`, `.woff2` and the manifest are served with `audio/mpeg`, `image/webp`, `font/woff2` and `application/json`, and that `/audio/` is reachable like `/assets/`. Check `openPath` in `internal/api/session_gate.go` and the static handler in `internal/api/router.go`, and add a test in `internal/api/spa_fallback_test.go`.
+- [X] T065 [US2] *(2026-11-03, owner choice: recordings are made on the owner's Mac, so the bucket holds the recordings and the deploy account only reads it; no CI synthesis role yet. `terraform plan`/`apply` in Cloud Shell is still to do.)* In `deploy/terraform/main.tf` and `deploy/terraform/variables.tf`, add:
   - the `texttospeech.googleapis.com` API;
   - a Cloud Storage bucket `${var.service_name}-narration-cache` (uniform access, a lifecycle rule to delete after 365 days, no public access);
   - for the deploy service account, `roles/serviceusage.serviceUsageConsumer` on the project and `roles/storage.objectAdmin` on the bucket only;
   - an output `narration_cache_bucket`.
 
   Run `terraform fmt` and `terraform validate`. `[external]` Then run `terraform plan`/`apply` in Cloud Shell.
-- [ ] T066 [US2] In `.github/workflows/deploy.yml`, add the steps in the build job between `google-github-actions/auth` and the image build:
+- [X] T066 [US2] *(2026-11-03: the build job copies recordings from `GCP_NARRATION_BUCKET` instead of synthesising; earlier `-verify` steps use `-audio=false`. Synthesis in CI is a later step.)* In `.github/workflows/deploy.yml`, add the steps in the build job between `google-github-actions/auth` and the image build:
   1. `gcloud storage rsync gs://<cache-bucket> .narration-cache`
   2. `TTS_ACCESS_TOKEN=$(gcloud auth print-access-token) go run ./cmd/narrate -lang <each approved> -cache .narration-cache`
   3. `gcloud storage rsync .narration-cache gs://<cache-bucket>`
 
   Take the bucket from a new environment variable `GCP_NARRATION_CACHE_BUCKET`, and add it to the variable list in `scripts/automate_deployment.sh`.
-- [ ] T067 [US2] Add FR-I18N-07 (recorded narration per approved language, cache by text hash, release gate) and FR-I18N-08 (device-voice fallback, never another language's voice) to `spec/SPEC.md`, and AC-50 to `spec/ACCEPTANCE.md`
+- [X] T067 [US2] Add FR-I18N-07 (recorded narration per approved language, cache by text hash, release gate) and FR-I18N-08 (device-voice fallback, never another language's voice) to `spec/SPEC.md`, and AC-50 to `spec/ACCEPTANCE.md`
 - [ ] T068 [US2] Release B4. Run the full suites, then commit, open a PR, merge and tag `v0.3.1`. Record the image size and cold-start time against `v0.3.0`, and the TTS characters billed, in `specs/009-indian-languages/checklists/hindi-review.md`. Re-tag a no-content-change release and confirm 0 characters are billed (SC-009).
 
 **Checkpoint**: Hindi audio is live.

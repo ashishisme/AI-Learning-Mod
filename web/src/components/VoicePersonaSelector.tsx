@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useAudioStore, VoicePersonaId } from '../store';
 import { speechService, VOICE_PERSONAS } from '../services/speechService';
-import { useT } from '../i18n';
+import { useLanguage, useT } from '../i18n';
 
 export const VoicePersonaSelector: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const t = useT();
+  const { language } = useLanguage();
   const { persona, setPersona, speechRate, setSpeechRate, isMuted, toggleMute, stopAudio } = useAudioStore();
 
   const activePersona = VOICE_PERSONAS[persona] || VOICE_PERSONAS.chip;
@@ -21,6 +22,7 @@ export const VoicePersonaSelector: React.FC = () => {
 
     speechService.speak(previewText, {
       personaId: pId,
+      speechLang: language.speechLang,
       rate: speechRate * p.rate,
       pitch: p.pitch,
     });

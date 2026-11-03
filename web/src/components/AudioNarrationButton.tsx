@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAudioStore, useAudienceModeStore, VoicePersonaId } from '../store';
 import { speechService, VOICE_PERSONAS } from '../services/speechService';
-import { useT } from '../i18n';
+import { useLanguage, useT } from '../i18n';
+import { recordingFor } from '../services/narration';
 
 interface AudioNarrationButtonProps {
   id: string;
@@ -9,6 +10,10 @@ interface AudioNarrationButtonProps {
   label?: string;
   size?: 'sm' | 'md' | 'lg';
   variant?: 'subtle' | 'pill' | 'chip';
+  // The language of textToRead, when it may differ from the chosen one (English fallback content).
+  speechLang?: string;
+  // SPEC-009 FR-012: the recorded narration's key, "<lessonId>/<mode>/<id>" or "global/<id>".
+  trackKey?: string;
 }
 
 export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
@@ -17,9 +22,14 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
   label: givenLabel,
   size = 'sm',
   variant = 'subtle',
+  speechLang,
+  trackKey,
 }) => {
   const t = useT();
   const label = givenLabel ?? t('narration.readAloud');
+  const { language } = useLanguage();
+  // SPEC-009 FR-013: shown when this device has no voice for the learner's language.
+  const [unavailable, setUnavailable] = useState(false);
   const {
     activeTrackId,
     isPlaying,
@@ -39,6 +49,7 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
     e.stopPropagation();
 
     if (isMuted) return;
+    setUnavailable(false);
 
     if (isCurrentActive) {
       speechService.stop();
@@ -64,8 +75,14 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
 
     setActiveTrack(id, true);
 
-    speechService.speak(textToRead, {
+    const lang = speechLang ?? language.speechLang;
+    const speakOnDevice = () => speechService.speak(textToRead, {
       personaId: effectivePersona,
+      speechLang: lang,
+      onUnavailable: () => {
+        stopAudio();
+        setUnavailable(true);
+      },
       pitch: personaConfig.pitch,
       rate: speechRate * personaConfig.rate,
       onSentenceStart: (sentence) => {
@@ -80,6 +97,26 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
       onError: () => {
         stopAudio();
       },
+    });
+
+    // A recording in the persona's voice when the language has one; the device voice otherwise.
+    const code = lang.toLowerCase().split('-')[0];
+    if (!trackKey || code === 'en') {
+      speakOnDevice();
+      return;
+    }
+    void recordingFor(code, trackKey, effectivePersona).then((url) => {
+      if (useAudioStore.getState().activeTrackId !== id) return; // stopped or replaced meanwhile
+      if (!url) {
+        speakOnDevice();
+        return;
+      }
+      speechService.playRecording(url, {
+        rate: speechRate,
+        onStart: () => setActiveTrack(id, true),
+        onEnd: () => stopAudio(),
+        onError: () => speakOnDevice(), // a file that will not play falls back to the device
+      });
     });
   };
 
@@ -100,9 +137,10 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
     return null;
   }
 
+  let button: React.ReactElement;
   // Styles based on variant
   if (variant === 'chip') {
-    return (
+    button = (
       <button
         onClick={handleToggle}
         aria-label={t(isCurrentActive ? 'narration.stopListeningChip' : 'narration.listenToChip')}
@@ -125,8 +163,8 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
     );
   }
 
-  if (variant === 'pill') {
-    return (
+  else if (variant === 'pill') {
+    button = (
       <button
         onClick={handleToggle}
         aria-label={isCurrentActive ? t('narration.stopSection') : label}
@@ -149,7 +187,7 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
   }
 
   // Default subtle variant
-  return (
+  else button = (
     <button
       onClick={handleToggle}
       aria-label={isCurrentActive ? t('narration.stopSection') : label}
@@ -179,5 +217,13 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
         </span>
       )}
     </button>
+  );
+
+  if (!unavailable) return button;
+  return (
+    <span className="inline-flex flex-col items-start gap-1">
+      {button}
+      <span role="status" className="text-xs text-amber-800 dark:text-amber-300">{t('narration.unavailable')}</span>
+    </span>
   );
 };

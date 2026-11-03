@@ -43,7 +43,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - name: Check lessons and images
-        run: go run ./cmd/ingest -verify
+        run: go run ./cmd/ingest -verify -audio=false # recordings join in the build job; its Docker build checks them
       - run: npm ci
         working-directory: web
       - name: Check runtime npm dependencies for known vulnerabilities
@@ -103,7 +103,7 @@ jobs:
         id: content
         run: |
           go run ./cmd/ingest
-          go run ./cmd/ingest -verify
+          go run ./cmd/ingest -verify -audio=false
           echo "asset=$(ls public-content/assets | head -n 1)" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -112,6 +112,18 @@ jobs:
           workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
       - uses: google-github-actions/setup-gcloud@v3
+      # SPEC-009 B4: recorded narration, made on the owner's machine, joins the image here. The
+      # Dockerfile's ingest -verify then fails the build if an approved language lacks a recording.
+      - name: Add recorded narration
+        if: ${{ vars.GCP_NARRATION_BUCKET != '' }}
+        run: |
+          if gcloud storage ls "gs://$GCP_NARRATION_BUCKET/audio/" > /dev/null 2>&1; then
+            gcloud storage rsync --recursive "gs://$GCP_NARRATION_BUCKET/audio" public-content/audio
+          else
+            echo "No recorded narration in the bucket yet"
+          fi
+        env:
+          GCP_NARRATION_BUCKET: ${{ vars.GCP_NARRATION_BUCKET }}
       - uses: docker/setup-qemu-action@v4
       - uses: docker/setup-buildx-action@v4
       - name: Configure Artifact Registry auth

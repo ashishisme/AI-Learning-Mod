@@ -23,16 +23,17 @@ env: TRANSLATE_BASE_URL, TRANSLATE_API_KEY, TRANSLATE_MODEL   (never set in CI, 
 - **Validation**: rejects a draft whose Markdown structure (headings, lists, code fences, links) differs from the English source. It reports the field and does not write.
 - **`-dry-run`**: prints the field count and estimated characters. It makes no API call.
 
-## `cmd/narrate` (new; release job and owner machine)
+## `cmd/narrate` (new; owner machine, B4)
 
 ```text
-go run ./cmd/narrate -lang hi -cache <dir> [-check] [-dry-run]
-env: TTS_ACCESS_TOKEN (from `gcloud auth print-access-token`), TTS_ENDPOINT (default https://texttospeech.googleapis.com)
+go run ./cmd/narrate -lang hi [-only <trackKey>] [-check] [-dry-run] [-sample <voice>]
+env: TTS_ACCESS_TOKEN (from `gcloud auth print-access-token`), TTS_PROJECT (billing project), TTS_ENDPOINT (default https://texttospeech.googleapis.com)
 ```
 
-- **Track text**: builds each narrated track's text by the shared rule. Its hash is `sha256(voice + "\n" + text)`.
-- **Cache**: if `<cache>/<hash>.mp3` exists, it is copied. Otherwise the text is split under 5,000 bytes at sentence ends, synthesised, joined, and stored in the cache.
-- **Output**: writes `public-content/audio/<lang>/…` and `manifest.json`.
-- **`-check`**: makes no API call. It fails if any narrated track of the language is missing from the manifest, or has a hash that differs from the current text.
-- **`-dry-run`**: prints the tracks to synthesise and the characters to be billed.
-- **Release job order (B4)**: `ingest` → `auth` → `gcloud storage rsync gs://<cache-bucket> .narration-cache` → `narrate -lang <each approved>` → `gcloud storage rsync .narration-cache gs://<cache-bucket>` → image build (the Dockerfile's `ingest -verify` runs `narrate -check`).
+- **Tracks**: every narrated track of the language's translated adaptive lessons plus the default greeting, built by the shared text rule (`internal/narration`, `web/src/services/narrationText.ts`), in each persona (`chip`, `nova`, `alan`). Its hash is `sha256(voice|speakingRate|pitch + "\n" + text)`.
+- **Cache**: the output folder itself. A track whose manifest hash matches and whose file exists is never recorded again, so a second run bills 0 characters. Otherwise the text is split under 4,800 bytes at `।`, `.`, `?` or `!`, synthesised as MP3 and the parts joined.
+- **Output**: `public-content/audio/<lang>/<lessonId>/<mode>/<trackId>-<persona>.mp3` (or `global/…`) and `manifest.json`, saved after every recording. A full run removes recordings of tracks that no longer exist.
+- **`-check`**: no API call; exit 1 if any track is missing, out of date or has no voice chosen.
+- **`-dry-run`**: lists the recordings to make and the characters billed.
+- **`-sample <voice>`**: listening test; records the greeting to `narration-sample-<voice>.mp3` only.
+- **Storage and release** (owner's choice, 2026-11-03): recordings are made on the owner's machine and kept in the private bucket `<project>-<service>-narration` (`gcloud storage rsync` down, `narrate`, rsync up). The release build copies them into the image; the Dockerfile's `ingest -verify` fails an approved language with any missing or stale recording. CI steps that run before the copy use `ingest -verify -audio=false`. Generating inside CI is a later step.

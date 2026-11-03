@@ -12,6 +12,7 @@ output "github_variables" {
     GCP_REGION                     = var.region
     GCP_ARTIFACT_REPOSITORY        = google_artifact_registry_repository.images.repository_id
     GCP_SERVICE                    = google_cloud_run_v2_service.coach.name
+    GCP_NARRATION_BUCKET           = google_storage_bucket.narration.name
   }
 }
 

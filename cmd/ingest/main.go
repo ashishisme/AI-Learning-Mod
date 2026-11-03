@@ -14,6 +14,7 @@ import (
 
 	"ai-foundations-coach/internal/i18n"
 	"ai-foundations-coach/internal/ingest"
+	"ai-foundations-coach/internal/narration"
 )
 
 type Config = ingest.Config
@@ -33,6 +34,7 @@ var (
 func main() {
 	verifyOnly := flag.Bool("verify", false, "check that the content directory is complete and self-contained, then exit")
 	lang := flag.String("lang", "", "ingest only this language from languages.json, for example hi")
+	audio := flag.Bool("audio", true, "with -verify: also check recorded narration (off where recordings are not present yet)")
 	flag.Parse()
 
 	contentDir := os.Getenv("CONTENT_DIR")
@@ -40,7 +42,7 @@ func main() {
 		contentDir = "public-content"
 	}
 	if *verifyOnly {
-		os.Exit(verify(contentDir, os.Stderr))
+		os.Exit(verify(contentDir, os.Stderr, *audio))
 	}
 
 	token := os.Getenv("GITHUB_TOKEN")
@@ -85,7 +87,7 @@ func main() {
 // language is checked against its review ledger and English (SPEC-009 FR-017..FR-019): a problem in
 // an approved language fails the build, and one in a hidden language is only a warning, so drafts
 // can ship hidden. It prints one "LANG PATH: reason" line per problem and returns the exit code.
-func verify(contentDir string, out io.Writer) int {
+func verify(contentDir string, out io.Writer, checkAudio bool) int {
 	if err := ingest.VerifyContent(contentDir); err != nil {
 		slog.Error("Content check failed", "error", err.Error())
 		return 1
@@ -110,6 +112,25 @@ func verify(contentDir string, out io.Writer) int {
 			if prefix == "" {
 				code = 1
 			}
+		}
+		if !checkAudio {
+			continue
+		}
+		// SPEC-009 FR-012: an approved language ships with every narrated track recorded and current.
+		manifest, err := narration.LoadManifest(root, l.Code)
+		if err == nil && prefix != "" && len(manifest.Tracks) == 0 {
+			fmt.Fprintf(out, "%s%s audio: no recordings yet\n", prefix, l.Code)
+			continue
+		}
+		problems, err := narration.Check(root, l.Code)
+		if err != nil {
+			problems = []narration.Problem{{Key: "audio", Reason: err.Error()}}
+		}
+		for _, line := range narration.Summary(problems, 20) {
+			fmt.Fprintf(out, "%s%s audio %s\n", prefix, l.Code, line)
+		}
+		if prefix == "" && len(problems) > 0 {
+			code = 1
 		}
 	}
 	if code == 0 {

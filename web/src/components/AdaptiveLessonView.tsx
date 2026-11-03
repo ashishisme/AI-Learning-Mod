@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { AdaptiveLessonPayload } from '../api'
+import { AdaptiveLessonPayload, Served } from '../api'
 import { ChipMascotBanner } from './ChipMascotBanner'
 import { ChipVectorAvatar } from './ChipVectorAvatar'
 import { TuringWidget } from './TuringWidget'
@@ -13,20 +13,25 @@ import { BiasDetectiveWidget } from './BiasDetectiveWidget'
 import { MermaidRenderer } from './MermaidRenderer'
 import { VisualMetaphorCard } from './VisualMetaphorCard'
 import { AudioNarrationButton } from './AudioNarrationButton'
+import { sectionNarration } from '../services/narrationText'
 import { speechService } from '../services/speechService'
 import { useAudioStore, useProgressStore } from '../store'
 import { StepperDiagram } from './StepperDiagram'
 import { WidgetFrame } from './WidgetFrame'
 import { ChoiceCard } from './ChoiceCard'
-import { useT } from '../i18n'
+import { useLanguage, useT } from '../i18n'
 
 interface Props {
-  payload: AdaptiveLessonPayload
+  payload: AdaptiveLessonPayload & Served
 }
 
 export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({})
   const t = useT()
+  // SPEC-009 FR-013: read the lesson in the language it was served in (English when it fell back).
+  const { languages } = useLanguage()
+  const contentSpeechLang = languages.find((l) => l.code === (payload.servedLang ?? 'en'))?.speechLang ?? 'en-US'
+  const trackPrefix = `${payload.lessonId}/${payload.mode}/`
   const { activeTrackId, currentSentence, isPlaying } = useAudioStore()
 
   const isJunior = payload.mode === 'junior'
@@ -47,7 +52,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
     <div className="space-y-8 animate-fadeIn">
       {/* Mascot Banner (Junior) or Plain Intro Banner (Adults) */}
       {isJunior ? (
-        <ChipMascotBanner greeting={payload.mascot?.greeting} />
+        <ChipMascotBanner greeting={payload.mascot?.greeting} speechLang={contentSpeechLang} trackPrefix={trackPrefix} />
       ) : (
         payload.intro && (
           <div className="p-6 rounded-3xl bg-gradient-to-r from-blue-50/90 to-indigo-50/70 dark:from-blue-950/40 dark:to-indigo-950/20 border-2 border-blue-200/90 dark:border-blue-800/50 text-slate-800 dark:text-slate-100 text-sm sm:text-base leading-relaxed font-medium shadow-sm flex items-start justify-between gap-3">
@@ -62,6 +67,8 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
             </div>
             <AudioNarrationButton
               id="intro-guide-note"
+              trackKey={trackPrefix + 'intro-guide-note'}
+              speechLang={contentSpeechLang}
               textToRead={payload.intro}
               label={t('narration.listen')}
               variant="pill"
@@ -120,7 +127,9 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                 </h2>
                 <AudioNarrationButton
                   id={sectionTrackId}
-                  textToRead={`${section.heading}. ${section.chipQuote ? t('narration.chipSays') + section.chipQuote + '. ' : ''}${section.bodyMarkdown}`}
+                  trackKey={trackPrefix + sectionTrackId}
+                  speechLang={contentSpeechLang}
+                  textToRead={sectionNarration(section.heading, section.chipQuote, section.bodyMarkdown, t('narration.chipSays'))}
                   label={t('narration.readSection')}
                   variant="pill"
                 />
@@ -257,7 +266,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                           </strong>
                           <button
                             type="button"
-                            onClick={() => speechService.speak(jb.term)}
+                            onClick={() => speechService.speak(jb.term, { speechLang: contentSpeechLang })}
                             title={t('adaptive.hearPronunciation', { term: jb.term })}
                             className="p-1 rounded-md text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 transition-colors text-xs"
                             aria-label={t('adaptive.pronounce', { term: jb.term })}

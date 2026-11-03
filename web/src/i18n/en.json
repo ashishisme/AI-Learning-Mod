@@ -212,6 +212,7 @@
   "narration.stopSection": "Stop reading section",
   "narration.studioLabel": "Voice Studio Settings",
   "narration.studioTitle": "🎙️ Audio Studio Settings",
+  "narration.unavailable": "Narration in your language is not available on this device.",
   "narration.voice": "Voice:",
   "nav.brand": "Foundations Coach",
   "nav.cloudActive": "Cloud AI Active",

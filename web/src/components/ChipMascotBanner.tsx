@@ -5,9 +5,13 @@ import { useT } from '../i18n'
 
 interface Props {
   greeting?: string
+  // The language of a given greeting; the default greeting is in the chosen language.
+  speechLang?: string
+  // "<lessonId>/<mode>/" of a lesson's own greeting, for its recording (SPEC-009 FR-012).
+  trackPrefix?: string
 }
 
-export const ChipMascotBanner: React.FC<Props> = ({ greeting: given }) => {
+export const ChipMascotBanner: React.FC<Props> = ({ greeting: given, speechLang, trackPrefix }) => {
   const t = useT()
   const greeting = given || t('adaptive.chipGreeting')
   return (
@@ -42,6 +46,8 @@ export const ChipMascotBanner: React.FC<Props> = ({ greeting: given }) => {
 
             <AudioNarrationButton
               id="chip-mascot-greeting"
+              speechLang={given ? speechLang : undefined}
+              trackKey={given && trackPrefix ? trackPrefix + 'chip-mascot-greeting' : 'global/chip-mascot-greeting'}
               textToRead={greeting}
               label={t('narration.listenChip')}
               variant="chip"

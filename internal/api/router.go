@@ -120,6 +120,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	lessonsHandler.langs = langs
 	mux.HandleFunc("GET /api/lessons", lessonsHandler.GetIndex)
 	mux.HandleFunc("GET /api/lessons/{id}", lessonsHandler.GetLesson)
+	mux.HandleFunc("GET "+AudioURLPrefix+"{lang}/{path...}", audioHandler(lessonsHandler.contentDir, langs))
 
 	// Lesson images ship with the release (FR-033). Outside /api, so the session gate does not apply:
 	// like the SPA itself, they hold no lesson text. Names are content hashes, so caching is safe.

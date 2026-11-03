@@ -96,6 +96,7 @@ if command -v gh &> /dev/null; then
     gh variable set GCP_REGION --env "${ENV}" --body "asia-south1" --repo "${REPO}"
     gh variable set GCP_ARTIFACT_REPOSITORY --env "${ENV}" --body "ai-foundations-coach" --repo "${REPO}"
     gh variable set GCP_SERVICE --env "${ENV}" --body "ai-foundations-coach" --repo "${REPO}"
+    gh variable set GCP_NARRATION_BUCKET --env "${ENV}" --body "${PROJECT_ID}-ai-foundations-coach-narration" --repo "${REPO}"
   done
   echo "✅ GitHub environment variables configured successfully."
 else
