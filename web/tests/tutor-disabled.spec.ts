@@ -19,7 +19,8 @@ async function setup(page: Page, tutorEnabled: boolean) {
 }
 
 test.describe('Tutor switched off or resting', () => {
-  test('tutorEnabled false hides the panel, microphone and read-aloud controls', async ({ page }) => {
+  // FR-024 as amended 2026-11-03: the panel stays visible but greyed out, pointing to Settings.
+  test('tutorEnabled false shows a greyed-out panel with no microphone, read-aloud or tutor calls', async ({ page }) => {
     let tutorCalls = 0
     await setup(page, false)
     await page.route('**/api/tutor', (route) => {
@@ -28,11 +29,16 @@ test.describe('Tutor switched off or resting', () => {
     })
     await page.goto('/lesson/tutor-test')
     await expect(page.locator('[data-testid="lesson-title"]')).toHaveText(lesson.title)
-    await expect(page.locator('[data-testid="tutor-panel"]')).toHaveCount(0)
-    await expect(page.locator('[data-testid="tutor-input"]')).toHaveCount(0)
+    await expect(page.locator('[data-testid="tutor-panel"]')).toBeVisible()
+    await expect(page.locator('[data-testid="tutor-setup-message"]')).toBeVisible()
+    await expect(page.locator('[data-testid="tutor-input"]')).toBeDisabled()
+    await expect(page.locator('[data-testid="tutor-submit"]')).toBeDisabled()
     await expect(page.locator('[data-testid="tutor-mic-btn"]')).toHaveCount(0)
     await expect(page.locator('[data-testid="tutor-read-answer-btn"]')).toHaveCount(0)
     expect(tutorCalls).toBe(0)
+    // The button goes straight to the AI settings.
+    await page.locator('[data-testid="tutor-setup-btn"]').click()
+    await expect(page.locator('#local-llm-enabled')).toBeVisible()
   })
 
   test('the resting reply appears in the answer area when the tutor is on', async ({ page }) => {

@@ -1,15 +1,19 @@
 // SPEC: FR-UI-03, FR-UI-07, FR-UI-12, NFR-SEC-05, AC-24, SPEC-005 (Audio & Speech Tutor)
 import React, { useState, useEffect, useRef } from 'react'
 import { askTutorStream, ApiError } from '../api'
-import { useAudienceModeStore } from '../store'
+import { useAudienceModeStore, useSettingsStore } from '../store'
 import { speechService } from '../services/speechService'
 import { useLanguage, useT } from '../i18n'
 
 interface TutorPanelProps {
   lessonId: string
+  // SPEC-008 FR-024 (amended 2026-11-03): on a hosted site with its tutor off, the panel is shown greyed
+  // out until the learner connects their own local AI in Settings (FR-021a).
+  needsSetup?: boolean
 }
 
-export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
+export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId, needsSetup = false }) => {
+  const openSettings = useSettingsStore((s) => s.setDrawerOpen)
   const { mode: audienceMode } = useAudienceModeStore()
   const t = useT()
   const { language } = useLanguage() // SPEC-009 FR-026: the microphone and read-aloud follow the learner's language
@@ -17,7 +21,8 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
   const [answer, setAnswer] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
-  const [isOffline, setIsOffline] = useState(false)
+  const [serverOffline, setIsOffline] = useState(false)
+  const isOffline = serverOffline || needsSetup // either way nothing can be asked yet
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isListening, setIsListening] = useState(false)
   const [speechSupported, setSpeechSupported] = useState(false)
@@ -189,9 +194,9 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
         {isOffline ? (
           <span
             data-testid="tutor-offline-badge"
-            className="text-xs font-semibold px-2.5 py-1 rounded-full bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800"
+            className={`whitespace-nowrap flex-shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full ${needsSetup ? 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600' : 'bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800'}`}
           >
-            {t('tutor.offline')}
+            {t(needsSetup ? 'tutor.setupBadge' : 'tutor.offline')}
           </span>
         ) : (
           <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-200/60 dark:border-emerald-800">
@@ -202,7 +207,29 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
       </div>
 
       {/* Offline Alert Box */}
-      {isOffline && (
+      {needsSetup && (
+        <div
+          data-testid="tutor-setup-message"
+          className="mb-5 p-4 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 text-sm flex flex-col sm:flex-row sm:items-center gap-3"
+        >
+          <div className="flex items-start gap-3 flex-1">
+            <span className="text-base leading-none" aria-hidden="true">🔌</span>
+            <div>
+              <p className="font-semibold mb-0.5">{t('tutor.setupTitle')}</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{t('tutor.setupBody')}</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            data-testid="tutor-setup-btn"
+            onClick={() => openSettings(true)}
+            className="self-start sm:self-auto px-4 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+          >
+            {t('tutor.setupAction')}
+          </button>
+        </div>
+      )}
+      {serverOffline && !needsSetup && (
         <div
           data-testid="tutor-offline-message"
           className="mb-5 p-4 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 rounded-xl text-amber-900 dark:text-amber-200 text-sm flex items-start gap-3"
@@ -275,7 +302,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId }) => {
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               disabled={isOffline || loading}
-              placeholder={t(isOffline ? 'tutor.offlinePlaceholder' : 'tutor.placeholder')}
+              placeholder={t(needsSetup ? 'tutor.setupPlaceholder' : isOffline ? 'tutor.offlinePlaceholder' : 'tutor.placeholder')}
               maxLength={500}
               className="w-full px-4 py-2.5 pr-11 border border-slate-300 dark:border-slate-400 bg-white dark:bg-white text-slate-900 dark:text-slate-900 placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed transition rounded-xl text-sm font-medium shadow-2xs"
             />

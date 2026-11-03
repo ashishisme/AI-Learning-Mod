@@ -269,7 +269,9 @@ test.describe('Hosted deployment with the learner\'s own local AI', () => {
     await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, tutorEnabled: false, ...runtimeExtra } }))
     await page.route(`${local}/models`, (r) => r.fulfill({ json: { data: [{ id: 'llama3.2:1b' }, { id: 'qwen2.5:0.5b' }] } }))
     await page.goto('/lesson/cloud-test')
-    await expect(page.locator('[data-testid="tutor-panel"]')).toHaveCount(0) // hosted tutor is off
+    // Hosted tutor off and no local AI yet: the panel is there, greyed out (FR-024 as amended 2026-11-03).
+    await expect(page.locator('[data-testid="tutor-setup-message"]')).toBeVisible()
+    await expect(page.locator('[data-testid="tutor-input"]')).toBeDisabled()
     await page.locator('[data-testid="open-settings-btn"]').click()
     await page.locator('#local-llm-enabled').check()
     await expect(page.locator('#local-llm-base-url')).toHaveValue(local)
@@ -277,6 +279,8 @@ test.describe('Hosted deployment with the learner\'s own local AI', () => {
     await expect(page.getByText(verified)).toBeVisible()
     await page.locator('#save-settings-btn').click()
     await expect(page.locator('[data-testid="tutor-panel"]')).toBeVisible()
+    await expect(page.locator('[data-testid="tutor-setup-message"]')).toHaveCount(0)
+    await expect(page.locator('[data-testid="tutor-input"]')).toBeEnabled()
   }
 
   test('asks the local AI with the server-built prompt and adds the citation', async ({ page }) => {
@@ -350,6 +354,6 @@ test.describe('Hosted deployment with the learner\'s own local AI', () => {
     await expect(page.getByRole('alert')).toContainText('Only addresses on this computer')
     await expect(page.locator('#local-llm-test-btn')).toBeDisabled()
     await page.locator('#save-settings-btn').click()
-    await expect(page.locator('[data-testid="tutor-panel"]')).toHaveCount(0)
+    await expect(page.locator('[data-testid="tutor-setup-message"]')).toBeVisible() // still not set up
   })
 })

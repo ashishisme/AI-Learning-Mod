@@ -34,6 +34,9 @@ export const Lesson: React.FC = () => {
   const t = useT()
   const { code } = useLanguage()
   const tutorEnabled = serverTutor || (hosted && !!localLLMEnabled && isLocalLLMUrl(baseUrl))
+  // FR-024 (amended 2026-11-03): a hosted site with its tutor off still shows the panel, greyed out
+  // until the learner connects their own local AI in Settings.
+  const tutorNeedsSetup = hosted && !tutorEnabled
 
   // 1. Fetch canonical lesson metadata
   useEffect(() => {
@@ -212,7 +215,7 @@ export const Lesson: React.FC = () => {
       )}
 
       {/* Grounded AI Teaching Assistant */}
-      {tutorEnabled && <TutorPanel lessonId={lesson.id} />}
+      {(tutorEnabled || tutorNeedsSetup) && <TutorPanel lessonId={lesson.id} needsSetup={tutorNeedsSetup} />}
     </div>
   )
 }
