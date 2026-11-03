@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.5.0 |
+| Version | 2.6.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -357,6 +357,19 @@ progress; `<html lang>` follows it. On a first visit the app opens in an approve
 the browser lists it before English, and otherwise in English. A stored choice that is no longer
 approved shows English and is kept. Whenever the chosen language is not English and the lesson list,
 lesson, adaptive lesson or quiz on screen came back in English, a notice in the chosen language says so.
+
+**FR-I18N-07.** Added 2.6.0 (SPEC-009, build B4). Every narrated track of an approved language other
+than English (each adaptive section, intro and greeting, and the default greeting) shall be recorded
+in each persona's voice and shipped with the release, served at `/api/audio/<code>/…` behind the
+session gate. A recording is identified by the hash of its voice, voice settings and text, is made
+again only when one of them changes, and `ingest -verify` fails the build for an approved language
+with any recording missing or out of date. Narration text is built by one rule shared by the app and
+the recorder. The recording credential is a short-lived token on the owner's machine, never stored.
+
+**FR-I18N-08.** Added 2.6.0 (SPEC-009, build B4). Without a recording, narration uses a device voice in
+the language of the text on screen (English for content that fell back to English). A text is never
+read by a voice of another language: when the device has none, nothing is spoken and the learner is
+told that narration in their language is not available on this device. English narration is unchanged.
 
 ---
 
@@ -836,6 +849,17 @@ English to a Hindi learner shows the notice, one served in Hindi or to an Englis
 and a quiz without a Hindi version shows it and still scores. Once the Hindi catalogue exists, no
 English interface string remains on Home, Lesson (three modes), Quiz or Settings, and those pages
 fit 360 px with 44 px targets. Covered by `web/tests/i18n.spec.ts`.
+
+**AC-50 (FR-I18N-07, FR-I18N-08).** The recorder builds the same text as the app (shared fixture),
+records every track in every persona, splits long text under the request limit at sentence ends,
+records nothing on a second run, records only changed tracks, never prints its token, and `-check`
+reports missing and out-of-date recordings; `/api/audio/` serves approved languages only, with the
+right types, Range support and no path escape; `-verify` fails an approved language with a missing
+recording and skips audio only with `-audio=false`. In the app a recorded section plays its file in
+the chosen persona and stops on request, an unrecorded one uses a Hindi device voice, a device with
+no Hindi voice says so and speaks nothing, English content is read in English, and English narration
+is unchanged. Covered by `internal/narration/text_test.go`, `cmd/narrate/narrate_test.go`,
+`internal/api/audio_test.go`, `cmd/ingest/verify_lang_test.go` and `web/tests/narration-hi.spec.ts`.
 
 ---
 
