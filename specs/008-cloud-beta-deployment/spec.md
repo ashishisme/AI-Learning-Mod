@@ -32,6 +32,14 @@ These decisions apply **only to the beta testing phase** and are reconsidered af
 - Q: How is personal data kept out of feedback? → A: **Two automatic checks.** First, a deterministic rule check rejects any message containing phone numbers, emails, addresses or similar before anything is stored. Second, an AI auditor reviews each stored message before any admin can read it. Nothing reaches an admin without passing both.
 - Q: When does the AI auditor run? → A: **Only when feedback is received.** No feedback means no AI call and no AI cost.
 
+### Session 2026-11-03 (owner rulings on open items T126, T127, T129, T132, T120/T121/T134)
+
+- Q: May a learner's own local AI show the tutor panel while the hosted tutor is off (T126)? → A: **Yes.** The panel is always shown on lessons and is greyed out, pointing to Settings, until a local AI is set up. FR-024 amended.
+- Q: Admin sign-in with MFA (T127)? → A: **Not yet.** Admin sign-in stays a personal Google account on the External/Testing consent screen with named test users for the beta; MFA (`OIDC_REQUIRE_MFA`) is deferred and revisited before the beta widens.
+- Q: Region for the staging beta (T132)? → A: **asia-south1 (Mumbai)**, as deployed.
+- Q: Run the staging acceptance (T120) before opening the release gate, or skip (T134)? → A: **Skip.** The owner approves running the beta without the T120 staging acceptance; T121 records the release details.
+- Q: Verify FR-021a in real browsers against the live site (T129)? → A: **Yes**, do it.
+
 ### Session 2026-11-02 (cloud beta decisions, owner)
 
 - Q: May the feedback auditor use a third-party API key under FR-023? → A: **Yes**, if the key is retrieved from Secret Manager at runtime using the Cloud Run service account's own identity, limited to `roles/secretmanager.secretAccessor`. It is never hardcoded, never in a plain environment variable and never in GitHub configuration. Under FR-059, deployment configuration names the secret and does not hold its value. Feedback stays hidden until this is working in staging. Access to cloud services stays managed identity only.
@@ -260,7 +268,7 @@ A signed-in learner can tell the team what is wrong or what they like, from any 
 
 **AI tutor (disabled in beta) and spend control**
 
-- **FR-024**: The AI tutor MUST be disabled for all beta users. Its panel, microphone and read-aloud controls are hidden, and any tutor request is refused without calling the AI service. Re-enabling it requires a future spec covering parental consent / school onboarding. This does not restrict the feedback auditor (FR-055 to FR-059), which sends only screened feedback text and nothing else to the AI service.
+- **FR-024**: The AI tutor MUST be disabled for all beta users. The hosted tutor refuses every request without calling the AI service. *(Amended 2026-11-03, owner decision, T126:)* the tutor panel stays visible on lessons, greyed out with its input disabled, no microphone or read-aloud, and a pointer to Settings, until the learner connects their own local AI (FR-021a); it then works as FR-021a describes. Re-enabling it requires a future spec covering parental consent / school onboarding. This does not restrict the feedback auditor (FR-055 to FR-059), which sends only screened feedback text and nothing else to the AI service.
 - **FR-025**: A global daily AI spend ceiling of **US \$1.00** MUST be enforced across all instances whenever the tutor is enabled. Once reached, the tutor returns "resting until tomorrow" until midnight IST.
 - **FR-026**: The owner MUST receive alerts at 50%, 90% and 100% of the monthly hosting budget. At 100%, the tutor (if enabled) MUST switch off automatically until manually re-enabled.
 
