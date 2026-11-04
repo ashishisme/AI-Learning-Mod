@@ -448,6 +448,13 @@ The hosted server cannot reach a learner's computer, so the learner's browser ta
 
 Only `localhost` and `127.0.0.1` addresses are accepted. Each question is first checked by the server (`POST /api/tutor/prepare`, the same safety screen as the hosted tutor), then sent from the browser to the local AI. The server makes no AI call and spends nothing.
 
+Browser support, as tested on 2026-11-04 (T129):
+
+- **Chrome (macOS):** works. Chrome blocks the first request until the learner allows the site to reach devices on their local network, from the prompt at the left of the address bar. A Check connection pressed before allowing stays on "Checking…", so reload the page and press it again.
+- **Edge, Firefox, Safari and LM Studio:** not tested yet.
+
+Speed depends on the learner's computer. On a 4-core Intel laptop with 8 GB of memory and no GPU, `llama3.2:1b` took about 100 seconds to start answering and 2 to 3 minutes to finish, because the prompt carries the lesson text. Answers from a model this small can be wrong: the citation shows which lesson section to check.
+
 ---
 
 ## 📐 Spec-Driven Development (SDD)
