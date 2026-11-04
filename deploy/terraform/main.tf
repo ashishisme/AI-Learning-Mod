@@ -6,6 +6,9 @@
 provider "google" {
   project = var.project_id
   region  = var.region
+  # The Budget API needs a quota project when called with user credentials.
+  billing_project       = var.project_id
+  user_project_override = true
 }
 
 data "google_project" "this" {}
