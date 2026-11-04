@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"io"
 	"math/rand/v2"
+	"net"
 	"net/http"
 	"regexp"
 	"sort"
@@ -46,6 +47,7 @@ const (
 // FirestoreConfig configures the store. The zero values of everything but ProjectID suit Cloud Run.
 type FirestoreConfig struct {
 	ProjectID   string
+	Database    string                                    // default (default); tests use throwaway databases
 	BaseURL     string                                    // default https://firestore.googleapis.com
 	Token       func(ctx context.Context) (string, error) // default: the runtime identity's metadata-server token
 	HTTP        *http.Client
@@ -57,7 +59,7 @@ type FirestoreConfig struct {
 // library because DC-06 allows no new module. It is safe to share a database between instances.
 type FirestoreStore struct {
 	cfg  FirestoreConfig
-	root string // projects/{p}/databases/(default)
+	root string // projects/{p}/databases/{database}
 }
 
 // OpenFirestoreStore checks the database can be read, so a misconfigured revision fails at startup
@@ -82,7 +84,10 @@ func OpenFirestoreStore(ctx context.Context, cfg FirestoreConfig) (*FirestoreSto
 	if cfg.TxTimeout <= 0 {
 		cfg.TxTimeout = 15 * time.Second
 	}
-	s := &FirestoreStore{cfg: cfg, root: "projects/" + cfg.ProjectID + "/databases/(default)"}
+	if cfg.Database == "" {
+		cfg.Database = "(default)"
+	}
+	s := &FirestoreStore{cfg: cfg, root: "projects/" + cfg.ProjectID + "/databases/" + cfg.Database}
 	if err := s.View(ctx, func(tx Tx) error {
 		tx.GetCounter("startup-check")
 		return nil
@@ -109,10 +114,18 @@ func (s *FirestoreStore) run(ctx context.Context, fn func(Tx) error, countersOnl
 	for attempt := 1; ; attempt++ {
 		id, err := s.begin(ctx, prev)
 		if err != nil {
-			return err
+			// Nothing is written before a transaction starts, so a transient failure can be retried.
+			if attempt >= s.cfg.MaxAttempts || !s.transient(ctx, err) {
+				return err
+			}
+			if err := s.backoff(ctx, attempt); err != nil {
+				return err
+			}
+			continue
 		}
 		tx := newFsTx(ctx, s, id, false)
 		fnErr := fn(tx)
+		committing := false
 		switch {
 		case tx.err != nil:
 			err = tx.err // a failed read can never look like "not found" (contract rule 8)
@@ -126,23 +139,55 @@ func (s *FirestoreStore) run(ctx context.Context, fn func(Tx) error, countersOnl
 			s.rollback(id)
 			return nil
 		default:
+			committing = true
 			if err = s.commit(ctx, id, tx.writes); err == nil {
 				return nil
 			}
 		}
-		// Only ABORTED is known not to have applied. Retrying after any other failure could apply
-		// the same change twice, so it fails closed instead.
-		if !isAborted(err) || attempt >= s.cfg.MaxAttempts {
+		// Of commit failures, only ABORTED is known not to have applied: retrying after any other could
+		// apply the same change twice, so it fails closed. A failed read has written nothing, so a
+		// transient one is retried too (heavy contention makes Firestore hold reads behind locks).
+		retry := isAborted(err) || (!committing && s.transient(ctx, err))
+		if !retry || attempt >= s.cfg.MaxAttempts {
 			s.rollback(id)
 			return err
 		}
+		if !isAborted(err) {
+			s.rollback(id) // release its locks; an aborted transaction holds none
+		}
 		prev = id
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		case <-time.After(time.Duration(rand.Int64N(int64(50*time.Millisecond) << min(attempt, 6)))):
+		if err := s.backoff(ctx, attempt); err != nil {
+			return err
 		}
 	}
+}
+
+// backoff waits a random, growing time before the next attempt, or returns when ctx ends.
+func (s *FirestoreStore) backoff(ctx context.Context, attempt int) error {
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-time.After(time.Duration(rand.Int64N(int64(50*time.Millisecond) << min(attempt, 6)))):
+		return nil
+	}
+}
+
+// transient is true for a failure that wrote nothing and may succeed on a later try: aborted, busy,
+// overloaded, or one request timing out while the whole transaction still has time left.
+func (s *FirestoreStore) transient(ctx context.Context, err error) bool {
+	if ctx.Err() != nil {
+		return false
+	}
+	var e *apiError
+	if errors.As(err, &e) {
+		switch e.Status {
+		case "ABORTED", "UNAVAILABLE", "DEADLINE_EXCEEDED", "RESOURCE_EXHAUSTED":
+			return true
+		}
+		return false
+	}
+	var ne net.Error
+	return errors.As(err, &ne) && ne.Timeout()
 }
 
 // View needs no commit or rollback: a read-only transaction holds no locks.

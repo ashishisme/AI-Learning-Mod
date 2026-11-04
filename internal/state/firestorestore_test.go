@@ -62,6 +62,40 @@ func TestFirestoreStoreContractOnEmulator(t *testing.T) {
 	})
 }
 
+// The 50-goroutine races on real Firestore (T106), which the emulator cannot run. Opt-in: it needs
+// throwaway databases, never the live one, and an owner's short-lived token:
+//
+//	FIRESTORE_REAL_PROJECT=<project> FIRESTORE_REAL_DATABASES=<db1>,<db2>,<db3> \
+//	FIRESTORE_REAL_TOKEN="$(gcloud auth print-access-token)" \
+//	go test ./internal/state -run 'TestFirestoreStoreRacesOnRealFirestore/(serialised|one_winner|hard_cap)' -v
+//
+// Each store path gets the next unused database, so each race starts empty.
+func TestFirestoreStoreRacesOnRealFirestore(t *testing.T) {
+	project, dbs, token := os.Getenv("FIRESTORE_REAL_PROJECT"), os.Getenv("FIRESTORE_REAL_DATABASES"), os.Getenv("FIRESTORE_REAL_TOKEN")
+	if project == "" || dbs == "" || token == "" {
+		t.Skip("FIRESTORE_REAL_PROJECT, FIRESTORE_REAL_DATABASES and FIRESTORE_REAL_TOKEN are not set")
+	}
+	free := strings.Split(dbs, ",")
+	for _, d := range free {
+		if d == "(default)" {
+			t.Fatal("refusing to run the store tests against the live (default) database")
+		}
+	}
+	byPath := map[string]string{}
+	statetest.RunStoreTests(t, func(path string) (state.Store, error) {
+		db, ok := byPath[path]
+		if !ok {
+			if len(free) == 0 {
+				return nil, errors.New("no unused test database left; list one per test you run")
+			}
+			db, free = free[0], free[1:]
+			byPath[path] = db
+		}
+		return state.OpenFirestoreStore(bg, state.FirestoreConfig{ProjectID: project, Database: db,
+			Token: func(context.Context) (string, error) { return token, nil }, MaxAttempts: 50, TxTimeout: 2 * time.Minute})
+	})
+}
+
 func TestReadFailureInsideATransactionDiscardsItsWrites(t *testing.T) {
 	s, srv := newFake(t)
 	notFound := errors.New("not found")
@@ -223,5 +257,48 @@ func TestMissingCredentialsFailClosed(t *testing.T) {
 	}})
 	if err == nil {
 		t.Error("no credentials must stop startup")
+	}
+}
+
+// Seen on real Firestore with 50 writers on one document (T106): a transaction can wait behind locks
+// until a request times out. Nothing is written before the commit, so a transient failure there is
+// retried; a commit that fails other than ABORTED is not (TestOtherCommitFailuresAreNotRetried).
+func TestTransientFailuresBeforeTheCommitAreRetried(t *testing.T) {
+	s, srv := newFake(t)
+	srv.FailNext(503, "UNAVAILABLE") // the first begin
+	runs := 0
+	err := s.Do(bg, func(tx state.Tx) error {
+		runs++
+		if runs == 1 {
+			srv.FailNext(429, "RESOURCE_EXHAUSTED") // the read below
+		}
+		tx.AddCounter("c", tx.GetCounter("c")+1)
+		return nil
+	})
+	if err != nil || runs != 2 {
+		t.Fatalf("err %v, runs %d, want nil and 2", err, runs)
+	}
+	if n := srv.Calls("commit"); n != 1 {
+		t.Errorf("commits = %d, want 1", n)
+	}
+	_ = s.View(bg, func(tx state.Tx) error {
+		if tx.GetCounter("c") != 1 {
+			t.Errorf("counter = %d, want 1", tx.GetCounter("c"))
+		}
+		return nil
+	})
+}
+
+func TestPermanentReadFailuresAreNotRetried(t *testing.T) {
+	s, srv := newFake(t)
+	runs := 0
+	err := s.Do(bg, func(tx state.Tx) error {
+		runs++
+		srv.FailNext(403, "PERMISSION_DENIED")
+		tx.GetCounter("c")
+		return nil
+	})
+	if err == nil || runs != 1 {
+		t.Fatalf("err %v, runs %d, want an error after 1", err, runs)
 	}
 }
