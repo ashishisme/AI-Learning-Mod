@@ -62,6 +62,11 @@ const spoken = (page: Page) => page.evaluate(() => (window as unknown as { __spo
 const readFirstSection = (page: Page, labels = hi) => page.getByRole('button', { name: labels['narration.readSection'] }).first().click()
 
 test.describe('Hindi narration on device voices (B4 step A)', () => {
+  test.beforeEach(async ({ page }) => {
+    // Device voice tests test SpeechSynthesis fallback when no recorded audio track exists
+    await page.route('**/api/audio/*/manifest.json', (r) => r.fulfill({ json: { tracks: {} } }))
+  })
+
   test('a Hindi lesson is read by a Hindi voice, sentence by sentence at ।', async ({ page }) => {
     await fakeSpeech(page, [{ name: 'Samantha', lang: 'en-US' }, { name: 'Lekha', lang: 'hi-IN' }])
     await hindiLesson(page)
