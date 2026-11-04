@@ -23,6 +23,12 @@
     min-width: 44px;
   }
 
+  /* Inputs need the same touch target; radios and checkboxes use their labelled wrapper. */
+  input:not([type='radio']):not([type='checkbox']),
+  textarea {
+    min-height: 44px;
+  }
+
   :root {
     --color-surface-bg: #f8fafc;
     --color-surface-card: #ffffff;
@@ -32,6 +38,8 @@
 
   html {
     scroll-behavior: smooth;
+    /* Keep keyboard focus clear of the 56 px sticky application header. */
+    scroll-padding-top: 4rem;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 

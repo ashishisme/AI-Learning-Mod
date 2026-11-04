@@ -199,7 +199,7 @@ export const Lesson: React.FC = () => {
           <AdaptiveLessonView payload={adaptivePayload} />
         </>
       ) : (
-        <main
+        <section
           data-testid="lesson-content"
           className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 shadow-sm space-y-6 text-slate-800 dark:text-slate-200 leading-relaxed text-base"
         >
@@ -211,7 +211,7 @@ export const Lesson: React.FC = () => {
           {lesson.blocks.map((block, idx) => (
             <MarkdownBlock key={idx} block={block} />
           ))}
-        </main>
+        </section>
       )}
 
       {/* Grounded AI Teaching Assistant */}

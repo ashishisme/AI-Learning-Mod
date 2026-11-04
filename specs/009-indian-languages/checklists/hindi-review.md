@@ -53,3 +53,15 @@ Measured 2026-11-04 with the current server and the real recordings, over the sa
 - All 20 Hindi files are approved as "owner (beta)" under FR-I18N-10.
 - A native speaker's review is still open. Use `go run ./cmd/review -lang hi`, then re-record any changed tracks with `go run ./cmd/narrate -lang hi`, and drop `beta` from `public-content/languages.json`.
 - Terms follow the source course's Hindi full lessons (SPEC-009, Session 2026-11-04). The glossary is `content/glossary/hi.json`.
+
+## Interface and accessibility review (T051, T079)
+
+Reviewed 2026-11-04 in Chromium at 360×740 and 1280×900, in light and dark themes. All six Hindi lessons were checked in Kids mode, covering their lesson-specific widgets.
+
+- Devanagari text wrapped without horizontal page overflow at either viewport.
+- Interactive controls had a 44 px minimum target; text fields and sliders now receive that floor in `web/src/index.css`.
+- Each lesson has one main landmark. `scroll-padding-top: 4rem` keeps focused content clear of the 56 px sticky header.
+- Keyboard traversal reached visible controls, and no unlabelled interactive control was found in the checked views.
+- `npm --prefix web test -- --project=chromium tests/i18n.spec.ts` passed: 14 tests.
+
+The Impeccable engine was not run because `CLAUDE.md` requires owner approval before its launcher downloads a native binary. Its documented fallback references and the UI UX Pro Max accessibility guidance were used instead.

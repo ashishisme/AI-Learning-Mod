@@ -116,6 +116,14 @@ test.describe('Hindi (B3)', () => {
     await expect(page.getByTestId('not-translated-notice')).toHaveCount(0)
   })
 
+  test('a Hindi lesson has one main landmark and preserves space below the sticky header for focus', async ({ page }) => {
+    await offerHindi(page, { stored: 'hi' })
+    await page.goto('/lesson/1-intro')
+    await expect(page.getByTestId('lesson-title')).toBeVisible()
+    expect(await page.getByRole('main').count()).toBe(1)
+    expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollPaddingTop)).toBe('64px')
+  })
+
   test('English learners never see the notice', async ({ page }) => {
     await offerHindi(page, { stored: 'en' })
     await page.goto('/lesson/1-intro')
@@ -190,6 +198,49 @@ test.describe('Hindi (B3)', () => {
         return out
       })
       expect(problems, `${path} ${tab ?? ''}`).toEqual([])
+    }
+  })
+
+  test('Hindi learner screens remain operable in light and dark at phone and desktop widths', async ({ page }) => {
+    needsHindi(hiUI)
+    for (const [width, height] of [[360, 740], [1280, 900]]) {
+      for (const theme of ['light', 'dark']) {
+        await page.setViewportSize({ width, height })
+        await offerHindi(page, { stored: 'hi' })
+        await page.addInitScript(() => localStorage.setItem('ai-foundations-audience-mode', JSON.stringify({ state: { mode: 'standard' }, version: 0 })))
+        for (const lessonId of ['1-intro', '2-symbolic', '3-neuralnetworks', '4-computervision', '5-nlp', '7-ethics']) {
+          await page.goto(`/lesson/${lessonId}`)
+          await expect(page.getByTestId('lesson-title')).toBeVisible()
+          await page.evaluate((selectedTheme) => document.documentElement.classList.toggle('dark', selectedTheme === 'dark'), theme)
+          await page.locator('button[role="tab"]').nth(1).click()
+          await expect(page.getByRole('heading').first()).toBeVisible()
+          const problems = await page.evaluate(() => {
+            const out: string[] = []
+            if (document.documentElement.scrollWidth > document.documentElement.clientWidth) out.push('page scrolls sideways')
+            if (document.querySelectorAll('main').length !== 1) out.push('expected one main landmark')
+            for (const el of Array.from(document.querySelectorAll<HTMLElement>('button, a[href], select, input, textarea'))) {
+              const r = el.getBoundingClientRect()
+              if (r.width > 0 && getComputedStyle(el).display !== 'inline' && (r.width < 44 || r.height < 44)) out.push(`small target: ${el.tagName}`)
+              if (!el.matches('[aria-hidden="true"]') && !((el as HTMLInputElement).labels?.length) && !el.getAttribute('aria-label') && !el.textContent?.trim()) out.push(`unlabelled control: ${el.tagName}`)
+            }
+            return out
+          })
+          expect(problems, `${lessonId} ${theme} ${width}px`).toEqual([])
+        }
+
+        await page.evaluate(() => {
+          document.body.tabIndex = -1
+          document.body.focus()
+        })
+        for (let i = 0; i < 8; i++) await page.keyboard.press('Tab')
+        const focusIsVisible = await page.evaluate(() => {
+          const active = document.activeElement as HTMLElement | null
+          if (!active) return false
+          const r = active.getBoundingClientRect()
+          return document.querySelector('header')?.contains(active) || (r.top >= 56 && r.bottom <= window.innerHeight)
+        })
+        expect(focusIsVisible, `${theme} ${width}px keyboard focus`).toBe(true)
+      }
     }
   })
 })
