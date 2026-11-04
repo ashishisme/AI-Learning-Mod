@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "rules": "See design/brand/README.md. Only status \"approved\" with trademarkScreen \"clear\" may ship in web/public/brand/.",
+  "assets": []
+}

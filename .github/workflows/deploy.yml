@@ -44,6 +44,8 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
       - name: Check lessons and images
         run: go run ./cmd/ingest -verify -audio=false # recordings join in the build job; its Docker build checks them
+      - name: Product art is approved and matches the register (SPEC-011 NFR-LIC-05)
+        run: go run ./cmd/assetcheck
       - run: npm ci
         working-directory: web
       - name: Check runtime npm dependencies for known vulnerabilities

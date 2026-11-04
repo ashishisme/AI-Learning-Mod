@@ -140,17 +140,33 @@ export type AudienceMode = "standard" | "junior" | "plain-english"
 
 export interface AudienceModeState {
   mode: AudienceMode
+  // SPEC-011 FR-UI-16: false only until a first-time learner picks a journey in the chooser.
+  hasChosenJourney: boolean
   setMode: (mode: AudienceMode) => void
+  chooseJourney: (mode: AudienceMode) => void
 }
+
+const AUDIENCE_MODES: AudienceMode[] = ["standard", "junior", "plain-english"]
 
 export const useAudienceModeStore = create<AudienceModeState>()(
   persist(
     (set) => ({
       mode: "standard",
-      setMode: (mode: AudienceMode) => set({ mode }),
+      hasChosenJourney: false,
+      setMode: (mode: AudienceMode) => set({ mode, hasChosenJourney: true }),
+      chooseJourney: (mode: AudienceMode) => set({ mode, hasChosenJourney: true }),
     }),
     {
       name: "ai-foundations-audience-mode",
+      version: 1,
+      // A mode saved by an earlier release (version 0) is kept, and counts as chosen, so returning
+      // learners never see the chooser. Only this store changes; progress and settings are untouched.
+      migrate: (persisted, version) => {
+        const old = (persisted ?? {}) as { mode?: AudienceMode }
+        const valid = old.mode !== undefined && AUDIENCE_MODES.includes(old.mode)
+        if (version < 1) return { mode: valid ? old.mode : "standard", hasChosenJourney: valid } as AudienceModeState
+        return persisted as AudienceModeState
+      },
     }
   )
 )

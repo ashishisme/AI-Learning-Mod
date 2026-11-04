@@ -13,13 +13,14 @@ import { AuthGate, SignOutControl } from './components/AuthGate'
 import { Attribution } from './components/Attribution'
 import { SettingsModal } from './components/SettingsModal'
 import { HelpModal } from './components/HelpModal'
-import { useSettingsStore, useHelpStore, useThemeStore, useRuntimeStore, applyThemeClass, resolveTheme } from './store'
+import { useSettingsStore, useHelpStore, useThemeStore, useRuntimeStore, useAudienceModeStore, applyThemeClass, resolveTheme } from './store'
 import { useApplyLanguage, useT } from './i18n'
 
 export const App: React.FC = () => {
   const { setDrawerOpen, settings } = useSettingsStore()
   const { setHelpOpen } = useHelpStore()
   const { theme, setTheme } = useThemeStore()
+  const journey = useAudienceModeStore((s) => s.mode) // SPEC-011 FR-UI-17: scopes the Kids layer
   useApplyLanguage() // SPEC-009 FR-004: <html lang> and the chosen catalogue
   const t = useT()
 
@@ -40,7 +41,7 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-indigo-500 selection:text-white transition-colors duration-200">
+    <div data-journey={journey} className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-indigo-500 selection:text-white transition-colors duration-200">
       {/* Top Application Bar */}
       <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/90 dark:border-slate-800 shadow-xs transition-all">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">

@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-04T00:00:00Z",
+  "title": "Design System: AI Foundations Coach",
+  "extensions": {
+    "colorMeta": {
+      "study-blue": { "role": "primary", "displayName": "Study Blue", "tonalRamp": ["#172554", "#1e3a8a", "#1d4ed8", "#2563eb", "#3b82f6", "#60a5fa", "#bfdbfe", "#eff6ff"] },
+      "study-blue-deep": { "role": "primary", "displayName": "Study Blue Deep" },
+      "study-blue-wash": { "role": "primary", "displayName": "Study Blue Wash" },
+      "sunny-amber": { "role": "secondary", "displayName": "Sunny Amber", "tonalRamp": ["#451a03", "#78350f", "#b45309", "#d97706", "#f59e0b", "#fbbf24", "#fcd34d", "#fffbeb"] },
+      "success-green": { "role": "tertiary", "displayName": "Success Green", "tonalRamp": ["#022c22", "#064e3b", "#047857", "#059669", "#10b981", "#34d399", "#a7f3d0", "#ecfdf5"] },
+      "paper": { "role": "neutral", "displayName": "Paper", "tonalRamp": ["#020617", "#0f172a", "#1e293b", "#334155", "#64748b", "#94a3b8", "#e2e8f0", "#f8fafc"] },
+      "ink": { "role": "neutral", "displayName": "Ink" },
+      "night-desk": { "role": "neutral", "displayName": "Night Desk" },
+      "alert-red": { "role": "neutral", "displayName": "Alert Red" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Page hero titles." },
+      "headline": { "displayName": "Headline", "purpose": "Section and lesson titles." },
+      "title": { "displayName": "Title", "purpose": "Card titles and panel headings." },
+      "body": { "displayName": "Body", "purpose": "Lesson prose and tutor answers." },
+      "label": { "displayName": "Label", "purpose": "Tags, field labels, small uppercase headings." }
+    },
+    "shadows": [
+      { "name": "card-rest", "value": "0 1px 2px 0 rgb(0 0 0 / 0.05)", "purpose": "Every card and panel at rest." },
+      { "name": "card-hover", "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)", "purpose": "Lesson cards on hover." },
+      { "name": "tile-inset", "value": "inset 0 2px 4px 0 rgb(0 0 0 / 0.05)", "purpose": "Kids metaphor icon tiles." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Tailwind default for hover and state transitions (150 ms)." },
+      { "name": "progress", "value": "500ms ease-out", "purpose": "Curriculum progress bar fill." },
+      { "name": "reduced-motion", "value": "0.001ms", "purpose": "All animation and transition durations under prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "phone", "value": "360px" },
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid study-blue action such as Ask Tutor.",
+      "html": "<button class=\"ds-btn-primary\">Ask Tutor</button>",
+      "css": ".ds-btn-primary { background: #1d4ed8; color: #fff; min-height: 44px; padding: 10px 16px; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background: #1e40af; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563eb; }"
+    },
+    {
+      "name": "Lesson Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "A curriculum lesson row on the home page.",
+      "html": "<div class=\"ds-card\"><span class=\"ds-card-num\">01</span><h3 class=\"ds-card-title\">Introduction to AI</h3><p class=\"ds-card-meta\">Lesson 1 · Quiz available</p></div>",
+      "css": ".ds-card { background: #fff; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); transition: box-shadow 150ms cubic-bezier(0.4,0,0.2,1); } .ds-card:hover { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); } .ds-card-num { font-family: monospace; font-size: 0.75rem; color: #64748b; } .ds-card-title { margin: 4px 0; font-size: 1.125rem; font-weight: 700; } .ds-card-meta { margin: 0; font-size: 0.875rem; color: #64748b; }"
+    },
+    {
+      "name": "Journey Switcher",
+      "kind": "custom",
+      "refersTo": "mode-tab-active",
+      "description": "Segmented control for Standard, Kids and Plain English.",
+      "html": "<div class=\"ds-seg\" role=\"tablist\"><button class=\"ds-seg-tab\" role=\"tab\">Standard</button><button class=\"ds-seg-tab ds-seg-on\" role=\"tab\" aria-selected=\"true\">Kids</button><button class=\"ds-seg-tab\" role=\"tab\">Plain English</button></div>",
+      "css": ".ds-seg { display: inline-flex; gap: 2px; padding: 4px; background: #f1f5f9; border: 1px solid rgb(226 232 240 / 0.6); border-radius: 12px; } .ds-seg-tab { min-height: 44px; padding: 6px 12px; border: none; border-radius: 8px; background: transparent; color: #475569; font-size: 0.75rem; font-weight: 500; cursor: pointer; } .ds-seg-tab:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; } .ds-seg-on { background: #fff; color: #2563eb; font-weight: 600; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }"
+    },
+    {
+      "name": "Module Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip-filter-active",
+      "description": "Home-page module filters.",
+      "html": "<button class=\"ds-chip ds-chip-on\">intro</button><button class=\"ds-chip\">symbolic</button>",
+      "css": ".ds-chip { min-height: 44px; padding: 4px 10px; margin-right: 6px; border: none; border-radius: 6px; background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 500; cursor: pointer; } .ds-chip:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; } .ds-chip-on { background: #2563eb; color: #fff; }"
+    },
+    {
+      "name": "Tutor Question Field",
+      "kind": "input",
+      "description": "The tutor's question input.",
+      "html": "<input class=\"ds-input\" placeholder=\"e.g. Can you explain the core concepts simply?\" />",
+      "css": ".ds-input { min-height: 44px; width: 100%; padding: 8px 12px; background: #fff; color: #0f172a; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 0.875rem; } .ds-input:focus-visible { outline: none; border-color: #2563eb; box-shadow: 0 0 0 2px #2563eb; }"
+    },
+    {
+      "name": "Chip Mascot Banner",
+      "kind": "custom",
+      "refersTo": "kids-banner",
+      "description": "The Kids journey's warm mascot banner.",
+      "html": "<div class=\"ds-kids\"><div class=\"ds-kids-avatar\" aria-hidden=\"true\"><svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\"><rect x=\"6\" y=\"10\" width=\"28\" height=\"22\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"15\" cy=\"21\" r=\"3\" fill=\"#fff\"/><circle cx=\"25\" cy=\"21\" r=\"3\" fill=\"#fff\"/><rect x=\"19\" y=\"4\" width=\"2\" height=\"6\" fill=\"#2563eb\"/></svg></div><p class=\"ds-kids-line\"><strong>Chip says:</strong> Let's find out how computers learn!</p></div>",
+      "css": ".ds-kids { display: flex; align-items: center; gap: 20px; padding: 24px; border-radius: 24px; border: 2px solid #fcd34d; background: linear-gradient(to right, #fffbeb, #fff7ed, rgb(254 243 199 / 0.6)); color: #0f172a; } .ds-kids-avatar { flex-shrink: 0; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background: rgb(255 255 255 / 0.9); border: 2px solid #fcd34d; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); } .ds-kids-line { margin: 0; font-size: 1rem; line-height: 1.6; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Friendly Study Desk",
+    "overview": "The app is a tidy, approachable place to study. Pages sit on a pale paper background, content lives on white cards with soft rounded corners, and a single study blue marks what you can act on. Dark mode turns the desk into a quiet night study, slate on deep navy, and keeps the same layout. Density is moderate and text-led. The Kids journey brightens the same desk rather than replacing it. The intended feel for controls is bouncy and playful (owner, 2026-11-04); today's controls are clear and dependable, so that feel is the direction of the SPEC-011 overhaul.",
+    "keyCharacteristics": [
+      "One accent colour, study blue, for action and progress.",
+      "White or deep-navy cards on a paper or night background, separated by a thin border and a light shadow.",
+      "Generous rounding: cards 16 px, banners 24 px, chips and pills fully round.",
+      "System fonts, with Noto Sans Devanagari served by the app for Hindi.",
+      "Kids adds warmth (amber, indigo and purple washes, Chip) on top of the same structure."
+    ],
+    "rules": [
+      { "name": "The One Blue Rule", "body": "Study blue is the only interactive colour. Kids colours decorate; they never mark a button or link.", "section": "colors" },
+      { "name": "The Contrast Floor Rule", "body": "Every text and control pair meets 4.5:1 in light and dark (DC-11). Tints carry backgrounds, never text.", "section": "colors" },
+      { "name": "The No Tiny Text Rule", "body": "Nothing a learner must read is under 12 px. A few chips use 11 px today, and the overhaul should raise them.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Depth answers state (hover, focus, open). A surface never gets a heavier shadow just to look important.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep study blue (#2563eb, #1d4ed8 for solid buttons) as the only action colour.",
+      "Do give every control a 44 px target and a visible 2 px focus ring.",
+      "Do keep Standard and Plain English on the calm desk; brighten only the Kids journey.",
+      "Do serve fonts and images from the app's own address, including Noto Sans Devanagari.",
+      "Do respect reduced motion: transitions collapse to instant (index.css)."
+    ],
+    "donts": [
+      "Don't set readable text below 12 px.",
+      "Don't use a Kids accent colour for a button or link.",
+      "Don't rely on emoji as the only carrier of meaning; the overhaul replaces them with original illustrations.",
+      "Don't use upstream course images with third-party logos (the brand blocklist stays in force)."
+    ]
+  }
+}

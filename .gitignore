@@ -64,3 +64,6 @@ web/*.tsbuildinfo
 .claude/skills/*/scripts/data/
 # Terraform inputs hold personal data (billing account, emails); the repo is public.
 deploy/terraform/terraform.tfvars
+
+# SPEC-011: large generated art masters stay out of git; the register records their checksums
+design/brand/masters/
