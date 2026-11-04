@@ -260,7 +260,7 @@ A signed-in learner can tell the team what is wrong or what they like, from any 
 
 - **FR-018**: The system MUST run in a *hosted mode* in which the AI provider, credentials and model are set only by deployment configuration.
 - **FR-019**: In hosted mode, the system MUST ignore any per-request instruction to change the AI endpoint, credentials, model, response size limit or certificate-verification behaviour.
-- **FR-020**: In hosted mode, curriculum re-sync and AI-config-test MUST be unavailable to everyone through the app, with no outbound call or content change.
+- **FR-020** *(amended 2026-11-04, T137: curriculum re-sync no longer exists, FR-ING-09 removed)*: In hosted mode, AI-config-test MUST be unavailable to everyone through the app, with no outbound call or content change.
 - **FR-021**: In hosted mode, Settings MUST NOT display the server's AI endpoint, API key, model override or certificate-skip fields. (Curriculum re-sync was removed everywhere on 2026-11-02.)
 - **FR-021a** *(owner decision 2026-11-02)*: In hosted mode, Settings MUST let a learner turn on "Use my own local AI" with an address on their own computer (`localhost` or `127.0.0.1` only), a model and an optional key, all kept in that browser. The tutor then appears even when the hosted tutor is off. For each question the browser calls `POST /api/tutor/prepare`, which requires a learner session, applies the same validation, rate limit and safety screen (FR-REV-20) as the hosted tutor, and returns either the safety reply or the lesson prompt, the citation and the fallback. The server never calls a model or spends for this. The browser sends the prompt to the learner's AI, appends the citation to a real answer without one, and shows the fallback otherwise.
 - **FR-022**: The server MUST NOT be able to make outbound calls to private network ranges or the cloud provider's internal metadata service.
@@ -346,7 +346,7 @@ A signed-in learner can tell the team what is wrong or what they like, from any 
 - **SC-005**: The seat total never exceeds 1,000, including under a test of 50 simultaneous activations for the last 10 seats.
 - **SC-006**: 100% of expired or revoked accounts are refused within 5 minutes of expiry or revocation, and 100% of extended accounts can sign in immediately.
 - **SC-007**: 100% of attempts to redirect the server to a visitor-chosen address, private network or metadata service are refused, with no outbound connection.
-- **SC-008**: 100% of attempts to trigger curriculum re-sync or AI-config-test through the app are refused.
+- **SC-008** *(amended 2026-11-04, T137)*: 100% of attempts to trigger AI-config-test through the app in hosted mode are refused.
 - **SC-009**: Password guessing beyond 10 attempts per 15 minutes per account or network is blocked 100% of the time.
 - **SC-010**: AI spend is zero while the tutor is disabled, and never exceeds \$1.00 per day by more than 5% once enabled.
 - **SC-011**: Running cost while idle is under US \$2 per month, and total monthly cost at 1,000 users stays within the owner's monthly budget.

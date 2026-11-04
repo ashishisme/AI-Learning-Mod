@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.8.0 |
+| Version | 2.8.1 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -795,9 +795,13 @@ returns nothing.
 **AC-29 (DC-02, DC-03, DC-04, DC-06).** `go mod graph` shows only the
 allowed modules and their transitive deps.
 
-**AC-30 (NFR-LIC-03, NFR-SEC-01).** `git ls-files` contains no matches
-for `^\.env`, `^public-content/`, `^web/dist/`, `^web/node_modules/`,
-`^bin/`.
+**AC-30 (NFR-LIC-03, NFR-SEC-01; amended by SPEC-008 T123, O6, 2026-11-04, 2.8.1).** `git ls-files`
+contains no matches for `^\.env`, `^public-content/`, `^web/dist/`, `^web/node_modules/`, `^bin/`,
+except the repository's own authored files: `.env.example` (placeholders only),
+`public-content/languages.json`, and the adaptive lessons
+`public-content/lessons/*.{junior,plain-english}.json` and
+`public-content/lang/<code>/lessons/*.{junior,plain-english}.json`. Ingested upstream lessons and
+their images stay out of git.
 
 **AC-31 (NFR-OPS-01).** `docker run --rm <image> id -u` returns a
 non-zero UID.

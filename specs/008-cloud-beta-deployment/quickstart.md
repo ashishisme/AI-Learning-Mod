@@ -63,6 +63,7 @@ go run ./cmd/server
 | 18 | Send 6 feedback items within an hour | The 6th is refused with the "try again later" message |
 | 19 | Admin: mark read, then resolved, then export CSV, then delete | Unread count updates; Audit tab lists `feedback.status`, `feedback.export`, `feedback.delete`; export holds only passed items |
 | 20 | Restart the server | Accounts, invites, spend tally and feedback remain; usage loses at most the last 30 seconds |
+| 21 | Learner's own AI (FR-021a): run Ollama with `OLLAMA_ORIGINS=<site origin>`, then in Settings turn on "Use my own local AI" with `http://localhost:11434/v1` and a model, press Check connection, and ask a lesson question | The tutor panel unlocks; `POST /api/tutor/prepare` returns the prompt; the answer streams from the local AI with a lesson citation; the server makes no model call and records no spend. A non-local address is refused in Settings |
 
 ## 4. Privacy spot check (SC-012, SC-016)
 
