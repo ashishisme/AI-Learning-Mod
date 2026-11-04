@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.8.1 |
+| Version | 2.9.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -252,6 +252,25 @@ the `.dark` class to `document.documentElement`, styling all components with
 accessible contrast ratios (WCAG ≥4.5:1), and persisting the choice in
 browser `localStorage["ai-foundations-theme"]`.
 
+**FR-UI-16.** Added 2.9.0 (SPEC-011). A first-time learner (no saved audience mode) shall see a chooser offering
+the three journeys, Kids, Plain English and Standard, each with one plain line and none framed as lesser, before
+any lesson. A saved mode from any earlier release is kept and the chooser is not shown. The choice stays in the
+browser (`ai-foundations-audience-mode`, with a `hasChosenJourney` flag) and is changeable from one consistent
+switcher on the home page and in every lesson.
+
+**FR-UI-17.** Added 2.9.0 (SPEC-011). All three journeys shall share the redesigned shell. The Kids journey adds
+its own visual layer under `[data-journey="junior"]`:
+- clay-style cards (20 px corners, 3 px borders, a soft double shadow);
+- a blue, amber and pink palette meeting FR-UI-15's contrast in both themes;
+- self-hosted Baloo 2 and Comic Neue for Latin text, with Noto Sans Devanagari for Hindi;
+- celebratory feedback that never relies on colour or motion alone.
+
+**FR-UI-18.** Added 2.9.0 (SPEC-011). In the Kids journey the home page shall be "Chip's Trail":
+- a Continue card for the first unfinished lesson;
+- the six lessons as always-open stops on a path, each with a text status (Done, You are here, Next);
+- Chip moving to the next stop after a lesson is finished, shown as a static highlight under reduced motion;
+- no search box or module filters.
+
 ### 4.5 Settings & AI Configuration — `FR-SET-*`
 
 **FR-SET-01.** The Settings Drawer shall provide configuration controls for
@@ -483,6 +502,11 @@ registered.
 **NFR-OPS-04.** The production image shall contain no Node runtime, no
 Python, and no package managers.
 
+**NFR-OPS-05.** Added 2.9.0 (SPEC-011). A release adding visual assets or fonts shall add no more than 350 KB
+(compressed) to the English home page's first load compared with the previous release. Before release it shall pass
+a performance review that reports first-load weight and the home and lesson load times against SPEC-009 SC-007's
+10% target, with the owner's keep-or-trim decision recorded.
+
 ### 5.6 Licensing — `NFR-LIC-*`
 
 **NFR-LIC-01.** Every route shall display:
@@ -495,6 +519,14 @@ used.
 and reproducible from a pinned SHA documented in `README.md`.
 
 **NFR-LIC-04.** The repository shall include an MIT `LICENSE`.
+
+**NFR-LIC-05.** Added 2.9.0 (SPEC-011). Every product-owned visual asset shipped under `web/public/brand/` shall have
+an `approved` entry in `design/brand/asset-register.json` recording:
+- purpose, files and SHA-256 checksums;
+- the creator, which for AI-generated art means the model, version, exact prompt, reference images and date;
+- the rights basis and evidence, a clear trademark screen, its alt text key or `decorative`, and the owner's approval.
+
+No asset may use third-party marks, lookalikes, copied characters or a named artist's or brand's style.
 
 ---
 
@@ -894,6 +926,23 @@ carries `lang: "hi"`, the Hindi answer streams with its citation, and the microp
 an audio warning; a draft still fails it; the runtime marks it `beta` and the menu labels it. Covered by
 `cmd/ingest/verify_lang_test.go::TestVerifyBetaLanguageMayLaunchOnDeviceVoices` and
 `web/tests/i18n.spec.ts`.
+
+**AC-54 (FR-UI-16).** With empty storage the home page shows the three-journey chooser, and after a choice it does
+not show again. A saved `standard`, `junior` or `plain-english` mode is kept with no chooser, and progress, theme,
+language and audio are unchanged. Covered by `web/tests/journey-store.spec.ts` and `web/tests/journey-switch.spec.ts`.
+
+**AC-55 (FR-UI-17).** The Kids layer applies only under `[data-journey="junior"]`. Every text node in all three
+journeys, in light and dark, meets 4.5:1 after the theme settles. Covered by `web/tests/redesign-a11y.spec.ts`.
+
+**AC-56 (FR-UI-18).** The Kids home shows the Continue card for the first unfinished lesson, six stops with text
+statuses, the all-done celebration at 6 of 6, and no search or filters. Covered by `web/tests/kids-home.spec.ts`.
+
+**AC-57 (NFR-LIC-05).** `go run ./cmd/assetcheck` fails on any file in `web/public/brand/` without an approved,
+trademark-clear register entry, or with a checksum mismatch, and passes otherwise. Covered by
+`cmd/assetcheck/assetcheck_test.go`.
+
+**AC-58 (NFR-OPS-05).** `specs/011-kids-ui-overhaul/checklists/perf-review.md` records first-load weight and load
+times against the previous release, within 350 KB, with the owner's decision. Manual review at release.
 
 ---
 

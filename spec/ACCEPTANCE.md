@@ -55,3 +55,8 @@
 | AC-51 | FR-I18N-09, FR-TUT-06 (amended) | `internal/api/tutor_lang_test.go`, `web/tests/cloud-hardening.spec.ts` | PASS | SPEC-009 B5: tutor in the learner's approved language (prompt, citation, fallback, safety), English for anything else; app sends lang and listens in hi-IN. Constitution II amended 2.4.0, ratified by the owner 2026-11-03 |
 | AC-52 | FR-I18N-10 | `cmd/ingest/verify_lang_test.go::TestVerifyBetaLanguageMayLaunchOnDeviceVoices`, `web/tests/i18n.spec.ts` | PASS | SPEC-009 owner beta exception 2026-11-03: Hindi launched owner-approved before native review and recordings; recordings warn only; menu labels it beta |
 | AC-53 | SPEC-008 FR-021a, FR-034 (CSP) | `internal/api/tutor_prepare_test.go`, `web/tests/cloud-hardening.spec.ts` | PASS (automated); real browsers pending T129 | Hosted learner's own local AI: `POST /api/tutor/prepare` needs a session, applies validation, rate limit and safety screen, makes no model call; the browser calls only localhost or 127.0.0.1 |
+| AC-54 | FR-UI-16 | `web/tests/journey-store.spec.ts`, `web/tests/journey-switch.spec.ts` | PENDING | SPEC-011: first-time three-journey chooser; saved modes kept |
+| AC-55 | FR-UI-17 | `web/tests/redesign-a11y.spec.ts` | PENDING | SPEC-011: Kids layer scoped to junior; 4.5:1 contrast in every journey and theme |
+| AC-56 | FR-UI-18 | `web/tests/kids-home.spec.ts` | PENDING | SPEC-011: Chip's Trail Kids home |
+| AC-57 | NFR-LIC-05 | `cmd/assetcheck/assetcheck_test.go` | PENDING | SPEC-011: product art needs an approved, trademark-clear register entry |
+| AC-58 | NFR-OPS-05 | `specs/011-kids-ui-overhaul/checklists/perf-review.md` | PENDING (manual, at release) | SPEC-011: page-weight and load-time review |
