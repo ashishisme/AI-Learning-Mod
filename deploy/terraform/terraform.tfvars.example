@@ -1,0 +1,17 @@
+# Copy to terraform.tfvars (git-ignored) and fill in. terraform.tfvars holds personal data
+# (billing account, email addresses) and is never committed: the repository is public.
+project_id        = "<PROJECT_ID>"
+region            = "asia-south1"
+service_name      = "ai-foundations-coach"
+github_repository = "<OWNER>/<REPO>"
+
+billing_account       = "<BILLING_ACCOUNT_ID>"
+budget_currency       = "INR" # must match the billing account's currency
+monthly_budget_amount = 2500
+monthly_budget_usd    = 30
+owner_alert_email     = "<OWNER_ALERT_EMAIL>"
+
+oidc_issuer      = "https://accounts.google.com"
+oidc_client_id   = "<OAUTH_CLIENT_ID>"
+admin_emails     = "<ADMIN_EMAIL>"
+backup_retention = "1209600s"

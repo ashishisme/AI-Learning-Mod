@@ -62,3 +62,5 @@ web/*.tsbuildinfo
 # Skill lookup data (dev tooling, not part of the app)
 .claude/skills/*/data/
 .claude/skills/*/scripts/data/
+# Terraform inputs hold personal data (billing account, emails); the repo is public.
+deploy/terraform/terraform.tfvars
