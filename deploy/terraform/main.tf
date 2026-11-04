@@ -458,6 +458,55 @@ resource "google_monitoring_alert_policy" "errors" {
   depends_on = [google_project_service.apis]
 }
 
+# ---- dashboard (T117): the signals the alerts use, on one page. Counts only, no personal data.
+
+locals {
+  run_filter = "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"${var.service_name}\""
+  dash_tiles = [
+    { title = "Requests per second, by response class", filter = "${local.run_filter} AND metric.type=\"run.googleapis.com/request_count\"", aligner = "ALIGN_RATE", reducer = "REDUCE_SUM", group = ["metric.label.response_code_class"] },
+    { title = "Request latency p95 (ms)", filter = "${local.run_filter} AND metric.type=\"run.googleapis.com/request_latencies\"", aligner = "ALIGN_PERCENTILE_95", reducer = "REDUCE_MAX", group = [] },
+    { title = "Instances", filter = "${local.run_filter} AND metric.type=\"run.googleapis.com/container/instance_count\"", aligner = "ALIGN_MAX", reducer = "REDUCE_SUM", group = ["metric.label.state"] },
+    { title = "Sign-in failures", filter = "${local.run_filter} AND metric.type=\"logging.googleapis.com/user/${var.service_name}/auth_failures\"", aligner = "ALIGN_DELTA", reducer = "REDUCE_SUM", group = [] },
+    { title = "Tutor stream failures", filter = "${local.run_filter} AND metric.type=\"logging.googleapis.com/user/${var.service_name}/sse_failures\"", aligner = "ALIGN_DELTA", reducer = "REDUCE_SUM", group = [] },
+    { title = "Firestore requests, by response code", filter = "resource.type=\"firestore.googleapis.com/Database\" AND metric.type=\"firestore.googleapis.com/api/request_count\"", aligner = "ALIGN_RATE", reducer = "REDUCE_SUM", group = ["metric.label.response_code"] },
+  ]
+}
+
+resource "google_monitoring_dashboard" "coach" {
+  dashboard_json = jsonencode({
+    displayName = "AI Foundations Coach"
+    mosaicLayout = {
+      columns = 12
+      tiles = [for i, t in local.dash_tiles : {
+        xPos   = (i % 2) * 6
+        yPos   = floor(i / 2) * 4
+        width  = 6
+        height = 4
+        widget = {
+          title = t.title
+          xyChart = {
+            dataSets = [{
+              plotType = "LINE"
+              timeSeriesQuery = {
+                timeSeriesFilter = {
+                  filter = t.filter
+                  aggregation = {
+                    alignmentPeriod    = "60s"
+                    perSeriesAligner   = t.aligner
+                    crossSeriesReducer = t.reducer
+                    groupByFields      = t.group
+                  }
+                }
+              }
+            }]
+          }
+        }
+      }]
+    }
+  })
+  depends_on = [google_project_service.apis, google_logging_metric.auth_failures, google_logging_metric.sse_failures]
+}
+
 # ---- budget: notifies the owner and trips the tutor switch. It is not a spending cap.
 
 resource "google_pubsub_topic" "budget" {
