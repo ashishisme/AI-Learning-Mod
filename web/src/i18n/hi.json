@@ -131,7 +131,7 @@
   "home.ingest.after": "डेटा लोड होने के बाद, सीखना शुरू करने के लिए इस पेज को रीफ़्रेश करें। कृपया आगे बढ़ने से पहले ingest चलाएँ।",
   "home.ingest.body": "पाठ्यक्रम के पाठ अभी लोड नहीं हुए हैं। स्थानीय पाठ JSON फ़ाइलें बनाने के लिए कृपया अपने GitHub टोकन के साथ ingestion CLI कमांड चलाएँ:",
   "home.ingest.title": "सामग्री लोड करना ज़रूरी है",
-  "home.intro": "मशीन लर्निंग (machine learning), तंत्रिका नेटवर्क (neural network) की बनावट, कंप्यूटर विज़न (computer vision), प्राकृतिक भाषा ट्रांसफ़ॉर्मर (natural language transformers) और सटीक एआई ट्यूटरिंग को समझें।",
+  "home.intro": "मशीन लर्निंग (machine learning), न्यूरल नेटवर्क (neural network) की बनावट, कंप्यूटर विज़न (computer vision), प्राकृतिक भाषा ट्रांसफ़ॉर्मर (natural language transformers) और सटीक एआई ट्यूटरिंग को समझें।",
   "home.listLabel": "पाठ्यक्रम के मॉड्यूल",
   "home.loadFailed": "पाठ लोड नहीं हो सके",
   "home.loading": "पाठ्यक्रम लोड हो रहा है...",

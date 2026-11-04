@@ -29,6 +29,14 @@
 - Q: The tutor's fallback is fixed English text in Constitution Principle II. → A: **Ratified:** it may be the approved translation in the learner's language. Constitution 2.4.0, FR-TUT-06 amended.
 - Q: Scope of Hindi content? → A: **Everything a learner sees is Hindi.** That covers all lessons in all three modes, quizzes, UI chrome, topic labels and the voice studio, with the narration voice also Hindi. Names (Chip, Nova, Prof. Alan) and code may stay as written.
 
+### Session 2026-11-04 (owner)
+
+- Q: Should the whole course use one Hindi vocabulary? → A: **Yes. Our own Hindi follows the terms used in the source course's Hindi full lessons.** A scan found two differences:
+  - "neural network": the source has न्यूरल नेटवर्क, and we had तंत्रिका नेटवर्क;
+  - "vector": the source has वेक्टर, and we had सदिश.
+
+  Both are changed in the glossary and in our Kids and Plain English lessons, quizzes and interface text, and the changed narration is re-recorded. "Bias" is not changed: पूर्वाग्रह means social bias, as in the source, and बायस is the neural-network parameter. The full lessons themselves stay the source's Hindi at pin `392d0df`. Upstream re-translations are not taken (SPEC-010 FR-009).
+
 ## Context
 
 Today every part of the app is English only. The interface text is written in English throughout, the kids and plain-English lessons and the quizzes exist only in English, and narration uses the device's English voices. The course the app is based on already publishes translations of its base lessons for nine Indian languages (Hindi, Bengali, Marathi, Tamil, Telugu, Kannada, Malayalam, Punjabi, Urdu) at the version the app uses. The app does not use them yet.

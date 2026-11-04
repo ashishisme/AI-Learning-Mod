@@ -40,7 +40,7 @@
         "परतों के बीच की समझ में कोई अंतर नहीं होता"
       ],
       "praise": "बिल्कुल सही! आपने क्रमबद्ध फ़ीचर सीखने (hierarchical feature learning) के तरीके को समझ लिया है।",
-      "question": "एक डीप कन्वोल्यूशनल तंत्रिका नेटवर्क (Convolutional Neural Network या CNN) में शुरुआती और बाद की परतों की क्या भूमिका होती है?"
+      "question": "एक डीप कन्वोल्यूशनल न्यूरल नेटवर्क (Convolutional Neural Network या CNN) में शुरुआती और बाद की परतों की क्या भूमिका होती है?"
     }
   ],
   "mode": "plain-english",

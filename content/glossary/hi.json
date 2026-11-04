@@ -1,11 +1,11 @@
 {
   "language": "hi",
-  "note": "Draft seed by the developer, 2026-11-03. The Hindi reviewer must confirm or correct every term before any Hindi file is approved (SPEC-009 FR-020, T050). Show the Hindi term followed by the English in brackets at its first use in each section (FR-008).",
+  "note": "Draft seed by the developer, 2026-11-03. The Hindi reviewer must confirm or correct every term before any Hindi file is approved (SPEC-009 FR-020, T050). Show the Hindi term followed by the English in brackets at its first use in each section (FR-008). Terms follow the source course's Hindi full lessons, so every mode reads the same (owner, 2026-11-04).",
   "terms": [
     { "en": "artificial intelligence", "target": "कृत्रिम बुद्धिमत्ता", "note": "Abbreviation एआई (AI) is fine after first use." },
     { "en": "machine learning", "target": "मशीन लर्निंग", "note": "Commonly used as is in Hindi." },
     { "en": "deep learning", "target": "डीप लर्निंग", "note": "" },
-    { "en": "neural network", "target": "तंत्रिका नेटवर्क", "note": "" },
+    { "en": "neural network", "target": "न्यूरल नेटवर्क", "note": "As in the source course's Hindi lessons (owner, 2026-11-04)." },
     { "en": "neuron", "target": "न्यूरॉन", "note": "" },
     { "en": "perceptron", "target": "परसेप्ट्रॉन", "note": "Transliterate; no common Hindi word." },
     { "en": "algorithm", "target": "एल्गोरिदम", "note": "" },
@@ -23,7 +23,7 @@
     { "en": "natural language processing", "target": "प्राकृतिक भाषा प्रसंस्करण", "note": "Short form एनएलपी (NLP)." },
     { "en": "token", "target": "टोकन", "note": "" },
     { "en": "embedding", "target": "एम्बेडिंग", "note": "" },
-    { "en": "vector", "target": "सदिश", "note": "Reviewer to confirm: वेक्टर may be easier for school-age learners." },
+    { "en": "vector", "target": "वेक्टर", "note": "As in the source course's Hindi lessons (owner, 2026-11-04)." },
     { "en": "expert system", "target": "विशेषज्ञ प्रणाली", "note": "" },
     { "en": "rule", "target": "नियम", "note": "" },
     { "en": "knowledge base", "target": "ज्ञान आधार", "note": "" },
