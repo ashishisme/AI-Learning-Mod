@@ -297,7 +297,7 @@ A signed-in learner can tell the team what is wrong or what they like, from any 
 **Admin console: usage, users, costs (FR-040 to FR-046)**
 
 - **FR-040**: The system MUST record usage as aggregate counts per IST day only (accounts active, sign-ins, failed sign-ins, activations, lesson views per lesson, quiz opens, tutor questions, requests, server errors). It MUST NOT keep a per-person activity log, network addresses, browser or device details.
-- **FR-041**: The admin console MUST be a single area with tabs: Overview, Users and Invites, Usage, Costs, Feedback, Audit.
+- **FR-041**: The admin console MUST be a single area with tabs: Overview, Users and Invites, Usage, Costs, Feedback (offered when the feedback auditor is configured, matching FR-058), Audit.
 - **FR-042**: The Usage view MUST show the FR-040 measures for today, the last 7 days and the last 30 days, with a per-day series, and MUST reflect activity no older than 1 minute.
 - **FR-043**: The Users view MUST list each account's Beta ID, group label, status, expiry, last-seen time (1-minute precision) and number of signed-in devices, MUST show how many accounts were active in the last 5 minutes, and MUST support filtering by label and status and sorting by last seen.
 - **FR-044**: The Costs view MUST show today's AI spend against the daily ceiling, month-to-date AI spend, the monthly budget (deployment configuration, default US $30) with the 50% / 90% / 100% thresholds marked, and a month-end projection from month-to-date spend.

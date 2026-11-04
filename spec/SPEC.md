@@ -408,7 +408,7 @@ enabled on decoding.
 `X-Frame-Options: DENY`,
 `Referrer-Policy: no-referrer`,
 `Cross-Origin-Opener-Policy: same-origin`,
-`Content-Security-Policy: default-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'`.
+`Content-Security-Policy: default-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' http://localhost:* http://127.0.0.1:*; frame-ancestors 'none'; base-uri 'self'` *(amended by SPEC-008 FR-034, 2026-11-02 to permit learner browser connections to local LLM endpoints)*.
 
 **NFR-SEC-04.** No CORS headers shall be emitted. Origin enforcement is
 same-origin only.

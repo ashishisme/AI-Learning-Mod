@@ -55,6 +55,10 @@ web/*.tsbuildinfo
 
 # Runtime state file for invite-only mode (SPEC-008)
 /data/
+# Terraform local state and provider cache
+**/.terraform/
+*.tfstate
+*.tfstate.*
 # Skill lookup data (dev tooling, not part of the app)
 .claude/skills/*/data/
 .claude/skills/*/scripts/data/

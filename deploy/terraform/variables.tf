@@ -74,9 +74,27 @@ variable "billing_account" {
   type        = string
 }
 
+variable "budget_currency" {
+  description = "Currency for the monthly budget (must match the billing account currency, e.g. INR or USD)."
+  type        = string
+  default     = "INR"
+}
+
+variable "monthly_budget_amount" {
+  description = "Monthly budget amount in the billing account currency units (e.g. 2500 for INR or 30 for USD)."
+  type        = number
+  default     = 2500
+}
+
 variable "monthly_budget_usd" {
   description = "Monthly budget in whole US dollars. Alerts at 50%, 90% and 100% notify the owner and do NOT cap spending."
   type        = number
+}
+
+variable "deletion_protection" {
+  description = "Whether to protect the Cloud Run service from accidental destruction. Set true for production/frozen staging."
+  type        = bool
+  default     = true
 }
 
 variable "owner_alert_email" {
