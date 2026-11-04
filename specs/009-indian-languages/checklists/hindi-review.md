@@ -23,6 +23,23 @@
 
 Cloud Run reports start-up latency only in histogram buckets, so the exact change from the audio is below what it can show. Every revision from 00001 to 00015 sits in the same bucket.
 
+## English speed against v0.1.2 (SC-007, T090)
+
+Measured 2026-11-04 on this Mac. Both builds served the same English lessons from their own server, in Chromium with no cache, over a throttled link (20 Mbit/s down, 20 ms latency). Each figure is the median of 7 loads.
+
+| Measure | v0.1.2 | Now (v0.4.3) | Change |
+| --- | --- | --- | --- |
+| JS and CSS an English visitor downloads first, gzip | 447.3 KiB | 455.5 KiB | +1.8% |
+| All JS, gzip (Hindi text is in separate files English never fetches) | 1,728.2 KiB | 1,759.4 KiB | +1.8% |
+| `/` until the network is quiet | 1,127 ms | 1,146 ms | +1.7% |
+| `/lesson/1-intro` until the network is quiet | 2,216 ms | 2,253 ms | +1.7% |
+
+The Devanagari font (117 KiB) downloads only when Devanagari text is on screen (`unicode-range`). Both changes are within the 10% limit.
+
+## Narration start (SC-003, T093)
+
+Measured 2026-11-04 with the current server and the real recordings, over the same throttled link: from pressing "यह भाग पढ़ें" on the Kids lesson 1 to the recorded Chip track playing. The 7 runs took 202, 207, 208, 214, 220, 235 and 561 ms, a median of 214 ms, against a 2-second target. The live site adds about 0.13 s of connection time from India (SPEC-008 T122).
+
 ## Text-to-speech characters billed
 
 | Run | Characters | Note |

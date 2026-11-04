@@ -307,7 +307,7 @@ Web application in one repository. Go is under `cmd/` and `internal/`, the React
 ## Phase 10: Polish and cross-cutting concerns
 
 - [X] T077 [P] Update `README.md` (language support, `cmd/translate`, `cmd/narrate`, owner-only key handling) and `APP_USAGE.md` (how learners switch language and use Hindi narration)
-- [ ] T078 Run `/speckit-converge` for `specs/009-indian-languages` after B5, and act on its findings
+- [X] T078 *(2026-11-04: done. Run on 2026-11-04; its findings are Phase 11, T088 to T093.)* Run `/speckit-converge` for `specs/009-indian-languages` after B5, and act on its findings
 - [ ] T079 [P] Review the whole Hindi learner journey against DC-11 in light and dark with the `impeccable` skill, in both themes, and fix any findings
 
 ---
@@ -434,3 +434,14 @@ See spec.md "Clarifications, later session" and plan.md "Implementation decision
   - The owner picks one voice per persona, and they go into `content/voices/hi.json`.
   - Then run `narrate -lang hi` and `gcloud storage rsync` to the bucket. Re-record after the reviewer's corrections, because only changed text is recorded again.
 - [X] T087 *(2026-11-04: done, in a different order than planned; see T024 and T054. Live: v0.4.2.)* Releases, in order, with owner approval at each outward step: push the branch, PR to `cloud-beta`, merge, then tag `v0.2.0` (B1) through `v0.3.2` (B5) as the plan describes. Hindi stays hidden until T050 (reviewer approval) and T052 (status `approved`).
+
+## Phase 11: Convergence
+
+Added 2026-11-04 by `/speckit-converge` (T078). Existing open tasks T050 (native review), T051 and T079 (design and accessibility review) already cover those gaps and are not repeated.
+
+- [X] T088 *(2026-11-04: done. Recorded in spec.md Clarifications 2026-11-04, "recording identity"; FR-015 points to it.)* Record in `spec.md` the owner's decision (T065, 2026-11-03) that recordings are made on the owner's Mac with a short-lived `gcloud` token and copied into the image from the narration bucket, or move synthesis into the release job under the deploy identity with a Text-to-Speech role in `deploy/terraform`, per FR-015 (contradicts)
+- [X] T089 *(2026-11-04: done. Clarification "beta exception" in spec.md; FR-018 and SC-010 point to it, and it states when the exception ends.)* Add a clarification to `spec.md` linking FR-018, SC-005 and SC-010 to the FR-I18N-10 beta exception in `spec/SPEC.md` 2.8.0 (Hindi offered owner-approved, labelled beta, before native review), and state when the exception ends (T050 approval, then `beta` removed), per FR-018, SC-005, SC-010 (contradicts)
+- [X] T090 *(2026-11-04: done. English first download +1.8%, `/` and a lesson +1.7% against v0.1.2; recorded in `checklists/hindi-review.md`.)* Measure the English production bundle size and the load time of `/` and one lesson against `v0.1.2`, and record both in `checklists/hindi-review.md`; fix if either is more than 10% worse, per SC-007 (partial)
+- [X] T091 *(2026-11-04: done by amendment. Clarification "scope of no change to app behaviour": per-language safety rules and server replies count as a language's content; FR-028 and SC-012 point to it.)* Either amend FR-028 and SC-012 to state that server replies (`internal/i18n/messages.go`) and the personal-details and safety rules (`internal/feedback/check.go`, `internal/api/safety.go`) are per-language code reviewed with each language, or move the replies into per-language content files so only the rules need code, per FR-028, SC-012 (partial)
+- [ ] T092 `[external]` Play recorded Hindi narration on the live site on Android Chrome, desktop Chrome with no Hindi voice installed, and Safari, including the device-voice fallback for a missing track, and record the results in `checklists/hindi-review.md`, per SC-004 (partial)
+- [X] T093 *(2026-11-04: done. Median 214 ms from press to recorded audio playing, over a throttled 20 Mbit/s link; recorded in `checklists/hindi-review.md`.)* Time narration start (button press to first audio) for a recorded Hindi track on the live site over typical broadband, and record it in `checklists/hindi-review.md` against the 2-second target, per SC-003 (partial)

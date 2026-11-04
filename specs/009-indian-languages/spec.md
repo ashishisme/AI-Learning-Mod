@@ -37,6 +37,10 @@
 
   Both are changed in the glossary and in our Kids and Plain English lessons, quizzes and interface text, and the changed narration is re-recorded. "Bias" is not changed: पूर्वाग्रह means social bias, as in the source, and बायस is the neural-network parameter. The full lessons themselves stay the source's Hindi at pin `392d0df`. Upstream re-translations are not taken (SPEC-010 FR-009).
 
+- Recording identity (convergence T088, recording the owner's T065 choice of 2026-11-03): **Narration is recorded on the owner's Mac** with a one-hour `gcloud` token of a project member who has Service Usage Consumer and Storage Object User on the narration bucket. The recordings go into the private narration bucket, and the release job copies them into the image with the deploy identity, which only reads the bucket. This replaces FR-015's "the deployment's managed identity" for now. No long-lived key is used, and nothing records while the site is idle, so FR-023 and DC-09 still hold. Moving synthesis into the release job is a later option.
+- Beta exception (convergence T089): **Hindi is offered under FR-I18N-10** (`spec/SPEC.md` 2.8.0, owner decision 2026-11-03). Every Hindi file is approved by "owner (beta)", and the menu labels Hindi "(beta)". Until T050, this relaxes FR-018 and SC-010: no native-speaker sign-off is needed before Hindi is offered. SC-005 still holds for what the gate checks: an unapproved, stale or incomplete file still fails the release. The exception ends when a native reviewer approves every file with `cmd/review`, the changed tracks are re-recorded, and `"beta"` is removed from `public-content/languages.json`.
+- Scope of "no change to app behaviour" (convergence T091): **adding a language needs content plus a reviewed set of language rules.** The content is translations, glossary, voices and recordings. The rules are its personal-details and safety patterns (`internal/feedback/check.go`, `internal/api/safety.go`) and its fixed server replies (`internal/i18n/messages.go`). These are per-language code, reviewed like content: they protect learners, and a language without them falls back to English replies and English-only rules, so it must not be offered (FR-024). FR-028 and SC-012 count these per-language rules as part of a language's content, not as a change to how the app behaves.
+
 ## Context
 
 Today every part of the app is English only. The interface text is written in English throughout, the kids and plain-English lessons and the quizzes exist only in English, and narration uses the device's English voices. The course the app is based on already publishes translations of its base lessons for nine Indian languages (Hindi, Bengali, Marathi, Tamil, Telugu, Kannada, Malayalam, Punjabi, Urdu) at the version the app uses. The app does not use them yet.
@@ -194,13 +198,13 @@ After Hindi, adding Tamil, Bengali, Marathi or Telugu needs only that language's
 - **FR-012**: Every narrated section of every Hindi lesson, in every mode, MUST have a recorded Hindi narration for each narration voice the app offers. Recordings are made before the release, ship with it, and are served from the app's own origin.
 - **FR-013**: When a recording is missing, narration MUST fall back to the device's Hindi voice if there is one. If there isn't, the control MUST say that Hindi narration isn't available on this device. Hindi text MUST NOT be read by a voice for another language.
 - **FR-014**: A recording MUST be made again only when its source text or voice changes. Releasing unchanged content MUST NOT incur new recording cost.
-- **FR-015**: Making recordings MUST happen only as part of preparing a release, never while the site is idle (DC-09). It MUST use the deployment's managed identity, not a long-lived key (SPEC-008 FR-023).
+- **FR-015**: *(see Clarifications 2026-11-04, recording identity)* Making recordings MUST happen only as part of preparing a release, never while the site is idle (DC-09). It MUST use the deployment's managed identity, not a long-lived key (SPEC-008 FR-023).
 - **FR-016**: English narration MUST keep working exactly as today.
 
 #### Translation and review
 
 - **FR-017**: Translations of the app's own content MAY be drafted automatically. Each translated file MUST carry a review status, plus the reviewer and date once approved.
-- **FR-018**: A language MUST NOT be offered to learners unless every one of its files is approved by a named native-speaker reviewer.
+- **FR-018**: *(relaxed for the Hindi beta: see Clarifications 2026-11-04, FR-I18N-10)* A language MUST NOT be offered to learners unless every one of its files is approved by a named native-speaker reviewer.
 - **FR-019**: A release MUST fail if a language it offers has any unapproved file, or lacks any text that exists in English. The failure MUST name each file and item.
 - **FR-020**: Each language MUST have a glossary of how key technical terms are rendered, and drafts MUST follow it.
 - **FR-021**: The credential used to draft translations automatically MUST NOT be included in the release or in the hosted service's configuration.
@@ -226,7 +230,7 @@ After Hindi, adding Tamil, Bengali, Marathi or Telugu needs only that language's
   - **B5:** the tutor answers in Hindi.
 
   Every release MUST keep the English experience unchanged, with all existing English tests passing.
-- **FR-028**: Adding another language the course already translates MUST need only that language's content, glossary, recordings and approval, with no change to how the app behaves.
+- **FR-028**: *(scope clarified 2026-11-04: per-language safety rules and replies count as content)* Adding another language the course already translates MUST need only that language's content, glossary, recordings and approval, with no change to how the app behaves.
 
 ### Key Entities
 
@@ -249,9 +253,9 @@ After Hindi, adding Tamil, Bengali, Marathi or Telugu needs only that language's
 - **SC-007**: At every release from B1, all existing English tests pass, and English pages load no more than 10% slower than before.
 - **SC-008**: Switching language takes effect within 1 second, with no loss of lesson position or progress.
 - **SC-009**: Re-releasing with unchanged Hindi content incurs zero new recording cost.
-- **SC-010**: A native-speaker reviewer signs off every Hindi file. In a sample of 20 sections, at least 18 are rated natural and accurate for the intended age group.
+- **SC-010**: *(open under the beta exception until T050)* A native-speaker reviewer signs off every Hindi file. In a sample of 20 sections, at least 18 are rated natural and accurate for the intended age group.
 - **SC-011**: At phone width, 0 Hindi screens have clipped or overlapping text, and 100% of controls meet the DC-11 floor.
-- **SC-012**: In round 2, a second language is added with 0 changes to application behaviour.
+- **SC-012**: *(per-language rules count as content; see Clarifications 2026-11-04)* In round 2, a second language is added with 0 changes to application behaviour.
 
 ## Assumptions
 
