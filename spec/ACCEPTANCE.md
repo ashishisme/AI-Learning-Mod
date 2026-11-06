@@ -59,4 +59,4 @@
 | AC-55 | FR-UI-17 | `web/tests/redesign-a11y.spec.ts` | PASS | SPEC-011: Kids layer scoped to junior; 4.5:1 contrast in every journey and theme |
 | AC-56 | FR-UI-18 | `web/tests/kids-home.spec.ts` | PASS | SPEC-011: Chip's Trail Kids home |
 | AC-57 | NFR-LIC-05 | `cmd/assetcheck/assetcheck_test.go` | PASS (automated) | SPEC-011: product art has approved, trademark-clear register entries and matching checksums; underlying reviewer/search evidence referenced by T028 |
-| AC-58 | NFR-OPS-05 | `specs/011-kids-ui-overhaul/checklists/perf-review.md` | PENDING owner decision | SPEC-011: measured page weight and load time meet budget; owner chooses keep or trim before release |
+| AC-58 | NFR-OPS-05 | `specs/011-kids-ui-overhaul/checklists/perf-review.md` | PASS | SPEC-011: measured page weight and load time meet budget; owner chose to keep current assets on 2026-11-06 |

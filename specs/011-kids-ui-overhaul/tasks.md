@@ -177,7 +177,7 @@ The web app is in `web/src/` and its tests in `web/tests/`. Go is in `cmd/` and 
 
 ## Phase 7: Polish and cross-cutting
 
-- [ ] T035 **Performance review (owner decision, SC-006).** *(2026-11-06: measurements and a Keep recommendation are recorded in `checklists/perf-review.md`; owner decision pending.)* Measure the following against v0.4.3, the same way as SPEC-009 T090 (the median of 7 runs over a throttled 20 Mbit/s link): (per FR-015)
+- [X] T035 **Performance review (owner decision, SC-006).** *(2026-11-06: measured against v0.4.3; owner chose to keep the current assets, recorded in `checklists/perf-review.md`.)* Measure the following against v0.4.3, the same way as SPEC-009 T090 (the median of 7 runs over a throttled 20 Mbit/s link): (per FR-015)
   - first-load weight;
   - `/` and a lesson load time;
   - the font and art bytes.

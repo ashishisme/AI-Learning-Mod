@@ -26,4 +26,4 @@ The v0.4.3 tag and the working feature branch were each built with `npm run buil
 
 Seven-run times (ms): v0.4.3 `/` = 1723, 1713, 1625, 1675, 1675, 1677, 1674; working `/` = 1631, 1767, 1637, 1634, 1646, 1633, 1647. v0.4.3 lesson = 2640, 2645, 2673, 2636, 2638, 2670, 2631; working lesson = 2633, 2644, 2674, 2646, 2640, 2647, 2635.
 
-The Kids-only font files total 64,604 bytes; all shipped brand SVGs total 24,326 bytes on disk, or 9,069 bytes gzip compressed. The home route increase and both load-time comparisons meet the targets. **Recommendation: Keep. Owner decision pending before release.**
+The Kids-only font files total 64,604 bytes; all shipped brand SVGs total 24,326 bytes on disk, or 9,069 bytes gzip compressed. The home route increase and both load-time comparisons meet the targets. **Owner decision (2026-11-06): Keep the current assets.**
