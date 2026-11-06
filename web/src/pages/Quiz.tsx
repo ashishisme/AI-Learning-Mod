@@ -2,10 +2,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ENGLISH_QUIZZES, loadQuizzes, LessonQuiz } from '../data/quizzes'
-import { useProgressStore } from '../store'
+import { useProgressStore, useAudienceModeStore } from '../store'
 import { askTutorStream } from '../api'
 import { useLanguage, useT } from '../i18n'
 import { NotTranslatedNotice } from '../components/NotTranslatedNotice'
+import { KidVisual } from '../components/KidVisual'
 
 export const Quiz: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -33,6 +34,7 @@ export const Quiz: React.FC = () => {
   }, [lessonId, quiz])
 
   const { setLessonCompleted, isLessonCompleted } = useProgressStore()
+  const { mode } = useAudienceModeStore()
 
   // State for interactive quiz
   const [currentIdx, setCurrentIdx] = useState(0)
@@ -155,48 +157,97 @@ export const Quiz: React.FC = () => {
 
       {isCompleted ? (
         /* Quiz Completed Recap Card */
-        <div
-          data-testid="quiz-recap-card"
-          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 sm:p-12 shadow-sm text-center animate-fade-in"
-        >
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-500 dark:text-amber-400 flex items-center justify-center text-3xl shadow-sm">
-            🏆
-          </div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">{t('quiz.completed')}</h2>
-          <p className="text-slate-600 dark:text-slate-300 text-sm mb-6">
-            {completedFor[0]}<span className="font-semibold text-slate-800 dark:text-slate-200">{quiz.title}</span>{completedFor[1]}
-          </p>
-
-          <div className="inline-block bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-8 py-5 mb-8">
-            <div className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-1" data-testid="quiz-final-score">
-              {t('quiz.score', { count: correctCount, total: totalQuestions })}
+        mode === 'junior' ? (
+          <section
+            data-testid="quiz-recap-card"
+            aria-labelledby="kids-quiz-done-title"
+            className="kids-card kids-celebrate p-6 sm:p-10 text-center animate-fade-in"
+          >
+            <div className="flex justify-center mb-4">
+              <KidVisual assetId="chip-cheer" altKey="brand.chipCheerAlt" width={96} height={96} className="kids-cheer" />
             </div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              {t('quiz.accuracy', { percent: scorePercent })}
+            <h2 id="kids-quiz-done-title" className="kids-heading text-2xl sm:text-3xl mb-2">
+              {t('kids.quiz.completed')}
+            </h2>
+            <p className="kids-ink text-base sm:text-lg mb-6">
+              {t('kids.quiz.chipCheer')}
+            </p>
+            <div className="kids-tile inline-block px-8 py-5 mb-8 bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-100">
+              <div className="kids-heading text-3xl sm:text-4xl font-extrabold mb-1" data-testid="quiz-final-score">
+                {t('quiz.score', { count: correctCount, total: totalQuestions })}
+              </div>
+              <div className="text-xs font-bold uppercase tracking-wider kids-ink-muted">
+                {t('quiz.accuracy', { percent: scorePercent })}
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={handleRetake}
+                className="kids-button kids-button-secondary w-full sm:w-auto px-6 py-2.5 inline-flex items-center justify-center text-xs font-semibold"
+              >
+                {t('quiz.retake')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setLessonCompleted(quiz.lessonId, true)}
+                className="kids-button w-full sm:w-auto px-6 py-2.5 inline-flex items-center justify-center text-xs font-semibold"
+              >
+                {t(isLessonCompleted(quiz.lessonId) ? 'quiz.markedComplete' : 'quiz.markComplete')}
+              </button>
+              <Link
+                to="/"
+                className="kids-button kids-button-secondary w-full sm:w-auto px-6 py-2.5 inline-flex items-center justify-center text-xs font-semibold"
+              >
+                {t('kids.quiz.backToTrail')}
+              </Link>
+            </div>
+          </section>
+        ) : (
+          <div
+            data-testid="quiz-recap-card"
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 sm:p-12 shadow-sm text-center animate-fade-in"
+          >
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-500 dark:text-amber-400 flex items-center justify-center text-3xl shadow-sm">
+              🏆
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">{t('quiz.completed')}</h2>
+            <p className="text-slate-600 dark:text-slate-300 text-sm mb-6">
+              {completedFor[0]}<span className="font-semibold text-slate-800 dark:text-slate-200">{quiz.title}</span>{completedFor[1]}
+            </p>
+
+            <div className="inline-block bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-8 py-5 mb-8">
+              <div className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-1" data-testid="quiz-final-score">
+                {t('quiz.score', { count: correctCount, total: totalQuestions })}
+              </div>
+              <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                {t('quiz.accuracy', { percent: scorePercent })}
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                onClick={handleRetake}
+                className="w-full sm:w-auto px-6 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl transition"
+              >
+                {t('quiz.retake')}
+              </button>
+              <button
+                onClick={() => setLessonCompleted(quiz.lessonId, true)}
+                className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl shadow-sm transition"
+              >
+                {t(isLessonCompleted(quiz.lessonId) ? 'quiz.markedComplete' : 'quiz.markComplete')}
+              </button>
+              <Link
+                to="/"
+                className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-sm transition"
+              >
+                {t('quiz.home')}
+              </Link>
             </div>
           </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={handleRetake}
-              className="w-full sm:w-auto px-6 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl transition"
-            >
-              {t('quiz.retake')}
-            </button>
-            <button
-              onClick={() => setLessonCompleted(quiz.lessonId, true)}
-              className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl shadow-sm transition"
-            >
-              {t(isLessonCompleted(quiz.lessonId) ? 'quiz.markedComplete' : 'quiz.markComplete')}
-            </button>
-            <Link
-              to="/"
-              className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-sm transition"
-            >
-              {t('quiz.home')}
-            </Link>
-          </div>
-        </div>
+        )
       ) : (
         /* Question Active View */
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-sm">
@@ -253,13 +304,12 @@ export const Quiz: React.FC = () => {
                   className={`w-full text-left p-4 rounded-2xl border transition-all flex items-start gap-3 ${btnStyle}`}
                 >
                   <span
-                    className={`w-6 h-6 rounded-full border flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 ${
-                      hasAnswered && isThisCorrect
-                        ? 'border-emerald-500 bg-emerald-500 text-white'
-                        : hasAnswered && isThisSelected
+                    className={`w-6 h-6 rounded-full border flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 ${hasAnswered && isThisCorrect
+                      ? 'border-emerald-500 bg-emerald-500 text-white'
+                      : hasAnswered && isThisSelected
                         ? 'border-rose-500 bg-rose-500 text-white'
                         : 'border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300'
-                    }`}
+                      }`}
                   >
                     {String.fromCharCode(65 + optIdx)}
                   </span>
@@ -273,11 +323,10 @@ export const Quiz: React.FC = () => {
           {hasAnswered && (
             <div
               data-testid="answer-rationale"
-              className={`p-4 rounded-2xl border text-xs leading-relaxed mb-6 animate-fade-in ${
-                isCorrect
-                  ? 'border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-200'
-                  : 'border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/50 text-rose-900 dark:text-rose-200'
-              }`}
+              className={`p-4 rounded-2xl border text-xs leading-relaxed mb-6 animate-fade-in ${isCorrect
+                ? 'border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-200'
+                : 'border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/50 text-rose-900 dark:text-rose-200'
+                }`}
             >
               <div className="font-bold mb-1 flex items-center gap-1.5 text-sm">
                 <span>{t(isCorrect ? 'quiz.correct' : 'quiz.incorrect')}</span>

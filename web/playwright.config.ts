@@ -9,6 +9,9 @@ export default defineConfig({
   reporter: 'list',
   use: {
     baseURL: 'http://localhost:3000',
+    // SPEC-011 FR-UI-16: tests start as a learner who has already chosen Standard, so the first-time
+    // journey chooser does not cover the page. Chooser and Kids tests set their own storage.
+    storageState: 'tests/fixtures/journey-chosen.json',
   },
   // UI-test environment: Go API (tutor defaults to local Ollama) + Vite dev server.
   // Existing servers on :8080 / :3000 are reused, so a manually started stack still works.

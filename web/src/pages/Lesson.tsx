@@ -153,14 +153,14 @@ export const Lesson: React.FC = () => {
         <Link
           to="/"
           data-testid="back-link"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition group"
+          className="inline-flex items-center gap-1.5 min-h-[44px] text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-md"
         >
           <span className="group-hover:-translate-x-0.5 transition-transform">&larr;</span>
           <span>{t('lesson.back')}</span>
         </Link>
 
         {lesson.module && (
-          <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
             {t(`module.${lesson.module}`) || lesson.module}
           </span>
         )}

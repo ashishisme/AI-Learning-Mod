@@ -26,7 +26,7 @@ The feature asset/content verifier must fail for a missing journey lesson, missi
 
 ## Accessibility, performance and rights
 
-Across Home, six lessons and quizzes; all three journeys; English/Hindi; light/dark; 360 px/desktop: no overflow or clipped Hindi, keyboard/focus/44 px actions, localized alternatives, 4.5:1 normal-text contrast, no colour-only information and reduced-motion-safe visuals.
+Across Home, six lessons and quizzes; all three journeys; English/Hindi; light/dark; 360 px/desktop: no overflow or clipped Hindi, keyboard/focus/44 px actions, localized alternatives, at least 4.5:1 contrast for all text including headings, no colour-only information and reduced-motion-safe visuals.
 
 On throttled mobile, added initial visual transfer is ≤350 KB and off-screen art is lazy. Verify served checksums/statuses, continuing upstream attribution/image-blocklist checks, and obtain design, content/accessibility and rights/trademark owner approvals before deployment.
 

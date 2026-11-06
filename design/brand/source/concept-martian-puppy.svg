@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none">
+  <!-- Martian Puppy Robot Avatar -->
+  <!-- Cute Antenna -->
+  <rect x="47" y="12" width="6" height="12" rx="3" fill="#64748B"/>
+  <circle cx="50" cy="10" r="5" fill="#EC4899"/>
+  <!-- Puppy Ears (Floppy) -->
+  <path d="M 28 34 Q 16 38 18 56 Q 26 58 32 46 Z" fill="#0284C7"/>
+  <path d="M 72 34 Q 84 38 82 56 Q 74 58 68 46 Z" fill="#0284C7"/>
+  <!-- Puppy Face Chassis -->
+  <circle cx="50" cy="46" r="26" fill="#38BDF8" stroke="#0284C7" stroke-width="2"/>
+  <!-- Screen Visor -->
+  <rect x="32" y="38" width="36" height="16" rx="8" fill="#0F172A"/>
+  <!-- Friendly Glowing Eyes -->
+  <circle cx="42" cy="46" r="3.5" fill="#22D3EE"/>
+  <circle cx="58" cy="46" r="3.5" fill="#22D3EE"/>
+  <!-- Nose/Treat Bell -->
+  <circle cx="50" cy="58" r="3" fill="#F59E0B"/>
+  <!-- Bone / Treat Reward -->
+  <g transform="translate(36, 76)">
+    <rect x="6" y="2" width="16" height="6" rx="3" fill="#FDE68A" stroke="#F59E0B" stroke-width="1.5"/>
+    <circle cx="6" cy="2" r="3" fill="#F59E0B"/>
+    <circle cx="6" cy="8" r="3" fill="#F59E0B"/>
+    <circle cx="22" cy="2" r="3" fill="#F59E0B"/>
+    <circle cx="22" cy="8" r="3" fill="#F59E0B"/>
+  </g>
+</svg>

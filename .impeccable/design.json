@@ -1,41 +1,201 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-04T00:00:00Z",
+  "generatedAt": "2026-11-06T00:00:00Z",
   "title": "Design System: AI Foundations Coach",
   "extensions": {
     "colorMeta": {
-      "study-blue": { "role": "primary", "displayName": "Study Blue", "tonalRamp": ["#172554", "#1e3a8a", "#1d4ed8", "#2563eb", "#3b82f6", "#60a5fa", "#bfdbfe", "#eff6ff"] },
-      "study-blue-deep": { "role": "primary", "displayName": "Study Blue Deep" },
-      "study-blue-wash": { "role": "primary", "displayName": "Study Blue Wash" },
-      "sunny-amber": { "role": "secondary", "displayName": "Sunny Amber", "tonalRamp": ["#451a03", "#78350f", "#b45309", "#d97706", "#f59e0b", "#fbbf24", "#fcd34d", "#fffbeb"] },
-      "success-green": { "role": "tertiary", "displayName": "Success Green", "tonalRamp": ["#022c22", "#064e3b", "#047857", "#059669", "#10b981", "#34d399", "#a7f3d0", "#ecfdf5"] },
-      "paper": { "role": "neutral", "displayName": "Paper", "tonalRamp": ["#020617", "#0f172a", "#1e293b", "#334155", "#64748b", "#94a3b8", "#e2e8f0", "#f8fafc"] },
-      "ink": { "role": "neutral", "displayName": "Ink" },
-      "night-desk": { "role": "neutral", "displayName": "Night Desk" },
-      "alert-red": { "role": "neutral", "displayName": "Alert Red" }
+      "study-blue": {
+        "role": "primary",
+        "displayName": "Study Blue",
+        "tonalRamp": [
+          "#172554",
+          "#1e3a8a",
+          "#1d4ed8",
+          "#2563eb",
+          "#3b82f6",
+          "#60a5fa",
+          "#bfdbfe",
+          "#eff6ff"
+        ]
+      },
+      "study-blue-deep": {
+        "role": "primary",
+        "displayName": "Study Blue Deep"
+      },
+      "study-blue-wash": {
+        "role": "primary",
+        "displayName": "Study Blue Wash"
+      },
+      "sunny-amber": {
+        "role": "secondary",
+        "displayName": "Sunny Amber",
+        "tonalRamp": [
+          "#451a03",
+          "#78350f",
+          "#b45309",
+          "#d97706",
+          "#f59e0b",
+          "#fbbf24",
+          "#fcd34d",
+          "#fffbeb"
+        ]
+      },
+      "success-green": {
+        "role": "tertiary",
+        "displayName": "Success Green",
+        "tonalRamp": [
+          "#022c22",
+          "#064e3b",
+          "#047857",
+          "#059669",
+          "#10b981",
+          "#34d399",
+          "#a7f3d0",
+          "#ecfdf5"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "tonalRamp": [
+          "#020617",
+          "#0f172a",
+          "#1e293b",
+          "#334155",
+          "#64748b",
+          "#94a3b8",
+          "#e2e8f0",
+          "#f8fafc"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink"
+      },
+      "night-desk": {
+        "role": "neutral",
+        "displayName": "Night Desk"
+      },
+      "alert-red": {
+        "role": "neutral",
+        "displayName": "Alert Red"
+      },
+      "kids-blue": {
+        "role": "primary",
+        "displayName": "Kids Blue"
+      },
+      "kids-amber": {
+        "role": "secondary",
+        "displayName": "Kids Amber"
+      },
+      "kids-pink": {
+        "role": "tertiary",
+        "displayName": "Kids Pink"
+      },
+      "kids-background": {
+        "role": "neutral",
+        "displayName": "Kids Background"
+      },
+      "kids-border": {
+        "role": "neutral",
+        "displayName": "Kids Border"
+      },
+      "kids-night-background": {
+        "role": "neutral",
+        "displayName": "Kids Night Background"
+      },
+      "kids-night-card": {
+        "role": "neutral",
+        "displayName": "Kids Night Card"
+      },
+      "kids-night-border": {
+        "role": "neutral",
+        "displayName": "Kids Night Border"
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "Page hero titles." },
-      "headline": { "displayName": "Headline", "purpose": "Section and lesson titles." },
-      "title": { "displayName": "Title", "purpose": "Card titles and panel headings." },
-      "body": { "displayName": "Body", "purpose": "Lesson prose and tutor answers." },
-      "label": { "displayName": "Label", "purpose": "Tags, field labels, small uppercase headings." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page hero titles."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section and lesson titles."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card titles and panel headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Lesson prose and tutor answers."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Tags, field labels, small uppercase headings."
+      }
     },
     "shadows": [
-      { "name": "card-rest", "value": "0 1px 2px 0 rgb(0 0 0 / 0.05)", "purpose": "Every card and panel at rest." },
-      { "name": "card-hover", "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)", "purpose": "Lesson cards on hover." },
-      { "name": "tile-inset", "value": "inset 0 2px 4px 0 rgb(0 0 0 / 0.05)", "purpose": "Kids metaphor icon tiles." }
+      {
+        "name": "card-rest",
+        "value": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        "purpose": "Every card and panel at rest."
+      },
+      {
+        "name": "card-hover",
+        "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "purpose": "Lesson cards on hover."
+      },
+      {
+        "name": "tile-inset",
+        "value": "inset 0 2px 4px 0 rgb(0 0 0 / 0.05)",
+        "purpose": "Kids metaphor icon tiles."
+      },
+      {
+        "name": "kids-clay",
+        "value": "4px 4px 0 0 rgb(37 99 235 / 0.18), inset -2px -2px 6px 0 rgb(15 23 42 / 0.06)",
+        "purpose": "Kids trail cards in light mode."
+      }
     ],
     "motion": [
-      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Tailwind default for hover and state transitions (150 ms)." },
-      { "name": "progress", "value": "500ms ease-out", "purpose": "Curriculum progress bar fill." },
-      { "name": "reduced-motion", "value": "0.001ms", "purpose": "All animation and transition durations under prefers-reduced-motion." }
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Tailwind default for hover and state transitions (150 ms)."
+      },
+      {
+        "name": "progress",
+        "value": "500ms ease-out",
+        "purpose": "Curriculum progress bar fill."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.001ms",
+        "purpose": "All animation and transition durations under prefers-reduced-motion."
+      },
+      {
+        "name": "kids-press",
+        "value": "200ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "purpose": "Kids control press transition, disabled under reduced motion."
+      }
     ],
     "breakpoints": [
-      { "name": "phone", "value": "360px" },
-      { "name": "sm", "value": "640px" },
-      { "name": "md", "value": "768px" },
-      { "name": "lg", "value": "1024px" }
+      {
+        "name": "phone",
+        "value": "360px"
+      },
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
     ]
   },
   "components": [
@@ -85,26 +245,50 @@
       "description": "The Kids journey's warm mascot banner.",
       "html": "<div class=\"ds-kids\"><div class=\"ds-kids-avatar\" aria-hidden=\"true\"><svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\"><rect x=\"6\" y=\"10\" width=\"28\" height=\"22\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"15\" cy=\"21\" r=\"3\" fill=\"#fff\"/><circle cx=\"25\" cy=\"21\" r=\"3\" fill=\"#fff\"/><rect x=\"19\" y=\"4\" width=\"2\" height=\"6\" fill=\"#2563eb\"/></svg></div><p class=\"ds-kids-line\"><strong>Chip says:</strong> Let's find out how computers learn!</p></div>",
       "css": ".ds-kids { display: flex; align-items: center; gap: 20px; padding: 24px; border-radius: 24px; border: 2px solid #fcd34d; background: linear-gradient(to right, #fffbeb, #fff7ed, rgb(254 243 199 / 0.6)); color: #0f172a; } .ds-kids-avatar { flex-shrink: 0; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background: rgb(255 255 255 / 0.9); border: 2px solid #fcd34d; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); } .ds-kids-line { margin: 0; font-size: 1rem; line-height: 1.6; }"
+    },
+    {
+      "name": "Kids Trail Card",
+      "kind": "card",
+      "refersTo": "kids-trail-card",
+      "description": "Clay card on Chip’s Trail with 20 px corners and a 3 px border.",
+      "html": "<div class=\"kids-card\">Trail stop</div>",
+      "css": ".kids-card { background: var(--kids-card); color: var(--kids-ink); border: 3px solid var(--kids-border); border-radius: 20px; box-shadow: var(--kids-shadow); }"
     }
   ],
   "narrative": {
     "northStar": "The Friendly Study Desk",
-    "overview": "The app is a tidy, approachable place to study. Pages sit on a pale paper background, content lives on white cards with soft rounded corners, and a single study blue marks what you can act on. Dark mode turns the desk into a quiet night study, slate on deep navy, and keeps the same layout. Density is moderate and text-led. The Kids journey brightens the same desk rather than replacing it. The intended feel for controls is bouncy and playful (owner, 2026-11-04); today's controls are clear and dependable, so that feel is the direction of the SPEC-011 overhaul.",
+    "overview": "Standard and Plain English retain a calm, text-led study desk. The Kids journey uses Chip’s Trail: a Continue card and six illustrated stops, with clay cards, blue, amber and pink accents, and self-hosted Baloo 2 and Comic Neue for Latin text. A sub-header toolbar offers all three journeys on Home and Lesson pages.",
     "keyCharacteristics": [
-      "One accent colour, study blue, for action and progress.",
-      "White or deep-navy cards on a paper or night background, separated by a thin border and a light shadow.",
-      "Generous rounding: cards 16 px, banners 24 px, chips and pills fully round.",
-      "System fonts, with Noto Sans Devanagari served by the app for Hindi.",
-      "Kids adds warmth (amber, indigo and purple washes, Chip) on top of the same structure."
+      "Study blue for shared actions; the Kids layer also uses amber and pink.",
+      "Standard and Plain English retain white or deep-navy cards on a paper or night background.",
+      "Kids uses 20 px clay cards with 3 px borders and a double shadow.",
+      "Kids uses Baloo 2 headings and Comic Neue body text for Latin; Hindi uses Noto Sans Devanagari.",
+      "Chip’s Trail has a Continue card and six always-open illustrated stops."
     ],
     "rules": [
-      { "name": "The One Blue Rule", "body": "Study blue is the only interactive colour. Kids colours decorate; they never mark a button or link.", "section": "colors" },
-      { "name": "The Contrast Floor Rule", "body": "Every text and control pair meets 4.5:1 in light and dark (DC-11). Tints carry backgrounds, never text.", "section": "colors" },
-      { "name": "The No Tiny Text Rule", "body": "Nothing a learner must read is under 12 px. A few chips use 11 px today, and the overhaul should raise them.", "section": "typography" },
-      { "name": "The Flat-By-Default Rule", "body": "Depth answers state (hover, focus, open). A surface never gets a heavier shadow just to look important.", "section": "elevation" }
+      {
+        "name": "The Contrast Floor Rule",
+        "body": "Every text and control pair meets 4.5:1 in light and dark (DC-11). Tints carry backgrounds, never text.",
+        "section": "colors"
+      },
+      {
+        "name": "The No Tiny Text Rule",
+        "body": "Nothing a learner must read is under 12 px.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Depth answers state (hover, focus, open). A surface never gets a heavier shadow just to look important.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Kids Palette Rule",
+        "body": "Kids surfaces use blue #2563eb, amber #f59e0b and pink #ec4899; text keeps a checked 4.5:1 contrast pairing.",
+        "section": "colors"
+      }
     ],
     "dos": [
-      "Do keep study blue (#2563eb, #1d4ed8 for solid buttons) as the only action colour.",
+      "Do use study blue for shared actions and the approved Kids palette in Kids surfaces.",
       "Do give every control a 44 px target and a visible 2 px focus ring.",
       "Do keep Standard and Plain English on the calm desk; brighten only the Kids journey.",
       "Do serve fonts and images from the app's own address, including Noto Sans Devanagari.",
@@ -112,7 +296,7 @@
     ],
     "donts": [
       "Don't set readable text below 12 px.",
-      "Don't use a Kids accent colour for a button or link.",
+      "Don’t use a Kids accent colour for text without meeting the 4.5:1 contrast floor.",
       "Don't rely on emoji as the only carrier of meaning; the overhaul replaces them with original illustrations.",
       "Don't use upstream course images with third-party logos (the brand blocklist stays in force)."
     ]

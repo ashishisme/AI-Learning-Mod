@@ -120,37 +120,37 @@ export const HelpModal: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
                     <span className="font-bold text-slate-900 dark:text-white block">{t('help.module1')}</span>
-                    <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
                       {t('help.module1Body')}
                     </span>
                   </div>
                   <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
                     <span className="font-bold text-slate-900 dark:text-white block">{t('help.module2')}</span>
-                    <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
                       {t('help.module2Body')}
                     </span>
                   </div>
                   <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
                     <span className="font-bold text-slate-900 dark:text-white block">{t('help.module3')}</span>
-                    <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
                       {t('help.module3Body')}
                     </span>
                   </div>
                   <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
                     <span className="font-bold text-slate-900 dark:text-white block">{t('help.module4')}</span>
-                    <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
                       {t('help.module4Body')}
                     </span>
                   </div>
                   <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
                     <span className="font-bold text-slate-900 dark:text-white block">{t('help.module5')}</span>
-                    <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
                       {t('help.module5Body')}
                     </span>
                   </div>
                   <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
                     <span className="font-bold text-slate-900 dark:text-white block">{t('help.module6')}</span>
-                    <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
                       {t('help.module6Body')}
                     </span>
                   </div>

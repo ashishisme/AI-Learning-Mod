@@ -166,7 +166,7 @@ test.describe('Audio Narration & Multi-Modal Sound Effects (SPEC-004)', () => {
     // Select Nova
     await page.locator('button', { hasText: 'Nova the Storyteller' }).click()
 
-    // Voice trigger button updates to Nova
-    await expect(page.locator('button[aria-label="Voice Studio Settings"]')).toContainText('Nova')
+    // The compact icon keeps the selected voice in its title.
+    await expect(voiceBtn).toHaveAttribute('title', 'Voice: Nova')
   })
 })

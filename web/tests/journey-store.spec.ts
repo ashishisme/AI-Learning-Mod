@@ -19,6 +19,8 @@ async function seed(page: Page, mode: unknown) {
 
 const stored = (page: Page) => page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? 'null'), MODE_KEY)
 
+test.use({ storageState: { cookies: [], origins: [] } })
+
 test.describe('Journey preference (SPEC-011)', () => {
   for (const mode of ['standard', 'junior', 'plain-english']) {
     test(`a saved "${mode}" mode from an earlier release is kept and counts as chosen`, async ({ page }) => {

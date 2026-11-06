@@ -1,6 +1,5 @@
-// SPEC: SPEC-009 US3, FR-027, SC-007 (English unchanged while the language foundation ships)
-// The text snapshots were recorded from the English UI before any string moved into the catalogue
-// (2026-11-03), so a passing run proves the move changed no visible English text.
+// SPEC: SPEC-009 US3, FR-027, SC-007; SPEC-011 approved English UI changes.
+// The text snapshots preserve the approved release copy across future localization edits.
 import { test, expect, Page } from '@playwright/test'
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -127,7 +126,7 @@ test.describe('English foundation (B1)', () => {
   ]
 
   for (const [name, open] of pages) {
-    test(`English text is unchanged: ${name}`, async ({ page }) => {
+    test(`English text matches release baseline: ${name}`, async ({ page }) => {
       await open(page)
       const text = await visibleText(page)
       if (process.env.UPDATE_I18N_BASELINE === '1') {

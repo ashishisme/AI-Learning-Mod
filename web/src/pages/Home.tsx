@@ -1,10 +1,13 @@
-// SPEC: FR-UI-02, FR-UI-06, FR-UI-13, FR-PRG-03, AC-19, AC-23, AC-35
+// SPEC: FR-UI-02, FR-UI-06, FR-UI-13, FR-PRG-03, AC-19, AC-23, AC-35; SPEC-011 FR-UI-16, FR-UI-18
 import React, { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { fetchLessons, LessonMeta, ApiError } from '../api'
-import { useProgressStore, useSettingsStore } from '../store'
+import { useProgressStore, useSettingsStore, useAudienceModeStore } from '../store'
 import { useLanguage, useT } from '../i18n'
 import { NotTranslatedNotice } from '../components/NotTranslatedNotice'
+import { JourneyChooser } from '../components/JourneyChooser'
+import { AudienceModeSelector } from '../components/AudienceModeSelector'
+import { KidsHome, KidsHomeSkeleton, KidsHomeError } from '../components/kids/KidsHome'
 
 export const Home: React.FC = () => {
   const [lessons, setLessons] = useState<LessonMeta[]>([])
@@ -21,8 +24,13 @@ export const Home: React.FC = () => {
   const moduleLabel = (id: string) => t(`module.${id}`) || id
   const { code } = useLanguage()
   const [servedLang, setServedLang] = useState('en')
+  const { mode, hasChosenJourney } = useAudienceModeStore()
+  const kids = mode === 'junior'
+  const [attempt, setAttempt] = useState(0) // Kids retry re-runs the fetch
 
   useEffect(() => {
+    setLoading(true)
+    setErrorMessage(null)
     fetchLessons()
       .then((data) => {
         setLessons(data.lessons || [])
@@ -38,7 +46,7 @@ export const Home: React.FC = () => {
         }
         setLoading(false)
       })
-  }, [code])
+  }, [code, attempt])
 
   // Modules list for filtering
   const modules = useMemo(() => {
@@ -71,6 +79,12 @@ export const Home: React.FC = () => {
   const total = lessons.length
   const done = lessons.filter((l) => isLessonCompleted(l.id)).length
   const percentComplete = total > 0 ? Math.round((done / total) * 100) : 0
+
+  // SPEC-011 FR-UI-16: a first-time learner picks a journey before any lesson.
+  if (!hasChosenJourney) return <JourneyChooser />
+
+  if (kids && loading) return <KidsHomeSkeleton />
+  if (kids && errorMessage) return <KidsHomeError onRetry={() => setAttempt((n) => n + 1)} />
 
   if (loading) {
     return (
@@ -124,8 +138,20 @@ export const Home: React.FC = () => {
     )
   }
 
+  // SPEC-011 FR-UI-18: the Kids home is Chip's Trail, with no search or module filters.
+  if (kids) {
+    return (
+      <div className="max-w-5xl mx-auto py-6 sm:py-8 px-4 sm:px-6">
+        <AudienceModeSelector className="mb-6" />
+        {code !== 'en' && servedLang !== code && <NotTranslatedNotice className="mb-6" />}
+        <KidsHome lessons={lessons} isDone={isLessonCompleted} />
+      </div>
+    )
+  }
+
   return (
-    <div className="max-w-5xl mx-auto py-10 px-4 sm:px-6">
+    <div className="max-w-5xl mx-auto py-6 sm:py-8 px-4 sm:px-6">
+      <AudienceModeSelector className="mb-6" />
       {code !== 'en' && servedLang !== code && <NotTranslatedNotice className="mb-6" />}
       {/* Editorial Header */}
       <header className="mb-8">
@@ -248,12 +274,12 @@ export const Home: React.FC = () => {
         {/* Module Topic Tags */}
         {modules.length > 0 && (
           <div className="flex items-center gap-1.5 flex-wrap pt-1 text-xs">
-            <span className="text-slate-400 text-[11px] font-semibold uppercase mr-1">{t('home.modules')}</span>
+            <span className="text-slate-400 text-xs font-semibold uppercase mr-1">{t('home.modules')}</span>
             {modules.map((mod) => (
               <button
                 key={mod}
                 onClick={() => setSelectedModule(selectedModule === mod ? 'all' : mod)}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition ${
+                className={`px-2.5 py-1 rounded-md text-xs font-medium transition ${
                   selectedModule === mod
                     ? 'bg-blue-600 text-white shadow-xs'
                     : 'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -310,7 +336,7 @@ export const Home: React.FC = () => {
                           {(idx + 1).toString().padStart(2, '0')}
                         </span>
                         {lesson.module && (
-                          <span className="inline-block text-[11px] font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+                          <span className="inline-block text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
                             {moduleLabel(lesson.module)}
                           </span>
                         )}

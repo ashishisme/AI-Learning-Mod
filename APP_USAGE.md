@@ -27,17 +27,32 @@ Open **[http://localhost:3000](http://localhost:3000)** in Chrome, Safari, Firef
 
 ---
 
-## 🎚️ 3 Adaptive Audience Modes
+## 🎚️ 3 Adaptive Audience Journeys & Chip's Trail
 
-Every module features three distinct modes at the top of the lesson:
+### First-Time Journey Chooser
+When launching the application for the first time, learners are greeted by a friendly three-way chooser presenting all three journeys equally:
+- **Kids (Ages 8–14)**: Guided by Chip the Robot with colourful clay cards, tactile illustrations, and Chip's Trail.
+- **Plain English**: Friendly everyday non-technical intuitions, jargon busters, and relatable workplace analogies.
+- **Standard**: Canonical technical curriculum derived from Microsoft AI-For-Beginners with formal definitions and architecture diagrams.
 
-| Mode | Target Audience | Guide Persona | Characteristics |
+Your journey preference is saved in this browser and can be switched anytime.
+
+### Dedicated Sub-Header Toolbar
+A dedicated toolbar sits directly below the top application bar on both Home and Lesson pages:
+- **Segmented 44 px Tabs**: Switch between Standard, Kids, and Plain English at any point. Mid-lesson switches stop narration and reset scroll to the top.
+- **Compact Voice Studio (`🤖`)**: Open voice persona and mute controls.
+
+### Kids Home: Chip's Trail
+Young explorers in Kids mode experience a playful, focused curriculum interface:
+- **Continue Card**: Displays Chip alongside the next unfinished lesson stop with a direct 1-click action to jump straight in.
+- **Winding Trail Path**: 6 illustrated stops on a winding path showing your status (*Done*, *You are here*, or *Next*). When completing a lesson, Chip hops forward along the trail!
+- **Celebration Banner**: Finishing all six stops shows a recap with replay and quiz links.
+
+| Journey | Target Audience | Guide Persona | Characteristics |
 | :--- | :--- | :--- | :--- |
-| **🎓 Standard** | University & Adult Learners | Prof. Alan | Canonical academic foundations derived from Microsoft AI-For-Beginners. Complete formulas, architecture diagrams, and formal definitions. |
-| **🚀 Kids (Ages 8–14)** | Young Explorers & Middle School | **Chip the Robot 🤖** | Interactive toy block metaphors, animated characters, simplified explanations, and Flesch-Kincaid Grade 4–6 reading levels. |
-| **💡 Plain English** | Non-Technical Professionals | **Nova 🎙️** | Executive summaries, workplace intuitions, zero math barriers, and relatable everyday business analogies. |
-
-> **Pro Tip:** Switch modes anytime while reading—your scroll position and progress stay intact, and the text adapts instantaneously without a page reload!
+| **🎓 Standard** | University & Adult Learners | Prof. Alan | Canonical academic foundations. Complete formulas, architecture diagrams, and formal definitions. |
+| **🚀 Kids (Ages 8–14)** | Young Explorers & Middle School | **Chip the Robot 🤖** | Story-driven trail with original approved clay illustrations, everyday physical metaphors, and Flesch-Kincaid Grade 4–6 reading levels. |
+| **💡 Plain English** | Non-Technical Professionals | **Nova 🎙️** | Executive summaries, workplace intuitions, zero math barriers, and relatable everyday analogies. |
 
 ---
 

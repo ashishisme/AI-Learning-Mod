@@ -28,7 +28,7 @@ Keep the three learner journeys, **Standard**, **Kids** (`junior`) and **Plain E
 
 - Preserve upstream attribution, content-image screening, privacy posture and no-Microsoft-assets rule.
 - Standard, Kids and Plain English all stay selectable; existing preferences and progress are untouched.
-- Interactive targets ≥44 × 44 CSS px; normal text WCAG AA; respect reduced motion.
+- Interactive targets ≥44 × 44 CSS px; all text, including headings, meets the constitution's ≥4.5:1 contrast floor; respect reduced motion.
 - Product visuals must be original, commissioned with exclusive rights, or carry a compatible written licence and recorded provenance. No third-party trademarks, lookalikes or imitation of recognisable brand/living-artist styles.
 - Source masters stay outside the deployable bundle; only reviewed derivatives ship.
 

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" fill="none">
+  <defs>
+    <linearGradient id="waveBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <linearGradient id="waveScreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#1E293B" />
+    </linearGradient>
+    <linearGradient id="waveGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22D3EE" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+  </defs>
+
+  <!-- Antenna -->
+  <rect x="57" y="16" width="6" height="14" rx="3" fill="#64748B" />
+  <circle cx="60" cy="14" r="6" fill="#F59E0B" />
+  <circle cx="60" cy="14" r="3" fill="#FDE68A" />
+
+  <!-- Ears -->
+  <rect x="24" y="46" width="6" height="16" rx="3" fill="#94A3B8" />
+  <rect x="90" y="46" width="6" height="16" rx="3" fill="#94A3B8" />
+
+  <!-- Head Chassis -->
+  <rect x="30" y="26" width="60" height="56" rx="16" fill="url(#waveBody)" stroke="#0284C7" stroke-width="2" />
+
+  <!-- Screen -->
+  <rect x="38" y="36" width="44" height="34" rx="10" fill="url(#waveScreen)" />
+
+  <!-- Winking Eyes -->
+  <path d="M 48 51 Q 52 47 56 51" stroke="#22D3EE" stroke-width="3" stroke-linecap="round" />
+  <circle cx="70" cy="51" r="4.5" fill="url(#waveGlow)" />
+  <circle cx="71.5" cy="49.5" r="1.5" fill="#FFFFFF" />
+
+  <!-- Smile -->
+  <path d="M 54 61 Q 60 65 66 61" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" />
+
+  <!-- Waving Hand Right -->
+  <g transform="translate(88, 22) rotate(-20)">
+    <rect x="0" y="0" width="10" height="24" rx="5" fill="#38BDF8" stroke="#0284C7" stroke-width="1.5" />
+    <circle cx="5" cy="-2" r="6" fill="#0284C7" />
+    <path d="M 14 -2 Q 18 2 14 6" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" />
+  </g>
+
+  <!-- Left Resting Arm -->
+  <rect x="22" y="70" width="10" height="18" rx="5" fill="#0284C7" />
+</svg>

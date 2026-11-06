@@ -1,5 +1,551 @@
 {
   "schemaVersion": 1,
   "rules": "See design/brand/README.md. Only status \"approved\" with trademarkScreen \"clear\" may ship in web/public/brand/.",
-  "assets": []
+  "assets": [
+    {
+      "id": "app-mark",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.appMarkAlt",
+      "releaseFiles": [
+        {
+          "path": "app-mark.svg",
+          "sha256": "b013d9cbeb971dd96bb145aff17102138d8c2957a38b3d1d61013d42deeb3ad1"
+        }
+      ],
+      "purpose": "app mark",
+      "sourceMaster": "design/brand/source/app-mark.svg",
+      "sourceSha256": "b013d9cbeb971dd96bb145aff17102138d8c2957a38b3d1d61013d42deeb3ad1",
+      "usageLocation": [
+        "web/src/App.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "chip-wave",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.chipWaveAlt",
+      "releaseFiles": [
+        {
+          "path": "chip-wave.svg",
+          "sha256": "cfbad2ae9d9a4a59756cc4e0f677a0946b2da4c1d7f9d8553bbe5d5c61d83434"
+        }
+      ],
+      "purpose": "chip wave",
+      "sourceMaster": "design/brand/source/chip-wave.svg",
+      "sourceSha256": "cfbad2ae9d9a4a59756cc4e0f677a0946b2da4c1d7f9d8553bbe5d5c61d83434",
+      "usageLocation": [
+        "web/public/brand/chip-wave.svg (reserved pose)"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "chip-think",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.chipThinkAlt",
+      "releaseFiles": [
+        {
+          "path": "chip-think.svg",
+          "sha256": "64df1bcc21a8fe32418cf533939e5896a39da183cba9eb794ed4a9ede24339b1"
+        }
+      ],
+      "purpose": "chip think",
+      "sourceMaster": "design/brand/source/chip-think.svg",
+      "sourceSha256": "64df1bcc21a8fe32418cf533939e5896a39da183cba9eb794ed4a9ede24339b1",
+      "usageLocation": [
+        "web/public/brand/chip-think.svg (reserved pose)"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "chip-cheer",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.chipCheerAlt",
+      "releaseFiles": [
+        {
+          "path": "chip-cheer.svg",
+          "sha256": "97f1e33f2ce046509c8abfeb9b3eebe7f0c8830b12b2c865816b32f41554e6ef"
+        }
+      ],
+      "purpose": "chip cheer",
+      "sourceMaster": "design/brand/source/chip-cheer.svg",
+      "sourceSha256": "97f1e33f2ce046509c8abfeb9b3eebe7f0c8830b12b2c865816b32f41554e6ef",
+      "usageLocation": [
+        "web/src/components/kids/KidsHome.tsx",
+        "web/src/pages/Quiz.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "stop-1-intro",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.stop1Alt",
+      "releaseFiles": [
+        {
+          "path": "stop-1-intro.svg",
+          "sha256": "3c7ecb2811a55d7e02f81b9fc1b8fafc204e0fe09e28492641da7b127da034a7"
+        }
+      ],
+      "purpose": "stop 1 intro",
+      "sourceMaster": "design/brand/source/stop-1-intro.svg",
+      "sourceSha256": "3c7ecb2811a55d7e02f81b9fc1b8fafc204e0fe09e28492641da7b127da034a7",
+      "usageLocation": [
+        "web/src/components/kids/StopArt.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "stop-2-symbolic",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.stop2Alt",
+      "releaseFiles": [
+        {
+          "path": "stop-2-symbolic.svg",
+          "sha256": "0757760a92a0f89a3b150641c097bd41d9633f9dbe18563f22035fb49cd07893"
+        }
+      ],
+      "purpose": "stop 2 symbolic",
+      "sourceMaster": "design/brand/source/stop-2-symbolic.svg",
+      "sourceSha256": "0757760a92a0f89a3b150641c097bd41d9633f9dbe18563f22035fb49cd07893",
+      "usageLocation": [
+        "web/src/components/kids/StopArt.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "stop-3-neuralnetworks",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.stop3Alt",
+      "releaseFiles": [
+        {
+          "path": "stop-3-neuralnetworks.svg",
+          "sha256": "fb0c19202288b437f7ed06398ddae4d726bd9008f4ba4faa619469a4e655ea10"
+        }
+      ],
+      "purpose": "stop 3 neuralnetworks",
+      "sourceMaster": "design/brand/source/stop-3-neuralnetworks.svg",
+      "sourceSha256": "fb0c19202288b437f7ed06398ddae4d726bd9008f4ba4faa619469a4e655ea10",
+      "usageLocation": [
+        "web/src/components/kids/StopArt.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "stop-4-computervision",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.stop4Alt",
+      "releaseFiles": [
+        {
+          "path": "stop-4-computervision.svg",
+          "sha256": "dd3f2c3593b83f4a15dbf5a3b0772f8a62c7ee02b8178e0d60a7e6b74251bf02"
+        }
+      ],
+      "purpose": "stop 4 computervision",
+      "sourceMaster": "design/brand/source/stop-4-computervision.svg",
+      "sourceSha256": "dd3f2c3593b83f4a15dbf5a3b0772f8a62c7ee02b8178e0d60a7e6b74251bf02",
+      "usageLocation": [
+        "web/src/components/kids/StopArt.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "stop-5-nlp",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.stop5Alt",
+      "releaseFiles": [
+        {
+          "path": "stop-5-nlp.svg",
+          "sha256": "ead446e8431acddd002d36240f196e50f16966553fc7e5ec29a2cd719c859bef"
+        }
+      ],
+      "purpose": "stop 5 nlp",
+      "sourceMaster": "design/brand/source/stop-5-nlp.svg",
+      "sourceSha256": "ead446e8431acddd002d36240f196e50f16966553fc7e5ec29a2cd719c859bef",
+      "usageLocation": [
+        "web/src/components/kids/StopArt.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "stop-7-ethics",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.stop7Alt",
+      "releaseFiles": [
+        {
+          "path": "stop-7-ethics.svg",
+          "sha256": "1dd5a6d1748df3b253ad152220a4a1e3a98c8347f505e40781654557f3842634"
+        }
+      ],
+      "purpose": "stop 7 ethics",
+      "sourceMaster": "design/brand/source/stop-7-ethics.svg",
+      "sourceSha256": "1dd5a6d1748df3b253ad152220a4a1e3a98c8347f505e40781654557f3842634",
+      "usageLocation": [
+        "web/src/components/kids/StopArt.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "concept-martian-puppy",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.conceptPuppyAlt",
+      "releaseFiles": [
+        {
+          "path": "concept-martian-puppy.svg",
+          "sha256": "1f63d4e38d5c0a65e832765c32236a28bd6561e83b8b9b4bc9e760329337d84d"
+        }
+      ],
+      "purpose": "concept martian puppy",
+      "sourceMaster": "design/brand/source/concept-martian-puppy.svg",
+      "sourceSha256": "1f63d4e38d5c0a65e832765c32236a28bd6561e83b8b9b4bc9e760329337d84d",
+      "usageLocation": [
+        "web/src/components/VisualMetaphorCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "concept-symbolic-maze",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.conceptMazeAlt",
+      "releaseFiles": [
+        {
+          "path": "concept-symbolic-maze.svg",
+          "sha256": "23177abcba2cdf005f0ffbec88febbbb9658b977a44b4b01dd03156fcaea814c"
+        }
+      ],
+      "purpose": "concept symbolic maze",
+      "sourceMaster": "design/brand/source/concept-symbolic-maze.svg",
+      "sourceSha256": "23177abcba2cdf005f0ffbec88febbbb9658b977a44b4b01dd03156fcaea814c",
+      "usageLocation": [
+        "web/src/components/VisualMetaphorCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "concept-neuron-switch",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.conceptNeuronAlt",
+      "releaseFiles": [
+        {
+          "path": "concept-neuron-switch.svg",
+          "sha256": "d73a49784d85640222ee799131a335bf4c303e18a0862a3a0a20fec8e2632251"
+        }
+      ],
+      "purpose": "concept neuron switch",
+      "sourceMaster": "design/brand/source/concept-neuron-switch.svg",
+      "sourceSha256": "d73a49784d85640222ee799131a335bf4c303e18a0862a3a0a20fec8e2632251",
+      "usageLocation": [
+        "web/src/components/VisualMetaphorCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "concept-pixel-grid",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.conceptPixelAlt",
+      "releaseFiles": [
+        {
+          "path": "concept-pixel-grid.svg",
+          "sha256": "9bf3ad82580aa474b042c6b9bddc3eeff0abf1b14fd31dbbc1530dc06d421ecc"
+        }
+      ],
+      "purpose": "concept pixel grid",
+      "sourceMaster": "design/brand/source/concept-pixel-grid.svg",
+      "sourceSha256": "9bf3ad82580aa474b042c6b9bddc3eeff0abf1b14fd31dbbc1530dc06d421ecc",
+      "usageLocation": [
+        "web/src/components/VisualMetaphorCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "concept-word-vectors",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.conceptVectorsAlt",
+      "releaseFiles": [
+        {
+          "path": "concept-word-vectors.svg",
+          "sha256": "24ebc86fd8cad5f3cc15dc21c8ae1a0fae2561ec4ee429ffbf3721a998f3ae03"
+        }
+      ],
+      "purpose": "concept word vectors",
+      "sourceMaster": "design/brand/source/concept-word-vectors.svg",
+      "sourceSha256": "24ebc86fd8cad5f3cc15dc21c8ae1a0fae2561ec4ee429ffbf3721a998f3ae03",
+      "usageLocation": [
+        "web/src/components/VisualMetaphorCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "concept-fairness-scale",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.conceptFairnessAlt",
+      "releaseFiles": [
+        {
+          "path": "concept-fairness-scale.svg",
+          "sha256": "c01615acadf942b2e57e8c20d0b1e198d4b4223aed2cb1123cf6a7c74bc71acd"
+        }
+      ],
+      "purpose": "concept fairness scale",
+      "sourceMaster": "design/brand/source/concept-fairness-scale.svg",
+      "sourceSha256": "c01615acadf942b2e57e8c20d0b1e198d4b4223aed2cb1123cf6a7c74bc71acd",
+      "usageLocation": [
+        "web/src/components/VisualMetaphorCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    }
+  ]
 }

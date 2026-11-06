@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none">
+  <defs>
+    <linearGradient id="markBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <linearGradient id="markScreenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#1E293B" />
+    </linearGradient>
+    <linearGradient id="markGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22D3EE" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+    <filter id="markShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#0284C7" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Antenna & Beacon -->
+  <rect x="47" y="10" width="6" height="14" rx="3" fill="#64748B" />
+  <circle cx="50" cy="8" r="6" fill="#F59E0B" filter="url(#markShadow)" />
+  <circle cx="50" cy="8" r="3" fill="#FDE68A" />
+
+  <!-- Robot Ears -->
+  <rect x="14" y="40" width="6" height="16" rx="3" fill="#94A3B8" />
+  <rect x="80" y="40" width="6" height="16" rx="3" fill="#94A3B8" />
+
+  <!-- Head Chassis -->
+  <rect x="20" y="20" width="60" height="56" rx="16" fill="url(#markBodyGrad)" stroke="#0284C7" stroke-width="2" filter="url(#markShadow)" />
+
+  <!-- Head Light Glaze -->
+  <path d="M 28 24 Q 50 20 72 24" stroke="rgba(255,255,255,0.45)" stroke-width="2.5" stroke-linecap="round" />
+
+  <!-- Display Face Screen -->
+  <rect x="28" y="30" width="44" height="34" rx="10" fill="url(#markScreenGrad)" />
+
+  <!-- Expressive Eyes -->
+  <circle cx="41" cy="46" r="4.5" fill="url(#markGlow)" />
+  <circle cx="42.5" cy="44.5" r="1.5" fill="#FFFFFF" />
+  <circle cx="59" cy="46" r="4.5" fill="url(#markGlow)" />
+  <circle cx="60.5" cy="44.5" r="1.5" fill="#FFFFFF" />
+
+  <!-- Warm Smile -->
+  <path d="M 44 55 Q 50 59 56 55" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" fill="none" />
+</svg>

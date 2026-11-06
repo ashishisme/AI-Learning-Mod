@@ -3,9 +3,13 @@ import { test, expect } from '@playwright/test'
 // SPEC: AC-19 (FR-UI-02, FR-PRG-03): / lists lessons with progress done / total; marking one complete updates the summary.
 test.describe('AC-19 Home Page', () => {
   test('AC-19: lists lessons with done / total summary and marking complete updates it', async ({ page }) => {
-    // Clear localStorage
+    // Clear localStorage and seed chosen Standard journey
     await page.addInitScript(() => {
       window.localStorage.clear()
+      window.localStorage.setItem(
+        'ai-foundations-audience-mode',
+        JSON.stringify({ state: { mode: 'standard', hasChosenJourney: true }, version: 1 })
+      )
     })
 
     // Mock /api/lessons

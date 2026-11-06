@@ -185,7 +185,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId, needsSetup = f
             <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 leading-none">
               {t(audienceMode === 'junior' ? 'tutor.titleJunior' : audienceMode === 'plain-english' ? 'tutor.titlePlain' : 'tutor.title')}
             </h3>
-            <span className="text-[11px] text-slate-400 font-medium">
+            <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
               {t(audienceMode === 'junior' ? 'tutor.subtitleJunior' : audienceMode === 'plain-english' ? 'tutor.subtitlePlain' : 'tutor.subtitle')}
             </span>
           </div>
@@ -199,7 +199,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId, needsSetup = f
             {t(needsSetup ? 'tutor.setupBadge' : 'tutor.offline')}
           </span>
         ) : (
-          <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-200/60 dark:border-emerald-800">
+          <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-200/60 dark:border-emerald-800">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             {t('tutor.online')}
           </span>
@@ -370,7 +370,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId, needsSetup = f
             </div>
           </div>
         )}
-        <div className="flex items-center justify-between text-[11px] text-slate-400">
+        <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
           <span>{t(isListening ? 'tutor.listening' : 'tutor.citations')}</span>
           <span>{question.length}/500</span>
         </div>

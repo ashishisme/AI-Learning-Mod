@@ -156,3 +156,72 @@
 .scaffold-guided:not(.show-math) [data-math] {
   display: none;
 }
+
+/* SPEC-011 FR-UI-17 / FR-UI-18: Kids layer components. They read the --kids-* tokens, so light and dark
+   both come from the token blocks above; every text colour here is one of the checked 4.5:1 pairs. */
+@layer components {
+  [data-journey='junior'] .kids-card {
+    background: var(--kids-card);
+    color: var(--kids-ink);
+    border: var(--kids-border-width) solid var(--kids-border);
+    border-radius: var(--kids-radius);
+    box-shadow: var(--kids-shadow);
+    font-family: var(--kids-font-body);
+  }
+  [data-journey='junior'] .kids-heading {
+    font-family: var(--kids-font-head);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--kids-ink);
+  }
+  [data-journey='junior'] .kids-ink { color: var(--kids-ink); }
+  [data-journey='junior'] .kids-ink-muted { color: var(--kids-ink-muted); }
+  [data-journey='junior'] .kids-link { color: var(--kids-primary); text-decoration: underline; text-underline-offset: 3px; }
+  [data-journey='junior'] .kids-tile { border-radius: 16px; box-shadow: inset -2px -2px 6px 0 rgb(15 23 42 / 0.08); }
+  [data-journey='junior'] .kids-button {
+    min-height: 48px;
+    border-radius: 9999px;
+    background: var(--kids-primary);
+    color: var(--kids-on-primary);
+    font-family: var(--kids-font-head);
+    font-weight: 700;
+    border: var(--kids-border-width) solid transparent;
+    box-shadow: 0 4px 0 0 rgb(15 23 42 / 0.25);
+    transition: transform var(--kids-press), box-shadow var(--kids-press);
+  }
+  [data-journey='junior'] .kids-button:hover { transform: translateY(-1px); }
+  [data-journey='junior'] .kids-button:active { transform: translateY(3px); box-shadow: 0 1px 0 0 rgb(15 23 42 / 0.25); }
+  [data-journey='junior'] .kids-button:focus-visible { outline: 3px solid var(--kids-accent); outline-offset: 3px; }
+  [data-journey='junior'] .kids-button-secondary { background: var(--kids-secondary); color: var(--kids-on-secondary); }
+  [data-journey='junior'] .kids-stop-here { border-color: var(--kids-primary); }
+  [data-journey='junior'] .kids-status-done { color: #065f46; }
+  [data-journey='junior'] .kids-status-here { color: var(--kids-primary); }
+  [data-journey='junior'] .kids-status-next { color: var(--kids-ink-muted); }
+  .dark [data-journey='junior'] .kids-status-done { color: #6ee7b7; }
+  [data-journey='junior'] .kids-celebrate { border-color: var(--kids-secondary); }
+  /* The trail's line: a dashed spine on phones, a dashed band behind the wave from md up. */
+  [data-journey='junior'] .kids-trail::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 50%;
+    border-left: 3px dashed var(--kids-border);
+    z-index: 0;
+  }
+  @media (min-width: 768px) {
+    [data-journey='junior'] .kids-trail::before { inset: 50% 0 auto 0; border-left: 0; border-top: 3px dashed var(--kids-border); }
+  }
+  [data-journey='junior'] .kids-trail > li { z-index: 1; }
+}
+
+@keyframes kidsHop {
+  0% { transform: translate(-56px, 24px) scale(0.8); opacity: 0; }
+  60% { transform: translate(0, -14px) scale(1.08); opacity: 1; }
+  100% { transform: translate(0, 0) scale(1); }
+}
+.kids-hop { animation: kidsHop 650ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+@keyframes kidsCheer {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-6deg); }
+  75% { transform: rotate(6deg); }
+}
+.kids-cheer { animation: kidsCheer 900ms ease-in-out 2; }

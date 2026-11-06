@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" fill="none">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFBEB"/>
+      <stop offset="100%" stop-color="#FEF3C7"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="144" height="144" rx="28" fill="url(#bgGrad2)" stroke="#FDE68A" stroke-width="2"/>
+
+  <!-- Stepping Stones Decision Tree -->
+  <!-- Root Stone -->
+  <circle cx="80" cy="38" r="16" fill="#F59E0B" stroke="#D97706" stroke-width="2"/>
+  <circle cx="80" cy="38" r="6" fill="#FEF3C7"/>
+
+  <!-- Connecting Branches -->
+  <path d="M 72 50 L 48 76" stroke="#D97706" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 88 50 L 112 76" stroke="#D97706" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Child Stones -->
+  <circle cx="44" cy="88" r="14" fill="#3B82F6" stroke="#1D4ED8" stroke-width="2"/>
+  <circle cx="116" cy="88" r="14" fill="#10B981" stroke="#059669" stroke-width="2"/>
+
+  <!-- Sub Branch to Goal -->
+  <path d="M 116 102 L 116 122" stroke="#059669" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="116" cy="128" r="10" fill="#EC4899" stroke="#DB2777" stroke-width="2"/>
+  <!-- Star on Goal Stone -->
+  <path d="M 116 123 L 117.5 126.5 L 121 127 L 118.5 129.5 L 119 133 L 116 131 L 113 133 L 113.5 129.5 L 111 127 L 114.5 126.5 Z" fill="#FFFBEB"/>
+</svg>

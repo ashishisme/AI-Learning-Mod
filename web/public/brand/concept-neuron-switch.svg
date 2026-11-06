@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none">
+  <!-- Perceptron Threshold Switch -->
+  <rect x="10" y="10" width="80" height="80" rx="16" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="2"/>
+  <!-- Accumulator Dial Outer -->
+  <circle cx="50" cy="50" r="28" stroke="#818CF8" stroke-width="5" fill="#FFFFFF"/>
+  <!-- Energy Fill Arc -->
+  <path d="M 50 22 A 28 28 0 1 1 23 57" stroke="#6366F1" stroke-width="5" stroke-linecap="round"/>
+  <!-- Switch Light Glowing Green -->
+  <circle cx="50" cy="50" r="14" fill="#10B981" stroke="#059669" stroke-width="2"/>
+  <circle cx="50" cy="50" r="6" fill="#A7F3D0"/>
+</svg>

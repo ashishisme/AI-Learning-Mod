@@ -19,6 +19,14 @@ colors:
   sunny-amber: "#fcd34d"
   sunny-wash: "#fffbeb"
   alert-red: "#dc2626"
+  kids-blue: "#2563eb"
+  kids-amber: "#f59e0b"
+  kids-pink: "#ec4899"
+  kids-background: "#eff6ff"
+  kids-border: "#bfdbfe"
+  kids-night-background: "#0b1220"
+  kids-night-card: "#111a2e"
+  kids-night-border: "#1e3a8a"
 typography:
   display:
     fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans Devanagari, sans-serif"
@@ -53,6 +61,7 @@ rounded:
   2xl: "16px"
   3xl: "24px"
   full: "9999px"
+  kids-card: "20px"
 spacing:
   xs: "4px"
   sm: "8px"
@@ -94,9 +103,14 @@ components:
     textColor: "{colors.ink}"
     rounded: "{rounded.3xl}"
     padding: "24px"
+  kids-trail-card:
+    backgroundColor: "{colors.card-white}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.kids-card}"
+    padding: "24px"
 ---
 
-<!-- Captured 2026-11-04 from the shipped code (v0.4.3), before the SPEC-011 Kids-first overhaul. It records today's look as the baseline; the overhaul will replace parts of it deliberately. -->
+<!-- Refreshed 2026-11-06 from the SPEC-011 Kids layer in web/src/index.css. -->
 
 # Design System: AI Foundations Coach
 
@@ -104,22 +118,22 @@ components:
 
 **Creative North Star: "The Friendly Study Desk"**
 
-The app is a tidy, approachable place to study. Pages sit on a pale paper background, content lives on white cards with soft rounded corners, and a single study blue marks what you can act on. Dark mode turns the desk into a quiet night study, slate on deep navy, and keeps the same layout.
+Standard and Plain English retain a tidy study desk. Pages sit on a pale paper background, content lives on white cards with soft rounded corners, and study blue marks what you can act on. Dark mode turns the desk into a quiet night study, slate on deep navy, and keeps the same layout.
 
-Density is moderate and text-led. Lessons, quizzes and the tutor are read more than clicked, so the system gives prose room and keeps chrome small. The Kids journey brightens the same desk rather than replacing it: warm amber banners, coloured icon tiles and Chip the robot appear, while the grid, cards and controls stay the same.
+Density is moderate and text-led in Standard and Plain English. The Kids journey uses Chip's Trail: a Continue card and six illustrated stops, with clay cards and blue, amber and pink accents. Its lesson and quiz surfaces use the same Kids tokens.
 
-The intended feel for controls is **bouncy and playful** (owner, 2026-11-04). Today's controls are clear, solid and dependable, so that feel is the direction of the SPEC-011 overhaul, not yet the implementation.
+Kids controls are bouncy and playful, while Standard and Plain English remain calm. The three-journey switcher sits in a sub-header toolbar on Home and Lesson pages.
 
 **Key Characteristics:**
-- One accent colour, study blue, for action and progress.
+- Study blue for shared actions; the Kids layer also uses amber and pink.
 - White or deep-navy cards on a paper or night background, separated by a thin border and a light shadow.
 - Generous rounding: cards 16 px, banners 24 px, chips and pills fully round.
 - System fonts, with Noto Sans Devanagari served by the app for Hindi.
-- Kids adds warmth (amber, indigo and purple washes, Chip) on top of the same structure.
+- Kids uses 20 px clay cards with 3 px borders and self-hosted Baloo 2 and Comic Neue for Latin text.
 
 ## Colors
 
-A cool, low-saturation desk with one confident blue and a few warm accents reserved for Kids and status.
+A cool, low-saturation desk for Standard and Plain English; a brighter blue, amber and pink Kids layer.
 
 ### Primary
 - **Study Blue** (#2563eb): selected filters, progress bars, the active mode tab's text, links and focus rings. It is the only colour that means "act here".
@@ -148,10 +162,12 @@ A cool, low-saturation desk with one confident blue and a few warm accents reser
 
 **The Contrast Floor Rule.** Every text and control pair meets 4.5:1 in light and dark (DC-11). Tints carry backgrounds, never text.
 
+**The Kids Palette Rule.** The Kids layer uses blue `#2563eb`, amber `#f59e0b`, pink `#ec4899`, light background `#eff6ff`, and dark background `#0b1220`. Text uses `--kids-ink` and `--kids-ink-muted`, never an accent colour without a checked contrast pairing.
+
 ## Typography
 
-**Display Font:** the system UI stack (with Noto Sans Devanagari for Hindi)
-**Body Font:** the same stack
+**Display Font:** the system UI stack in Standard and Plain English; Baloo 2 in Kids for Latin text, with Noto Sans Devanagari for Hindi.
+**Body Font:** the system UI stack in Standard and Plain English; Comic Neue in Kids for Latin text, with Noto Sans Devanagari for Hindi.
 **Label/Mono Font:** the same stack; code uses the browser's monospace
 
 **Character:** neutral and native. The app reads like the learner's own device, and Devanagari is never a mismatched fallback.
@@ -164,11 +180,13 @@ A cool, low-saturation desk with one confident blue and a few warm accents reser
 - **Label** (600, 0.75rem, 0.05em, uppercase in English): tags, field labels and small headings like "CURRICULUM MASTERY".
 
 ### Named Rules
-**The No Tiny Text Rule.** Nothing a learner must read is under 12 px. A few chips use 11 px today, and the overhaul should raise them.
+**The No Tiny Text Rule.** Nothing a learner must read is under 12 px.
 
 ## Layout
 
 A single centred column, `max-w-4xl` (896 px) on the home page, with 16 px side gutters on phones. A sticky 56 px header holds the brand, language switcher, help, settings and sign-out. Content stacks vertically in cards with 24 px padding and 24 to 32 px gaps.
+
+Kids home replaces search and filters with a Continue card and six always-open illustrated stops. The three-journey switcher and Voice Studio button sit in a toolbar below the header on Home and Lesson pages.
 
 Spacing follows Tailwind's 4 px scale, mostly 8, 12, 16 and 24 px. The layout is phone-first: everything fits 360 px without sideways scrolling, and `scroll-padding-top` keeps focused items clear of the sticky header.
 
@@ -179,14 +197,14 @@ Flat with soft lift. Surfaces are flat and bordered, and a light shadow (`shadow
 ### Shadow Vocabulary
 - **Card rest** (`box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05)`): every card and panel.
 - **Card hover** (`box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)`): lesson cards on hover.
-- **Tile inset** (`box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05)`): Kids metaphor icon tiles.
+- **Kids clay** (`box-shadow: 4px 4px 0 0 rgb(37 99 235 / 0.18), inset -2px -2px 6px 0 rgb(15 23 42 / 0.06)`): Kids trail cards in light mode.
 
 ### Named Rules
 **The Flat-By-Default Rule.** Depth answers state (hover, focus, open). A surface never gets a heavier shadow just to look important.
 
 ## Shapes
 
-Soft and generous. Cards use 16 px corners, Kids banners and guide notes 24 px, buttons and inputs 8 to 12 px, and pills, chips, avatars and progress bars are fully round. Borders are 1 px; Kids banners use 2 px for a chunkier, friendlier edge.
+Soft and generous. Standard cards use 16 px corners, Kids trail cards use 20 px corners and 3 px borders, buttons and inputs use 8 to 12 px corners, and pills, chips, avatars and progress bars are fully round.
 
 ## Components
 
@@ -216,6 +234,7 @@ Soft and generous. Cards use 16 px corners, Kids banners and guide notes 24 px, 
 
 ### Journey Switcher
 - A segmented control: a slate-100 track holding three tabs (Standard, Kids, Plain English). The active tab is a raised white chip with study-blue text and a light shadow.
+- It sits in a sub-header toolbar on Home and Lesson pages, with 44 px targets and a compact Voice Studio button. Switching within a lesson stops narration and scrolls to the top.
 
 ### Chip Mascot Banner (Kids)
 - A warm amber gradient banner (24 px corners, 2 px amber border) with a soft blurred glow, Chip's 80 px avatar tile and a speech line. It is the Kids journey's signature.
@@ -223,7 +242,7 @@ Soft and generous. Cards use 16 px corners, Kids banners and guide notes 24 px, 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep study blue (#2563eb, #1d4ed8 for solid buttons) as the only action colour.
+- **Do** use study blue (#2563eb, #1d4ed8 for solid buttons) for shared actions and the approved Kids palette in Kids surfaces.
 - **Do** give every control a 44 px target and a visible 2 px focus ring.
 - **Do** keep Standard and Plain English on the calm desk; brighten only the Kids journey.
 - **Do** serve fonts and images from the app's own address, including Noto Sans Devanagari.
@@ -231,6 +250,6 @@ Soft and generous. Cards use 16 px corners, Kids banners and guide notes 24 px, 
 
 ### Don't:
 - **Don't** set readable text below 12 px.
-- **Don't** use a Kids accent colour for a button or link.
+- **Don't** use a Kids accent colour for text without meeting the 4.5:1 contrast floor.
 - **Don't** rely on emoji as the only carrier of meaning; the overhaul replaces them with original illustrations.
 - **Don't** use upstream course images with third-party logos (the brand blocklist stays in force).

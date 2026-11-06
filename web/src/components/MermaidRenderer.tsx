@@ -84,7 +84,7 @@ export const MermaidRenderer: React.FC<Props> = ({ chart, caption, alt, classNam
           <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
             📊 {caption}
           </span>
-          <span className="text-[11px] font-medium text-slate-400">{t('widget.diagram.label')}</span>
+          <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">{t('widget.diagram.label')}</span>
         </div>
       )}
 
@@ -101,7 +101,7 @@ export const MermaidRenderer: React.FC<Props> = ({ chart, caption, alt, classNam
             className="w-full flex justify-center [&_svg]:max-w-full [&_svg]:h-auto transition-all"
           />
         ) : (
-          <div className="flex items-center gap-2 text-xs font-medium text-slate-400 animate-pulse">
+          <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300 animate-pulse">
             <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping"></span>
             {t('widget.diagram.rendering')}
           </div>

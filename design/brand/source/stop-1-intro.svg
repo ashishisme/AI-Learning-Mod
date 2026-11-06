@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" fill="none">
+  <defs>
+    <linearGradient id="bgGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="100%" stop-color="#DBEAFE"/>
+    </linearGradient>
+    <linearGradient id="lensGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Clay Tile -->
+  <rect x="8" y="8" width="144" height="144" rx="28" fill="url(#bgGrad1)" stroke="#BFDBFE" stroke-width="2"/>
+
+  <!-- Puzzle Blocks -->
+  <rect x="30" y="88" width="36" height="36" rx="8" fill="#F59E0B" stroke="#D97706" stroke-width="2"/>
+  <rect x="74" y="88" width="36" height="36" rx="8" fill="#10B981" stroke="#059669" stroke-width="2"/>
+  <rect x="52" y="48" width="36" height="36" rx="8" fill="#3B82F6" stroke="#1D4ED8" stroke-width="2"/>
+
+  <!-- Spark of Curiosity on Top Block -->
+  <circle cx="70" cy="66" r="6" fill="#FDE68A"/>
+  <circle cx="70" cy="66" r="3" fill="#F59E0B"/>
+
+  <!-- Magnifying Glass -->
+  <circle cx="95" cy="65" r="24" stroke="url(#lensGrad)" stroke-width="6" fill="rgba(255,255,255,0.4)"/>
+  <line x1="112" y1="82" x2="134" y2="104" stroke="#64748B" stroke-width="8" stroke-linecap="round"/>
+</svg>

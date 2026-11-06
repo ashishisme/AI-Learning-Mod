@@ -32,6 +32,14 @@
     - **The decision:** whether to keep the budget or trim. Hero art and fonts load after first paint where possible.
     - **SPEC-009 SC-007:** its "no more than 10% slower" stays the target the review reports against.
 
+### Session 2026-11-05
+
+- Q: Where should the redesigned three-journey switcher be placed on the Home and Lesson pages? (FR-004) → A: **Option A: Dedicated sub-header toolbar on both Home and Lesson pages, placed directly above the main content with 44 px segmented buttons.**
+- Q: What should happen to active audio narration when a learner switches journeys mid-lesson? (FR-004, FR-016) → A: **Option B: Stop audio immediately and reset scroll to the top of the lesson so the learner starts the new journey from the beginning.**
+- Q: What fallback representation should be displayed when an original illustration fails to load or is blocked by client privacy/content blockers? (FR-008, FR-015) → A: **Option B: Outlined placeholder box with a subtle concept icon and the localized descriptive text alternative.**
+- Q: How should the Voice Studio (Voice Persona) selector be arranged alongside the three-journey switcher in the new sub-header toolbar? (FR-004, FR-014) → A: **Option C: Display the 3 journey tabs plus a compact 44 px icon button (robot face 🤖) for Voice Studio on all screen sizes.**
+- Q: What specific contrast ratio threshold should be enforced by the automated accessibility test across all three journeys? (FR-014, SC-005) → A: **At least 4.5:1 for all text, including large text and headings, in light and dark themes, as required by the project constitution.**
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Start a lively kids learning journey (Priority: P1)
@@ -102,9 +110,10 @@ Learners can use the colourful redesign on a phone, tablet, or desktop in light 
 ### Edge Cases
 
 - A saved preference exists from an earlier release, including Standard: it is kept as it is, and the learner does not see the first-time chooser again.
+- A learner changes journey while viewing a lesson: any active audio narration stops immediately and the scroll position resets to the top of the lesson to begin the new presentation from the start.
 - A Kids or Plain English lesson is missing or temporarily unavailable: the learner sees a clear message and can switch journey or return to the curriculum.
 - The learner changes language after choosing a journey: the chosen journey remains selected and translated presentation text loads for the selected language.
-- An original graphic is unavailable or disabled for reduced data: the associated text, activity, and learning outcome remain available.
+- An original graphic is unavailable or disabled for reduced data/privacy blockers: an outlined placeholder box displays a subtle concept icon and the localized text alternative, and the associated learning outcome remains clear without layout shift.
 - The device cannot play animation: the static first frame communicates the same state and purpose.
 
 ## Requirements *(mandatory)*
@@ -114,17 +123,17 @@ Learners can use the colourful redesign on a phone, tablet, or desktop in light 
 - **FR-001**: The learner-facing product MUST offer three journeys: Kids, Plain English and Standard.
 - **FR-002**: All three journeys MUST share the redesigned look (navigation, typography, colour system, cards and controls). The Kids journey adds the lively visual system in FR-007.
 - **FR-003**: A first-time learner MUST receive an understandable choice between the three journeys before beginning a lesson; no choice may be framed as less capable or less correct.
-- **FR-004**: A learner's selected journey MUST persist on their device and MUST be changeable from a consistent, accessible location on the home page and within a lesson.
+- **FR-004**: A learner's selected journey MUST persist on their device and MUST be changeable from a dedicated sub-header toolbar directly below the top navigation bar on both the home page and lesson pages, with segmented buttons of at least 44 px touch target size alongside a compact 44 px icon button for Voice Studio. Changing journey inside a lesson MUST stop any active audio narration and reset the scroll position to the top of the lesson.
 - **FR-005**: A preference saved by an earlier release, including Standard, MUST be kept unchanged, along with browser-local progress, quizzes, audio settings, language choice and theme preference.
 - **FR-006**: Every one of the six lessons MUST provide all three journeys before this release ships.
 - **FR-007**: The Kids journey MUST use a consistent visual system comprising Chip guidance, an original app mark, concept-relevant illustrations, clear activity states, and celebratory completion feedback.
-- **FR-008**: Kids graphics MUST support comprehension, use text alternatives when they carry learning meaning, and MUST NOT be the sole source of instructional information.
+- **FR-008**: Kids graphics MUST support comprehension, use text alternatives when they carry learning meaning, and MUST NOT be the sole source of instructional information. When an illustration fails to load or is blocked, an outlined placeholder box displaying the localized text alternative and a subtle concept icon MUST be rendered.
 - **FR-009**: The release MUST use product-owned or appropriately licensed original visual assets. Each new visual asset MUST have a recorded creator, ownership or licence basis, source file, usage location, and reviewer approval.
 - **FR-010**: The release MUST not use third-party logos, lookalike marks, copied character designs, unverified web images, or prompts requesting a living artist's or brand's style.
 - **FR-011**: The app mark and illustration set MUST have a documented trademark-conflict review before public release.
 - **FR-012**: The redesign MUST maintain current attribution for the upstream curriculum and MUST keep the existing upstream-image brand exclusion controls in force.
 - **FR-013**: Kids journey visuals and controls MUST work in English and Hindi, including localized labels and text alternatives.
-- **FR-014**: The redesign MUST meet the existing accessibility floor for contrast, 44 px targets or equivalent padding, keyboard operation, visible focus, and reduced motion in light and dark themes.
+- **FR-014**: The redesign MUST meet the project constitution's contrast floor (minimum 4.5:1 for all text, including large text and headings), 44 px targets or equivalent padding, keyboard operation, visible focus, and reduced motion in light and dark themes.
 - **FR-015**: New visual assets MUST be delivered at an appropriate size for their display, load only when needed, and preserve the existing English first-load performance target.
 - **FR-016**: The release MUST retain a concise, non-animated representation for every essential animated or 3D-style visual state.
 - **FR-017**: The Standard journey MUST keep presenting the canonical course lesson, with its upstream attribution and image-screening controls unchanged.
@@ -145,7 +154,7 @@ Learners can use the colourful redesign on a phone, tablet, or desktop in light 
 - **SC-002**: 100% of preferences saved by earlier releases are kept, with existing local learner data intact.
 - **SC-003**: All six lessons pass the defined phone and desktop visual review in English and Hindi, light and dark themes, with no page-level horizontal overflow.
 - **SC-004**: 100% of learning-relevant visual assets have a completed visual asset record and approval before release.
-- **SC-005**: 100% of primary learner actions meet the existing target-size, contrast, keyboard, and reduced-motion acceptance checks.
+- **SC-005**: 100% of primary learner actions meet the target-size (>= 44 px), contrast (>= 4.5:1 for all text, including headings), keyboard, and reduced-motion acceptance checks in light and dark themes.
 - **SC-006**: The English home page's initial downloaded asset weight increases by no more than 350 KB compressed compared with the release immediately before this feature. *(2026-11-04: accepted for the build, then subject to a performance review against SPEC-009 SC-007's 10% load-time target.)*
 - **SC-007**: In moderated usability review, at least 8 of 10 representative learners can identify their current journey and change it without help.
 - **SC-008**: At least 8 of 10 representative child learners can state the goal of an activity after completing its first screen.

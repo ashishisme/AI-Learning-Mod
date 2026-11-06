@@ -13,6 +13,7 @@ import { AuthGate, SignOutControl } from './components/AuthGate'
 import { Attribution } from './components/Attribution'
 import { SettingsModal } from './components/SettingsModal'
 import { HelpModal } from './components/HelpModal'
+import { KidVisual } from './components/KidVisual'
 import { useSettingsStore, useHelpStore, useThemeStore, useRuntimeStore, useAudienceModeStore, applyThemeClass, resolveTheme } from './store'
 import { useApplyLanguage, useT } from './i18n'
 
@@ -41,7 +42,7 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div data-journey={journey} className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-indigo-500 selection:text-white transition-colors duration-200">
+    <div data-journey={journey} className={`flex flex-col min-h-screen ${journey === 'junior' ? 'bg-[var(--kids-bg)]' : 'bg-slate-50 dark:bg-slate-950'} text-slate-900 dark:text-slate-100 selection:bg-indigo-500 selection:text-white transition-colors duration-200`}>
       {/* Top Application Bar */}
       <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/90 dark:border-slate-800 shadow-xs transition-all">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
@@ -49,9 +50,14 @@ export const App: React.FC = () => {
             to="/"
             className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-md"
           >
-            <div className="w-7 h-7 rounded-lg bg-blue-600 dark:bg-blue-500 text-white flex items-center justify-center font-bold text-xs shadow-sm shadow-blue-500/20 group-hover:bg-blue-700 transition">
-              AI
-            </div>
+            <KidVisual
+              assetId="app-mark"
+              altKey="brand.appMarkAlt"
+              width={28}
+              height={28}
+              priority
+              className="rounded-lg shadow-sm group-hover:scale-105 transition-transform"
+            />
             <span className="font-semibold text-sm tracking-tight text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
               {t('nav.brand')}
             </span>

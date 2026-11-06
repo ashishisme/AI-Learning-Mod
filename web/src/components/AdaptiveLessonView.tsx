@@ -95,7 +95,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
             {t(isJunior ? 'adaptive.trackJunior' : 'adaptive.trackPlain')}
           </span>
           {payload.readingTimeMinutes && (
-            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
               ⏱️ {t('adaptive.minRead', { n: payload.readingTimeMinutes })}
             </span>
           )}
@@ -114,15 +114,18 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
           return (
             <article
               key={section.id || sIdx}
-              className={`p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 space-y-6 shadow-md ${
-                isThisSectionPlaying
-                  ? 'border-blue-400 dark:border-blue-500 ring-2 ring-blue-300/40 dark:ring-blue-700/40'
-                  : 'border-slate-200/90 dark:border-slate-800'
-              }`}
+              className={isJunior
+                ? `kids-card p-6 sm:p-8 space-y-6 ${isThisSectionPlaying ? 'kids-stop-here' : ''}`
+                : `p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 space-y-6 shadow-md ${
+                    isThisSectionPlaying
+                      ? 'border-blue-400 dark:border-blue-500 ring-2 ring-blue-300/40 dark:ring-blue-700/40'
+                      : 'border-slate-200/90 dark:border-slate-800'
+                  }`
+              }
             >
               {/* Section Heading + Audio Button */}
               <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800">
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+                <h2 className={isJunior ? "kids-heading text-xl sm:text-2xl flex items-center gap-2.5" : "text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5"}>
                   {section.heading}
                 </h2>
                 <AudioNarrationButton
@@ -251,7 +254,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
               {/* Jargon Buster List */}
               {section.jargonBuster && section.jargonBuster.length > 0 && (
                 <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80">
-                  <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2.5">
+                  <span className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-2.5">
                     💡 {t('adaptive.jargonBuster')}
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -306,7 +309,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white leading-none">
                 {t('adaptive.checkTitle')}
               </h2>
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                 {t('adaptive.checkSubtitle')}
               </span>
             </div>
