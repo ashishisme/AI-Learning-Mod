@@ -30,7 +30,7 @@ export const AudienceModeSelector: React.FC<Props> = ({ className = '' }) => {
   return (
     <div
       data-testid="audience-mode-toolbar"
-      className={`flex flex-wrap items-center justify-between gap-3 p-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-xs ${className}`}
+      className={`relative z-20 flex flex-wrap items-center justify-between gap-3 p-2 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-xs ${className}`}
     >
       <div className="flex items-center gap-2 pl-1">
         <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">

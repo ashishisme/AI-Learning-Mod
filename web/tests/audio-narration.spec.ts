@@ -169,4 +169,28 @@ test.describe('Audio Narration & Multi-Modal Sound Effects (SPEC-004)', () => {
     // The compact icon keeps the selected voice in its title.
     await expect(voiceBtn).toHaveAttribute('title', 'Voice: Nova')
   })
+
+  for (const width of [360, 1280]) {
+    test(`Voice Studio menu stays above lesson content at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: width === 360 ? 740 : 900 })
+      await page.goto('/lesson/1-intro')
+      await page.getByTestId('voice-studio-trigger').click()
+
+      const menu = page.getByTestId('voice-studio-menu')
+      await expect(menu).toBeVisible()
+      const visibility = await menu.evaluate((el) => {
+        const r = el.getBoundingClientRect()
+        const x = r.left + r.width / 2
+        const y = r.top + Math.min(r.height / 2, window.innerHeight - r.top - 1)
+        const hit = document.elementFromPoint(x, y)
+        return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, x, y,
+          hit: hit?.tagName, hitClass: hit?.getAttribute('class'),
+          fits: r.left >= 0 && r.right <= window.innerWidth, uncovered: !!hit && el.contains(hit) }
+      })
+      expect(visibility.fits, JSON.stringify(visibility)).toBe(true)
+      expect(visibility.uncovered, JSON.stringify(visibility)).toBe(true)
+      await menu.getByRole('button', { name: /Prof\. Alan/ }).click()
+      await expect(page.getByTestId('voice-studio-trigger')).toHaveAttribute('title', 'Voice: Prof. Alan')
+    })
+  }
 })

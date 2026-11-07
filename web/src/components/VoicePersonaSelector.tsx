@@ -67,7 +67,7 @@ export const VoicePersonaSelector: React.FC<Props> = ({ compact = false }) => {
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 mt-2 w-80 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl z-50 animate-fadeIn">
+          <div data-testid="voice-studio-menu" className="fixed inset-x-4 top-20 max-h-[calc(100dvh-6rem)] overflow-y-auto sm:absolute sm:inset-x-auto sm:right-0 sm:top-auto sm:mt-2 sm:w-80 sm:max-h-none sm:overflow-visible p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl z-50 animate-fadeIn">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                 {t('narration.studioTitle')}
