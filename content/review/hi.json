@@ -175,11 +175,11 @@
     {
       "path": "web/src/i18n/hi.json",
       "kind": "ui",
-      "sourceHash": "24cbe375805dd7ec561b75963808e99ecb55546293b73b298d77a137d4ea3a1d",
-      "translationHash": "99b509cd1648eaa86803e5ad5f399949d0ead171e04cd1c1600f17e134c91ad2",
+      "sourceHash": "5f036a463afe039497541875d6e8a8375aa7447e64a128a657f085e097525b4c",
+      "translationHash": "6adb126a4e21be4149453ea337509c485644cc9dfcb74af82bbf86d2fe87d9c8",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-05"
+      "date": "2026-11-09"
     }
   ]
 }

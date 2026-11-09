@@ -11,6 +11,10 @@
  */
 
 import { cleanForSpeech } from './narrationText';
+import { useAudioStore } from '../store';
+
+// FR-UI-19: every sound the app makes goes through this service, so mute is enforced here once.
+const muted = () => useAudioStore.getState().isMuted;
 
 export type VoicePersonaId = 'chip' | 'nova' | 'alan';
 
@@ -208,7 +212,7 @@ class SpeechService {
    * Speak text sequentially with natural breath pauses and sentence callbacks
    */
   public speak(text: string, options: SpeechOptions = {}): void {
-    if (!this.synth) {
+    if (!this.synth || muted()) {
       if (options.onEnd) options.onEnd();
       return;
     }
@@ -303,6 +307,10 @@ class SpeechService {
    */
   public playRecording(url: string, options: { rate?: number; onStart?: () => void; onEnd?: () => void; onError?: (err: unknown) => void } = {}): void {
     this.stop();
+    if (muted()) {
+      options.onEnd?.();
+      return;
+    }
     const gen = ++this.generation;
     const player = this.player ?? (this.player = new Audio());
     player.src = url;
@@ -350,7 +358,7 @@ class SpeechService {
    * Warm procedural harmonic synthesizer using Web Audio API (ADSR envelope)
    */
   public playChime(type: 'success' | 'click' | 'turing' | 'robot'): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || muted()) return;
 
     try {
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;

@@ -34,6 +34,7 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
     activeTrackId,
     isPlaying,
     isMuted,
+    toggleMute,
     speechRate,
     persona,
     setActiveTrack,
@@ -133,8 +134,22 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
     };
   }, [id]);
 
+  // FR-UI-19: muted controls stay on the page, say that sound is off, and turn it back on in one tap
+  // (without starting playback, since the learner may have muted on purpose).
   if (isMuted) {
-    return null;
+    return (
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleMute();
+        }}
+        data-testid="narration-muted"
+        className="inline-flex flex-shrink-0 items-center gap-1.5 min-h-[44px] px-3 py-1.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-800 hover:bg-rose-200 dark:bg-rose-950/60 dark:text-rose-200 dark:hover:bg-rose-900/70"
+      >
+        {t('narration.soundOffTapToTurnOn')}
+      </button>
+    );
   }
 
   let button: React.ReactElement;

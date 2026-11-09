@@ -148,7 +148,13 @@ export const VoicePersonaSelector: React.FC<Props> = ({ compact = false }) => {
                 {t('narration.muteAll')}
               </span>
               <button
-                onClick={toggleMute}
+                onClick={() => {
+                  if (!isMuted) {
+                    speechService.stop(); // FR-UI-19: muting silences what is playing now
+                    stopAudio();
+                  }
+                  toggleMute();
+                }}
                 className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${
                   isMuted
                     ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300'
