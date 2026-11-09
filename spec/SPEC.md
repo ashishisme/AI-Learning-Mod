@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.9.0 |
+| Version | 2.10.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -270,6 +270,16 @@ its own visual layer under `[data-journey="junior"]`:
 - the six lessons as always-open stops on a path, each with a text status (Done, You are here, Next);
 - Chip moving to the next stop after a lesson is finished, shown as a static highlight under reduced motion;
 - no search box or module filters.
+
+**FR-UI-19.** Added 2.10.0 (design_draft.md "Visible Audio Controls When Sound Is Muted"). Muting sound shall
+never remove audio controls from a lesson:
+- every narration control shown while sound is on is also shown while sound is off, in a muted state, in every
+  journey and language that shows it;
+- the lesson page shows that sound is off without opening any menu;
+- a learner can turn sound back on from the lesson page in one tap;
+- while muted, no lesson audio plays: narration, recordings, glossary pronunciation, tutor read-aloud, voice
+  previews and sound effects all follow the same mute setting;
+- a saved mute choice is kept across visits and is never reset by this rule.
 
 ### 4.5 Settings & AI Configuration — `FR-SET-*`
 
@@ -943,6 +953,12 @@ trademark-clear register entry, or with a checksum mismatch, and passes otherwis
 
 **AC-58 (NFR-OPS-05).** `specs/011-kids-ui-overhaul/checklists/perf-review.md` records first-load weight and load
 times against the previous release, within 350 KB, with the owner's decision. Manual review at release.
+
+**AC-59 (FR-UI-19).** With `isMuted: true` already saved, a Junior lesson and a Plain English lesson show the Chip
+listen button and every section's read button in a muted state, and the page says sound is off. One tap on the
+lesson page turns sound on, saves `isMuted: false`, and the buttons return to normal. While muted, tapping a
+glossary pronunciation button speaks nothing, and turning sound on starts no playback. Covered by
+`web/tests/audio-mute.spec.ts`.
 
 ---
 
