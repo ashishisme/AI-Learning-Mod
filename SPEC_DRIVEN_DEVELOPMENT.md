@@ -50,6 +50,8 @@ Configured specifically for **Google Antigravity** (`agy`), **Claude Code**, and
 | `/speckit-checklist` | Evaluates deliverables against strict acceptance criteria. |
 | `/speckit-constitution` | Reviews, updates, and ratifies constitutional rules. |
 
+For features with significant design choices, [EGM](docs/egm-workflow.md) can add a fresh-context review before the Spec Kit plan is finalized. Its findings are reconciled into the feature's Spec Kit artifacts; it does not change the constitution, acceptance criteria, or verification gates.
+
 ---
 
 ## 🛠️ 3. Workflow Automation Scripts (`.specify/scripts/bash/`)

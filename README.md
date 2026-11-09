@@ -463,6 +463,8 @@ This repository is developed following strict **Spec-Driven Development** govern
 
 > For complete details on constitutional constraints (DC-01..11), agent skills, and verification gates, see **[SPEC_DRIVEN_DEVELOPMENT.md](SPEC_DRIVEN_DEVELOPMENT.md)**.
 
+For substantial design decisions, see the optional [EGM design review workflow](docs/egm-workflow.md). Bugs are documented in [GitHub Issues](https://github.com/ashishisme/AI-Learning-Mod/issues), with links to their fixes and verification.
+
 ### Run Verification Test Suite
 ```bash
 # Go unit tests
