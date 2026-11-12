@@ -61,3 +61,12 @@
 | AC-57 | NFR-LIC-05 | `cmd/assetcheck/assetcheck_test.go` | PASS (automated) | SPEC-011: product art has approved, trademark-clear register entries and matching checksums; underlying reviewer/search evidence referenced by T028 |
 | AC-58 | NFR-OPS-05 | `specs/011-kids-ui-overhaul/checklists/perf-review.md` | PASS | SPEC-011: measured page weight and load time meet budget; owner chose to keep current assets on 2026-11-06 |
 | AC-59 | FR-UI-19 | `web/tests/audio-mute.spec.ts` | PASS | Spec 2.10.0: muting keeps audio controls visible with a muted state and one-tap unmute (no auto-play); mute enforced once in `speechService` for speech, recordings and chimes |
+| AC-60 | FR-CNT-08 | `internal/readability/kids_test.go`, `cmd/ingest/kids_check_test.go` | N/A (pending SPEC-012 T010–T012, T042) | SPEC-012: Kids reading check per band; blocks `"bands": true` lessons, warns on others |
+| AC-61 | FR-CNT-09 | `internal/readability/kids_test.go`, `internal/i18n/parity_test.go`, `cmd/ingest/kids_check_test.go` | N/A (pending SPEC-012 T006–T007, T026, T042) | SPEC-012: banded lesson structure and Hindi lockstep |
+| AC-62 | FR-UI-16 (amended 2.11.0) | `web/tests/kids-bands.spec.ts` | N/A (pending SPEC-012 T019–T022) | SPEC-012: age band choice, store v2 migration, band never sent |
+| AC-63 | FR-UI-20 | `web/tests/kids-bands.spec.ts` | N/A (pending SPEC-012 T023) | SPEC-012: 12+ layer shown only in 12–14 |
+| AC-64 | FR-UI-21 | `web/tests/kids-word-cards.spec.ts` | N/A (pending SPEC-012 T031–T033) | SPEC-012: tappable word cards |
+| AC-65 | FR-UI-22 | `web/tests/kids-aids.spec.ts` | N/A (pending SPEC-012 T038) | SPEC-012: stepper Play and Pause |
+| AC-66 | FR-UI-23 | `web/tests/kids-aids.spec.ts` | N/A (pending SPEC-012 T013–T014, T039) | SPEC-012: big idea, recap, check-ins, teach-back |
+| AC-67 | FR-UI-24 | `web/tests/kids-aids.spec.ts` | N/A (pending SPEC-012 T023, T041) | SPEC-012: guided widgets in 8–11 |
+| AC-68 | FR-UI-25 | `web/tests/kids-aids.spec.ts` | N/A (pending SPEC-012 T040) | SPEC-012: read-along for recordings |

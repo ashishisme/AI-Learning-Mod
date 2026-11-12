@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.10.0 |
+| Version | 2.11.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -137,6 +137,30 @@ the content directory (path traversal); such requests shall produce 404.
 shall return 503 with `{"error":"content not generated"}`, and the
 learner UI shall show a "run ingest" message (§5.4 FR-UI-06).
 
+**FR-CNT-08.** Added 2.11.0 (SPEC-012). Kids lessons (`*.junior.json`) shall follow `content/kids-writing-guide.md`,
+and the release check (`cmd/ingest -verify`) shall measure every English Kids lesson for each age band:
+- 8–11 core text: reading grade (Flesch-Kincaid) at most 3.5, average sentence at most 12 words, no sentence over
+  18 words;
+- 12–14 text (core plus 12+ parts): reading grade at most 6.0;
+- at most 2 new (bold) words per section, and every bold word has a Jargon Buster entry;
+- every word picture named by a lesson exists and has an approved asset-register entry.
+
+A lesson marked `"bands": true` fails the release check when it breaks any of these rules. An unmarked lesson only
+warns. A missing word picture always fails. The check also warns, and never fails, when a quiz answer's key words no
+longer appear in the lesson text.
+
+**FR-CNT-09.** Added 2.11.0 (SPEC-012). A Kids lesson marked `"bands": true` shall be made of short sections (about
+60–80 words of core text), each opening with a one-line `bigIdea` and a picture or diagram. It may carry, per
+section:
+- `more`, a "Want to know more?" box for facts the story does not need;
+- `teen`, the 12+ layer: `add` (text added after the core) or `body` (a separate 12+ text for that section), and
+  extra `jargonBuster` terms;
+- `checkIn`, one unscored tap-to-answer question.
+
+The lesson ends with a three-item `recap`, and may add one quiz question marked `"band": "12-14"`, placed after all
+other questions. Every approved language ships each banded lesson in the same release as English, with the same
+sections, 12+ parts and quiz items, and with changed narration re-recorded.
+
 ### 4.3 Tutor — `FR-TUT-*`
 
 **FR-TUT-01.** The system shall expose `POST /api/tutor` accepting
@@ -257,6 +281,10 @@ the three journeys, Kids, Plain English and Standard, each with one plain line a
 any lesson. A saved mode from any earlier release is kept and the chooser is not shown. The choice stays in the
 browser (`ai-foundations-audience-mode`, with a `hasChosenJourney` flag) and is changeable from one consistent
 switcher on the home page and in every lesson.
+Amended 2.11.0 (SPEC-012): choosing Kids also offers two age bands, 8–11 and 12–14; skipping keeps 8–11. The band is
+saved in the same browser store (`ageBand`, store version 2; an earlier saved mode keeps its choice and gets 8–11),
+is changeable in Settings and the Voice Studio while in the Kids journey, and is never sent to the server, included
+in feedback, or logged.
 
 **FR-UI-17.** Added 2.9.0 (SPEC-011). All three journeys shall share the redesigned shell. The Kids journey adds
 its own visual layer under `[data-journey="junior"]`:
@@ -280,6 +308,30 @@ never remove audio controls from a lesson:
 - while muted, no lesson audio plays: narration, recordings, glossary pronunciation, tutor read-aloud, voice
   previews and sound effects all follow the same mute setting;
 - a saved mute choice is kept across visits and is never reset by this rule.
+
+**FR-UI-20.** Added 2.11.0 (SPEC-012). A Kids lesson marked `"bands": true` shall show its 12+ parts (`teen` text and
+terms, the `"band": "12-14"` quiz question) only in the 12–14 band, with "Want to know more?" open there and closed
+in 8–11, and "try it" activities in their guided form in 8–11. Changing band updates the open lesson and keeps
+progress. An unmarked lesson looks the same in both bands.
+
+**FR-UI-21.** Added 2.11.0 (SPEC-012). In Kids lessons each bold word with a Jargon Buster entry shall be a button
+that opens a word card in place, with the simple explanation, its picture or a short looping animation (movement and
+fading only, still under reduced motion, loaded only when opened), and a listen control that follows FR-UI-19. The
+card opens and closes by touch and keyboard, closes on Escape, returns focus to the word, stays inside a 320 px
+screen, and meets DC-11. The end-of-section list stays as "Words you learned".
+
+**FR-UI-22.** Added 2.11.0 (SPEC-012). Step-by-step diagrams in Kids lessons shall offer Play and Pause, advancing
+one step about every 3 seconds; under reduced motion there is no Play and steps advance by hand.
+
+**FR-UI-23.** Added 2.11.0 (SPEC-012). A banded Kids lesson shall show each section's big idea first and its picture
+above the text, a section's check-in after it with Chip's reaction and no effect on score or progress, the
+three-item recap before the mini-quiz, and the teach-back as a tap-to-pick choice of 2–3 options.
+
+**FR-UI-24.** Added 2.11.0 (SPEC-012). In the 8–11 band "try it" activities shall use their guided form with kid
+wording and a "Chip's hint"; their behaviour is unchanged.
+
+**FR-UI-25.** Added 2.11.0 (SPEC-012). While a recorded narration plays, the sentence being read shall be
+highlighted, as it is for device voices. The position may be estimated from the recording's progress.
 
 ### 4.5 Settings & AI Configuration — `FR-SET-*`
 
@@ -959,6 +1011,42 @@ listen button and every section's read button in a muted state, and the page say
 lesson page turns sound on, saves `isMuted: false`, and the buttons return to normal. While muted, tapping a
 glossary pronunciation button speaks nothing, and turning sound on starts no playback. Covered by
 `web/tests/audio-mute.spec.ts`.
+
+**AC-60 (FR-CNT-08).** `go run ./cmd/ingest -verify` prints a reading summary for each Kids lesson and band, warns
+on an unmarked lesson that breaks a rule, fails on a `"bands": true` lesson that does, fails on a missing word
+picture, and only warns on a quiz-answer finding. Covered by `internal/readability/kids_test.go` and
+`cmd/ingest/kids_check_test.go`.
+
+**AC-61 (FR-CNT-09).** A banded lesson with both `teen.add` and `teen.body` in one section, a band quiz question
+before a core one, more than one band question, a recap not of 3 items, or a section without a big idea or picture
+fails the check; a Hindi file whose sections, 12+ parts, word pictures or band questions differ from English fails
+parity; an English change with the Hindi left unapproved fails verify. Covered by `internal/readability/kids_test.go`,
+`internal/i18n/parity_test.go` and `cmd/ingest/kids_check_test.go`.
+
+**AC-62 (FR-UI-16 amended).** After Kids is chosen the chooser offers 8–11 and 12–14, skipping keeps 8–11, a saved
+version 1 store migrates to 8–11 with its mode kept, and no request made during a lesson or a feedback submit
+contains the band. Covered by `web/tests/kids-bands.spec.ts`.
+
+**AC-63 (FR-UI-20).** In a banded lesson 12–14 shows the 12+ text, terms and extra question with "Want to know
+more?" open; 8–11 shows none of them; switching band keeps progress; an unmarked lesson is identical in both bands.
+Covered by `web/tests/kids-bands.spec.ts`.
+
+**AC-64 (FR-UI-21).** Each bold word is a 44 × 44 px button that opens a card with explanation, picture and listen
+control; Escape, close and an outside tap close it and return focus; it fits a 320 px screen; muted, it speaks
+nothing; text meets 4.5:1 in both themes. Covered by `web/tests/kids-word-cards.spec.ts`.
+
+**AC-65 (FR-UI-22).** Play advances the stepper and Pause stops it; under reduced motion Play is absent. Covered by
+`web/tests/kids-aids.spec.ts`.
+
+**AC-66 (FR-UI-23).** A banded lesson shows big idea and picture first, a closed "Want to know more?" in 8–11, the
+recap before the quiz, and check-ins that leave saved progress unchanged; teach-back has 2–3 tap options. Covered by
+`web/tests/kids-aids.spec.ts`.
+
+**AC-67 (FR-UI-24).** In 8–11 a "try it" activity renders guided with a hint button. Covered by
+`web/tests/kids-aids.spec.ts`.
+
+**AC-68 (FR-UI-25).** While a recording plays exactly one sentence is marked as being read, and it moves forward as
+playback advances. Covered by `web/tests/kids-aids.spec.ts`.
 
 ---
 
