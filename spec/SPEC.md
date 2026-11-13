@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.13.0 |
+| Version | 2.14.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -164,6 +164,23 @@ The lesson ends with a three-item `recap`, and may add one quiz question marked 
 other questions. Every approved language ships each banded lesson in the same release as English, with the same
 sections, 12+ parts and quiz items, and with changed narration re-recorded.
 
+**FR-CNT-10.** Added 2.14.0 (SPEC-013 FR-001, FR-008). A lesson file with top-level `"origin": "own"` is our own
+text, written for this product. The owner approves our own English files in `content/review/en.json`, with the same
+entry shape as FR-I18N-04 (`translationHash` unused): every `public-content/lessons/*.json` marked `own` (kind
+`adaptive`), `web/src/data/quizzes/en.json` once any of its lesson entries has `"origin": "own"` (kind `quiz`), and
+every `notebooks/*.ipynb` (kind `notebook`). `go run ./cmd/review -lang en` lists them as approved, pending or stale,
+and `-approve` records the file's SHA-256, reviewer and date. `ingest -verify` prints `en <path>: pending` or
+`en <path>: stale: the text changed after approval` and fails the build for each one. `origin` is never translated.
+
+**FR-CNT-11.** Added 2.14.0 (SPEC-013 FR-003, FR-004). A Detailed lesson is `public-content/lessons/<id>.detailed.json`
+(and its translation under `lang/<code>/lessons/`), in the section format of the other journeys, plus an optional
+`goFurther` list of 3–5 `{title, url, note}` items pointing to neutral, free sources (https, never the Microsoft
+course), and a `colabUrl` (FR-UI-08). `GET /api/lessons/{id}` accepts `mode=detailed` beside `junior` and
+`plain-english`, with the same lookup order. In the Standard journey the page asks for `mode=detailed` first and
+shows the Detailed lesson when it exists, otherwise the standard lesson as before. `goFurther[].title` and `.note`
+are translated; `url`, `origin` and `colabUrl` are not. Detailed lessons are review-ledger and narration targets
+like the other journeys.
+
 ### 4.3 Tutor — `FR-TUT-*`
 
 **FR-TUT-01.** The system shall expose `POST /api/tutor` accepting
@@ -217,6 +234,12 @@ applying the FR-TUT-06 replacement. This exception does not apply to the
 default OpenAI provider, and short or empty responses still receive the
 FR-TUT-06 fallback.
 
+**FR-TUT-14.** Added 2.14.0 (SPEC-013). The tutor shall ground on the version of the lesson on screen. When the
+request's `mode` is `junior`, `plain-english` or `detailed` and that mode's file exists in the learner's language or
+in English, the lesson content (FR-TUT-02, §7.3.2) is its intro and sections, each as `## <heading>` followed by its
+big idea, body, 12+ text and "more" text; otherwise it is the standard lesson's Markdown. The citation format,
+truncation, fallback and system prompt are unchanged. `mode` accepts `detailed`, which adds no tone line.
+
 ### 4.4 Learner UI — `FR-UI-*`
 
 **FR-UI-01.** The UI shall be a single-page application served at `/`
@@ -246,9 +269,11 @@ render "Tutor offline" and disable the input. On any other error, the
 panel shall display a non-destructive inline error and re-enable the
 input.
 
-**FR-UI-08.** The Colab button shall link to
-`https://colab.research.google.com/github/microsoft/AI-For-Beginners/blob/main/<path>`
-and open in a new tab with `rel="noreferrer"`.
+**FR-UI-08.** (Amended 2.14.0, SPEC-013 FR-016.) The Colab button shall open in a new tab with
+`rel="noreferrer"`. For our own lessons it links only to this product's notebook,
+`https://colab.research.google.com/github/ashishisme/AI-Learning-Mod/blob/cloud-beta/notebooks/<id>.ipynb`
+(the lesson's `colabUrl`), and is hidden when there is none. A lesson still derived from the Microsoft course keeps
+`https://colab.research.google.com/github/microsoft/AI-For-Beginners/blob/main/<path>` until it is replaced.
 
 **FR-UI-09.** The UI shall render the attribution footer defined in
 §5.6 NFR-LIC-01 on every route.
@@ -906,8 +931,8 @@ allowed modules and their transitive deps.
 contains no matches for `^\.env`, `^public-content/`, `^web/dist/`, `^web/node_modules/`, `^bin/`,
 except the repository's own authored files: `.env.example` (placeholders only),
 `public-content/languages.json`, and the adaptive lessons
-`public-content/lessons/*.{junior,plain-english}.json` and
-`public-content/lang/<code>/lessons/*.{junior,plain-english}.json`. Ingested upstream lessons and
+`public-content/lessons/*.{junior,plain-english,detailed}.json` and
+`public-content/lang/<code>/lessons/*.{junior,plain-english,detailed}.json` (detailed added 2.14.0). Ingested upstream lessons and
 their images stay out of git.
 
 **AC-31 (NFR-OPS-01).** `docker run --rm <image> id -u` returns a
@@ -1066,6 +1091,19 @@ and its text without code, and pressing another stops the first. Covered by `web
 
 **AC-70 (FR-UI-27).** A section with a scene shows it; a playing scene has a Play button that restarts it; with
 reduced motion there is no Play button. Covered by `web/tests/kids-aids.spec.ts`.
+
+**AC-71 (FR-CNT-10).** An `origin: own` lesson with no approval fails `ingest -verify` as pending; approving it with
+`cmd/review -lang en` passes; editing it afterwards fails as stale. Covered by `internal/i18n/ledger_en_test.go`,
+`cmd/review/review_test.go` and `cmd/ingest/verify_lang_test.go`.
+
+**AC-72 (FR-CNT-11, FR-UI-08).** `?mode=detailed` returns the Detailed sections when the file exists and the standard
+lesson when it does not (`internal/api/lessons_test.go`). In the Standard journey a Detailed lesson shows its sections
+with Read section buttons, a "Go further" list and a Colab button to this repository's notebook, an own lesson never
+links to another repository's notebook, and a lesson without a Detailed version shows the standard text
+(`web/tests/detailed-lesson.spec.ts`).
+
+**AC-73 (FR-TUT-14).** The tutor cites a Kids, Detailed or Hindi Kids lesson's own section headings and includes the
+12+ text, and falls back to the standard lesson otherwise (`internal/api/tutor_mode_test.go`).
 
 ---
 
