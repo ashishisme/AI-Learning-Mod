@@ -1,6 +1,6 @@
 module ai-foundations-coach
 
-go 1.27.3
+go 1.27.4
 
 require (
 	github.com/google/go-github/v66 v66.0.0
