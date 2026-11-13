@@ -67,8 +67,8 @@
     {
       "path": "public-content/lang/hi/lessons/3-neuralnetworks.junior.json",
       "kind": "adaptive",
-      "sourceHash": "0b1f6995109b5302b9bea42c1d9993c3d9a092b0f78fbfc5bbdccbf4136391fb",
-      "translationHash": "3143d8a86addb1fa762ecdca42a33cf7dca7d44d4330d9b4e34c69b43d6f9c86",
+      "sourceHash": "08e75de0ce97807faf901d5970228eafc4ee20010c97fc306ee6ef86220d57d7",
+      "translationHash": "e935da08102ff4738eb5537b0b4a350c027197abb40ca914c8d869a19b088491",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-13"
