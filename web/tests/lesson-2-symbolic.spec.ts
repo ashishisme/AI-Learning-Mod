@@ -93,7 +93,7 @@ test.describe('Lesson 2: Symbolic AI & Expert Systems (SPEC-005)', () => {
     await expect(page.getByTestId('expert-rule-5')).toHaveAttribute('data-fired', 'true')
   })
 
-  test('AC-SYM-03: Plain English mode renders healthcare & tax software analogies', async ({ page }) => {
+  test('AC-SYM-03: Plain English mode renders procedures manual & helpdesk analogies', async ({ page }) => {
     await page.goto('/lesson/2-symbolic')
 
     // Switch to Plain English
@@ -101,10 +101,10 @@ test.describe('Lesson 2: Symbolic AI & Expert Systems (SPEC-005)', () => {
     await page.locator('button[role="tab"]', { hasText: 'Plain English' }).click()
 
     // Title
-    await expect(page.locator('h1', { hasText: 'Knowledge Representation & Expert Systems' })).toBeVisible()
+    await expect(page.locator('h1', { hasText: 'Rule-Based AI and Expert Systems' })).toBeVisible()
 
     // Analogy cards
-    await expect(page.locator('text=Tax Preparation Software')).toBeVisible()
-    await expect(page.locator('text=Hospital Triage Guidelines')).toBeVisible()
+    await expect(page.locator('text=The Office Procedures Manual')).toBeVisible()
+    await expect(page.locator('text=The Helpdesk Flowchart')).toBeVisible()
   })
 })

@@ -1,146 +1,206 @@
 {
   "lessonId": "2-symbolic",
   "mode": "plain-english",
-  "title": "Knowledge Representation & Expert Systems",
+  "origin": "own",
+  "title": "Rule-Based AI and Expert Systems 📜",
   "readingTimeMinutes": 7,
-  "intro": "Before machine learning became popular, AI meant writing expert knowledge down as clear rules. Those rules are still used today. Anyone can read them and check how a decision was reached.",
+  "intro": "Before machine learning took over, AI meant writing knowledge down as rules. That approach still runs inside many systems you use. Here is how it works, and why it is still useful.",
   "sections": [
     {
       "id": "symbolic-foundations",
-      "heading": "1. Symbolic AI: Smart Software Built on Clear Rules",
+      "heading": "1. Writing Knowledge Down",
       "analogy": {
-        "metaphorName": "Tax Preparation Software",
-        "description": "When tax software helps you file a return, it does not guess. It follows a long list of rules, such as giving you a credit if you installed solar panels and own your home. You can always see why each figure appears."
+        "metaphorName": "The Office Procedures Manual",
+        "description": "Every workplace has written procedures: if a customer asks for a refund within 30 days, approve it. Rule-based AI turns that kind of written knowledge into something a computer can follow."
       },
-      "bodyMarkdown": "**Symbolic AI** is built on written knowledge: words, facts, and rules that experts have typed into the system.\n\nThe software does not study millions of examples to find hidden patterns. It simply follows the rules it was given. This makes its behavior predictable and easy to check, because the same input always gives the same answer.",
+      "bodyMarkdown": "**Symbolic AI** represents knowledge with symbols a person can read: facts like \"a penguin is a bird\" and rules like \"if a bird cannot fly, do not suggest flying as a way to escape\". The computer combines them to reach conclusions.\n\nHow you write knowledge down matters. Simple rules work for narrow tasks. For richer subjects, people use structures that link concepts together, so the computer can follow the connections. Either way, every piece of knowledge was put there by someone, which makes the system transparent but laborious to build.",
       "jargonBuster": [
         {
           "term": "Symbolic AI",
-          "simpleExplanation": "AI that follows written facts and rules instead of learning from data."
+          "simpleExplanation": "AI that works with knowledge written as readable symbols, facts and rules."
         },
         {
-          "term": "Predictable",
-          "simpleExplanation": "Gives the same answer every time for the same input."
+          "term": "Knowledge representation",
+          "simpleExplanation": "The way knowledge is written down so a computer can use it."
         }
       ],
       "diagram": {
         "type": "mermaid",
-        "caption": "How a rule-based system reaches an answer",
-        "alt": "A flow from left to right: a fact comes in, a matching if-then rule is found, the rule is applied, and the answer comes with the rule that produced it.",
-        "content": "flowchart LR\n    A[\"Fact comes in\"] --> B[\"Find matching rule\"] --> C[\"Apply the rule\"] --> D[\"Answer + the rule used\"]"
+        "caption": "Facts plus rules give conclusions",
+        "content": "graph LR\n    F[\"Fact: a penguin is a bird\"] --> C[\"Combine\"]\n    F2[\"Fact: penguins cannot fly\"] --> C\n    R[\"Rule: if a bird cannot fly, it escapes on foot or by swimming\"] --> C\n    C --> A[\"Conclusion: a penguin escapes by swimming\"]",
+        "alt": "Two facts, a penguin is a bird and penguins cannot fly, plus a rule about birds that cannot fly, are combined to reach the conclusion that a penguin escapes by swimming."
       },
-      "realWorld": "Tax software and loan-eligibility checkers that follow written rules."
+      "realWorld": "Loan pre-checks, insurance quote forms and tax calculators all run on written rules."
     },
     {
       "id": "expert-system-architecture",
-      "heading": "2. Inside an Expert System: Rules and a Reasoning Engine",
+      "heading": "2. Inside an Expert System",
       "analogy": {
-        "metaphorName": "Hospital Triage Guidelines",
-        "description": "In a hospital, the handbook of symptoms and diseases is kept separate from the nurse who sorts incoming patients. The handbook can be updated without retraining the nurse."
+        "metaphorName": "The Helpdesk Flowchart",
+        "description": "A good IT helpdesk has a binder of fixes and a technician who asks questions until one fix matches. An expert system is that binder and that technician, in software."
       },
-      "bodyMarkdown": "In the 1970s and 1980s, researchers built **expert systems** to copy the way human specialists make decisions. Every expert system has two main parts:\n\n1. **The knowledge base**, which is a store of facts and if-then rules written by experts.\n2. **The inference engine**, which checks the facts against the rules, decides which rules apply, and draws a conclusion.\n\nBecause the two parts are kept separate, a doctor or engineer can update a rule without changing the software that runs it.",
-      "diagram": {
-        "type": "mermaid",
-        "caption": "Decoupled Architecture: Knowledge Base + Inference Engine",
-        "content": "graph TD\n    Facts[\"📋 Working Memory<br/>(Observed Symptoms / Inputs)\"] --> Engine[\"⚙️ Inference Engine<br/>(Pattern Matcher & Reasoner)\"]\n    KB[\"📚 Knowledge Base<br/>(If-Then Production Rules)\"] --> Engine\n    Engine --> Output[\"✅ Verified Conclusion & Audit Trail\"]",
-        "alt": "Two inputs feed one engine. Observed inputs in working memory and if-then rules in the knowledge base go into the inference engine, which produces a conclusion with an audit trail."
-      },
+      "bodyMarkdown": "An **expert system** captures the know-how of specialists, such as engineers or doctors, so others can use it. It has two main parts.\n\nThe **knowledge base** stores the rules. The **inference engine** looks at the current facts, finds rules whose conditions are met and applies them. Each conclusion becomes a new fact, which may trigger further rules, until it reaches an answer.\n\nBecause every step uses a written rule, the system can always show its reasoning: \"I recommended this because rules 3 and 7 applied.\"",
       "jargonBuster": [
         {
-          "term": "Knowledge Base",
-          "simpleExplanation": "The collection of facts and if-then rules."
+          "term": "Expert system",
+          "simpleExplanation": "Software that gives specialist advice by applying rules collected from experts."
         },
         {
-          "term": "Inference Engine",
-          "simpleExplanation": "The part that applies the rules to the facts."
+          "term": "Knowledge base",
+          "simpleExplanation": "The collection of facts and rules an expert system uses."
         },
         {
-          "term": "Forward Chaining",
-          "simpleExplanation": "Start with known facts, fire the rules that match, and reach a conclusion."
+          "term": "Inference engine",
+          "simpleExplanation": "The part that checks the facts against the rules and decides which rules apply."
         }
       ],
-      "realWorld": "Medical checklists and car-repair scanners that match symptoms to causes."
+      "diagram": {
+        "type": "stepper",
+        "caption": "How an expert system reaches an answer",
+        "alt": "Four steps: the user gives facts, the inference engine finds rules whose conditions are met, each conclusion is added as a new fact, and the system gives an answer with the rules it used.",
+        "content": "",
+        "steps": [
+          "The user supplies the facts: \"The printer is on but nothing prints.\"",
+          "The inference engine finds rules whose conditions are all true.",
+          "Each conclusion is added as a new fact, which may trigger more rules.",
+          "The system gives its answer and lists the rules it used."
+        ]
+      },
+      "realWorld": "Equipment fault-finding guides, airline crew scheduling checks and some medical triage tools use this design."
+    },
+    {
+      "id": "forward-backward",
+      "heading": "3. Working Forward or Backward",
+      "analogy": {
+        "metaphorName": "Detective vs Checklist",
+        "description": "A detective starts from the clues and sees where they lead. Someone checking a theory starts from the suspect and looks for the clues that would prove it. Expert systems can reason both ways."
+      },
+      "bodyMarkdown": "**Forward chaining** starts from the facts you have and keeps applying rules to see what follows. It suits monitoring: \"the battery is low and it is night, so…\".\n\n**Backward chaining** starts from a possible answer and works back, asking only the questions needed to confirm or rule it out. It suits diagnosis: \"could it be a flat battery? Then I need to know whether the lights work.\"\n\nBackward chaining often asks fewer questions, because it ignores anything irrelevant to the answer it is testing.",
+      "jargonBuster": [
+        {
+          "term": "Forward chaining",
+          "simpleExplanation": "Reasoning from known facts towards whatever conclusions they lead to."
+        },
+        {
+          "term": "Backward chaining",
+          "simpleExplanation": "Reasoning from a possible answer back to the facts needed to confirm it."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Two directions of reasoning",
+        "content": "flowchart LR\n    subgraph FW [\"Forward chaining\"]\n        F1[\"Facts\"] --> F2[\"Apply rules\"] --> F3[\"Conclusions\"]\n    end\n    subgraph BW [\"Backward chaining\"]\n        B1[\"Possible answer\"] --> B2[\"Which facts would prove it?\"] --> B3[\"Ask only for those\"]\n    end",
+        "alt": "Forward chaining goes from facts, through rules, to conclusions. Backward chaining starts from a possible answer, works out which facts would prove it, and asks only for those."
+      },
+      "realWorld": "A car's dashboard warning system works forward from sensor readings. A troubleshooting wizard that asks you targeted questions often works backward."
+    },
+    {
+      "id": "ontologies",
+      "heading": "4. Maps of Meaning: Ontologies and Knowledge Graphs",
+      "analogy": {
+        "metaphorName": "The Family Tree",
+        "description": "A family tree lets you work out that your mother's sister's son is your cousin, even though nobody wrote \"cousin\" on the chart. Linked knowledge lets computers make the same kind of deductions."
+      },
+      "bodyMarkdown": "An **ontology** is a structured description of a subject: what kinds of things exist, and how they relate. For example, a dog is a mammal, a mammal is an animal, and every animal eats.\n\nFrom that, a computer can deduce that a dog eats, without anyone writing it down. Large collections of linked facts like this are called **knowledge graphs**. Search engines use them to answer questions like \"how tall is the Eiffel Tower?\" directly, instead of just listing pages.",
+      "jargonBuster": [
+        {
+          "term": "Ontology",
+          "simpleExplanation": "A structured description of the kinds of things in a subject and how they relate."
+        },
+        {
+          "term": "Knowledge graph",
+          "simpleExplanation": "A large network of linked facts that a computer can search and reason over."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "A tiny ontology",
+        "content": "graph TD\n    Animal[\"Animal: eats\"] --> Mammal[\"Mammal\"]\n    Mammal --> Dog[\"Dog\"]\n    Mammal --> Cat[\"Cat\"]\n    Dog -.->|deduced| Eats[\"A dog eats\"]",
+        "alt": "Animal, which eats, has the subtype mammal, which has the subtypes dog and cat. From the links, the computer deduces that a dog eats."
+      },
+      "realWorld": "The fact panel beside search results, product catalogues that group items sensibly and medical coding systems all rely on ontologies."
     },
     {
       "id": "interactive-diagnostic-sim",
-      "heading": "3. Interactive Simulation: Forward Chaining Diagnostic Engine",
+      "heading": "5. Try It: Diagnose a Mars Rover",
       "analogy": {
-        "metaphorName": "Automotive Diagnostic Computer",
-        "description": "When a mechanic plugs a scanner into your car, the car's computer checks its sensors and reports a likely reason why the check-engine light came on."
+        "metaphorName": "Remote Mechanic",
+        "description": "A rover on Mars is minutes of signal delay away from any engineer. It needs its own rule book to react in time."
       },
-      "bodyMarkdown": "Try the simulator below by switching the sensor readings on and off. As you do, watch which rules match the readings and which conclusion appears at the end.",
+      "bodyMarkdown": "This simulation is a small expert system. Its sensors report facts: battery level, day or night, whether the solar panels are dusty, and whether the antenna is aimed at the relay satellite.\n\nChange the facts and watch which rules fire. The rover's decision always comes from a rule you can point to, which is exactly the transparency that makes rule-based systems attractive for safety-critical work.",
+      "realWorld": "Spacecraft, industrial machinery and medical devices often use rule-based safety logic because every decision can be traced and checked.",
       "interactiveWidget": {
         "type": "expert-system-sim",
-        "title": "🚀 Interactive Simulation: The Mars Rover Expert System",
-        "goal": "Turn on the sensor readings that trigger the right diagnosis.",
+        "title": "🚀 Try It: The Mars Rover Expert System",
+        "goal": "Set the sensor facts that lead to each of the rover's decisions.",
         "scaffold": "standard",
-        "predictionPrompt": "Before you change any input: which rule do you expect to match?",
+        "predictionPrompt": "Before you change anything: which rule do you expect to fire if the battery is low at night?",
         "hints": [
-          "Rules fire only when all their conditions are true.",
-          "Try one input at a time."
+          "A rule fires only when all of its conditions are true.",
+          "Change one fact at a time and watch the rules."
         ],
-        "successMessage": "That is forward chaining: facts go in, matching rules fire, and a conclusion comes out.",
-        "allowFreePlay": true
-      },
-      "realWorld": "The check-engine light: sensors trigger rules that point to a fault."
+        "successMessage": "That is forward chaining: facts in, matching rules fire, a traceable decision out.",
+        "allowFreePlay": true,
+        "instruction": "Change the sensor facts. Watch which rules fire and what the rover decides."
+      }
     }
   ],
   "miniQuiz": [
     {
-      "question": "What is the primary advantage of decoupling the Knowledge Base from the Inference Engine?",
+      "question": "What are the two main parts of an expert system?",
       "options": [
-        "Domain specialists can update rules without rewriting the core reasoning software",
-        "It makes the program run 100 times faster than compiled C code",
-        "It allows the computer to run without electricity"
+        "A knowledge base and an inference engine",
+        "A camera and a database",
+        "A keyboard and a screen"
       ],
       "correctIndex": 0,
-      "praise": "Excellent! Separating rules from reasoning allows experts to maintain the knowledge base independently.",
-      "explanation": "Decoupling ensures that domain knowledge can be maintained, verified, and expanded without touching the core engine algorithms."
+      "praise": "Correct. Rules in one part, reasoning in the other.",
+      "explanation": "The knowledge base stores the rules; the inference engine decides which rules apply to the current facts."
     },
     {
-      "question": "Which of the following best describes Forward Chaining?",
+      "question": "Why are rule-based systems popular for safety-critical work?",
       "options": [
-        "Starting with known observations and applying rules forward to deduce conclusions",
-        "Guessing an outcome and working backward to justify it",
-        "Connecting physical computers together with networking cables"
+        "They are always cheaper",
+        "Every decision can be traced to a written rule",
+        "They learn by themselves"
       ],
-      "correctIndex": 0,
-      "praise": "Exactly right! Forward chaining is data-driven reasoning moving from facts to conclusions.",
-      "explanation": "Forward chaining is a bottom-up, data-driven inference method that triggers matching rules until no further deductions can be made."
+      "correctIndex": 1,
+      "praise": "Yes. Traceability is their strength.",
+      "explanation": "Because each decision comes from a written rule, it can be checked and explained."
     },
     {
-      "question": "Why is Symbolic AI still widely used in flight control and healthcare systems today?",
+      "question": "Which approach starts from a possible answer and asks only the questions needed to confirm it?",
       "options": [
-        "Because it is 100% explainable, deterministic, and leaves a complete audit trail",
-        "Because neural networks are illegal in airplanes",
-        "Because modern computers cannot run machine learning models"
+        "Forward chaining",
+        "Backward chaining",
+        "Machine learning"
       ],
-      "correctIndex": 0,
-      "praise": "Spot on! When human safety is on the line, having a verifiable audit trail of rules is indispensable.",
-      "explanation": "Symbolic rule-based logic is essential in mission-critical applications where every single automated decision must be provably verifiable."
+      "correctIndex": 1,
+      "praise": "Right. Backward chaining works back from the answer.",
+      "explanation": "Backward chaining starts from a candidate answer and looks for the facts that would prove or rule it out."
     }
   ],
   "teachBack": {
-    "prompt": "Which sentence best explains a rule-based system?",
+    "prompt": "How would you explain an expert system to a colleague?",
     "options": [
-      "It applies written if-then rules, so each answer can be traced.",
-      "It learns hidden patterns from large data sets.",
-      "It predicts outcomes with probabilities and cannot explain them."
+      "Software that applies experts' written rules to the facts and can show which rules it used.",
+      "Software that learns from millions of examples.",
+      "A chat assistant that knows everything."
     ],
     "correctIndex": 0,
-    "explanation": "Rule-based systems are transparent because every conclusion points to a rule."
+    "explanation": "Exactly. Expert rules, applied to facts, with traceable reasoning."
   },
   "recall": [
     {
       "fromLesson": "1-intro",
-      "question": "What is Narrow AI?",
+      "question": "What makes most modern AI different from ordinary software?",
       "options": [
-        "AI built to do one specific job well",
-        "AI that can do any job a person can",
-        "AI that only works on small computers"
+        "It learns patterns from examples",
+        "It runs on special computers",
+        "It never needs data"
       ],
       "correctIndex": 0,
-      "explanation": "All AI that exists today is Narrow AI."
+      "explanation": "Most modern AI learns patterns from examples rather than only following written rules."
     }
   ]
 }

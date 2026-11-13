@@ -1,130 +1,204 @@
 {
   "lessonId": "1-intro",
   "mode": "plain-english",
-  "title": "Understanding Artificial Intelligence in Everyday Terms 💡",
+  "origin": "own",
+  "title": "What AI Really Is, in Plain English 💡",
   "readingTimeMinutes": 7,
-  "intro": "You do not need a computer science degree to understand artificial intelligence. This lesson explains what AI actually does, why it matters to everyday life, and how it quietly shapes the tools you already use.",
+  "intro": "You use AI many times a day, often without noticing. This lesson explains what it is, what it is not, and the two main ways people build it. No maths needed.",
   "sections": [
     {
       "id": "what-is-ai",
-      "heading": "1. What is AI (and How is It Different from Regular Software)?",
+      "heading": "1. Software That Learns from Examples",
       "analogy": {
-        "metaphorName": "The Calculator vs. The Apprentice",
-        "description": "Regular software is like a pocket calculator, which follows the exact steps you give it and nothing more. AI is more like an apprentice chef, who studies many finished dishes and gradually learns what makes them taste good."
+        "metaphorName": "Training a New Colleague",
+        "description": "You could hand a new colleague a thick manual, or you could sit them next to someone experienced for a month. Most AI is trained the second way: it watches lots of examples until it can handle new cases on its own."
       },
-      "bodyMarkdown": "Most software follows fixed instructions: if you click here, it does this, and if you click there, it does that.\n\n**Artificial Intelligence** works differently, because people do not write every rule by hand. Instead, the software studies a large collection of past examples, discovers the patterns inside them, and then makes its best guess about new situations. This is how your email application recognizes spam and how your navigation application predicts traffic before you leave home.",
+      "bodyMarkdown": "Ordinary software follows instructions a programmer wrote, step by step. A spreadsheet adds a column because someone told it exactly how.\n\n**Artificial intelligence (AI)** is software that does tasks we would normally say need human judgement, such as recognising a face, understanding a spoken request or spotting a suspicious payment. Most modern AI is not given those rules. Instead it is shown a large number of examples and works out the patterns itself. That is why it can cope with situations nobody wrote a rule for, and also why it sometimes gets things confidently wrong.",
       "jargonBuster": [
         {
-          "term": "Training Data",
-          "simpleExplanation": "The examples an AI studies so it can learn patterns."
+          "term": "Artificial intelligence (AI)",
+          "simpleExplanation": "Software that does tasks we would normally say need human judgement, usually by learning from examples."
         },
         {
-          "term": "Prediction",
-          "simpleExplanation": "A best guess based on patterns the AI has seen before."
+          "term": "Algorithm",
+          "simpleExplanation": "A precise set of steps a computer follows. AI systems are built from algorithms too."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "Rules written by people vs patterns learned from examples",
+        "alt": "Two routes compared: ordinary software runs the rules a programmer wrote; AI is shown many labelled examples, finds the pattern, and applies it to new cases.",
+        "content": "",
+        "steps": [
+          "Ordinary software: a programmer writes the rules, and the computer follows them exactly.",
+          "AI: people collect many examples with the right answers attached.",
+          "The AI looks for the pattern that links each example to its answer.",
+          "It then applies that pattern to new cases it has never seen."
+        ]
+      },
+      "realWorld": "Your bank flagging an unusual card payment, your phone sorting photos by who is in them, and your email filtering out spam."
+    },
+    {
+      "id": "weak-vs-strong-ai",
+      "heading": "2. Narrow AI Today, General AI in Fiction",
+      "analogy": {
+        "metaphorName": "The Specialist Tool",
+        "description": "A satnav is brilliant at routes and useless at cooking. Today's AI is like that: each system is a specialist tool, however clever it looks."
+      },
+      "bodyMarkdown": "Every AI in use today is **narrow AI**: it is built and trained for a particular kind of task. A system that reads X-rays cannot plan a holiday, and a route planner cannot write an email.\n\nChat assistants can feel broader, because language touches so many subjects. But they are still one kind of tool, trained to produce likely text, and they cannot, for example, drive a car or learn a new physical skill.\n\n**General AI**, a machine that could learn any task a person can, does not exist. Experts disagree about whether, or when, it might.",
+      "jargonBuster": [
+        {
+          "term": "Narrow AI",
+          "simpleExplanation": "AI built for one kind of task. All AI in use today is narrow."
+        },
+        {
+          "term": "General AI",
+          "simpleExplanation": "A hypothetical machine that could learn any task a person can. It has not been built."
         }
       ],
       "diagram": {
         "type": "mermaid",
-        "caption": "Regular software versus AI",
-        "alt": "Two paths. Regular software takes data and human-written rules and produces an answer. AI takes data and example answers and produces its own rules.",
-        "content": "flowchart LR\n    subgraph R[\"Regular software\"]\n        R1[\"Data + rules written by people\"] --> R2[\"Answer\"]\n    end\n    subgraph A[\"AI\"]\n        A1[\"Data + example answers\"] --> A2[\"Rules learned from patterns\"]\n    end"
+        "caption": "What exists today and what does not",
+        "content": "graph TD\n    AI[\"AI\"] --> N[\"Narrow AI: exists today\"]\n    AI --> G[\"General AI: does not exist\"]\n    N --> N1[\"Reads X-rays\"]\n    N --> N2[\"Translates text\"]\n    N --> N3[\"Recommends music\"]\n    G --> G1[\"Would learn any task a person can\"]",
+        "alt": "AI splits into narrow AI, which exists today and does jobs like reading X-rays, translating text and recommending music, and general AI, which would learn any task a person can and does not exist."
       },
-      "realWorld": "Spam filters, map apps that predict traffic, and photo apps that group faces."
-    },
-    {
-      "id": "weak-vs-strong-ai",
-      "heading": "2. Narrow AI vs. General AI: Cutting Through the Hype",
-      "analogy": {
-        "metaphorName": "The World-Class Espresso Machine vs. A Human Barista",
-        "description": "An espresso machine can produce a perfect cup of coffee, but it cannot take your order, restock the napkins, or chat about the weather. That is Narrow AI. A human barista can handle all of those tasks without any special training."
-      },
-      "bodyMarkdown": "News stories often mix up two very different ideas, so it helps to separate them:\n\n* **Narrow AI** is designed to do one job very well. Face unlock, fraud alerts, and voice typing are all examples, and **every AI system that exists today is Narrow AI.**\n* **General AI** would be able to learn and reason about any subject the way a person can. It appears often in movies and marketing, but nobody has built it.",
-      "diagram": {
-        "type": "mermaid",
-        "caption": "Where Today's AI Actually Fits",
-        "content": "graph TD\n    Tech[\"Artificial Intelligence Landscape\"]\n    Tech --> Practical[\"Narrow AI (100% of Today's Reality) ⚙️\"]\n    Tech --> Speculative[\"General AI / AGI (Theoretical Future) 🔭\"]\n    Practical --> App1[\"Smart Navigation & ETA Predictions\"]\n    Practical --> App2[\"Automated Translation (e.g. DeepL)\"]\n    Practical --> App3[\"Fraud Prevention in Banking\"]\n    Speculative --> Goal[\"Autonomous general problem solving (Unsolved)\"]",
-        "alt": "A tree. AI splits into Narrow AI, which is all of today's AI, with examples like navigation, translation and fraud detection, and General AI, which is a theoretical future goal."
-      },
-      "realWorld": "Voice assistants and fraud alerts: each is good at one job only."
+      "realWorld": "Face unlock, translation apps, music recommendations and route planning are all narrow AI, each good at its own job."
     },
     {
       "id": "turing-test",
-      "heading": "3. Can Machines Truly Think? (The Turing Test)",
+      "heading": "3. Can a Machine Pass for a Person?",
       "analogy": {
-        "metaphorName": "The Customer Support Chat Dilemma",
-        "description": "Think of a support chat on a bank website, where you quietly wonder whether a person or a program is typing the replies. Alan Turing asked that same question back in 1950."
+        "metaphorName": "The Phone Call",
+        "description": "If you call a helpline and cannot tell whether a person or a program is answering, has the program become intelligent, or just good at sounding like it?"
       },
-      "bodyMarkdown": "Alan Turing proposed a thought experiment called the **Imitation Game**. A person exchanges text messages with both a human and a computer, and if that person cannot reliably tell them apart, the computer has behaved intelligently.\n\nToday's chat tools can sound remarkably natural. Even so, they work by predicting which word is likely to come next, and they do not understand language the way a person does.",
+      "bodyMarkdown": "In 1950 the mathematician Alan Turing suggested a practical test. A judge chats in writing with two hidden partners, one human and one machine. If the judge cannot reliably tell which is which, the machine passes. This became known as the **Turing test**.\n\nModern chat assistants can pass short versions of it. That says more about how well they imitate human writing than about whether they understand anything. Being convincing and being correct are different things, which is worth remembering when an answer sounds sure of itself.",
+      "jargonBuster": [
+        {
+          "term": "Turing test",
+          "simpleExplanation": "A test where a judge chats with a hidden person and a hidden machine and tries to tell them apart."
+        }
+      ],
+      "realWorld": "Customer service chats, voice assistants and automated phone lines all try to sound natural. Many now tell you up front that you are talking to an AI.",
       "interactiveWidget": {
         "type": "turing-guess-game",
-        "title": "🔍 Quick Analysis: Bot or Human?",
-        "instruction": "Examine this customer inquiry and decide which response was generated by an AI versus an empathetic human agent.",
+        "title": "🔍 Try It: Person or Program?",
+        "instruction": "A customer asks a question. Read both replies and pick the one you think a program wrote.",
         "scenario": {
-          "userPrompt": "I just missed my connecting flight because of a maintenance delay, and my daughter's wedding is tomorrow afternoon. What can you do?",
-          "terminalA": "I understand your flight was disrupted. Pursuant to Tariff Rule 240, you are eligible for the next available seat on Flight 412 departing tomorrow at 08:30 AM with a 2-hour layover.",
-          "terminalB": "I am so sorry to hear that—what an incredibly stressful situation with your daughter's wedding on the line. Let me immediately check direct partner flights and emergency rebooking so we can get you there in time.",
-          "correctAnswer": "Terminal A",
-          "explanation": "Terminal A mechanically cites tariff rules and procedures without contextual empathy. Terminal B demonstrates situational awareness and prioritized escalation, typical of experienced human support."
+          "userPrompt": "My parcel was marked as delivered, but it isn't here and I've checked with the neighbours. What should I do?",
+          "terminalA": "Oh no, that's so annoying, especially after you've already been round the neighbours. Let me check where the driver scanned it and get a replacement or refund started for you today.",
+          "terminalB": "Parcels marked as delivered may occasionally be located in safe places such as porches or with neighbours. Please allow 48 hours before submitting a claim through the appropriate channel.",
+          "correctAnswer": "Terminal B",
+          "explanation": "Terminal B ignores what the customer said, since they already checked with the neighbours, and replies with a stock policy. Terminal A responds to the actual situation and offers a next step."
         },
-        "goal": "Decide which reply came from an AI, then check your reasoning.",
+        "goal": "Pick the program-written reply, then say what gave it away.",
         "scaffold": "standard",
-        "predictionPrompt": "Before you choose: which reply do you think is automated, and what makes you say so?",
+        "predictionPrompt": "Before you choose: what would a helpful person do differently from a scripted reply?",
         "hints": [
-          "Look for emotion and specific detail.",
-          "Very polished, generic wording can be a sign."
+          "Does the reply respond to what the customer actually said?",
+          "Stock phrases and generic advice are a clue."
         ],
-        "successMessage": "Good call. The point is not that bots always fail. It is that telling them apart takes care.",
+        "successMessage": "Well spotted. Generic, scripted replies are often the giveaway, though good AI is getting harder to tell apart.",
         "allowFreePlay": true
-      },
-      "realWorld": "Customer-service chat windows where you wonder whether you are talking to a person."
+      }
     },
     {
       "id": "top-down-vs-bottom-up",
-      "heading": "4. How Modern AI Actually Works: Rules vs. Machine Learning",
+      "heading": "4. Two Ways to Build AI: Rules or Learning",
       "analogy": {
-        "metaphorName": "The Corporate Employee Handbook vs. Mentorship",
-        "description": "A 500-page policy manual tries to cover every situation in an office, yet real life is messy and unusual cases slip through the gaps. A new colleague, on the other hand, learns by watching experienced people and absorbing the unwritten habits of good work."
+        "metaphorName": "The Recipe Book and the Taste Test",
+        "description": "You can learn to cook from a recipe book that spells out every step, or by tasting lots of dishes and adjusting until it is right. AI can be built either way."
       },
-      "bodyMarkdown": "Computer scientists have followed two main paths toward building smart software:\n\n1. **Rules first (top-down).** People write out detailed if-then rules, which works well for tax software or chess but fails for messy jobs such as driving through traffic.\n2. **Examples first (bottom-up).** Engineers feed in millions of examples, and the computer finds patterns that no person could ever write down by hand. This approach is called **machine learning**.",
+      "bodyMarkdown": "The first way is **rule-based AI**. Experts write down what they know as rules, such as \"if the temperature is above 38°C and there is a rash, suggest a doctor's visit\". It is predictable and easy to check, but someone has to think of every case in advance.\n\nThe second way is **machine learning**. Instead of rules, the system is given many examples with the right answers and learns the pattern itself. It handles messy, varied situations far better, but it can be harder to explain why it gave a particular answer.\n\nMany real products combine both: learned patterns for the messy parts, firm rules for the parts that must never go wrong.",
+      "jargonBuster": [
+        {
+          "term": "Rule-based AI",
+          "simpleExplanation": "AI built from rules that experts write down by hand. Also called symbolic AI."
+        },
+        {
+          "term": "Machine learning",
+          "simpleExplanation": "Building AI by showing it many examples and letting it learn the pattern."
+        }
+      ],
       "diagram": {
         "type": "mermaid",
-        "caption": "The Evolution from Traditional Logic to Machine Learning",
-        "content": "flowchart LR\n    subgraph Trad [\"Traditional Programming (Rule-Based)\"]\n        Input1[\"Data\"] & Rules[\"Human Rules\"] --> Engine1[\"Computer\"] --> Out1[\"Output\"]\n    end\n    subgraph ML [\"Machine Learning (Data-Driven)\"]\n        Input2[\"Data\"] & Out2[\"Desired Answers\"] --> Engine2[\"Computer Training\"] --> Model[\"Learned Model / Rules\"]\n    end",
-        "alt": "Two flows. In traditional programming, data plus human rules go into a computer and produce output. In machine learning, data plus desired answers go into computer training and produce a learned model."
+        "caption": "Two ways to build AI",
+        "content": "flowchart LR\n    subgraph R [\"Rule-based AI\"]\n        R1[\"Experts write rules\"] --> R2[\"Computer applies them\"] --> R3[\"Predictable, but misses cases nobody wrote\"]\n    end\n    subgraph M [\"Machine learning\"]\n        M1[\"People supply examples\"] --> M2[\"Computer learns the pattern\"] --> M3[\"Copes with variety, but harder to explain\"]\n    end",
+        "alt": "Two paths. Rule-based AI: experts write rules, the computer applies them, and it is predictable but misses cases nobody wrote. Machine learning: people supply examples, the computer learns the pattern, and it copes with variety but is harder to explain."
       },
-      "realWorld": "Tax software follows rules. Music apps learn your taste from what you play."
+      "realWorld": "A tax form that checks your entries uses rules. A photo app that recognises your dog uses machine learning."
+    },
+    {
+      "id": "brief-history",
+      "heading": "5. A Short History: Booms, Winters and the Data Era",
+      "analogy": {
+        "metaphorName": "The Weather of Ideas",
+        "description": "AI has had sunny spells of excitement and long cold winters when funding dried up. Today's boom is the warmest yet, powered by data and fast chips."
+      },
+      "bodyMarkdown": "AI research began in the 1950s with big promises. Early systems used rules and did well at puzzles and games, then struggled with the messy real world. Twice, disappointed funders pulled back, periods now called **AI winters**.\n\nThree things changed in the 2010s: the internet produced huge amounts of example data, graphics chips made training fast, and better learning methods made use of both. Since then, machine learning, and especially neural networks, has driven most progress, from photo recognition to chat assistants.",
+      "jargonBuster": [
+        {
+          "term": "AI winter",
+          "simpleExplanation": "A period when interest and funding for AI dropped after early promises were not met."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "AI's ups and downs",
+        "alt": "Four stages in time: early rule-based optimism in the 1950s and 60s, AI winters when progress stalled, the rise of learning from data, and today's data-driven boom.",
+        "content": "",
+        "steps": [
+          "1950s–60s: early optimism. Programs solve puzzles and play games using rules.",
+          "1970s–90s: AI winters. Rules struggle with the real world and funding dries up twice.",
+          "1990s–2000s: learning from data grows, helped by the internet.",
+          "2010s–today: lots of data plus fast chips. Neural networks drive a boom."
+        ]
+      },
+      "realWorld": "The voice assistant on your phone, the face recognition in your photo app and today's chat assistants all come from this data-driven era."
     }
   ],
   "miniQuiz": [
     {
-      "question": "Why did early rule-based AI struggle to recognize photos of cats or handwritten letters?",
+      "question": "What makes most modern AI different from ordinary software?",
       "options": [
-        "Computers in the 1980s did not have electricity",
-        "It is virtually impossible to write formal logical rules covering every possible angle, shadow, and posture",
-        "Cats are invisible to digital cameras"
+        "It learns patterns from examples instead of only following written rules",
+        "It runs faster",
+        "It never makes mistakes"
       ],
-      "correctIndex": 1,
-      "explanation": "Correct! Physical reality contains too many edge cases for handwritten 'if-then' statements. Machine learning solves this by learning visual patterns directly from data."
+      "correctIndex": 0,
+      "praise": "Exactly. Learning from examples is the key difference.",
+      "explanation": "Ordinary software follows rules a programmer wrote; most AI learns patterns from examples."
     },
     {
-      "question": "Which statement accurately describes Artificial General Intelligence (AGI)?",
+      "question": "Which of these is narrow AI?",
       "options": [
-        "It is currently operating in your smartphone's autocorrect feature",
-        "It is software that only works on Apple hardware",
-        "It is a theoretical system capable of human-level reasoning across all subjects, but does not currently exist"
+        "A machine that can learn any job a person can",
+        "A translation app",
+        "A robot with feelings"
       ],
-      "correctIndex": 2,
-      "explanation": "Exactly right. Every AI application in commercial use today is Narrow AI designed for specific tasks."
+      "correctIndex": 1,
+      "praise": "Right. A translation app is a specialist tool.",
+      "explanation": "All AI in use today is narrow: each system is built for one kind of task, like translation."
+    },
+    {
+      "question": "What does passing the Turing test show?",
+      "options": [
+        "That a machine understands what it says",
+        "That its writing can pass for a person's",
+        "That it is always correct"
+      ],
+      "correctIndex": 1,
+      "praise": "Yes. It shows convincing imitation, not understanding.",
+      "explanation": "Passing the Turing test means a judge could not tell the machine's writing from a person's. It does not prove understanding or accuracy."
     }
   ],
   "teachBack": {
-    "prompt": "Explain AI to a colleague. Which sentence is the most accurate?",
+    "prompt": "How would you explain AI to a friend in one sentence?",
     "options": [
-      "AI finds patterns in examples to make predictions.",
-      "AI is software that understands things like a person.",
-      "AI is any program with a lot of if-then rules."
+      "Software that learns patterns from lots of examples to do tasks that usually need human judgement.",
+      "A robot that thinks exactly like a person.",
+      "Any program that runs on a computer."
     ],
     "correctIndex": 0,
-    "explanation": "Today's AI finds patterns in data. It does not understand in a human way."
+    "explanation": "That's it. Learning from examples, for tasks that normally need judgement."
   }
 }

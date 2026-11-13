@@ -51,17 +51,17 @@ test.describe('Lesson 3: Introduction to Neural Networks & Perceptrons (SPEC-005
     await expect(page.locator('text=Classified as APPLE')).toBeVisible()
   })
 
-  test('AC-NN-03: Plain English mode renders committee vote & mixer analogies', async ({ page }) => {
+  test('AC-NN-03: Plain English mode renders hiring panel & mixing desk analogies', async ({ page }) => {
     await page.goto('/lesson/3-neuralnetworks')
 
     // Switch to Plain English
     await page.locator('button[role="tab"]', { hasText: 'Plain English' }).click()
 
     // Title
-    await expect(page.locator('h1', { hasText: 'Introduction to Neural Networks & Perceptrons' })).toBeVisible()
+    await expect(page.locator('h1', { hasText: 'Neural Networks, Without the Maths' })).toBeVisible()
 
     // Analogies
-    await expect(page.locator('text=The Weighted Committee Vote')).toBeVisible()
-    await expect(page.locator('text=The Audio Mixing Board')).toBeVisible()
+    await expect(page.locator('text=The Hiring Panel Member')).toBeVisible()
+    await expect(page.locator('text=The Mixing Desk')).toBeVisible()
   })
 })

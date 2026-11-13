@@ -57,17 +57,17 @@ test.describe('Lesson 5: Natural Language Processing & Embeddings (SPEC-005)', (
     await expect(resultBadge).toContainText('Kitten')
   })
 
-  test('AC-NLP-03: Plain English mode renders tokenization and spotlight analogies', async ({ page }) => {
+  test('AC-NLP-03: Plain English mode renders sorting the post and wedding seating analogies', async ({ page }) => {
     await page.goto('/lesson/5-nlp')
 
     // Switch to Plain English
     await page.locator('button[role="tab"]', { hasText: 'Plain English' }).click()
 
     // Title
-    await expect(page.locator('h1', { hasText: 'Natural Language Processing in Plain English: From Words to Meaning' })).toBeVisible()
+    await expect(page.locator('h1', { hasText: 'How Computers Handle Language, in Plain English' })).toBeVisible()
 
     // Analogies
-    await expect(page.locator('text=The Spotlight Mechanism')).toBeVisible()
-    await expect(page.locator('text=The Multi-Dimensional Map')).toBeVisible()
+    await expect(page.locator('text=Sorting the Post')).toBeVisible()
+    await expect(page.locator('text=Seating at a Wedding')).toBeVisible()
   })
 })

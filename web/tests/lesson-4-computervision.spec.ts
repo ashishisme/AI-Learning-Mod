@@ -57,17 +57,17 @@ test.describe('Lesson 4: Computer Vision & Convolutions (SPEC-005)', () => {
     await expect(page.locator('text=Output Pixel Value =')).toBeVisible()
   })
 
-  test('AC-CV-03: Plain English mode renders digital mosaic and visual ladder analogies', async ({ page }) => {
+  test('AC-CV-03: Plain English mode renders tiled floor and jigsaw analogies', async ({ page }) => {
     await page.goto('/lesson/4-computervision')
 
     // Switch to Plain English
     await page.locator('button[role="tab"]', { hasText: 'Plain English' }).click()
 
     // Title
-    await expect(page.locator('h1', { hasText: 'Computer Vision in Plain English: From Pixels to Recognition' })).toBeVisible()
+    await expect(page.locator('h1', { hasText: 'How Computers See, in Plain English' })).toBeVisible()
 
     // Analogies
-    await expect(page.locator('text=The Visual Ladder')).toBeVisible()
-    await expect(page.locator('text=The Moving Math Filter')).toBeVisible()
+    await expect(page.locator('text=The Tiled Floor')).toBeVisible()
+    await expect(page.locator('text=Assembling a Jigsaw')).toBeVisible()
   })
 })

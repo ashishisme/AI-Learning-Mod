@@ -49,17 +49,17 @@ test.describe('Lesson 6 (7-ethics): Ethical and Responsible AI (SPEC-005)', () =
     await expect(widget.locator('text=Meets EEOC 80% Rule')).toBeVisible()
   })
 
-  test('AC-ETH-03: Plain English mode renders distorted mirror and calibrated scale analogies', async ({ page }) => {
+  test('AC-ETH-03: Plain English mode renders hiring habit and mystery shopper analogies', async ({ page }) => {
     await page.goto('/lesson/7-ethics')
 
     // Switch to Plain English
     await page.locator('button[role="tab"]', { hasText: 'Plain English' }).click()
 
     // Title
-    await expect(page.locator('h1', { hasText: 'Ethical and Responsible AI in Plain English' })).toBeVisible()
+    await expect(page.locator('h1', { hasText: 'Responsible AI, in Plain English' })).toBeVisible()
 
     // Analogies
-    await expect(page.locator('text=The Calibrated Scale')).toBeVisible()
-    await expect(page.locator('text=The Dual Key Safeguard')).toBeVisible()
+    await expect(page.locator('text=The Hiring Habit')).toBeVisible()
+    await expect(page.locator('text=The Mystery Shopper')).toBeVisible()
   })
 })

@@ -22,11 +22,11 @@
     {
       "path": "public-content/lang/hi/lessons/1-intro.plain-english.json",
       "kind": "adaptive",
-      "sourceHash": "aca263d59d5f84741677201c2cdd81341f6f9fce075dbd9ce5300d8726254e0d",
-      "translationHash": "5c87dcd01034766179c7a032d65b17c92b848bc7879ae2ae29a50991fdbee3d6",
+      "sourceHash": "e84b1793a3e99d29c1420a1be28c0a074572cb932527b1f87bf1abf068e5b43a",
+      "translationHash": "66ae750b917d654c441141e102409cd39c724d1d56c166c0f7ff018f097c9d18",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-13"
+      "date": "2026-11-14"
     },
     {
       "path": "public-content/lang/hi/lessons/2-symbolic.json",
@@ -49,11 +49,11 @@
     {
       "path": "public-content/lang/hi/lessons/2-symbolic.plain-english.json",
       "kind": "adaptive",
-      "sourceHash": "ff606aa82e1704b5e057c1bd8e3f281872046defb9ebc559fa8e8a4c639835c3",
-      "translationHash": "c3766945431b69b845c89cf3247682ab2c8ac3512ba756b3715b965cb58fda93",
+      "sourceHash": "ffcedc0d319030fc474e18d76d5e6db3944dbebb785d88a30156aec60e0d265e",
+      "translationHash": "68eea5b203f90a37660f21a646caa56b5e1e01fdfbcfb25d3a3f28cce611d8c0",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-13"
+      "date": "2026-11-14"
     },
     {
       "path": "public-content/lang/hi/lessons/3-neuralnetworks.json",
@@ -76,11 +76,11 @@
     {
       "path": "public-content/lang/hi/lessons/3-neuralnetworks.plain-english.json",
       "kind": "adaptive",
-      "sourceHash": "47e1f1b860b9fa644a9169a80fd6dd43d54eaf43f0d278f28e1b79cbd415f55c",
-      "translationHash": "6d50b2cd03273547a25223c1f6c1564b142d92c64c5d6afa25855d375a5937eb",
+      "sourceHash": "406cfdfe0aa9be5edb5d221a91160452c07839aa9b9e66886fc3c8e4ebff82e5",
+      "translationHash": "1f50b1f904931d89d7ff0ccf0b90cac49a15f0319aaa443e6119a2afc5d55e3f",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-04"
+      "date": "2026-11-14"
     },
     {
       "path": "public-content/lang/hi/lessons/4-computervision.json",
@@ -103,11 +103,11 @@
     {
       "path": "public-content/lang/hi/lessons/4-computervision.plain-english.json",
       "kind": "adaptive",
-      "sourceHash": "1ccda0520834d80da453516da95c92e3cc7ac30b42420b629a782906e9d6f643",
-      "translationHash": "5e25482fc9b41893f56a7722dedcba66bc8c5ab085806ff5756dfaec54a6a5ca",
+      "sourceHash": "db24803c9dcf20e237e5cf343a4cc1707869069583950784bff0d1841b032c5f",
+      "translationHash": "4f1cc8c41510c9de9fd33b46181f17ccbea65c1c4f6842a8442d3f76c5dbb41b",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-13"
+      "date": "2026-11-14"
     },
     {
       "path": "public-content/lang/hi/lessons/5-nlp.json",
@@ -130,11 +130,11 @@
     {
       "path": "public-content/lang/hi/lessons/5-nlp.plain-english.json",
       "kind": "adaptive",
-      "sourceHash": "c6a17fdaeab8bf103b08ce01a73d437f6e7987600210537ea557153993cdc3a2",
-      "translationHash": "1c56646c9268d74eea2bda193055286b156cab1f7a9e5f123f8229cca79d2398",
+      "sourceHash": "fd1205f46dc63191f68a78dec1ea3face936e74e3d4447858aee97b2642ae4ff",
+      "translationHash": "29965a55fc4038bcc3e642c29d396268afee7b14402ed6cbd0ed319f9f83f141",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-13"
+      "date": "2026-11-14"
     },
     {
       "path": "public-content/lang/hi/lessons/7-ethics.json",
@@ -157,11 +157,11 @@
     {
       "path": "public-content/lang/hi/lessons/7-ethics.plain-english.json",
       "kind": "adaptive",
-      "sourceHash": "16b63add6ddc8f703c49aa332684500ee7326aaf13be8f0928b5fee86ab03c9a",
-      "translationHash": "2b203421a3a8506c79f077130531ed928e909c80f4a88105a7dcce8d59f2b35b",
+      "sourceHash": "be3de26590c3479d4a35ae521b819b1de8f80120d334da8a36f7a5e7bac76ea7",
+      "translationHash": "f7956db5cda877c1ef879a3d2a8d311ca4adced03859a0be44a0bb4090dc9204",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-13"
+      "date": "2026-11-14"
     },
     {
       "path": "web/src/data/quizzes/hi.json",

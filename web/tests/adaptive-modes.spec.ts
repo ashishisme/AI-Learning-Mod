@@ -86,14 +86,14 @@ test.describe('Adaptive Audience Modes (Kids 8-14 & Plain English)', () => {
     await expect(plainTab).toHaveAttribute('aria-selected', 'true')
 
     // Verify Plain English Title
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Understanding Artificial Intelligence in Everyday Terms 💡')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('What AI Really Is, in Plain English 💡')
 
     // Verify Workplace / Kitchen Analogy
-    await expect(page.getByText('Everyday Metaphor: The Calculator vs. The Apprentice')).toBeVisible()
+    await expect(page.getByText('Everyday Metaphor: Training a New Colleague')).toBeVisible()
 
     // Verify Jargon Buster
-    await expect(page.getByText('Jargon Buster')).toBeVisible()
-    await expect(page.locator('strong', { hasText: 'Training Data' })).toBeVisible()
+    await expect(page.getByText('Jargon Buster').first()).toBeVisible()
+    await expect(page.locator('strong', { hasText: 'Algorithm' })).toBeVisible()
   })
 
   test('AC-ADAPT-04: Audience mode choice persists across page reloads in localStorage', async ({ page }) => {

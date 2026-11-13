@@ -1,146 +1,207 @@
 {
   "lessonId": "3-neuralnetworks",
   "mode": "plain-english",
-  "title": "Introduction to Neural Networks & Perceptrons",
+  "origin": "own",
+  "title": "Neural Networks, Without the Maths 🧠",
   "readingTimeMinutes": 7,
-  "intro": "Neural networks are computer programs that are loosely inspired by the human brain. They do not follow fixed rules written by people; instead, they learn by adjusting many small numbers until their answers become more accurate.",
+  "intro": "Neural networks power most of today's AI, from photo apps to chat assistants. This lesson explains the basic building block, how it learns, and why stacking many of them works so well.",
   "sections": [
     {
       "id": "biological-inspiration",
-      "heading": "1. From Brain Cells to Math: The Perceptron",
+      "heading": "1. A Tiny Decision-Maker",
       "analogy": {
-        "metaphorName": "The Weighted Committee Vote",
-        "description": "Picture a committee voting on a new project, where each member votes yes or no but some votes count for more than others. If the weighted total passes a set score, the project goes ahead."
+        "metaphorName": "The Hiring Panel Member",
+        "description": "Picture one member of a hiring panel. They look at a few things on a CV, give each a different importance, and say yes or no. An artificial neuron makes decisions in much the same way."
       },
-      "bodyMarkdown": "Your brain is made of billions of cells called **neurons**. Each neuron collects signals from its neighbors, and if those signals add up to enough, it sends a signal of its own to the cells that come next.\n\nIn 1957, a psychologist named **Frank Rosenblatt** turned that idea into simple mathematics and built the **Perceptron**, which is still the basic building block of modern AI systems.",
+      "bodyMarkdown": "Your brain contains billions of nerve cells, or neurons, each passing signals on when it receives enough input. Computer scientists borrowed that idea in a very simplified form.\n\nAn **artificial neuron** takes several inputs, for example a fruit's colour, size and sweetness. It decides how much each input should count, adds them up, and gives an output, such as \"apple\" or \"not apple\". The earliest version, from the 1950s, was called the **perceptron**.",
       "jargonBuster": [
         {
-          "term": "Perceptron",
-          "simpleExplanation": "The simplest artificial neuron. It adds up weighted clues and decides yes or no."
+          "term": "Artificial neuron",
+          "simpleExplanation": "A small piece of software that weighs up several inputs and produces one output."
         },
         {
-          "term": "Neuron",
-          "simpleExplanation": "A brain cell that passes signals to other cells."
+          "term": "Perceptron",
+          "simpleExplanation": "The earliest artificial neuron, from the 1950s. It makes a simple yes or no decision."
         }
       ],
       "diagram": {
-        "type": "mermaid",
-        "caption": "From a brain cell to an artificial neuron",
-        "alt": "A flow from left to right: signals come into a neuron, are added up, and if the total passes a threshold the neuron fires and passes a signal on.",
-        "content": "flowchart LR\n    A[\"Incoming signals\"] --> B[\"Add them up\"] --> C{\"Total big enough?\"}\n    C -->|Yes| D[\"Fire a signal\"]\n    C -->|No| E[\"Stay quiet\"]"
+        "type": "stepper",
+        "caption": "What one artificial neuron does",
+        "alt": "Four steps: inputs come in, each is given an importance, they are added up, and the neuron outputs yes or no.",
+        "content": "",
+        "steps": [
+          "Inputs come in: colour, size, sweetness.",
+          "Each input gets an importance: sweetness matters a lot, size a little.",
+          "The neuron adds up the evidence.",
+          "Enough evidence? It says yes. Otherwise, no."
+        ]
       },
-      "realWorld": "Face unlock and photo search are built from many artificial neurons."
+      "realWorld": "A spam filter that weighs up the sender, certain words and the number of links before deciding is doing a similar kind of judgement."
     },
     {
       "id": "weights-bias-activation",
-      "heading": "2. The Four Parts: Inputs, Weights, Bias and the Gate",
+      "heading": "2. Importance, Starting Point and the Decision",
       "analogy": {
-        "metaphorName": "The Audio Mixing Board",
-        "description": "A sound engineer sets one slider for the guitar, one for the voice, and one for the drums, and then sets a master knob that controls the overall level. Once the combined mix is loud enough, it is sent out to the crowd."
+        "metaphorName": "The Mixing Desk",
+        "description": "A sound engineer has a slider for each microphone. Push one up and that voice dominates. A neuron has a slider for each input."
       },
-      "bodyMarkdown": "A perceptron reaches a decision in four steps:\n\n1. **Inputs** are the clues it receives, such as how sweet or how round a piece of fruit is.\n2. **Weights** say how much each clue matters to the final decision.\n3. **Bias** is a built-in nudge that makes it easier or harder for the neuron to say yes.\n4. **The gate** compares the total to a limit, answering yes if the total is high enough and no if it is not.",
-      "diagram": {
-        "type": "mermaid",
-        "caption": "Perceptron Architecture: Linear Combination & Threshold Step",
-        "content": "graph LR\n    X1[\"Input x1\"] -->|Weight w1| Sum[\"➕ Linear Combination<br/>z = ∑(wi·xi) + b\"]\n    X2[\"Input x2\"] -->|Weight w2| Sum\n    Bias[\"Bias b\"] --> Sum\n    Sum --> Act[\"📈 Activation Gate<br/>f(z) ≥ 0\"]\n    Act --> Out[\"💡 Binary Output (0 or 1)\"]",
-        "alt": "Two inputs are each multiplied by a weight, added together with a bias, and passed through a gate. The output is 1 or 0."
-      },
+      "bodyMarkdown": "Each input has a **weight**: a number saying how much it counts. A large weight means the input strongly influences the decision; a weight near zero means it is mostly ignored. A negative weight pushes the other way.\n\nThe neuron also has a **bias**, which sets how easily it says yes overall. A neuron with a high bias needs only a little evidence; one with a low bias needs a lot.\n\nFinally, an **activation** rule turns the total into an output, such as yes or no, or a confidence between 0 and 1.",
       "jargonBuster": [
         {
           "term": "Weight",
-          "simpleExplanation": "A number that says how much one clue matters."
+          "simpleExplanation": "A number that says how much one input counts towards the neuron's decision."
         },
         {
           "term": "Bias",
-          "simpleExplanation": "A built-in nudge that makes saying yes easier or harder."
+          "simpleExplanation": "A number that makes the neuron more or less inclined to say yes, whatever the inputs."
         },
         {
-          "term": "Activation Function",
-          "simpleExplanation": "The gate that turns the total into a yes or no."
+          "term": "Activation",
+          "simpleExplanation": "The rule that turns the neuron's total into its output."
         }
       ],
-      "realWorld": "Spam filters learn which words matter more by adjusting weights."
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Inputs, weights, bias and activation",
+        "content": "graph LR\n    I1[\"Sweetness\"] -->|high weight| S[\"Add up\"]\n    I2[\"Roundness\"] -->|medium weight| S\n    I3[\"Sticker on skin\"] -->|zero weight| S\n    B[\"Bias\"] --> S\n    S --> A{\"Activation\"}\n    A --> O[\"Apple or not\"]",
+        "alt": "Three inputs with different weights, sweetness high, roundness medium and a sticker zero, plus a bias, are added up. The activation rule turns the total into the answer: apple or not."
+      },
+      "realWorld": "A credit check weighs income, existing debt and payment history very differently. That is weighting in action."
+    },
+    {
+      "id": "learning-from-mistakes",
+      "heading": "3. How a Neuron Learns",
+      "analogy": {
+        "metaphorName": "Adjusting a Recipe",
+        "description": "Your first loaf is too salty, so next time you add a little less. Too flat, so a bit more yeast. Small corrections after each try, until it comes out right."
+      },
+      "bodyMarkdown": "Nobody sets the weights by hand. The neuron starts with random ones and is shown labelled examples: this fruit is an apple, this one is not.\n\nEach time it gets one wrong, its weights and bias are nudged slightly in the direction that would have given the right answer. Repeat this over thousands of examples, and the weights settle on values that work. This process is called **training**.\n\nOne neuron can only learn simple, straight-line distinctions. That limit is why we connect many of them.",
+      "jargonBuster": [
+        {
+          "term": "Training",
+          "simpleExplanation": "Showing a model labelled examples and adjusting its weights after each mistake until it performs well."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "The training loop",
+        "alt": "Four steps repeated: show an example, the neuron guesses, compare with the right answer, and nudge the weights if it was wrong.",
+        "content": "",
+        "steps": [
+          "Show the neuron a labelled example.",
+          "It makes a guess.",
+          "Compare the guess with the right answer.",
+          "If wrong, nudge the weights and bias slightly. Repeat thousands of times."
+        ]
+      },
+      "realWorld": "Every time you mark an email as \"not spam\", you supply a labelled example that can be used to nudge a filter's weights."
+    },
+    {
+      "id": "layers-networks",
+      "heading": "4. From One Neuron to a Network",
+      "analogy": {
+        "metaphorName": "An Organisation Chart",
+        "description": "Front-line staff spot details, team leads combine them into patterns, and managers make the final call. A neural network passes information up through layers in a similar way."
+      },
+      "bodyMarkdown": "Connect many neurons in **layers** and you get a **neural network**. The first layer looks at the raw inputs. Each following layer combines the previous layer's outputs into more complex patterns. The last layer gives the answer.\n\nWith enough layers and enough examples, networks learn things no single neuron could, such as recognising faces or translating sentences. Networks with many layers are called deep learning. The trade-off is that their reasoning is spread across millions of weights, which makes it hard to explain any single decision.",
+      "jargonBuster": [
+        {
+          "term": "Layer",
+          "simpleExplanation": "A row of neurons that all receive the same inputs and pass their outputs to the next row."
+        },
+        {
+          "term": "Neural network",
+          "simpleExplanation": "Many artificial neurons connected in layers, trained together on examples."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Layers of a small network",
+        "content": "graph LR\n    In[\"Inputs\"] --> L1[\"Layer 1: simple features\"]\n    L1 --> L2[\"Layer 2: combinations\"]\n    L2 --> Out[\"Output: the answer\"]",
+        "alt": "Inputs go into layer 1, which finds simple features, then layer 2, which combines them, then the output layer, which gives the answer."
+      },
+      "realWorld": "Photo tagging, voice recognition and chat assistants are all built on large neural networks."
     },
     {
       "id": "interactive-perceptron-playground",
-      "heading": "3. Interactive Simulation: Tuning a Binary Classifier",
+      "heading": "5. Try It: Train a Fruit Sorter",
       "analogy": {
-        "metaphorName": "Calibrating a Sensor Threshold",
-        "description": "Think of a home thermostat, where you adjust the dials until the heater switches on only when the room is cold enough to be uncomfortable."
+        "metaphorName": "Quality Control on the Line",
+        "description": "On a packing line, someone sets the sorting machine so apples go one way and lemons the other. Here, you are that someone."
       },
-      "bodyMarkdown": "Try the neuron below by choosing a fruit and then adjusting the weights and the bias. As you change them, watch how the dividing line between the two kinds of fruit moves across the screen.",
+      "bodyMarkdown": "This sorter is a single neuron. Each fruit is described by two inputs. Adjust the weights and the bias, and watch the dividing line move, until every fruit lands on the correct side.\n\nNotice how changing one weight tilts the line, while changing the bias shifts it. That is exactly what training does automatically, thousands of times over.",
+      "realWorld": "Sorting machines in food packing, and simple yes or no checks in software, work on the same principle.",
       "interactiveWidget": {
         "type": "perceptron-sim",
-        "title": "⚡ Interactive Simulation: The Fruit Sorting Perceptron",
-        "goal": "Adjust the weights and bias until the sorter classifies every fruit correctly.",
+        "title": "⚡ Try It: The Fruit Sorting Neuron",
+        "goal": "Adjust the weights and bias until the sorter puts every fruit on the correct side.",
         "scaffold": "standard",
         "predictionPrompt": "Before you adjust anything: which input should carry more weight?",
         "hints": [
-          "Change one weight at a time.",
-          "Watch how the dividing line moves."
+          "Change one weight at a time and watch the line tilt.",
+          "Change the bias to slide the line without tilting it."
         ],
-        "successMessage": "That is how learning works: small adjustments until the mistakes disappear.",
+        "successMessage": "That is training by hand. A real network makes these adjustments automatically, across millions of weights.",
         "allowFreePlay": true
-      },
-      "realWorld": "Any recommendation system tunes its settings in the same way, only at a much larger scale."
+      }
     }
   ],
   "miniQuiz": [
     {
-      "question": "In a perceptron, what does the 'Weighted Sum' represent?",
+      "question": "What does a weight do in an artificial neuron?",
       "options": [
-        "The linear combination of inputs multiplied by their corresponding weights plus bias",
-        "The total weight of the computer hardware",
-        "The number of rows in the SQL database"
+        "Sets how much one input counts",
+        "Stores the answer",
+        "Makes the computer faster"
       ],
       "correctIndex": 0,
-      "praise": "Outstanding! The weighted sum z = ∑(wi·xi) + b is the core linear equation of a perceptron.",
-      "explanation": "Every input feature is scaled by its synaptic weight and aggregated together with the threshold bias."
+      "praise": "Right. Weights set each input's influence.",
+      "explanation": "Each input has a weight: large means it strongly influences the decision; near zero means it is mostly ignored."
     },
     {
-      "question": "What is the historical limitation of a single-layer perceptron discovered by Minsky and Papert?",
+      "question": "How does a neuron learn during training?",
       "options": [
-        "It can only solve linearly separable problems and cannot learn the XOR function",
-        "It can only run on magnetic tape drives",
-        "It requires internet access to compute math"
+        "Someone types in the correct weights",
+        "Its weights are nudged after each mistake",
+        "It memorises every example"
       ],
-      "correctIndex": 0,
-      "praise": "Spot on! The XOR limitation caused the first 'AI Winter' until multi-layer neural networks were developed!",
-      "explanation": "A single perceptron can only draw straight decision lines. Overcoming the XOR problem required multi-layer networks with non-linear activations."
+      "correctIndex": 1,
+      "praise": "Exactly. Small corrections, many times.",
+      "explanation": "During training, weights and bias are nudged slightly after each wrong guess, over thousands of examples."
     },
     {
-      "question": "How does a neural network 'learn' during the training process?",
+      "question": "Why do we connect neurons into layers?",
       "options": [
-        "By iteratively adjusting its weights and biases to minimize prediction errors",
-        "By memorizing the entire internet into RAM",
-        "By printing receipts after every calculation"
+        "One neuron can only learn simple distinctions",
+        "It uses less electricity",
+        "Layers are easier to explain"
       ],
       "correctIndex": 0,
-      "praise": "Brilliant! Algorithms like gradient descent nudge weights incrementally to reduce error!",
-      "explanation": "Learning in neural networks consists of optimizing connection weights through error backpropagation."
+      "praise": "Yes. Layers let networks learn complex patterns.",
+      "explanation": "A single neuron can only separate things with a straight line. Layers combine simple patterns into complex ones."
     }
   ],
   "teachBack": {
-    "prompt": "Which sentence best explains how a neural network learns?",
+    "prompt": "How would you explain a neural network to a colleague?",
     "options": [
-      "It adjusts numeric weights to reduce its mistakes.",
-      "It stores every example and looks it up later.",
-      "Engineers write a rule for each case."
+      "Many simple decision-makers in layers, whose weights are tuned on examples.",
+      "A computer copy of the human brain.",
+      "A list of rules written by experts."
     ],
     "correctIndex": 0,
-    "explanation": "Training adjusts weights step by step to reduce errors."
+    "explanation": "That's it. Simple units, layered, with weights learned from examples."
   },
   "recall": [
     {
       "fromLesson": "2-symbolic",
-      "question": "In a rule-based system, what does an if-then rule do?",
+      "question": "What can a rule-based system do that a neural network finds hard?",
       "options": [
-        "Connects a fact to an action",
-        "Learns from pictures",
-        "Adds random noise"
+        "Show exactly which rule led to a decision",
+        "Recognise faces",
+        "Learn from examples"
       ],
       "correctIndex": 0,
-      "explanation": "Rules link conditions to actions, so answers can be traced."
+      "explanation": "Rule-based systems can trace each decision to a written rule."
     }
   ]
 }
