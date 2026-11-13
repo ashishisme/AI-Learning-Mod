@@ -52,7 +52,21 @@ export const ExpertSystemWidget: React.FC = () => {
 
   const rule4Fires = safeMode && commSignalLost;
 
+  const rule5Fires = sensors.lowBattery && sensors.isNighttime;
+  const rule6Fires = sensors.lowBattery && !sensors.isNighttime && !sensors.dustyPanels;
+
+  // Every rule the engine uses is shown on screen, and every conclusion comes from one that fired.
+  const rules = [
+    { n: 1, label: t('widget.expert.rule1'), code: 'IF Solar_Dusty AND Daytime THEN Power_Degraded', fires: rule1Fires },
+    { n: 2, label: t('widget.expert.rule2'), code: 'IF Power_Degraded AND Low_Battery THEN Safe_Mode', fires: rule2Fires },
+    { n: 3, label: t('widget.expert.rule3'), code: 'IF Dish_Misaligned THEN Comm_Lost', fires: rule3Fires },
+    { n: 4, label: t('widget.expert.rule4'), code: 'IF Safe_Mode AND Comm_Lost THEN Emergency_Halt', fires: rule4Fires, emergency: true },
+    { n: 5, label: t('widget.expert.rule5'), code: 'IF Low_Battery AND Night THEN Hibernate', fires: rule5Fires },
+    { n: 6, label: t('widget.expert.rule6'), code: 'IF Low_Battery AND Daytime AND Solar_Clean THEN Recharge', fires: rule6Fires },
+  ];
+
   // Determine Final Diagnosis & Rover Expressions
+  let conclusionRule = 0;
   let diagnosis = t('widget.expert.nominal');
   let recommendation = t('widget.expert.nominalAction');
   let statusTone = "border-emerald-500/80 bg-emerald-500/10 text-emerald-900 dark:text-emerald-100 ring-2 ring-emerald-400/40";
@@ -60,29 +74,47 @@ export const ExpertSystemWidget: React.FC = () => {
   let roverMouth = '( ^‿^ )';
 
   if (rule4Fires) {
+    conclusionRule = 4;
     diagnosis = t('widget.expert.emergency');
     recommendation = t('widget.expert.emergencyAction');
     statusTone = "border-rose-500/80 bg-rose-500/10 text-rose-900 dark:text-rose-100 ring-2 ring-rose-500/40 animate-pulse";
     roverMood = 'emergency';
     roverMouth = '( >_< 🚨 )';
   } else if (safeMode) {
+    conclusionRule = 2;
     diagnosis = t('widget.expert.safeMode');
     recommendation = t('widget.expert.safeModeAction');
     statusTone = "border-amber-500/80 bg-amber-500/10 text-amber-900 dark:text-amber-100 ring-2 ring-amber-400/40";
     roverMood = 'warning';
     roverMouth = '( •_• )';
   } else if (commSignalLost) {
+    conclusionRule = 3;
     diagnosis = t('widget.expert.signal');
     recommendation = t('widget.expert.signalAction');
     statusTone = "border-blue-500/80 bg-blue-500/10 text-blue-900 dark:text-blue-100 ring-2 ring-blue-400/40";
     roverMood = 'warning';
     roverMouth = '( ⚆_⚆ )';
-  } else if (sensors.isNighttime && sensors.lowBattery) {
+  } else if (rule5Fires) {
+    conclusionRule = 5;
     diagnosis = t('widget.expert.night');
     recommendation = t('widget.expert.nightAction');
     statusTone = "border-indigo-500/80 bg-indigo-500/10 text-indigo-900 dark:text-indigo-100 ring-2 ring-indigo-400/40";
     roverMood = 'night';
     roverMouth = '( -_- )zzZ';
+  } else if (rule6Fires) {
+    conclusionRule = 6;
+    diagnosis = t('widget.expert.recharge');
+    recommendation = t('widget.expert.rechargeAction');
+    statusTone = "border-amber-500/80 bg-amber-500/10 text-amber-900 dark:text-amber-100 ring-2 ring-amber-400/40";
+    roverMood = 'warning';
+    roverMouth = '( •_• )';
+  } else if (powerDegraded) {
+    conclusionRule = 1;
+    diagnosis = t('widget.expert.powerLow');
+    recommendation = t('widget.expert.powerLowAction');
+    statusTone = "border-amber-500/80 bg-amber-500/10 text-amber-900 dark:text-amber-100 ring-2 ring-amber-400/40";
+    roverMood = 'warning';
+    roverMouth = '( •_• )';
   }
 
   const isNominal = !sensors.dustyPanels && !sensors.lowBattery && !sensors.dishMisaligned && !sensors.isNighttime;
@@ -447,106 +479,45 @@ export const ExpertSystemWidget: React.FC = () => {
           </div>
 
           <div className="space-y-2.5 text-xs">
-            {/* Rule 1 */}
-            <div
-              className={`p-3 rounded-xl border transition-all ${
-                rule1Fires
-                  ? 'border-emerald-500 bg-emerald-500/20 text-emerald-100 font-medium ring-1 ring-emerald-400/50'
-                  : 'border-slate-800 bg-slate-900/40 text-slate-500'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="font-bold flex items-center gap-1.5">
-                  <span>{t('widget.expert.rule1')}</span>
-                </span>
-                {rule1Fires && (
-                  <span className="text-[10px] font-extrabold text-emerald-300 uppercase px-2 py-0.5 rounded-full bg-emerald-500/30 flex items-center gap-1">
-                    {t('widget.expert.fired')}
+            {rules.map((rule) => (
+              <div
+                key={rule.n}
+                data-testid={`expert-rule-${rule.n}`}
+                data-fired={rule.fires}
+                className={`p-3 rounded-xl border transition-all ${
+                  !rule.fires
+                    ? 'border-slate-800 bg-slate-900/40 text-slate-500'
+                    : rule.emergency
+                      ? 'border-rose-500 bg-rose-500/25 text-rose-100 font-medium ring-1 ring-rose-400/50'
+                      : 'border-emerald-500 bg-emerald-500/20 text-emerald-100 font-medium ring-1 ring-emerald-400/50'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="font-bold flex items-center gap-1.5">
+                    <span>{rule.label}</span>
                   </span>
-                )}
+                  {rule.fires && (rule.emergency ? (
+                    <span className="text-[10px] font-extrabold text-rose-300 uppercase px-2 py-0.5 rounded-full bg-rose-500/40 flex items-center gap-1 animate-pulse">
+                      {t('widget.expert.emergencyFired')}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-extrabold text-emerald-300 uppercase px-2 py-0.5 rounded-full bg-emerald-500/30 flex items-center gap-1">
+                      {t('widget.expert.fired')}
+                    </span>
+                  ))}
+                </div>
+                <code className="text-[11px] font-mono block opacity-90">{rule.code}</code>
               </div>
-              <code className="text-[11px] font-mono block opacity-90">
-                IF Solar_Dusty AND Daytime THEN Power_Degraded
-              </code>
-            </div>
-
-            {/* Rule 2 */}
-            <div
-              className={`p-3 rounded-xl border transition-all ${
-                rule2Fires
-                  ? 'border-emerald-500 bg-emerald-500/20 text-emerald-100 font-medium ring-1 ring-emerald-400/50'
-                  : 'border-slate-800 bg-slate-900/40 text-slate-500'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="font-bold flex items-center gap-1.5">
-                  <span>{t('widget.expert.rule2')}</span>
-                </span>
-                {rule2Fires && (
-                  <span className="text-[10px] font-extrabold text-emerald-300 uppercase px-2 py-0.5 rounded-full bg-emerald-500/30 flex items-center gap-1">
-                    {t('widget.expert.fired')}
-                  </span>
-                )}
-              </div>
-              <code className="text-[11px] font-mono block opacity-90">
-                IF Power_Degraded AND Low_Battery THEN Safe_Mode
-              </code>
-            </div>
-
-            {/* Rule 3 */}
-            <div
-              className={`p-3 rounded-xl border transition-all ${
-                rule3Fires
-                  ? 'border-emerald-500 bg-emerald-500/20 text-emerald-100 font-medium ring-1 ring-emerald-400/50'
-                  : 'border-slate-800 bg-slate-900/40 text-slate-500'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="font-bold flex items-center gap-1.5">
-                  <span>{t('widget.expert.rule3')}</span>
-                </span>
-                {rule3Fires && (
-                  <span className="text-[10px] font-extrabold text-emerald-300 uppercase px-2 py-0.5 rounded-full bg-emerald-500/30 flex items-center gap-1">
-                    {t('widget.expert.fired')}
-                  </span>
-                )}
-              </div>
-              <code className="text-[11px] font-mono block opacity-90">
-                IF Dish_Misaligned THEN Comm_Lost
-              </code>
-            </div>
-
-            {/* Rule 4 */}
-            <div
-              className={`p-3 rounded-xl border transition-all ${
-                rule4Fires
-                  ? 'border-rose-500 bg-rose-500/25 text-rose-100 font-medium ring-1 ring-rose-400/50'
-                  : 'border-slate-800 bg-slate-900/40 text-slate-500'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="font-bold flex items-center gap-1.5">
-                  <span>{t('widget.expert.rule4')}</span>
-                </span>
-                {rule4Fires && (
-                  <span className="text-[10px] font-extrabold text-rose-300 uppercase px-2 py-0.5 rounded-full bg-rose-500/40 flex items-center gap-1 animate-pulse">
-                    {t('widget.expert.emergencyFired')}
-                  </span>
-                )}
-              </div>
-              <code className="text-[11px] font-mono block opacity-90">
-                IF Safe_Mode AND Comm_Lost THEN Emergency_Halt
-              </code>
-            </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* 3. Inference Engine Deduction Result */}
-      <div className={`p-5 rounded-2xl border-2 transition-all duration-300 ${statusTone} shadow-lg`}>
+      <div data-testid="expert-conclusion" data-rule={conclusionRule} className={`p-5 rounded-2xl border-2 transition-all duration-300 ${statusTone} shadow-lg`}>
         <div className="flex items-start gap-3.5">
           <span className="text-3xl flex-shrink-0">
-            {roverMood === 'happy' ? '🎉' : roverMood === 'warning' ? '⚠️' : '🚨'}
+            {roverMood === 'happy' ? '🎉' : roverMood === 'warning' ? '⚠️' : roverMood === 'night' ? '🌙' : '🚨'}
           </span>
           <div className="flex-1">
             <span className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
