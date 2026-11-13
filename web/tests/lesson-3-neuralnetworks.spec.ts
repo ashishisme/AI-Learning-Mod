@@ -19,7 +19,7 @@ test.describe('Lesson 3: Introduction to Neural Networks & Perceptrons (SPEC-005
     await expect(page.getByText('Chip the Robot', { exact: true })).toBeVisible()
 
     // Section 1 heading
-    await expect(page.locator('text=Brain Cells vs Computer Cells (Meet the Neuron!)')).toBeVisible()
+    await expect(page.locator('text=1. Meet the Neuron')).toBeVisible()
   })
 
   test('AC-NN-02: Interactive Perceptron widget dynamically classifies fruits', async ({ page }) => {

@@ -2,128 +2,220 @@
   "lessonId": "3-neuralnetworks",
   "mode": "junior",
   "title": "Connecting the Brain's Spark Plugs ⚡",
-  "readingTimeMinutes": 6,
+  "readingTimeMinutes": 5,
   "mascot": {
     "name": "Chip",
     "avatar": "🤖",
-    "greeting": "Beep boop! Today we are looking inside our own heads to discover the amazing bio-superpower that inspired modern AI: Neural Networks!"
+    "greeting": "Beep boop! Today we look inside your head. Your brain gave people the idea for a kind of AI called neural networks!"
   },
+  "recap": [
+    "A neuron is a tiny switch that says yes or no.",
+    "A weight says how much each clue counts.",
+    "A neuron learns by fixing its weights after each mistake."
+  ],
   "sections": [
     {
       "id": "meet-the-neuron",
-      "heading": "1. Brain Cells vs Computer Cells (Meet the Neuron!)",
-      "chipQuote": "Your brain has about 86 billion tiny cells called neurons. When you see a cute kitten, millions of them spark together like a holiday light show!",
+      "heading": "1. Meet the Neuron",
+      "bigIdea": "A neuron is a tiny switch that says yes or no.",
+      "chipQuote": "Your brain has billions of tiny cells. They help you see, think and move!",
       "analogy": {
         "metaphorName": "The Two-Key Treasure Box",
-        "description": "Imagine a treasure chest that only pops open if two pirate captains turn their keys at the very same second. A neuron is just like that: it waits for enough electric signals to arrive before it decides to fire its own spark!"
+        "description": "Think of a treasure box with two locks. It only opens when both keys turn. A neuron waits for enough clues before it says yes."
       },
-      "bodyMarkdown": "Every animal brain is made of **neurons**. A biological neuron has tiny branches called **dendrites** that catch signals. A center nucleus adds them up. A wire called an **axon** sends the signal to its neighbors.\n\nScientists asked: *Can we build a computer program that acts like a single neuron?* In 1957, Frank Rosenblatt created the **Perceptron**—the very first artificial brain cell!",
+      "bodyMarkdown": "Your brain is full of **neurons**. Each one listens to clues from the cells next to it. When it gets enough clues, it switches on and sends a spark. If not, it stays quiet.\n\nSo a neuron is a bit like a light switch. It is on or off.",
       "jargonBuster": [
         {
           "term": "Neuron",
-          "simpleExplanation": "A tiny brain cell that passes electrical signals to help you think, see, and move."
-        },
-        {
-          "term": "Perceptron",
-          "simpleExplanation": "The simplest artificial neuron: a math formula that adds up clues and decides whether to fire."
+          "simpleExplanation": "A tiny cell in your brain. It listens to clues and then says yes or no."
         }
       ],
       "diagram": {
         "type": "stepper",
-        "caption": "How a neuron decides to fire",
-        "alt": "Four steps: signals arrive at a neuron, the neuron adds them up, checks if the total is big enough, and then either sends a spark or stays quiet.",
+        "caption": "How a neuron says yes or no",
+        "alt": "Four steps: clues arrive at a neuron, the neuron adds them up, checks if it has enough, and then either sends a spark or stays quiet.",
         "content": "",
         "steps": [
-          "Signals arrive from other neurons, like tiny messages. ✉️",
-          "The neuron adds up all the signals it received.",
-          "It asks: \"Is the total big enough?\"",
-          "Big enough? Spark! ⚡ Not big enough? Stay quiet. 💤"
+          "Clues come in from other neurons. ✉️",
+          "The neuron adds up the clues. ➕",
+          "It asks: \"Do I have enough?\"",
+          "Enough? Spark! ⚡ Not enough? Stay quiet. 💤"
+        ]
+      },
+      "more": {
+        "title": "The parts of a real neuron",
+        "bodyMarkdown": "A real neuron has tiny branches called dendrites that catch signals. The middle of the cell adds them up. A long wire called an axon passes the signal on. Your brain has about 86 billion neurons!"
+      },
+      "teen": {
+        "add": "Scientists call switching on \"firing\". A neuron fires when its signals add up past a set level. Billions of these small choices, made at the same time, let you read this sentence."
+      },
+      "checkIn": {
+        "question": "A neuron got enough clues. What does it do?",
+        "options": ["⚡ It sends a spark", "💤 It stays quiet"],
+        "correctIndex": 0,
+        "praise": "Yes! Enough clues means it switches on.",
+        "explanation": "A neuron switches on and sends a spark when it gets enough clues."
+      }
+    },
+    {
+      "id": "clue-weights",
+      "heading": "2. Some Clues Count More",
+      "bigIdea": "Some clues matter more than others.",
+      "chipQuote": "Is it an apple? Let's look for clues!",
+      "analogy": {
+        "metaphorName": "The Music Mixer",
+        "description": "A DJ has a slider for each sound. Push a slider up, and that sound gets loud. Pull it down, and it goes quiet."
+      },
+      "bodyMarkdown": "A neuron has a slider for each clue. We call it a **weight**. A big weight means the clue counts a lot. A small weight means it hardly counts.\n\nTo spot an apple, a sweet taste gets a big weight. A sticker on the skin gets no weight at all.",
+      "jargonBuster": [
+        {
+          "term": "Weight",
+          "simpleExplanation": "A number that says how much a clue counts. A big weight means a big say."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Each clue has its own weight",
+        "content": "graph LR\n    Sweet[\"🍬 Sweet? (big weight)\"] -->|counts a lot| Add[\"➕ Add up the clues\"]\n    Round[\"⚪ Round? (some weight)\"] -->|counts a bit| Add\n    Sticker[\"🏷️ Sticker? (no weight)\"] -.->|counts zero| Add\n    Add --> Out{\"🍎 Apple or not?\"}",
+        "alt": "Three clues go into an adder. Sweet has a big weight and counts a lot, round has some weight and counts a bit, and a sticker has no weight and counts zero. The adder then decides: apple or not?"
+      },
+      "teen": {
+        "add": "The neuron multiplies each clue by its weight and then adds up the results. This total is called the **weighted sum**.",
+        "jargonBuster": [
+          {
+            "term": "Weighted sum",
+            "simpleExplanation": "Each clue times its weight, all added together."
+          }
         ]
       }
     },
     {
-      "id": "weights-and-bias",
-      "heading": "2. The Magic Knobs: Weights and Bias",
-      "chipQuote": "When learning to ride a bike, you don't read a manual—you wobble, adjust your balance, and try again until you nail it!",
+      "id": "bias",
+      "heading": "3. Easy or Picky?",
+      "bigIdea": "Some neurons switch on easily. Some need lots of proof.",
+      "chipQuote": "One of my friends says yes to every game. Another one needs a lot of asking!",
       "analogy": {
-        "metaphorName": "The Soundboard Mixer",
-        "description": "Picture a DJ mixing music with sliding faders. If the bass is too loud, they slide it down. If the vocals are too quiet, they slide them up. In AI, these sliders are called weights!"
+        "metaphorName": "The Picky Friend",
+        "description": "One friend says yes to every plan. Another friend says no until you give good reasons. A neuron can be easy or picky too."
       },
-      "bodyMarkdown": "How does an artificial neuron learn? Through two secrets:\n\n* **Weights**: How much attention the neuron pays to each clue. If spotting an apple, sweetness gets a BIG weight, but whether it has a sticker gets zero weight!\n* **Bias**: The neuron's stubbornness threshold. How strong must the evidence be before it yells 'YES!'?\n\nBy practicing over and over, the computer nudges each weight up or down until its guesses are spot-on.",
-      "diagram": {
-        "type": "mermaid",
-        "caption": "Inside a Perceptron: Inputs × Weights + Bias = Fired or Dormant",
-        "content": "graph LR\n    X1[\"Input 1: Sweetness (x1)\"] -->|Weight w1| Sum[\"➕ Adder Nucleus<br/>(Sum = x1·w1 + x2·w2 + b)\"]\n    X2[\"Input 2: Roundness (x2)\"] -->|Weight w2| Sum\n    Bias[\"🎛️ Bias (b)\"] --> Sum\n    Sum --> Gate{\"Threshold: Sum ≥ 0?\"}\n    Gate -->|YES| Fire[\"⚡ Output: FIRED! (Apple 🍎)\"]\n    Gate -->|NO| Sleep[\"💤 Output: DORMANT (Lemon 🍋)\"]",
-        "alt": "Two inputs, sweetness and roundness, are each multiplied by a weight, added to a bias, and compared with a threshold. If the sum is at least zero the neuron fires and says apple. Otherwise it stays dormant and says lemon."
-      },
+      "bodyMarkdown": "The **bias** sets how hard it is for the neuron to switch on. Change the bias, and the neuron gets easier or harder to switch on.\n\nWeights and bias work as a team. Together they help the neuron make a good choice.",
       "jargonBuster": [
         {
-          "term": "Weight",
-          "simpleExplanation": "A multiplier that controls how important an input is to the neuron's decision."
-        },
-        {
           "term": "Bias",
-          "simpleExplanation": "A threshold adjustment that makes the neuron easier or harder to activate."
+          "simpleExplanation": "A number that makes a neuron easier or harder to switch on."
         }
-      ]
+      ],
+      "teen": {
+        "add": "In math, the bias is one more number added to the weighted sum. If the total ends up at zero or more, the neuron fires."
+      }
+    },
+    {
+      "id": "how-it-learns",
+      "heading": "4. A Neuron in a Computer",
+      "bigIdea": "A computer neuron learns by fixing its mistakes.",
+      "chipQuote": "When you learn to ride a bike, you wobble, fix it and try again!",
+      "analogy": {
+        "metaphorName": "Learning to Ride a Bike",
+        "description": "You do not read a book to ride a bike. You wobble, you fix your balance, and you try again."
+      },
+      "bodyMarkdown": "People built a neuron out of math. It is called a **perceptron**. It looks at clues, adds them up and says yes or no.\n\nAt first it makes lots of mistakes. Each time it gets one wrong, it moves its weights a bit. After lots of practice, its guesses get good.",
+      "jargonBuster": [
+        {
+          "term": "Perceptron",
+          "simpleExplanation": "A neuron made of math inside a computer. It adds up clues and says yes or no."
+        }
+      ],
+      "more": {
+        "title": "Who built the first one?",
+        "bodyMarkdown": "The first perceptron was built in 1957 by a scientist named Frank Rosenblatt. It was a big machine that learned to tell simple shapes apart."
+      },
+      "teen": {
+        "add": "One perceptron can only learn simple rules. Put many of them in rows, and each row passes its answers to the next. These rows are called **layers**, and a stack of layers is a neural network.",
+        "jargonBuster": [
+          {
+            "term": "Layer",
+            "simpleExplanation": "A row of neurons that all get the same clues and pass their answers on to the next row."
+          }
+        ]
+      },
+      "checkIn": {
+        "question": "The perceptron got an answer wrong. What does it do next?",
+        "options": ["It moves its weights a bit", "It gives up", "It turns itself off"],
+        "correctIndex": 0,
+        "praise": "Right! Small fixes after each mistake are how it learns.",
+        "explanation": "After each mistake, the perceptron moves its weights a little, so its next guess is better."
+      }
     },
     {
       "id": "interactive-perceptron-demo",
-      "heading": "3. Train Your Own Neuron: The Fruit Classifier",
-      "chipQuote": "Time to become an AI Trainer! Grab the sliders below and tune your neuron until it accurately spots sweet apples and sour lemons!",
+      "heading": "5. Train Your Own Neuron: The Fruit Sorter",
+      "bigIdea": "Now you get to teach a neuron!",
+      "chipQuote": "Move the sliders until the neuron can tell apples from lemons.",
       "analogy": {
         "metaphorName": "The Fruit Stand Inspector",
-        "description": "An apple is sweet and round. A lemon is sour and oval. Adjust the dials so your artificial neuron fires green for apples and red for lemons!"
+        "description": "An apple is sweet and round. A lemon is sour and long. Help the neuron say apple for apples and lemon for lemons."
       },
-      "bodyMarkdown": "Test different fruits and tweak the synaptic weights below. Watch the total weighted sum change in real time!",
+      "bodyMarkdown": "Pick a fruit. Then move the sliders and watch the total change. When the neuron gets it right, you have trained it!",
       "interactiveWidget": {
         "type": "perceptron-sim",
-        "title": "⚡ Interactive Simulation: The Fruit Sorting Perceptron",
-        "goal": "Tune the sliders so the neuron says apple for apples and lemon for lemons.",
+        "title": "⚡ Try It: The Fruit Sorting Neuron",
+        "goal": "Move the sliders so the neuron says apple for apples and lemon for lemons.",
         "scaffold": "guided",
-        "predictionPrompt": "Before you move a slider: should sweetness matter more or less than roundness?",
+        "predictionPrompt": "Before you start: which clue should count more, sweet or round?",
         "hints": [
-          "Raise the weight of the clue that separates the fruits.",
-          "A lower bias makes the neuron more eager to fire."
+          "Give a bigger weight to the clue that tells the fruits apart.",
+          "Change the bias to make the neuron easier or harder to switch on."
         ],
-        "successMessage": "You trained a neuron! You nudged the weights until the guesses were right.",
+        "successMessage": "You trained a neuron! You moved the weights until it got the right answer.",
         "allowFreePlay": true
       }
     }
   ],
   "miniQuiz": [
     {
-      "question": "What does a 'Weight' do in an artificial neuron?",
+      "question": "What does a weight do in a neuron?",
       "options": [
-        "It weighs the physical computer on a scale",
-        "It decides how important a specific input clue is to the final answer",
-        "It slows down internet connection speeds"
+        "It weighs the computer on a scale",
+        "It says how much a clue counts",
+        "It makes the internet slow"
       ],
       "correctIndex": 1,
-      "praise": "Spot on, explorer! Weights tell the neuron which clues to pay attention to!",
-      "explanation": "Weights scale incoming signals: higher weights mean that input has a stronger influence on whether the neuron fires."
+      "praise": "Spot on! Weights tell the neuron which clues matter most.",
+      "explanation": "A big weight means a clue counts a lot. A small weight means it hardly counts."
     },
     {
-      "question": "What is the 'Bias' in a perceptron?",
+      "question": "What does the bias change?",
       "options": [
-        "A threshold adjustment that shifts the firing line",
-        "A bad mood inside the computer",
-        "A broken keyboard button"
+        "How hard it is for the neuron to switch on",
+        "The mood of the computer",
+        "The color of the screen"
       ],
       "correctIndex": 0,
-      "praise": "Brilliant! The bias sets the baseline hurdle before the neuron fires!",
-      "explanation": "Bias acts as a flexible threshold, allowing the model to shift its activation boundary independently of inputs."
+      "praise": "Great! The bias makes a neuron easy or picky.",
+      "explanation": "Change the bias, and the neuron needs fewer or more clues before it says yes."
     },
     {
-      "question": "Who created the very first artificial neuron (The Perceptron) in 1957?",
+      "question": "What does a neuron do with its clues?",
       "options": [
-        "Frank Rosenblatt",
-        "Albert Einstein",
-        "Isaac Newton"
+        "It adds them up and says yes or no",
+        "It throws them away",
+        "It turns them into music"
       ],
       "correctIndex": 0,
-      "praise": "Awesome history knowledge! Frank Rosenblatt designed the pioneering Perceptron at Cornell University!",
-      "explanation": "Frank Rosenblatt developed the Perceptron algorithm in 1957, establishing the foundation for modern deep learning."
+      "praise": "Yes! Add up the clues, then switch on or stay quiet.",
+      "explanation": "A neuron adds up its clues. If it has enough, it switches on."
+    },
+    {
+      "band": "12-14",
+      "question": "What do we call rows of neurons that pass their answers to the next row?",
+      "options": [
+        "Layers",
+        "Weights",
+        "Stickers"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly! Stack layers and you get a neural network.",
+      "explanation": "Neurons in a neural network sit in rows called layers. Each layer passes its answers to the next one."
     }
   ],
   "teachBack": {

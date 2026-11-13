@@ -31,6 +31,8 @@
     { "en": "Turing test", "target": "ट्यूरिंग टेस्ट", "note": "" },
     { "en": "fairness", "target": "निष्पक्षता", "note": "" },
     { "en": "responsible AI", "target": "ज़िम्मेदार एआई", "note": "" },
-    { "en": "quiz", "target": "प्रश्नोत्तरी", "note": "Reviewer to confirm: क्विज़ may be more familiar." }
+    { "en": "quiz", "target": "प्रश्नोत्तरी", "note": "Reviewer to confirm: क्विज़ may be more familiar." },
+    { "en": "weighted sum", "target": "भारित योग", "note": "As in the source course's Hindi lesson 3." },
+    { "en": "layer", "target": "परत", "note": "Of a neural network; plural परतें. Reviewer to confirm: the full lesson uses लेयर." }
   ]
 }
