@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.12.0 |
+| Version | 2.13.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -156,6 +156,9 @@ section:
 - `teen`, the 12+ layer: `add` (text added after the core) or `body` (a separate 12+ text for that section), and
   extra `jargonBuster` terms;
 - `checkIn`, one unscored tap-to-answer question.
+
+Amended 2.13.0: the picture may also be a `scene`, a card picture at `web/public/brand/scenes/<key>.svg` that is
+registered and approved like word pictures (NFR-LIC-05). `scene` and `scenePlays` are never translated.
 
 The lesson ends with a three-item `recap`, and may add one quiz question marked `"band": "12-14"`, placed after all
 other questions. Every approved language ships each banded lesson in the same release as English, with the same
@@ -337,6 +340,11 @@ highlighted, as it is for device voices. The position may be estimated from the 
 shall have a "Read section" button. It reads the heading and the text under it up to the next heading, leaving out
 code, images, tables and link addresses, in the language the lesson was served in, with the Standard voice. It follows
 mute (FR-UI-19) and only one section plays at a time (AC-AUD-02.4).
+
+**FR-UI-27.** Added 2.13.0 (SPEC-012 pictures). A section's `scene` picture shall show above its text as a still
+picture. When `scenePlays` is true it shall offer a Play button (at least 44x44 px) that plays its animation once,
+for 5 seconds or less, and can play it again. Under reduced motion no Play button is shown and the picture stays
+still. Scene pictures are decorative: the card text tells the same story.
 
 ### 4.5 Settings & AI Configuration — `FR-SET-*`
 
@@ -1055,6 +1063,9 @@ playback advances. Covered by `web/tests/kids-aids.spec.ts`.
 
 **AC-69 (FR-UI-26).** A Standard lesson shows one "Read section" button per heading; pressing one speaks that heading
 and its text without code, and pressing another stops the first. Covered by `web/tests/standard-listen.spec.ts`.
+
+**AC-70 (FR-UI-27).** A section with a scene shows it; a playing scene has a Play button that restarts it; with
+reduced motion there is no Play button. Covered by `web/tests/kids-aids.spec.ts`.
 
 ---
 
