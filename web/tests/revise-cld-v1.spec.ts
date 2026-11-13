@@ -21,7 +21,7 @@ test.describe('SPEC-006 revise-cld-v1', () => {
 
     const stepper = page.locator('[data-testid="stepper-diagram"]').first()
     await expect(stepper).toBeVisible()
-    await expect(stepper).toHaveAttribute('aria-label', /robot is shown one cat photo/i)
+    await expect(stepper).toHaveAttribute('aria-label', /computer is shown one dog photo/i)
     await expect(stepper.locator('[data-testid="stepper-step"]')).toHaveCount(1)
 
     await stepper.locator('[data-testid="stepper-next"]').focus()
@@ -118,7 +118,7 @@ test.describe('SPEC-006 revise-cld-v1', () => {
     })
     await page.reload()
     await expect(page.locator('[data-testid="recall-card"]')).toBeVisible()
-    await expect(page.locator('[data-testid="recall-card"]')).toContainText('Narrow AI')
+    await expect(page.locator('[data-testid="recall-card"]')).toContainText('How does most AI today learn?')
   })
 
   test('plain-english sections show "Where you\'ll see this" (FR-REV-14)', async ({ page }) => {

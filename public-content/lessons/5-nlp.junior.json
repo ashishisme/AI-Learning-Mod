@@ -1,200 +1,249 @@
 {
   "lessonId": "5-nlp",
   "mode": "junior",
-  "title": "Teaching Computers How to Talk 💬",
-  "readingTimeMinutes": 6,
+  "origin": "own",
+  "title": "Computers and Words 💬",
+  "readingTimeMinutes": 5,
   "mascot": {
     "name": "Chip",
     "avatar": "🤖",
-    "greeting": "Beep boop! Words are human magic. Today we teach computers how to read stories, talk like friends, and solve word riddles!"
+    "greeting": "Hi, it's Chip! How does a chat app write back to you? Let's find out how computers work with words!"
   },
+  "recap": [
+    "A computer cuts sentences into tokens and gives each a number.",
+    "Words that mean similar things sit close on a word map.",
+    "Chat apps write by guessing the next word, again and again."
+  ],
+  "bands": true,
   "sections": [
     {
       "id": "word-tokens",
-      "heading": "1. Slicing Words: The Secret Tokens",
-      "chipQuote": "Computers do not speak English or Spanish. They speak numbers! So we must chop every sentence into tiny word puzzle pieces called tokens.",
+      "heading": "1. Cutting Words into Pieces",
+      "bigIdea": "A computer cuts sentences into small pieces and gives each one a number.",
+      "chipQuote": "I can't read like you. I need words in small pieces!",
       "analogy": {
-        "metaphorName": "The Scrabble Tile Bag",
-        "description": "Imagine pulling letter tiles out of a game bag. You line them up to make words. When you type to an AI, it chops your sentence into little tiles called tokens. Then it gives each tile a secret number!"
+        "metaphorName": "Building Bricks",
+        "description": "To see how a brick model is made, you take it apart, one brick at a time."
       },
-      "bodyMarkdown": "Computers do not understand letters the way humans do. To read a story, an AI chops sentences into small pieces called **tokens**.\n\nA token can be a full word like `kitten` or a small piece like `ing` in `jumping`.\n\nEvery single token gets a unique ID number in a huge computer dictionary:\n* `cat` might be `#452`\n* `sleeps` might be `#8910`\n* `sun` might be `#314`\n\nOnce sentences turn into ID numbers, computers can do fast math with them!",
+      "bodyMarkdown": "A computer can't read the way you do. First it cuts your sentence into small pieces called **tokens**. A token can be a whole word, like \"dog\". It can be part of a word, like \"ing\".\n\nEach token gets its own number. Now the computer can work with the sentence.",
       "jargonBuster": [
         {
-          "term": "Token",
-          "simpleExplanation": "A single word or piece of a word that a computer turns into a number."
-        },
-        {
-          "term": "NLP",
-          "simpleExplanation": "Natural Language Processing: Teaching computers to read, speak, and understand human words."
+          "term": "Tokens",
+          "simpleExplanation": "The small pieces a computer cuts words into. Each one gets a number."
         }
       ],
       "diagram": {
         "type": "stepper",
-        "caption": "Slicing a sentence into tiles",
-        "alt": "Four steps: a sentence is split into small pieces called tokens, each token gets a number, and the computer reads the list of numbers.",
+        "caption": "From a sentence to numbers",
+        "alt": "Three steps: a sentence, the sentence cut into pieces, and each piece given a number.",
         "content": "",
         "steps": [
-          "Start with a sentence: \"I love pizza.\" 🍕",
-          "Slice it into small pieces called tokens.",
-          "Give each token its own number, like a Scrabble tile.",
-          "The computer reads the list of numbers. 🔢"
+          "The sentence: \"I am jumping\" ✏️",
+          "Cut into pieces: I | am | jump | ing ✂️",
+          "Each piece gets a number: 12 | 48 | 905 | 7 🔢"
         ]
+      },
+      "teen": {
+        "add": "Cutting words into parts helps with new words. Even if the computer never saw \"unjumpable\", it knows \"un\", \"jump\" and \"able\"."
+      },
+      "checkIn": {
+        "question": "What does a computer do first with your sentence?",
+        "options": [
+          "✂️ Cuts it into small pieces",
+          "🎤 Sings it"
+        ],
+        "correctIndex": 0,
+        "praise": "Yes! It cuts it into tokens.",
+        "explanation": "A computer first cuts a sentence into tokens and gives each one a number."
       }
     },
     {
       "id": "word-embeddings",
-      "heading": "2. The Word Constellation: Embeddings",
-      "chipQuote": "What if words lived in a giant star map? Words that mean similar things float close together, like best friends sitting at the same lunch table!",
+      "heading": "2. A Map of Words",
+      "bigIdea": "Words that mean similar things sit close together on a map.",
+      "chipQuote": "Puppy and dog are best friends on my map!",
       "analogy": {
-        "metaphorName": "The Star Map of Words",
-        "description": "Imagine looking up at the night sky. In one constellation, you see 'Dog', 'Puppy', and 'Kitten' shining close together. Far away in another constellation, you see 'Toaster' and 'Microwave'. That map is called an embedding space!"
+        "metaphorName": "The Lunch Tables",
+        "description": "At lunch, friends sit together. The football fans share one table. The chess club shares another."
       },
-      "bodyMarkdown": "If we only gave words random numbers, the computer would never know that `puppy` and `dog` are related!\n\nSo scientists created **Word Embeddings**. They give every word coordinates in space—just like a GPS map:\n* `Dog` and `Puppy` get coordinates right next to each other.\n* `Apple` and `Banana` sit together in the fruit neighborhood.\n\nEven cooler, you can do real math with words: `King - Man + Woman = Queen`! Try our live Word Math Lab below!",
+      "bodyMarkdown": "A token's number alone says nothing about meaning. So the computer puts each word on a big **word map**. Words used in the same way end up close together.\n\n\"Puppy\" sits near \"dog\". \"Apple\" sits near \"banana\". But \"dog\" and \"banana\" are far apart.",
+      "jargonBuster": [
+        {
+          "term": "Word map",
+          "simpleExplanation": "A map where words with similar meanings sit close together."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Close words sit together",
+        "content": "graph LR\n    subgraph Pets [\"🐾 Pets corner\"]\n        Dog[\"dog\"] --- Puppy[\"puppy\"]\n    end\n    subgraph Fruit [\"🍎 Fruit corner\"]\n        Apple[\"apple\"] --- Banana[\"banana\"]\n    end",
+        "alt": "Two corners of a word map. Dog and puppy sit together in the pets corner. Apple and banana sit together in the fruit corner, far from the pets."
+      },
+      "teen": {
+        "add": "Each word's spot is a list of numbers called an **embedding**. You can even do maths with them. King minus man plus woman lands near queen.",
+        "jargonBuster": [
+          {
+            "term": "Embedding",
+            "simpleExplanation": "A list of numbers that gives a word its spot on the word map."
+          }
+        ]
+      },
       "interactiveWidget": {
         "type": "vector-math-sim",
-        "title": "Interactive Word Vector Space & Math Lab",
-        "instruction": "Click the formula buttons below to test how vector coordinates let computers solve word analogies.",
+        "title": "🗺️ Try It: The Word Map",
+        "instruction": "Tap an example. See where the words land, and which ones are close.",
         "goal": "Find which words sit close together on the map of meaning.",
         "scaffold": "guided",
-        "predictionPrompt": "Before you tap an example: which two words do you think are closest in meaning?",
+        "predictionPrompt": "Before you tap: which two words do you think sit closest?",
         "hints": [
           "Words used in similar ways end up near each other.",
           "Try the king and queen example."
         ],
-        "successMessage": "You read the map of meaning! Computers place similar words close together.",
+        "successMessage": "You read the word map! Computers place similar words close together.",
         "allowFreePlay": true
-      },
-      "jargonBuster": [
-        {
-          "term": "Embedding",
-          "simpleExplanation": "A list of coordinates that places a word on a map based on its meaning."
-        },
-        {
-          "term": "Vector",
-          "simpleExplanation": "An arrow or coordinate pointing to a word's exact spot in the map."
-        }
-      ]
+      }
     },
     {
       "id": "predict-next-word",
-      "heading": "3. The Next Word Game: How Chatbots Talk",
-      "chipQuote": "Chatbots do not memorize entire books. They play a super-fast guessing game: What is the most likely next word?",
+      "heading": "3. The Next-Word Game",
+      "bigIdea": "Chat apps write by guessing the next word, again and again.",
+      "chipQuote": "Happy birth... You already know the next word, don't you?",
       "analogy": {
-        "metaphorName": "The Story Chain Game",
-        "description": "Have you played the game where you and a friend make a story one word at a time? Modern AI does the exact same thing billions of times every second!"
+        "metaphorName": "Finish the Sentence",
+        "description": "Your friend says \"Happy birth...\" and you shout \"day!\" You guessed from the words before."
       },
-      "bodyMarkdown": "How do tools like ChatGPT write stories and help with homework?\n\nThey use a powerful brain called a **Transformer**. It reads the words you typed. It looks back at the context. Then it works out how likely each next word is:\n* If the sentence is `The fluffy kitten drinks...`, what comes next?\n* The AI checks its training: `milk` is 85% likely, `water` is 10%, and `pizza` is 0.01%!\n\nBy picking the best next words one by one, the AI forms smart, helpful sentences!",
-      "jargonBuster": [
-        {
-          "term": "Transformer",
-          "simpleExplanation": "A modern AI model that pays attention to all words in a sentence at the same time."
-        },
-        {
-          "term": "Language Model",
-          "simpleExplanation": "An AI system trained on vast text to predict words and generate sentences."
-        }
-      ],
+      "bodyMarkdown": "Chat apps learned from a huge amount of writing. Give one the words \"The cat sat on the\". It works out which next word is most likely, like \"mat\" or \"sofa\".\n\nIt adds that word and guesses again. Word by word, it builds a whole answer. It is good at guessing, but it can still be wrong.",
       "diagram": {
         "type": "stepper",
-        "caption": "The Next Word Game",
-        "alt": "Four steps: the computer sees an unfinished sentence, guesses how likely each next word is, picks a likely word, and repeats to build a whole sentence.",
+        "caption": "How a chat app writes",
+        "alt": "Four steps: read the words so far, guess the most likely next word, add it, and repeat until the answer is done.",
         "content": "",
         "steps": [
-          "It sees: \"The cat sat on the ...\"",
-          "It scores guesses: mat 60%, sofa 25%, moon 1%.",
-          "It picks a likely word: \"mat\". 🧶",
-          "Then it repeats, one word at a time, to build a story. 📖"
+          "Read the words so far: \"The cat sat on the\" 📖",
+          "Guess the most likely next word: \"mat\" 🤔",
+          "Add it: \"The cat sat on the mat\" ➕",
+          "Guess again, until the answer is done. 🔁"
         ]
+      },
+      "teen": {
+        "add": "Most chat apps today use a design called a **transformer**. It looks back at all the words so far and picks out which ones matter most for the next guess.",
+        "jargonBuster": [
+          {
+            "term": "Transformer",
+            "simpleExplanation": "A design for language AI that looks at all the words so far to guess the next one."
+          }
+        ]
+      },
+      "checkIn": {
+        "question": "How does a chat app build its answer?",
+        "options": [
+          "🔁 One guessed word at a time",
+          "📚 By copying a whole book"
+        ],
+        "correctIndex": 0,
+        "praise": "Right! Guess, add, guess again.",
+        "explanation": "A chat app guesses the next word, adds it, and guesses again."
       }
     },
     {
       "id": "real-world-nlp",
-      "heading": "4. Language AI in Everyday Life!",
-      "chipQuote": "From translating signs when you travel to chatting with game characters, language AI connects the world!",
+      "heading": "4. Word Helpers Everywhere",
+      "bigIdea": "Language AI helps you every day.",
+      "chipQuote": "Words are everywhere, so word helpers are too!",
       "analogy": {
-        "metaphorName": "The Universal Translator",
-        "description": "Like in science fiction, you can now speak into a phone and hear your voice in Japanese, French, or Hindi!"
+        "metaphorName": "The Pocket Translator",
+        "description": "On holiday, you point your phone at a menu. It tells you what the food is, in your own language."
       },
-      "bodyMarkdown": "Language AI powers tools all around us:\n\n* 🌐 **Instant Translation:** Speak into your phone and read signs in over 100 languages.\n* 🛡️ **Spam Detectors:** Protects your inbox by reading messages and catching tricky junk mail.\n* 🎧 **Voice Helpers:** Understands questions you ask smart speakers and reads out answers.\n* 📝 **Writing Helpers:** Fixes spelling mistakes and suggests clearer words for your school essays.\n\nLanguage AI helps everyone share ideas and talk across different languages!",
-      "jargonBuster": [
-        {
-          "term": "Machine Translation",
-          "simpleExplanation": "Using computers to translate text or speech from one language into another."
-        }
-      ],
+      "bodyMarkdown": "Your phone can read a sign in another language and say it in yours. Your email hides junk messages. A voice helper sets a timer when you ask it to.\n\nAll of these cut words into tokens and use a word map. Chat apps can sound sure even when they are wrong. So check facts that matter.",
       "diagram": {
-        "type": "stepper",
-        "caption": "Language AI in everyday life",
-        "alt": "Four examples of language AI: translating between languages, spell and word suggestions while typing, voice assistants that answer questions, and tools that summarize long text.",
-        "content": "",
-        "steps": [
-          "Translate a sign into your language. 🌍",
-          "Your keyboard suggests the next word. ⌨️",
-          "A voice assistant answers a question. 🗣️",
-          "A tool shrinks a long article into a few lines. 📝"
-        ]
+        "type": "mermaid",
+        "caption": "Where language AI helps",
+        "content": "graph TD\n    W[\"💬 Language AI\"] --> T[\"🌐 Translating signs\"]\n    W --> S[\"🛡️ Hiding junk email\"]\n    W --> V[\"🎙️ Voice helpers\"]\n    W --> C[\"🤖 Chat apps\"]",
+        "alt": "Language AI helps with translating signs, hiding junk email, voice helpers and chat apps."
+      },
+      "teen": {
+        "add": "A chat app can make up facts that sound real. This is because it predicts likely words, not true ones. Always check important facts with a trusted source."
+      },
+      "checkIn": {
+        "question": "A chat app tells you a fact for your homework. What should you do?",
+        "options": [
+          "✅ Check it somewhere you trust",
+          "🙈 Copy it without checking"
+        ],
+        "correctIndex": 0,
+        "praise": "Yes! Chat apps can be wrong.",
+        "explanation": "Chat apps can sound sure and still be wrong, so check facts that matter."
       }
     }
   ],
   "miniQuiz": [
     {
-      "question": "What is a 'token' when a computer reads human language?",
+      "question": "What is a token?",
       "options": [
-        "A gold coin used to buy arcade games",
-        "A chopped-up piece of a word or sentence turned into a number",
-        "A plastic toy inside a board game",
-        "A password for your email account"
-      ],
-      "correctIndex": 1,
-      "praise": "Awesome job, explorer! You understand tokenization!",
-      "explanation": "A token is a word or piece of a word that the computer converts into a number ID to do math!"
-    },
-    {
-      "question": "In word embedding vector space, where do similar words like 'Dog' and 'Puppy' sit?",
-      "options": [
-        "On opposite ends of the universe",
-        "Close together on the map because they share meaning",
-        "In completely random spots every time you run the code",
-        "Inside the computer's recycle bin"
-      ],
-      "correctIndex": 1,
-      "praise": "Spot on! That is the secret of word embeddings!",
-      "explanation": "Word embeddings map words with similar meanings close together in coordinate space!"
-    },
-    {
-      "question": "What classic vector math riddle proves that word embeddings capture relationships?",
-      "options": [
-        "King - Man + Woman = Queen",
-        "Tree + Cloud = Airplane",
-        "Shoe - Foot = Pizza",
-        "Book + Bed = Banana"
+        "A small piece of a sentence with its own number",
+        "A coin for games",
+        "A kind of robot"
       ],
       "correctIndex": 0,
-      "praise": "Superstar answer! The classic King - Man + Woman = Queen vector formula!",
-      "explanation": "Subtracting 'Man' from 'King' isolates the royal role, and adding 'Woman' points straight to 'Queen'!"
+      "praise": "Great! Sentences are cut into tokens.",
+      "explanation": "A token is a small piece a computer cuts words into. Each one gets a number."
+    },
+    {
+      "question": "Where does \"puppy\" sit on the word map?",
+      "options": [
+        "Near \"dog\"",
+        "Near \"banana\"",
+        "Nowhere"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes! Similar words sit close together.",
+      "explanation": "Words with similar meanings sit close together on the word map."
+    },
+    {
+      "question": "How does a chat app write its answer?",
+      "options": [
+        "It guesses the next word, again and again",
+        "It asks a person every time",
+        "It copies a whole book"
+      ],
+      "correctIndex": 0,
+      "praise": "Spot on! One guessed word at a time.",
+      "explanation": "A chat app guesses the next word, adds it, and guesses again."
+    },
+    {
+      "band": "12-14",
+      "question": "What is the list of numbers that gives a word its spot on the map?",
+      "options": [
+        "An embedding",
+        "A pixel",
+        "A rule"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly! That list is an embedding.",
+      "explanation": "An embedding is the list of numbers that places a word on the word map."
     }
   ],
   "teachBack": {
-    "prompt": "Chip asks: How does a chatbot write sentences? Pick the best explanation.",
+    "prompt": "Chip asks: How does a chat app write? Pick the best answer for a friend.",
     "options": [
-      "It guesses the most likely next word, again and again.",
-      "It looks up the whole answer in a book.",
-      "It thinks about the answer like a person."
+      "It guesses the most likely next word, over and over.",
+      "It understands everything like a person does.",
+      "It looks up every answer in one big book."
     ],
     "correctIndex": 0,
-    "explanation": "Yes! It builds sentences by predicting one word at a time."
+    "explanation": "Right! It builds answers by guessing the next word, again and again."
   },
   "recall": [
     {
       "fromLesson": "4-computervision",
-      "question": "What does a computer actually read when it looks at a picture?",
+      "question": "What is a picture to a computer?",
       "options": [
-        "Numbers for each pixel",
-        "The colors the way eyes see them",
-        "A written description"
+        "A grid of numbers",
+        "A painting",
+        "A sound"
       ],
       "correctIndex": 0,
-      "explanation": "Pictures become grids of numbers."
+      "explanation": "A computer turns each pixel into a number."
     }
   ]
 }

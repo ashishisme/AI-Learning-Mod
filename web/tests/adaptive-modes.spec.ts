@@ -43,19 +43,19 @@ test.describe('Adaptive Audience Modes (Kids 8-14 & Plain English)', () => {
 
     // Verify Chip Mascot Banner
     await expect(page.getByText('Chip the Robot', { exact: true })).toBeVisible()
-    await expect(page.getByText("Let's crack the code together!")).toBeVisible()
+    await expect(page.getByText("Let's find out together!")).toBeVisible()
 
     // Verify Adapted Title
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Teaching Robots How to Think 🤖')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('What Is AI? 🤖')
 
     // Verify Physical Metaphor Card
-    await expect(page.getByText('Everyday Metaphor: The Martian Puppy')).toBeVisible()
+    await expect(page.getByText('Everyday Metaphor: Teaching Your Little Cousin')).toBeVisible()
 
     // SPEC-006: widgets start with a prediction step; take the free-play path
     await page.locator('[data-testid="widget-skip-predict"]').click()
 
     // Verify Interactive Turing Widget Mini-Game
-    const widget = page.getByText('Mini-Game: Can You Spot the Bot?')
+    const widget = page.getByText('Game: Spot the Computer')
     await expect(widget).toBeVisible()
 
     // Play the Turing Game: Vote on Terminal B
@@ -65,7 +65,7 @@ test.describe('Adaptive Audience Modes (Kids 8-14 & Plain English)', () => {
 
     // Verify reveal card
     await expect(page.getByText('Spot On!')).toBeVisible()
-    await expect(page.getByText('Terminal B sounds like a textbook encyclopedia!')).toBeVisible()
+    await expect(page.getByText('Terminal B sounds like a fact book.')).toBeVisible()
 
     // Verify Play Again reset button
     const playAgainBtn = page.getByRole('button', { name: 'Play Again' })

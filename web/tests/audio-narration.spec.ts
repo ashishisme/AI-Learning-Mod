@@ -140,12 +140,12 @@ test.describe('Audio Narration & Multi-Modal Sound Effects (SPEC-004)', () => {
     await page.locator('button[role="tab"]', { hasText: 'Kids (8–14)' }).click()
 
     // Answer the first quiz question
-    const correctOption = page.locator('button', { hasText: 'An app that unlocks your phone when it sees your face' })
+    const correctOption = page.locator('button', { hasText: 'An app that opens your phone when it sees your face' })
     await expect(correctOption).toBeVisible()
     await correctOption.click()
 
     // Affirmation message appears
-    await expect(page.locator('text=Awesome job, explorer!')).toBeVisible()
+    await expect(page.locator('text=Spot on! Face unlock does one job well.')).toBeVisible()
   })
 
   test('AC-AUD-04: Audio Studio Voice Persona selector allows switching narrators', async ({ page }) => {

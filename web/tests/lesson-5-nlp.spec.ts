@@ -15,11 +15,11 @@ test.describe('Lesson 5: Natural Language Processing & Embeddings (SPEC-005)', (
     await juniorTab.click()
 
     // Title & Chip banner
-    await expect(page.locator('h1', { hasText: 'Teaching Computers How to Talk' })).toBeVisible()
+    await expect(page.locator('h1', { hasText: 'Computers and Words' })).toBeVisible()
     await expect(page.getByText('Chip the Robot', { exact: true })).toBeVisible()
 
     // Section 1 heading
-    await expect(page.locator('text=1. Slicing Words: The Secret Tokens')).toBeVisible()
+    await expect(page.locator('text=1. Cutting Words into Pieces')).toBeVisible()
   })
 
   test('AC-NLP-02: Interactive Vector Math widget solves analogies with semantic distance', async ({ page }) => {

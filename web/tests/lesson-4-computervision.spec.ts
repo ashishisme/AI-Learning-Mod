@@ -15,11 +15,11 @@ test.describe('Lesson 4: Computer Vision & Convolutions (SPEC-005)', () => {
     await juniorTab.click()
 
     // Title & Chip banner
-    await expect(page.locator('h1', { hasText: 'Robot Eyes: How Computers Learn to See' })).toBeVisible()
+    await expect(page.locator('h1', { hasText: 'Computer Eyes' })).toBeVisible()
     await expect(page.getByText('Chip the Robot', { exact: true })).toBeVisible()
 
     // Section 1 heading
-    await expect(page.locator('text=1. Tiny Squares: The Pixel Secret')).toBeVisible()
+    await expect(page.locator('text=1. Pictures Made of Tiny Squares')).toBeVisible()
   })
 
   test('AC-CV-02: Interactive Convolution widget dynamically extracts edge features', async ({ page }) => {

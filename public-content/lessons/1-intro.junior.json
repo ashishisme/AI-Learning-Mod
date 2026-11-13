@@ -1,140 +1,278 @@
 {
   "lessonId": "1-intro",
   "mode": "junior",
-  "title": "Teaching Robots How to Think 🤖",
-  "readingTimeMinutes": 6,
+  "origin": "own",
+  "title": "What Is AI? 🤖",
+  "readingTimeMinutes": 5,
   "mascot": {
     "name": "Chip",
     "avatar": "🤖",
-    "greeting": "Hey there, Future Explorer! I'm Chip. Ever wonder how computers can spot your dog in a photo or beat grown-ups at chess? Let's crack the code together!"
+    "greeting": "Hi, I'm Chip! Your phone knows your face. A game knows your next move. How? Let's find out together!"
   },
+  "recap": [
+    "AI learns from lots of examples.",
+    "Today's AI is good at one job, not every job.",
+    "We can build AI with rules or by letting it learn."
+  ],
+  "bands": true,
   "sections": [
     {
       "id": "what-is-ai",
-      "heading": "1. What Exactly is Artificial Intelligence?",
-      "chipQuote": "Computers used to be like super-fast calculators that only did exactly what you told them. AI gives them eyes, ears, and the ability to learn from practice!",
+      "heading": "1. A Computer That Learns",
+      "bigIdea": "AI is a computer that learns from examples.",
+      "chipQuote": "Most computers only do what they are told. I can learn!",
       "analogy": {
-        "metaphorName": "The Martian Puppy",
-        "description": "Imagine a puppy arrives from Mars. It has never seen a cat before! If you just hand it a giant book of math, it won't understand. But if you show it 100 friendly cats and say 'Cat!', the puppy starts recognizing cats everywhere. That's how AI learns!"
+        "metaphorName": "Teaching Your Little Cousin",
+        "description": "Your little cousin points at a dog and says \"cat\". You show her lots of dogs. Soon she gets it right every time."
       },
-      "bodyMarkdown": "Regular computer programs follow strict recipes called **algorithms**. If you type `5 + 5`, it gives you `10`. Simple, right?\n\n**Artificial Intelligence (AI)** is different. Instead of following one rigid recipe, AI looks at thousands of examples. It finds clues on its own. It gets smarter the more it practices, just like you playing a video game!",
+      "bodyMarkdown": "A normal computer follows steps, one by one. A step list like this is called an **algorithm**. Type 2 + 2, and it always says 4.\n\n**AI** works in a new way. We show it lots of examples. It looks for what they have in common. Then it can make a good guess about something it has never seen.",
       "jargonBuster": [
         {
-          "term": "Artificial",
-          "simpleExplanation": "Made by humans, not found in nature."
+          "term": "Algorithm",
+          "simpleExplanation": "A list of steps a computer follows, in order."
         },
         {
-          "term": "Algorithm",
-          "simpleExplanation": "A step-by-step recipe that tells a computer what to do."
+          "term": "AI",
+          "simpleExplanation": "Short for artificial intelligence. A computer that learns from examples."
         }
       ],
       "diagram": {
         "type": "stepper",
-        "caption": "How Chip learns what a cat is",
-        "alt": "Four steps: a robot is shown one cat photo, then many more, notices that cats share ears, whiskers and a tail, and then correctly names a brand new cat.",
+        "caption": "How AI learns what a dog is",
+        "alt": "Four steps: the computer is shown one dog photo, then many more dogs, finds what they share, and then names a dog it has never seen.",
         "content": "",
         "steps": [
-          "Chip sees a photo of a cat 🐱 and is told: \"This is a cat.\"",
-          "Chip sees hundreds more cats. Big ones, small ones, fluffy ones.",
-          "Chip notices what they share: pointy ears, whiskers and a tail.",
-          "Now Chip can say \"Cat!\" when it sees a brand new photo. ✅"
+          "We show the computer a photo and say: \"This is a dog.\" 🐶",
+          "We show it lots more dogs. Big, small, spotty, fluffy.",
+          "It finds what they share: four legs, a wet nose, a waggy tail.",
+          "Now it sees a new photo and says: \"Dog!\" ✅"
         ]
+      },
+      "more": {
+        "title": "Why is it called \"artificial\"?",
+        "bodyMarkdown": "\"Artificial\" means made by people. \"Intelligence\" means being able to learn and solve problems. So AI is learning that people built into a machine."
+      },
+      "teen": {
+        "add": "Learning from examples has its own name: **machine learning**. The examples are called data. More good data usually means better guesses.",
+        "jargonBuster": [
+          {
+            "term": "Machine learning",
+            "simpleExplanation": "A way to build AI where the computer finds patterns in data by itself."
+          }
+        ]
+      },
+      "checkIn": {
+        "question": "How does AI learn what a dog looks like?",
+        "options": [
+          "📸 By looking at lots of dog photos",
+          "📏 By measuring one dog with a ruler"
+        ],
+        "correctIndex": 0,
+        "praise": "Yes! Lots of examples help AI learn.",
+        "explanation": "AI looks at many examples and finds what they have in common."
       }
     },
     {
-      "id": "weak-vs-strong-ai",
-      "heading": "2. Superhero AI vs Real-World AI",
-      "chipQuote": "Movies show shiny robots that can do everything from cooking pancakes to saving the galaxy. But real AI today is actually a master of just ONE single chore!",
+      "id": "one-job-ai",
+      "heading": "2. Good at One Job",
+      "bigIdea": "The AI we have today is great at one job.",
+      "chipQuote": "In films, robots can do everything. Real AI is much more picky!",
       "analogy": {
-        "metaphorName": "The Chess Wizard Who Can't Tie His Shoes",
-        "description": "Imagine a genius who is the world champion at chess. But this genius cannot ride a bike or tie shoelaces. That is what today's AI is like!"
+        "metaphorName": "The Toaster",
+        "description": "A toaster makes great toast. Ask it to wash your socks, and nothing happens. It only knows one job."
       },
-      "bodyMarkdown": "Scientists divide AI into two big categories:\n\n* **Narrow AI (Weak AI)**: Super-focused tools built for a single job. Siri understands your voice, YouTube suggests your favorite videos, and photo filters detect smiles. But Siri can't drive a car!\n* **General AI (AGI or Strong AI)**: A computer that could think, feel, and learn *anything* a human can do. This only exists in sci-fi movies like *WALL-E* or *Star Wars*—no one has built it yet!",
+      "bodyMarkdown": "The AI in your phone can open it when it sees your face. Another AI picks songs you might like. But the face AI can't pick songs. Each one does just one job.\n\nThis is called **narrow AI**. A robot that can learn any job like you can does not exist yet. You only see it in films.",
+      "jargonBuster": [
+        {
+          "term": "Narrow AI",
+          "simpleExplanation": "AI that is good at one job and nothing else. All the AI we have today is narrow."
+        }
+      ],
       "diagram": {
         "type": "mermaid",
-        "caption": "Narrow AI (Real Today) vs General AI (Sci-Fi Movies)",
-        "content": "graph TD\n    AI[\"Types of AI\"]\n    AI --> Narrow[\"Narrow AI (Real Today) 🛠️\"]\n    AI --> General[\"General AI (Sci-Fi) 🚀\"]\n    Narrow --> Ex1[\"🎮 Chess Champions\"]\n    Narrow --> Ex2[\"📱 Face Unlock\"]\n    Narrow --> Ex3[\"🎵 Music Recommendations\"]\n    General --> Movie[\"🤖 Human-like thinking across all subjects (Not yet invented!)\"]",
-        "alt": "A tree. AI splits into Narrow AI, which is real today with chess, face unlock and music picks, and General AI, which is only in movies and does not exist yet."
+        "caption": "Real AI today vs film robots",
+        "content": "graph TD\n    AI[\"Kinds of AI\"]\n    AI --> Narrow[\"One-job AI: real today 🛠️\"]\n    AI --> General[\"Do-anything AI: only in films 🎬\"]\n    Narrow --> J1[\"📱 Opens your phone with your face\"]\n    Narrow --> J2[\"🎵 Picks songs for you\"]\n    Narrow --> J3[\"🗺️ Finds the fastest way home\"]\n    General --> F1[\"🤖 Learns any job, like a person (not built yet)\"]",
+        "alt": "A tree. Kinds of AI split into one-job AI, which is real today and opens phones, picks songs and finds the way home, and do-anything AI, which is only in films and has not been built."
+      },
+      "more": {
+        "title": "The do-anything kind",
+        "bodyMarkdown": "Scientists call the do-anything kind \"general AI\". Some think it will be built one day. Others think it never will. Nobody knows yet."
+      },
+      "teen": {
+        "add": "Scientists call the do-anything kind **general AI**. Some chatbots seem to do many jobs. But they still can't learn to ride a bike or cook dinner.",
+        "jargonBuster": [
+          {
+            "term": "General AI",
+            "simpleExplanation": "AI that could learn any job a person can. Nobody has built it yet."
+          }
+        ]
+      },
+      "checkIn": {
+        "question": "Which one is real AI today?",
+        "options": [
+          "🤖 A robot that can do every job",
+          "🎵 An app that picks songs for you"
+        ],
+        "correctIndex": 1,
+        "praise": "Right! A song picker does one job well.",
+        "explanation": "Today's AI is good at one job, like picking songs."
       }
     },
     {
       "id": "turing-test",
-      "heading": "3. The Curtain Guessing Game (The Turing Test)",
-      "chipQuote": "In 1950, a smart man named Alan Turing asked: 'Can a machine fool a person into thinking it is a person too?'",
+      "heading": "3. Person or Computer?",
+      "bigIdea": "Can you tell a computer from a person just by chatting?",
+      "chipQuote": "Let's play a game. Can you spot the computer?",
       "analogy": {
-        "metaphorName": "Texting Behind a Velvet Curtain",
-        "description": "Imagine you are in a quiet room with a keyboard. Behind a thick curtain are two pen pals: one is a real human, and the other is a computer. You send messages to both. If you can't tell which one is the machine, the computer passes the test!"
+        "metaphorName": "The Mystery Pen Pal",
+        "description": "You swap notes with two pen pals you can't see. One is a person. One is a computer. Your job is to guess which is which."
       },
-      "bodyMarkdown": "This game is called **The Turing Test**. Today, chatbots can sound very human. But are they really *thinking*? Or are they just good at guessing the next word?",
+      "bodyMarkdown": "A long time ago, a scientist asked a big question. If you only chat with a computer, can you tell it is not a person? This game is called the **Turing test**.\n\nSome chat apps today sound a lot like people. But sounding like a person is not the same as thinking like one.",
+      "jargonBuster": [
+        {
+          "term": "Turing test",
+          "simpleExplanation": "A game where you chat and try to tell a computer from a person."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "How the guessing game works",
+        "alt": "Four steps: you send the same question to two hidden chat partners, both answer, you read the answers, and you guess which one is the computer.",
+        "content": "",
+        "steps": [
+          "You send the same question to two hidden pen pals. ✉️",
+          "Both send back an answer.",
+          "You read both answers. Which one sounds like a person?",
+          "You guess which one is the computer. 🕵️"
+        ]
+      },
+      "more": {
+        "title": "Who was Turing?",
+        "bodyMarkdown": "Alan Turing was a scientist in England. He came up with this game in 1950, long before phones or chat apps."
+      },
+      "teen": {
+        "add": "Many chat apps work by guessing the next word, over and over. They can pass a short chat. But passing the test does not prove that a machine understands what it says."
+      },
       "interactiveWidget": {
         "type": "turing-guess-game",
-        "title": "🎮 Mini-Game: Can You Spot the Bot?",
-        "instruction": "Read the conversation below and pick which participant is the AI!",
+        "title": "🎮 Game: Spot the Computer",
+        "instruction": "Read both answers. Pick the one you think the computer wrote.",
         "scenario": {
-          "userPrompt": "What is the best thing about rainy days?",
-          "terminalA": "I love the smell of damp grass and curling up with hot cocoa while listening to raindrops on the window.",
-          "terminalB": "Precipitation provides critical replenishment to municipal reservoirs and enhances soil saturation for agricultural yields.",
+          "userPrompt": "What did you do last weekend?",
+          "terminalA": "Ha, not much! I went to my friend's birthday and ate way too much cake. My tummy hurt after.",
+          "terminalB": "Weekend activities commonly include leisure, social gatherings and rest, which support overall well-being.",
           "correctAnswer": "Terminal B",
-          "explanation": "Terminal B sounds like a textbook encyclopedia! Real humans usually talk about feelings, warmth, and cozy snacks."
+          "explanation": "Terminal B sounds like a fact book. It never says what it did. People tell little stories about their own day."
         },
-        "goal": "Spot which terminal is the AI. Then explain how you knew.",
+        "goal": "Spot the computer, then say how you knew.",
         "scaffold": "guided",
-        "predictionPrompt": "Before you choose: which terminal do you think is the robot, and why?",
+        "predictionPrompt": "Before you pick: what would a real person say about their weekend?",
         "hints": [
-          "Humans often ramble or make small mistakes.",
-          "A bot can sound too neat, like a textbook."
+          "People talk about things that happened to them.",
+          "A computer can sound too neat, like a fact book."
         ],
-        "successMessage": "Nice detective work! Even experts find this hard, and that is exactly what Alan Turing wondered about.",
+        "successMessage": "Great detective work! Telling people from computers is harder than it looks.",
         "allowFreePlay": true
       }
     },
     {
-      "id": "top-down-vs-bottom-up",
-      "heading": "4. How Do We Teach Machines? (Two Secret Paths)",
-      "chipQuote": "There are two famous ways scientists teach AI: writing an impossible rulebook, or letting the computer learn from clues!",
+      "id": "two-ways",
+      "heading": "4. Two Ways to Build AI",
+      "bigIdea": "You can give a computer rules, or let it learn from examples.",
+      "chipQuote": "How would you teach me to spot a dog?",
       "analogy": {
-        "metaphorName": "The 10,000-Page Cat Rulebook vs. The Photo Album",
-        "description": "Path 1: You write rules for a cat: 'Pointy ears, whiskers, 4 legs'. But what if the cat is sleeping in a box? Or has one ear tucked? Your rules break! Path 2: Show the computer 1,000 photos of cats in goofy poses. Let it figure out what makes a cat a cat!"
+        "metaphorName": "The Rule Book and the Photo Album",
+        "description": "Way 1 is a rule book. It says: \"A dog has four legs and a tail.\" Way 2 is a photo album full of dogs."
       },
-      "bodyMarkdown": "In computer science, these two methods are known as:\n\n1. **Top-Down (Symbolic AI)**: Humans write every single rule manually. Great for math, terrible for recognizing messy real-world objects.\n2. **Bottom-Up (Machine Learning)**: Humans give data, and the machine figures out the patterns on its own!",
+      "bodyMarkdown": "Way 1: people write the **rules** by hand. Rules work well for clear jobs, like maths. But a dog lying in a box breaks the rules!\n\nWay 2: people give lots of examples. The computer finds the pattern itself. This is how most AI is built today.",
+      "jargonBuster": [
+        {
+          "term": "Rules",
+          "simpleExplanation": "Steps that people write by hand, like \"if it has a tail, it might be a dog\"."
+        }
+      ],
       "diagram": {
         "type": "mermaid",
-        "caption": "The Two Ways to Build AI",
-        "content": "flowchart LR\n    subgraph TopDown [\"Path 1: Top-Down (Rule-Based)\"]\n        R1[\"Human writes 1,000 rules 📝\"] --> R2[\"Computer checks rules 🔎\"] --> R3[\"Breaks on surprises ❌\"]\n    end\n    subgraph BottomUp [\"Path 2: Bottom-Up (Machine Learning)\"]\n        D1[\"Provide 1,000 photos 📸\"] --> D2[\"Computer spots patterns 🧠\"] --> D3[\"Recognizes new cats! ✅\"]\n    end",
-        "alt": "Two paths side by side. Path 1: a human writes 1,000 rules, the computer checks them, and it breaks on surprises. Path 2: you give 1,000 photos, the computer finds patterns, and it recognizes new cats."
+        "caption": "Two ways to build AI",
+        "content": "flowchart LR\n    subgraph Way1 [\"Way 1: Rules\"]\n        A1[\"People write rules 📝\"] --> A2[\"Computer follows them 🔎\"] --> A3[\"Gets stuck on surprises ❌\"]\n    end\n    subgraph Way2 [\"Way 2: Learning\"]\n        B1[\"People give examples 📸\"] --> B2[\"Computer finds the pattern 🧠\"] --> B3[\"Handles new dogs ✅\"]\n    end",
+        "alt": "Two paths side by side. Way 1: people write rules, the computer follows them, and it gets stuck on surprises. Way 2: people give examples, the computer finds the pattern, and it handles new dogs."
+      },
+      "teen": {
+        "add": "Way 1 is called **symbolic AI**. You will meet it in the next lesson. Way 2 is machine learning. Many tools today mix the two.",
+        "jargonBuster": [
+          {
+            "term": "Symbolic AI",
+            "simpleExplanation": "AI built from rules and facts that people write down."
+          }
+        ]
+      },
+      "checkIn": {
+        "question": "A dog is curled up in a box. Which way copes better?",
+        "options": [
+          "📝 A rule book",
+          "📸 Learning from lots of photos"
+        ],
+        "correctIndex": 1,
+        "praise": "Yes! Learning from photos copes with surprises.",
+        "explanation": "Rules break on surprises. Learning from lots of examples copes better."
       }
     }
   ],
   "miniQuiz": [
     {
-      "question": "Which of these is an example of Narrow AI that we use right now?",
+      "question": "How does most AI learn?",
       "options": [
-        "A robot that feels happy and writes its own homework for fun",
-        "An app that unlocks your phone when it sees your face",
-        "A machine that can do every human job in the world"
+        "From lots of examples",
+        "By reading one rule",
+        "By guessing at random"
       ],
-      "correctIndex": 1,
-      "praise": "Awesome job, explorer! Face unlock is a champion at one specific job—that's Narrow AI!"
+      "correctIndex": 0,
+      "praise": "Great! Examples are how AI learns.",
+      "explanation": "AI looks at lots of examples and finds what they have in common."
     },
     {
-      "question": "In the Turing Test, what is the human judge trying to figure out?",
+      "question": "Which of these is narrow AI we use today?",
       "options": [
-        "How fast the computer's fan is spinning",
-        "Which chatting partner is human and which is a computer",
-        "Who can solve math equations faster"
+        "A robot that can do every job",
+        "An app that opens your phone when it sees your face",
+        "A computer that feels sad"
       ],
       "correctIndex": 1,
-      "praise": "Spot on! The Turing Test is all about seeing if a machine can chat like a real person!"
+      "praise": "Spot on! Face unlock does one job well.",
+      "explanation": "Narrow AI is good at one job, like opening your phone with your face."
+    },
+    {
+      "question": "In the Turing test, what are you trying to guess?",
+      "options": [
+        "How fast the computer is",
+        "Which chat partner is a computer",
+        "Who is better at maths"
+      ],
+      "correctIndex": 1,
+      "praise": "Yes! You try to spot the computer.",
+      "explanation": "In the Turing test, you chat and try to tell the computer from the person."
+    },
+    {
+      "band": "12-14",
+      "question": "What is it called when a computer finds patterns in data by itself?",
+      "options": [
+        "Machine learning",
+        "Symbolic AI",
+        "A rule book"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly! Machine learning finds the pattern in the data.",
+      "explanation": "Machine learning is learning from data. Symbolic AI uses rules people write."
     }
   ],
   "teachBack": {
     "prompt": "Chip asks: How would you explain AI to a friend?",
     "options": [
-      "AI is a computer that learns patterns from lots of examples.",
-      "AI is a robot that thinks exactly like a person.",
-      "AI is a list of rules a person typed in."
+      "A computer that learns from lots of examples.",
+      "A robot that thinks just like a person.",
+      "A computer that can do every job."
     ],
     "correctIndex": 0,
-    "explanation": "Right! Most AI today learns patterns from examples. It does not think like a person."
+    "explanation": "Right! AI learns from examples. It does not think like a person, and it can't do every job."
   }
 }

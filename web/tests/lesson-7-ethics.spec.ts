@@ -15,11 +15,11 @@ test.describe('Lesson 6 (7-ethics): Ethical and Responsible AI (SPEC-005)', () =
     await juniorTab.click()
 
     // Title & Chip banner
-    await expect(page.locator('h1', { hasText: 'Superpowers with a Moral Compass: AI Ethics' })).toBeVisible()
+    await expect(page.locator('h1', { hasText: 'Fair and Safe AI' })).toBeVisible()
     await expect(page.getByText('Chip the Robot', { exact: true })).toBeVisible()
 
     // Section 1 heading
-    await expect(page.locator('text=1. The Magic Mirror: Why Data Matters')).toBeVisible()
+    await expect(page.locator('text=1. AI Copies Its Examples')).toBeVisible()
   })
 
   test('AC-ETH-02: Interactive Bias Detective widget toggles between raw disparity and audited parity', async ({ page }) => {

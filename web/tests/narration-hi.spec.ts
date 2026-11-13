@@ -44,6 +44,7 @@ async function hindiLesson(page: Page) {
     const body = await res.json()
     body.sections[0].heading = 'एआई क्या है'
     body.sections[0].chipQuote = ''
+    delete body.sections[0].bigIdea // banded Kids cards also read their big idea; this test checks sentence splitting only
     body.sections[0].bodyMarkdown = 'पहला वाक्य यहाँ है। दूसरा वाक्य यहाँ है।'
     await r.fulfill({ json: body, headers: { 'content-language': 'hi' } })
   })

@@ -15,11 +15,11 @@ test.describe('Lesson 2: Symbolic AI & Expert Systems (SPEC-005)', () => {
     await juniorTab.click()
 
     // Title & Chip banner
-    await expect(page.locator('h1', { hasText: 'The Giant Book of If-Then Rules' })).toBeVisible()
+    await expect(page.locator('h1', { hasText: 'Robots That Follow Rules' })).toBeVisible()
     await expect(page.getByText('Chip the Robot', { exact: true })).toBeVisible()
 
     // First section heading
-    await expect(page.locator('text=Meet Symbolic AI: Computers That Love Recipes')).toBeVisible()
+    await expect(page.locator('text=1. Robots That Follow Rules')).toBeVisible()
   })
 
   test('AC-SYM-02: Interactive Mars Rover Expert System simulator updates rules in real time', async ({ page }) => {

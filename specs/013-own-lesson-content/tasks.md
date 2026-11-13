@@ -122,17 +122,17 @@ Rules for every Kids file:
 - the lesson's existing `interactiveWidget` is kept;
 - `scaffold` and `scene` are never translated.
 
-- [ ] T021 [US1] Add `"origin": "own"` to `public-content/lessons/3-neuralnetworks.junior.json` and its Hindi file. Release it with the per-lesson steps. Hindi needs re-approval only because the hash changed.
-- [ ] T022 [P] [US1] Draw lesson 1 pictures as hand-made SVGs: word pictures 240×140 in `design/brand/source/words/`, scenes 320×180 in `design/brand/source/scenes/`, with any tap-to-play under 5 s and a still frame under reduced motion. Copy them to `web/public/brand/` and register them as `draft` in `design/brand/asset-register.json`. **(owner)** The owner approves the art.
-- [ ] T023 [US1] Rewrite `public-content/lessons/1-intro.junior.json` with the Turing game. Then follow the per-lesson release steps with `public-content/lang/hi/lessons/1-intro.junior.json`, and update `web/tests/lesson.spec.ts` for any changed headings.
-- [ ] T024 [P] [US1] Draw lesson 2 pictures, as in T022.
-- [ ] T025 [US1] Rewrite `public-content/lessons/2-symbolic.junior.json` with the Rover expert system (`ExpertSystemWidget`). Release it, and keep `web/tests/lesson-2-symbolic.spec.ts` passing.
-- [ ] T026 [P] [US1] Draw lesson 4 pictures, as in T022.
-- [ ] T027 [US1] Rewrite `public-content/lessons/4-computervision.junior.json` with the Convolution lab. Release it, and keep `web/tests/lesson-4-computervision.spec.ts` passing.
-- [ ] T028 [P] [US1] Draw lesson 5 pictures, as in T022.
-- [ ] T029 [US1] Rewrite `public-content/lessons/5-nlp.junior.json` with Word vector maths. Release it, and keep `web/tests/lesson-5-nlp.spec.ts` passing.
-- [ ] T030 [P] [US1] Draw lesson 7 pictures, as in T022.
-- [ ] T031 [US1] Rewrite `public-content/lessons/7-ethics.junior.json` with the Bias detective. Release it, and keep `web/tests/lesson-7-ethics.spec.ts` passing.
+- [X] T021 [US1] Add `"origin": "own"` to `public-content/lessons/3-neuralnetworks.junior.json` and its Hindi file. Release it with the per-lesson steps. Hindi needs re-approval only because the hash changed.
+- [X] T022 [P] [US1] (Skipped: diagrams on every card meet FR-CNT-09; new drawings optional, owner 2026-11-13.) Draw lesson 1 pictures as hand-made SVGs: word pictures 240×140 in `design/brand/source/words/`, scenes 320×180 in `design/brand/source/scenes/`, with any tap-to-play under 5 s and a still frame under reduced motion. Copy them to `web/public/brand/` and register them as `draft` in `design/brand/asset-register.json`. **(owner)** The owner approves the art.
+- [X] T023 [US1] Rewrite `public-content/lessons/1-intro.junior.json` with the Turing game. Then follow the per-lesson release steps with `public-content/lang/hi/lessons/1-intro.junior.json`, and update `web/tests/lesson.spec.ts` for any changed headings.
+- [X] T024 [P] [US1] (Skipped: diagrams on every card meet FR-CNT-09; new drawings optional, owner 2026-11-13.) Draw lesson 2 pictures, as in T022.
+- [X] T025 [US1] Rewrite `public-content/lessons/2-symbolic.junior.json` with the Rover expert system (`ExpertSystemWidget`). Release it, and keep `web/tests/lesson-2-symbolic.spec.ts` passing.
+- [X] T026 [P] [US1] (Skipped: diagrams on every card meet FR-CNT-09; new drawings optional, owner 2026-11-13.) Draw lesson 4 pictures, as in T022.
+- [X] T027 [US1] Rewrite `public-content/lessons/4-computervision.junior.json` with the Convolution lab. Release it, and keep `web/tests/lesson-4-computervision.spec.ts` passing.
+- [X] T028 [P] [US1] (Skipped: diagrams on every card meet FR-CNT-09; new drawings optional, owner 2026-11-13.) Draw lesson 5 pictures, as in T022.
+- [X] T029 [US1] Rewrite `public-content/lessons/5-nlp.junior.json` with Word vector maths. Release it, and keep `web/tests/lesson-5-nlp.spec.ts` passing.
+- [X] T030 [P] [US1] (Skipped: diagrams on every card meet FR-CNT-09; new drawings optional, owner 2026-11-13.) Draw lesson 7 pictures, as in T022.
+- [X] T031 [US1] Rewrite `public-content/lessons/7-ethics.junior.json` with the Bias detective. Release it, and keep `web/tests/lesson-7-ethics.spec.ts` passing.
 - [ ] T032 [US1] Add a Go test in `cmd/ingest/kids_check_test.go`: every `*.junior.json` has `"origin": "own"` and `bands: true`. Enable it after T031.
 
 **Checkpoint**: the whole Kids journey is ours (SC-002).

@@ -1,4 +1,59 @@
 {
   "language": "en",
-  "entries": []
+  "entries": [
+    {
+      "path": "public-content/lessons/1-intro.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "c6433ce60bf83b829c4564ed0efe58c5f5722bfe216b9ad4bf6c7a3437c5476b",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-13"
+    },
+    {
+      "path": "public-content/lessons/2-symbolic.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "75db19d15d7e3a08c2c593c3f1eee487a93fb68203a311ccb2bf44a1d73c85c2",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-13"
+    },
+    {
+      "path": "public-content/lessons/3-neuralnetworks.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "d8e164e6ba2664cb2dc97289bb211c32887cf5be2a8cc54b9b737538f9d3a383",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-13"
+    },
+    {
+      "path": "public-content/lessons/4-computervision.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "1e1976918795bce4d4b3d96af6d285bd1e06995feddb57382ebdb98dbc1081d4",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-13"
+    },
+    {
+      "path": "public-content/lessons/5-nlp.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "19225b56ee0c7b2a8e9e822d5a776e22e273c90265073c5d740e6fbd61bf4322",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-13"
+    },
+    {
+      "path": "public-content/lessons/7-ethics.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "edb00e0c7f6b2ba0e236000c391cd7f59d97edc14a00f8c6dc55ea2a4b1276a0",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-13"
+    }
+  ]
 }

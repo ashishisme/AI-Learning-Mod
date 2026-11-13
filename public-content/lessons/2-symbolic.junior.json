@@ -1,90 +1,181 @@
 {
   "lessonId": "2-symbolic",
   "mode": "junior",
-  "title": "The Giant Book of If-Then Rules 📜",
-  "readingTimeMinutes": 6,
+  "origin": "own",
+  "title": "Robots That Follow Rules 📜",
+  "readingTimeMinutes": 5,
   "mascot": {
     "name": "Chip",
     "avatar": "🤖",
-    "greeting": "Welcome back, Detective! Today we are travelling back in time to meet Symbolic AI—the clever rule-books that gave robots their first brains!"
+    "greeting": "Hi, it's Chip! Before AI learned from photos, people taught it with rules. Let's see how, and then fix a rover on Mars!"
   },
+  "recap": [
+    "Some AI follows if-then rules that people write.",
+    "An expert system has a box of rules and a part that picks one.",
+    "With rules, you can always see why the computer chose."
+  ],
+  "bands": true,
   "sections": [
     {
       "id": "what-is-symbolic-ai",
-      "heading": "1. Meet Symbolic AI: Computers That Love Recipes",
-      "chipQuote": "Imagine cooking pancakes. You don't guess—you follow a clear recipe step-by-step. Symbolic AI is like a master chef following strict recipes!",
+      "heading": "1. Robots That Follow Rules",
+      "bigIdea": "Some AI follows rules that people write down.",
+      "chipQuote": "I love a good rule. It tells me just what to do!",
       "analogy": {
-        "metaphorName": "The Choose-Your-Own-Adventure Book",
-        "description": "Have you ever read a book that says: 'If you want to open the treasure chest, turn to page 40. If you want to run away, turn to page 12'? That is exactly how early AI thought—by hopping from one rule to the next!"
+        "metaphorName": "The Board Game Card",
+        "description": "A board game has a rule card. Land on a ladder, and you climb up. Every player follows the same card."
       },
-      "bodyMarkdown": "Before computers learned by looking at photos, scientists built **Symbolic AI**. Instead of studying millions of examples, people wrote down clear **symbols**, like words and numbers. Then they linked them with rules like:\n\n* **IF** it is raining, **THEN** grab an umbrella.\n* **IF** the traffic light is red, **THEN** press the brakes.\n\nBecause every single step is written down, Symbolic AI is 100% explainable. It never has to guess or make things up!",
+      "bodyMarkdown": "Long ago, people built AI out of **if-then rules**. Each rule says: if this is true, then do that.\n\nIf your bike tyre is flat, then pump it up. If the dog waits by the door, then take it for a walk. Put lots of rules together, and a computer can solve real problems.",
       "jargonBuster": [
         {
-          "term": "Symbolic AI",
-          "simpleExplanation": "AI that solves puzzles by following human-written rules and symbols instead of guessing from data."
-        },
-        {
-          "term": "Knowledge Base",
-          "simpleExplanation": "A digital library storing all the facts and rules the computer knows."
+          "term": "If-then rules",
+          "simpleExplanation": "Rules that say what to do when something is true. If it rains, then take a coat."
         }
       ],
       "diagram": {
-        "type": "stepper",
-        "caption": "How a rule-following computer decides",
-        "alt": "Four steps: the computer reads a fact, finds a matching if-then rule, follows the rule, and gives an answer you can trace back.",
-        "content": "",
-        "steps": [
-          "The computer reads a fact: \"The light is red.\" 🚦",
-          "It finds a rule that fits: \"IF the light is red THEN stop.\"",
-          "It follows the rule and picks the action: STOP. 🛑",
-          "You can always ask why, and point to the exact rule it used. 🔍"
+        "type": "mermaid",
+        "caption": "One if-then rule",
+        "content": "graph LR\n    Fact[\"🚲 Fact: the tyre is flat\"] --> Rule{\"📜 Rule: IF flat THEN pump\"}\n    Rule --> Action[\"💨 Action: pump the tyre\"]",
+        "alt": "A fact, the tyre is flat, goes into a rule that says if flat then pump, and out comes the action: pump the tyre."
+      },
+      "more": {
+        "title": "When was this popular?",
+        "bodyMarkdown": "Rule-based AI was the main kind of AI from the 1960s to the 1980s. People still use it today in games, forms and machines."
+      },
+      "teen": {
+        "add": "Rules like these use symbols: words and signs that stand for real things. That is why this kind of AI is called **symbolic AI**.",
+        "jargonBuster": [
+          {
+            "term": "Symbolic AI",
+            "simpleExplanation": "AI built from symbols and rules that people write down."
+          }
         ]
+      },
+      "checkIn": {
+        "question": "Rule: IF it is dark, THEN turn on the light. It is dark. What happens?",
+        "options": [
+          "💡 The light turns on",
+          "😴 Nothing happens"
+        ],
+        "correctIndex": 0,
+        "praise": "Yes! The fact matches the rule, so the rule acts.",
+        "explanation": "When the IF part is true, the THEN part happens."
       }
     },
     {
       "id": "expert-systems",
-      "heading": "2. The Doctor in the Computer (Expert Systems)",
-      "chipQuote": "Back in the 1970s, scientists built a program named MYCIN. It asked doctors questions and diagnosed sick patients using hundreds of rules!",
+      "heading": "2. A Box of Rules and a Thinker",
+      "bigIdea": "An expert system has a box of rules and a part that picks the right one.",
+      "chipQuote": "Imagine a computer that knows what a car mechanic knows!",
       "analogy": {
-        "metaphorName": "The 20 Questions Wizard",
-        "description": "Think of the 20 Questions game. 'Is it an animal?' Yes. 'Does it bark?' Yes. 'Is it a dog?' Bingo! By asking smart yes-or-no questions, the computer zeroes in on the exact right answer."
+        "metaphorName": "The Recipe Box",
+        "description": "A cook has a box of recipe cards. The cook looks in the fridge, then picks the card that fits what is there."
       },
-      "bodyMarkdown": "An **Expert System** has two main parts:\n\n1. **The Knowledge Base**: A digital notebook full of tips from real doctors and pilots.\n2. **The Inference Engine**: The computer's brain. It looks at what is happening now, checks the notebook, and picks what to do next!",
-      "diagram": {
-        "type": "mermaid",
-        "caption": "How an Expert System Works: Facts + Rules = Smart Answer",
-        "content": "graph LR\n    Facts[\"🔍 Current Facts<br/>(Sensors, Symptoms)\"] --> Engine[\"⚙️ Inference Engine<br/>(Matching Logic)\"]\n    Rules[\"📚 Knowledge Base<br/>(If-Then Rules)\"] --> Engine\n    Engine --> Answer[\"💡 Smart Diagnosis<br/>(100% Explainable!)\"]",
-        "alt": "Two inputs feed one engine. Current facts and a rule book of if-then rules go into the inference engine, which produces a smart diagnosis that can be fully explained."
-      },
+      "bodyMarkdown": "An **expert system** keeps advice from real experts, like doctors or mechanics. It has two parts.\n\nThe **knowledge base** is the box of rules. The thinking part looks at the facts right now. It finds a rule that fits, and does what the rule says.",
       "jargonBuster": [
         {
-          "term": "Inference Engine",
-          "simpleExplanation": "The problem-solving engine that tests your facts against the knowledge base rules."
+          "term": "Expert system",
+          "simpleExplanation": "A computer program that gives advice using rules from real experts."
         },
         {
-          "term": "Forward Chaining",
-          "simpleExplanation": "Starting with facts you know and following the rules forward to reach a new conclusion."
+          "term": "Knowledge base",
+          "simpleExplanation": "The box of rules an expert system keeps."
         }
-      ]
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "How an expert system decides",
+        "alt": "Four steps: facts come in, the thinking part looks in the box of rules, it finds a rule that fits, and it does what the rule says.",
+        "content": "",
+        "steps": [
+          "Facts come in: \"The car won't start.\" 🚗",
+          "The thinking part looks in the box of rules. 📦",
+          "It finds a rule that fits: \"IF it won't start, THEN check the battery.\"",
+          "It gives the advice: \"Check the battery!\" ✅"
+        ]
+      },
+      "teen": {
+        "add": "The thinking part is called the **inference engine**. It keeps using rules until no new rule fits. Going from facts to an answer like this is called forward chaining.",
+        "jargonBuster": [
+          {
+            "term": "Inference engine",
+            "simpleExplanation": "The part of an expert system that picks which rule to use."
+          }
+        ]
+      },
+      "checkIn": {
+        "question": "Where does an expert system keep its rules?",
+        "options": [
+          "📦 In the knowledge base",
+          "🎒 In a school bag",
+          "☁️ In the clouds"
+        ],
+        "correctIndex": 0,
+        "praise": "Right! The knowledge base is the box of rules.",
+        "explanation": "An expert system keeps its rules in the knowledge base."
+      }
+    },
+    {
+      "id": "why-rules-help",
+      "heading": "3. Easy to Check",
+      "bigIdea": "With rules, you can always see why the computer chose.",
+      "chipQuote": "Ask me why, and I'll show you the rule!",
+      "analogy": {
+        "metaphorName": "Showing Your Working",
+        "description": "In maths class, you write down each step. Your teacher can see just how you got your answer."
+      },
+      "bodyMarkdown": "Ask a rule-based AI: \"Why did you do that?\" It can point to the rule it used. That makes it easy to check and to fix.\n\nBut rules have a weak spot. Someone has to write every single one. A surprise that no rule covers can leave the computer stuck.",
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Good and bad sides of rules",
+        "content": "graph TD\n    R[\"📜 Rule-based AI\"] --> G[\"✅ Shows which rule it used\"]\n    R --> G2[\"✅ Easy to fix a wrong rule\"]\n    R --> B[\"❌ People must write every rule\"]\n    R --> B2[\"❌ Gets stuck on surprises\"]",
+        "alt": "Rule-based AI has two good sides, it shows which rule it used and a wrong rule is easy to fix, and two bad sides, people must write every rule and it gets stuck on surprises."
+      },
+      "teen": {
+        "add": "AI that learns from examples is often harder to explain. It can be right without being able to say why. That is one reason rules are still used where safety matters."
+      },
+      "checkIn": {
+        "question": "What is the weak spot of rule-based AI?",
+        "options": [
+          "It can't explain itself",
+          "Someone has to write every rule"
+        ],
+        "correctIndex": 1,
+        "praise": "Yes! Every rule needs a person to write it.",
+        "explanation": "Rules are easy to check, but people have to write each one."
+      }
     },
     {
       "id": "interactive-rover-demo",
-      "heading": "3. The Mars Rover Rescue Mission",
-      "chipQuote": "Space rovers millions of miles away on Mars can't wait for Earth to answer every text. They use rule-based Expert Systems to stay alive!",
+      "heading": "4. Fix the Mars Rover",
+      "bigIdea": "Now you get to run an expert system on Mars!",
+      "chipQuote": "Mars is too far away for a mechanic. The rover has to fix itself!",
       "analogy": {
-        "metaphorName": "The Spaceship Auto-Pilot",
-        "description": "When a dust storm hits Mars, the rover checks its sensor memory. If solar panels lose sun and the battery drops, the rule tells it to go to sleep and conserve warmth."
+        "metaphorName": "The Rover's Rule Box",
+        "description": "No mechanic can fly to Mars. So the rover carries its own box of rules, and follows them when something goes wrong."
       },
-      "bodyMarkdown": "Play with the live simulation below! Flip the sensor switches in working memory and watch the **Inference Engine** fire the matching rules in real time.",
+      "bodyMarkdown": "Flip the switches to change what the rover senses. Is the battery low? Is it night? Are the solar panels dusty?\n\nWatch which rule lights up. The rover's answer always comes from a rule you can see.",
+      "diagram": {
+        "type": "stepper",
+        "caption": "What the rover does",
+        "alt": "Three steps: the rover's sensors report facts, a rule that fits lights up, and the rover follows that rule.",
+        "content": "",
+        "steps": [
+          "The sensors report facts: battery, day or night, dust. 📡",
+          "A rule that fits the facts lights up. 💡",
+          "The rover does what that rule says. 🤖"
+        ]
+      },
       "interactiveWidget": {
         "type": "expert-system-sim",
-        "title": "🚀 Interactive Simulation: The Mars Rover Expert System",
-        "goal": "Find the broken part of the Mars rover by answering the yes/no questions.",
+        "title": "🚀 Try It: The Mars Rover Rule Box",
+        "instruction": "Flip the switches. Watch which rule lights up, and read what the rover decides.",
+        "goal": "Find out what is wrong with the rover by changing what it senses.",
         "scaffold": "guided",
-        "predictionPrompt": "Before you start: which part do you think is the problem?",
+        "predictionPrompt": "Before you start: what should a rover do at night with a low battery?",
         "hints": [
-          "Start with the symptom that looks scariest.",
-          "Each answer rules out a rule."
+          "Change one switch at a time.",
+          "Look for the rule that lights up."
         ],
         "successMessage": "Rover fixed! You just did what an expert system does: match facts to rules.",
         "allowFreePlay": true
@@ -93,60 +184,72 @@
   ],
   "miniQuiz": [
     {
-      "question": "What are the two core components of every Expert System?",
+      "question": "What are the two parts of an expert system?",
       "options": [
-        "A video camera and a microphone",
-        "A Knowledge Base (rules) and an Inference Engine (reasoning)",
-        "A battery pack and a rocket booster"
-      ],
-      "correctIndex": 1,
-      "praise": "Spot on, explorer! The Knowledge Base holds the facts, and the Inference Engine solves the puzzle!",
-      "explanation": "Expert systems separate the knowledge base (the rules) from the inference engine (the reasoning algorithm)."
-    },
-    {
-      "question": "Why is Symbolic AI considered '100% explainable'?",
-      "options": [
-        "Because you can trace every single If-Then rule that led to the final decision",
-        "Because it speaks with a human voice",
-        "Because it only runs on solar power"
+        "A box of rules and a part that picks one",
+        "A camera and a speaker",
+        "A battery and a screen"
       ],
       "correctIndex": 0,
-      "praise": "Brilliant! You can always open the rule book and see exactly why the computer made its choice!",
-      "explanation": "Unlike deep neural networks which are black boxes, symbolic rule systems can show you the exact chain of logic."
+      "praise": "Great! Rules plus a thinker.",
+      "explanation": "An expert system has a knowledge base of rules and a part that picks the rule to use."
     },
     {
-      "question": "What is Forward Chaining in an expert system?",
+      "question": "Why is rule-based AI easy to check?",
       "options": [
-        "Walking forward while typing on a laptop",
-        "Starting with known facts and applying rules forward to deduce new conclusions",
-        "Connecting two robots together with a metal chain"
+        "It is always right",
+        "It can show the rule it used",
+        "It is very fast"
       ],
       "correctIndex": 1,
-      "praise": "Awesome deductive work! Facts lead to rules, which lead to discoveries!",
-      "explanation": "Forward chaining starts with the known facts and iterates through rules until a goal or diagnosis is reached."
+      "praise": "Yes! You can see the rule behind each choice.",
+      "explanation": "Rule-based AI can point to the exact rule it used."
+    },
+    {
+      "question": "Rule: IF the tyre is flat, THEN pump it. The tyre is flat. What happens?",
+      "options": [
+        "The tyre gets pumped",
+        "The bike is painted",
+        "Nothing"
+      ],
+      "correctIndex": 0,
+      "praise": "Spot on! The fact matches the rule.",
+      "explanation": "When the IF part is true, the THEN part happens."
+    },
+    {
+      "band": "12-14",
+      "question": "What is the part of an expert system that picks which rule to use?",
+      "options": [
+        "The inference engine",
+        "The knowledge base",
+        "The solar panel"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly! The inference engine does the picking.",
+      "explanation": "The knowledge base holds the rules. The inference engine picks which one to use."
     }
   ],
   "teachBack": {
-    "prompt": "Chip asks: How would you explain a rule-based AI to a friend?",
+    "prompt": "Chip asks: How would you explain an expert system to a friend?",
     "options": [
-      "It follows if-then rules that people wrote, so it can show why it decided.",
-      "It learns by looking at millions of pictures.",
-      "It guesses and nobody can tell why."
+      "A computer that uses rules from experts to give advice.",
+      "A computer that learns from millions of photos.",
+      "A robot that is an expert at everything."
     ],
     "correctIndex": 0,
-    "explanation": "Yes! Rule-based AI follows written rules, so you can trace each answer."
+    "explanation": "Right! An expert system uses rules from real experts to give advice."
   },
   "recall": [
     {
       "fromLesson": "1-intro",
-      "question": "What is Narrow AI?",
+      "question": "How does most AI today learn?",
       "options": [
-        "AI built to do one specific job well",
-        "AI that can do any job a person can",
-        "AI that only works on small computers"
+        "From lots of examples",
+        "From one rule",
+        "By guessing at random"
       ],
       "correctIndex": 0,
-      "explanation": "All AI that exists today is Narrow AI."
+      "explanation": "Most AI today learns from lots of examples."
     }
   ]
 }
