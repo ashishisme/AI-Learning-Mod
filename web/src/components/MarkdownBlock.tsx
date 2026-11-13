@@ -1,11 +1,14 @@
 // SPEC: FR-UI-04, NFR-SEC-05, AC-21, AC-27, DC-01
-import React from 'react'
+import React, { useMemo } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import rehypeHighlight from 'rehype-highlight'
 import { Block } from '../api'
+import { useT } from '../i18n'
+import { headingSections } from '../services/narrationText'
+import { AudioNarrationButton } from './AudioNarrationButton'
 
 // NFR-SEC-05 conservative sanitize schema
 const sanitizeSchema = {
@@ -30,15 +33,43 @@ const sanitizeSchema = {
 
 interface MarkdownBlockProps {
   block: Block
+  // FR-UI-26: set on Standard lessons to give each level 1–3 heading a Read section button.
+  narrateId?: string
+  speechLang?: string
 }
 
-export const MarkdownBlock: React.FC<MarkdownBlockProps> = ({ block }) => {
+type HeadingProps = React.HTMLAttributes<HTMLHeadingElement> & { node?: { position?: { start: { line: number } } } }
+
+export const MarkdownBlock: React.FC<MarkdownBlockProps> = ({ block, narrateId, speechLang }) => {
+  const label = useT()('narration.readSection')
+  // Built once per lesson: new component types on every render would remount the buttons, and a
+  // remounting button stops its own playback.
+  const components = useMemo(() => {
+    if (!narrateId || block.type !== 'markdown') return undefined
+    const sections = headingSections(block.content || '')
+    const heading = (Tag: 'h1' | 'h2' | 'h3') => ({ node, children, ...props }: HeadingProps) => {
+      const line = node?.position?.start.line
+      const text = line ? sections.get(line) : undefined
+      if (!text) return <Tag {...props}>{children}</Tag>
+      return (
+        <div className="flex items-start justify-between gap-3">
+          <Tag {...props} className="flex-1">{children}</Tag>
+          <div className="mt-[1.4em] flex-shrink-0" data-testid="standard-read-section">
+            <AudioNarrationButton id={`${narrateId}-${line}`} textToRead={text} label={label} speechLang={speechLang} variant="pill" />
+          </div>
+        </div>
+      )
+    }
+    return { h1: heading('h1'), h2: heading('h2'), h3: heading('h3') }
+  }, [narrateId, block.type, block.content, label, speechLang])
+
   if (block.type === 'markdown') {
     return (
       <div className="prose prose-slate dark:prose-invert max-w-none my-4 [overflow-wrap:anywhere] [&_pre]:overflow-x-auto [&_pre]:max-w-full">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema], rehypeHighlight]}
+          components={components}
         >
           {block.content || ''}
         </ReactMarkdown>

@@ -22,3 +22,30 @@ export function cleanForSpeech(text: string): string {
     .replace(/([0-9]+)\.\s+/g, '$1. ')
     .trim()
 }
+
+// FR-UI-26: a Standard lesson's Read section text, keyed by the heading's 1-based line. A section is a
+// level 1–3 heading and its text up to the next heading, without code fences, tables or images.
+export function headingSections(md: string): Map<number, string> {
+  const out = new Map<number, string>()
+  let fenced = false
+  let start = 0
+  let buf: string[] = []
+  const flush = () => {
+    if (start) out.set(start, cleanForSpeech(buf.join('\n').replace(/!\[[^\]]*\]\([^)]*\)/g, '')).replace(/\s+/g, ' '))
+  }
+  md.split('\n').forEach((line, i) => {
+    const fence = /^\s*(```|~~~)/.test(line)
+    if (fence) fenced = !fenced
+    if (fence || fenced || /^\s*\|/.test(line)) return
+    const h = /^ {0,3}#{1,3}\s+(.*?)(?:\s+#+)?\s*$/.exec(line)
+    if (h) {
+      flush()
+      start = i + 1
+      buf = [`${h[1]}.`]
+      return
+    }
+    buf.push(line)
+  })
+  flush()
+  return out
+}

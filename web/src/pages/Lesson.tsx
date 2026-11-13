@@ -32,7 +32,7 @@ export const Lesson: React.FC = () => {
   const { localLLMEnabled, baseUrl } = useSettingsStore((st) => st.settings)
   // FR-021a: a hosted learner's own local AI works even while the hosted tutor is off.
   const t = useT()
-  const { code } = useLanguage()
+  const { code, languages } = useLanguage()
   const tutorEnabled = serverTutor || (hosted && !!localLLMEnabled && isLocalLLMUrl(baseUrl))
   // FR-024 (amended 2026-11-03): a hosted site with its tutor off still shows the panel, greyed out
   // until the learner connects their own local AI in Settings.
@@ -104,6 +104,8 @@ export const Lesson: React.FC = () => {
     `https://colab.research.google.com/github/microsoft/AI-For-Beginners/blob/main/${lesson.path.replace(/README\.md$/, 'lab.ipynb')}`
 
   const isAdaptiveActive = audienceMode !== 'standard' && adaptivePayload !== null
+  // FR-UI-26: Read section speaks in the language the lesson came back in (English fallback included).
+  const lessonSpeechLang = languages.find((l) => l.code === (lesson.servedLang ?? 'en'))?.speechLang ?? 'en-US'
 
   // Quiz, Colab and completion stay reachable in every audience mode.
   const lessonActions = (
@@ -209,7 +211,7 @@ export const Lesson: React.FC = () => {
             </div>
           )}
           {lesson.blocks.map((block, idx) => (
-            <MarkdownBlock key={idx} block={block} />
+            <MarkdownBlock key={idx} block={block} narrateId={`std-${lesson.id}-${idx}`} speechLang={lessonSpeechLang} />
           ))}
         </section>
       )}
