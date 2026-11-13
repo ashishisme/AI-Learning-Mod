@@ -61,7 +61,12 @@ type adaptive struct {
 		ID           string `json:"id"`
 		Heading      string `json:"heading"`
 		ChipQuote    string `json:"chipQuote"`
+		BigIdea      string `json:"bigIdea"`
 		BodyMarkdown string `json:"bodyMarkdown"`
+		Teen         struct {
+			Add  string `json:"add"`
+			Body string `json:"body"`
+		} `json:"teen"`
 	} `json:"sections"`
 }
 
@@ -101,7 +106,13 @@ func Tracks(root, code string) ([]Track, error) {
 				if id == "" {
 					id = fmt.Sprint(i) // the UI's fallback: section-<index>
 				}
-				add(prefix+"section-"+id, Section(s.Heading, s.ChipQuote, s.BodyMarkdown, ui["narration.chipSays"]))
+				add(prefix+"section-"+id, Section(s.Heading, s.ChipQuote, CoreBody(s.BigIdea, s.BodyMarkdown), ui["narration.chipSays"]))
+				// SPEC FR-CNT-09 (SPEC-012): the 12+ part of a banded Kids section is its own track.
+				teen := s.Teen.Body
+				if teen == "" {
+					teen = s.Teen.Add
+				}
+				add(prefix+"section-"+id+"-teen", teen)
 			}
 		}
 	}
@@ -128,4 +139,13 @@ func catalogue(root, code string) (map[string]string, error) {
 		}
 	}
 	return merged, nil
+}
+
+// CoreBody is a section's narrated body: its big idea (SPEC-012 banded Kids lessons) and then its text.
+// web/src/services/narrationText.ts coreBody is its twin.
+func CoreBody(bigIdea, body string) string {
+	if bigIdea == "" {
+		return body
+	}
+	return bigIdea + "\n\n" + body
 }

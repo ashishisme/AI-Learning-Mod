@@ -35,7 +35,7 @@ func repo(t *testing.T) string {
 		"web/src/i18n/en.json":                               `{"narration.chipSays":"Chip says: ","adaptive.chipGreeting":"Hello!"}`,
 		"web/src/i18n/hi.json":                               `{"narration.chipSays":"चिप कहता है: ","adaptive.chipGreeting":"नमस्ते!"}`,
 		"content/voices/hi.json":                             `{"language":"hi","personas":{"chip":{"voice":"hi-IN-Wavenet-A","speakingRate":1,"pitch":0},"nova":{"voice":"hi-IN-Wavenet-D","speakingRate":0.95,"pitch":0},"alan":{"voice":"hi-IN-Wavenet-B","speakingRate":1,"pitch":-1}}}`,
-		"public-content/lang/hi/lessons/1-intro.junior.json": `{"lessonId":"1-intro","mode":"junior","intro":"परिचय","mascot":{"greeting":"हाय!"},"sections":[{"id":"what","heading":"क्या","chipQuote":"वाह","bodyMarkdown":"**एआई** सीखता है।"},{"heading":"दो","bodyMarkdown":"दूसरा।"}]}`,
+		"public-content/lang/hi/lessons/1-intro.junior.json": `{"lessonId":"1-intro","mode":"junior","intro":"परिचय","mascot":{"greeting":"हाय!"},"sections":[{"id":"what","heading":"क्या","chipQuote":"वाह","bodyMarkdown":"**एआई** सीखता है।"},{"heading":"दो","bodyMarkdown":"दूसरा।"},{"id":"big","heading":"तीन","bigIdea":"बड़ी बात।","bodyMarkdown":"तीसरा।","teen":{"add":"और **भार**।"}}]}`,
 	} {
 		f := filepath.Join(root, filepath.FromSlash(p))
 		if err := os.MkdirAll(filepath.Dir(f), 0o755); err != nil {
@@ -63,6 +63,9 @@ func TestTracksUseTheUIsKeys(t *testing.T) {
 		"1-intro/junior/chip-mascot-greeting": "हाय!",
 		"1-intro/junior/section-what":         "क्या. चिप कहता है: वाह. एआई सीखता है।",
 		"1-intro/junior/section-1":            "दो. दूसरा।",
+		// SPEC-012: the big idea is read first, and the 12+ part is its own track.
+		"1-intro/junior/section-big":      "तीन. बड़ी बात।\n\nतीसरा।",
+		"1-intro/junior/section-big-teen": "और भार।",
 	}
 	if len(got) != len(want) {
 		t.Errorf("tracks: %v", got)
@@ -80,7 +83,7 @@ func TestCheckFindsMissingAndOutOfDateRecordings(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(ps) != 5*3 || !strings.Contains(ps[0].Reason, "not recorded") {
+	if len(ps) != 7*3 || !strings.Contains(ps[0].Reason, "not recorded") {
 		t.Fatalf("want every track in every persona not recorded, got %d: %v", len(ps), ps)
 	}
 

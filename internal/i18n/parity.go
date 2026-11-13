@@ -30,6 +30,13 @@ var Translatable = map[string][]string{
 		"sections[].interactiveWidget.scenario.terminalB", "sections[].interactiveWidget.scenario.explanation",
 		"miniQuiz[].question", "miniQuiz[].options[]", "miniQuiz[].praise", "miniQuiz[].explanation",
 		"teachBack.prompt", "teachBack.options[]", "teachBack.explanation",
+		// SPEC FR-CNT-09 (SPEC-012): banded Kids lessons. bands, miniQuiz[].band, jargonBuster[].visual and
+		// checkIn.correctIndex are left out on purpose: they must equal the English values.
+		"recap[]", "sections[].bigIdea", "sections[].more.title", "sections[].more.bodyMarkdown",
+		"sections[].teen.add", "sections[].teen.body",
+		"sections[].teen.jargonBuster[].term", "sections[].teen.jargonBuster[].simpleExplanation",
+		"sections[].checkIn.question", "sections[].checkIn.options[]", "sections[].checkIn.praise",
+		"sections[].checkIn.explanation",
 	},
 	KindQuiz: {
 		"*.title", "*.description", "*.questions[].prompt", "*.questions[].options[]",

@@ -1,5 +1,6 @@
 // SPEC: FR-ING-01, FR-ING-02, FR-ING-03, FR-ING-04, FR-ING-05, FR-ING-06, FR-ING-07, FR-ING-08, NFR-SEC-09, DC-03, DC-07
 // SPEC-009: FR-005 (-lang), FR-017..FR-019 (the language release gate in -verify)
+// SPEC-012: FR-CNT-08 (the Kids reading check in -verify)
 package main
 
 import (
@@ -42,7 +43,12 @@ func main() {
 		contentDir = "public-content"
 	}
 	if *verifyOnly {
-		os.Exit(verify(contentDir, os.Stderr, *audio))
+		code := verify(contentDir, os.Stderr, *audio)
+		// SPEC-012 FR-CNT-08: the Kids reading check runs in the same release gate.
+		if kidsCheck(filepath.Dir(filepath.Clean(contentDir)), contentDir, os.Stderr) != 0 {
+			code = 1
+		}
+		os.Exit(code)
 	}
 
 	token := os.Getenv("GITHUB_TOKEN")

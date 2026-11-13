@@ -73,6 +73,33 @@ func TestParityAdaptiveLesson(t *testing.T) {
 	}
 }
 
+// SPEC FR-CNT-09, AC-61: the banded Kids fields are translatable text, while the band markers and word
+// pictures must stay as in English, and a 12+ part on one side must be on the other.
+func TestParityBandedKidsLesson(t *testing.T) {
+	root := fixture(t)
+	const p, src = "public-content/lang/hi/lessons/3-nn.junior.json", "public-content/lessons/3-nn.junior.json"
+	lesson := func(teen, visual, band string) string {
+		return `{"lessonId":"3-nn","mode":"junior","bands":true,"title":"T","recap":["a","b","c"],"sections":[{"id":"s1","heading":"H","bigIdea":"B","bodyMarkdown":"A **neuron**.",` +
+			teen + `"jargonBuster":[{"term":"neuron","simpleExplanation":"S","visual":"` + visual + `"}],` +
+			`"more":{"title":"M","bodyMarkdown":"MB"},"checkIn":{"question":"Q","options":["x","y"],"correctIndex":0,"explanation":"E"}}],` +
+			`"miniQuiz":[{"question":"Q1","options":["a","b"],"correctIndex":0},{"band":"` + band + `","question":"Q2","options":["a","b"],"correctIndex":1}]}`
+	}
+	write(t, root, src, lesson(`"teen":{"add":"A **weight**.","jargonBuster":[{"term":"weight","simpleExplanation":"W"}]},`, "neuron-switch", "12-14"))
+	hiTeen := `"teen":{"add":"एक **भार**।","jargonBuster":[{"term":"भार","simpleExplanation":"भा"}]},`
+	if got := parityOf(t, root, p, KindAdaptive, src, lesson(hiTeen, "neuron-switch", "12-14")); got != "" {
+		t.Errorf("good translation: %s", got)
+	}
+	for _, c := range []struct{ body, want string }{
+		{lesson(hiTeen, "neuron-other", "12-14"), `visual: is never translated and must stay "neuron-switch"`},
+		{lesson(``, "neuron-switch", "12-14"), "sections[0]: missing field teen"},
+		{lesson(hiTeen, "neuron-switch", "8-11"), `miniQuiz[1].band: is never translated and must stay "12-14"`},
+	} {
+		if got := parityOf(t, root, p, KindAdaptive, src, c.body); !strings.Contains(got, c.want) {
+			t.Errorf("want %q, got %q", c.want, got)
+		}
+	}
+}
+
 func TestPreserved(t *testing.T) {
 	fence := "```python\nprint(1)\n```"
 	for _, c := range []struct{ en, tr, want string }{
