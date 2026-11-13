@@ -85,7 +85,7 @@ New art follows `docs/kids-visuals-and-own-content-plan.md`: hand-made SVGs that
 | Phase | Work | Done when |
 |---|---|---|
 | 0 | SPEC-013: tracks, Detailed format, English recordings, retire ingest (amends SPEC §1, §6.1, §7.3.1, FR-I18N-07/08, NFR-LIC-01..03) | spec committed |
-| 1 | Kids lessons 1, 2, 4, 5, 7 rewritten like lesson 3, with pictures; `bands: true` on each | reading check passes, owner approves, Hindi approved, EN+HI recorded |
+| 1 | Kids lessons 1, 2, 4, 5, 7 rewritten like lesson 3, with pictures; `bands: true` on each | reading check passes, owner approves, Hindi approved and recorded |
 | 2 | Plain English 1–7 rewritten | same |
 | 3 | Detailed 1–7 written; widgets get their Detailed panels | same, plus a per-lesson tutor check |
 | 4 | Switch Standard to Detailed; remove ingest, Microsoft images, pinned commit, brand blocklist; new tutor prompt; attribution updated; close SPEC-010 | no Microsoft-derived text or image ships |
@@ -96,15 +96,15 @@ Each lesson goes through the same steps:
 3. Owner review.
 4. Hindi translation.
 5. Hindi approval in the review ledger.
-6. Record English and Hindi.
+6. Record Hindi (English recording is on hold).
 7. Update the text baselines and tests.
 8. Release.
 
 Kids lesson 3 already went through steps 1–5 in SPEC-012.
 
-## 4. Decisions still needed
+## 4. Owner decisions (2026-11-13)
 
-1. **Topics and numbering.** Keep lessons 1–5 and 7, or add our own, such as "AI in daily life" or "generative AI"? Adding a topic is easiest after phase 1.
-2. **Who writes Detailed:** Claude drafts and the owner reviews (assumed), or the owner writes?
-3. **English recordings:** confirm reversing the 2026-11-09 decision, and how much to spend once the dry-run gives the character count.
-4. **SPEC-010** (upstream translation sync) closes in phase 4. Close it now instead, so no effort goes into upstream text?
+1. **Topics:** recreate the existing lessons (1–5 and 7), keeping the gist of each. No new topics for now.
+2. **Writing:** Claude writes every lesson; the owner reviews.
+3. **English recordings:** held back for now. English stays on the device voice; only Hindi is recorded.
+4. **SPEC-010** (upstream translation sync) is closed, not built.

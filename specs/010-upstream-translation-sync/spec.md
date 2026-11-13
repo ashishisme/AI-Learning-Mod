@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-04
 
-**Status**: **Pending.** Nothing is built until the start condition below is met. Do not run `/speckit-plan` before then.
+**Status**: **Closed, not built (2026-11-13).** The owner decided to replace the Microsoft course with our own lessons (`docs/own-content-plan.md`, SPEC-013), so upstream translations will not be taken up. Kept as a record only.
 
 **Input**: User description: "Review the update on the git repo (source). Looks like there are translations available: https://github.com/microsoft/AI-For-Beginners/pull/780. Can we use them?" Then: "Ok create a spec for this but keep it pending."
 
