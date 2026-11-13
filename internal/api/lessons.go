@@ -107,7 +107,7 @@ func (h *LessonsHandler) GetLesson(w http.ResponseWriter, r *http.Request) {
 
 	// SPEC-009 FR-009: try the chosen language first, then English, one file at a time.
 	mode := r.URL.Query().Get("mode")
-	if mode != "junior" && mode != "plain-english" {
+	if mode != "junior" && mode != "plain-english" && mode != "detailed" { // SPEC-013: detailed
 		mode = ""
 	}
 	served := i18n.English.Code

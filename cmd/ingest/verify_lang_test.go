@@ -203,3 +203,26 @@ func TestVerifyBetaLanguageMayLaunchOnDeviceVoices(t *testing.T) {
 		t.Errorf("beta with a draft: exit %d", code)
 	}
 }
+
+// SPEC-013 FR-008: an own English lesson fails the gate until the owner approves its current text.
+func TestVerifyEnglishOwnerApproval(t *testing.T) {
+	root, dir := langRepo(t, "")
+	lesson := filepath.Join(root, "public-content/lessons/1-intro.junior.json")
+	writeFile(t, lesson, `{"lessonId":"1-intro","mode":"junior","title":"T","origin":"own"}`)
+	if code, out := runVerify(dir); code != 1 || !strings.Contains(out, "en public-content/lessons/1-intro.junior.json: pending") {
+		t.Fatalf("want pending, exit %d\n%s", code, out)
+	}
+	h, _ := i18n.HashFile(lesson)
+	l := &i18n.Ledger{Language: "en", Entries: []i18n.Entry{{Path: "public-content/lessons/1-intro.junior.json", Kind: i18n.KindAdaptive,
+		SourceHash: h, Status: i18n.ReviewApproved, Reviewer: "owner", Date: "2026-11-13"}}}
+	if err := l.Save(root); err != nil {
+		t.Fatal(err)
+	}
+	if code, out := runVerify(dir); code != 0 {
+		t.Fatalf("want pass, exit %d\n%s", code, out)
+	}
+	writeFile(t, lesson, `{"lessonId":"1-intro","mode":"junior","title":"T2","origin":"own"}`)
+	if code, out := runVerify(dir); code != 1 || !strings.Contains(out, "stale: the text changed after approval") {
+		t.Fatalf("want stale, exit %d\n%s", code, out)
+	}
+}

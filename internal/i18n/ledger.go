@@ -1,4 +1,4 @@
-// SPEC: SPEC-009 FR-017, FR-018, FR-019; data-model "ReviewEntry"
+// SPEC: SPEC-009 FR-017, FR-018, FR-019; data-model "ReviewEntry"; SPEC-013 FR-008 (English owner approvals)
 
 package i18n
 
@@ -22,6 +22,7 @@ const (
 	KindAdaptive = "adaptive"
 	KindQuiz     = "quiz"
 	KindUI       = "ui"
+	KindNotebook = "notebook"
 )
 
 // Entry is one reviewed file. Paths are relative to the repository root, with forward slashes.
@@ -123,7 +124,7 @@ func Targets(root, code string) ([]Target, error) {
 		{Path: "web/src/i18n/" + code + ".json", Source: "web/src/i18n/en.json", Kind: KindUI},
 		{Path: "web/src/data/quizzes/" + code + ".json", Source: "web/src/data/quizzes/en.json", Kind: KindQuiz},
 	}
-	for _, mode := range []string{"junior", "plain-english"} {
+	for _, mode := range []string{"junior", "plain-english", "detailed"} {
 		files, err := filepath.Glob(filepath.Join(root, "public-content", "lessons", "*."+mode+".json"))
 		if err != nil {
 			return nil, err
@@ -235,6 +236,91 @@ func Check(root, code string) []Problem {
 			add(e.Path, "review entry for a file this language does not need")
 		case e.Kind != KindBase && e.Kind != KindAdaptive && e.Kind != KindQuiz && e.Kind != KindUI:
 			add(e.Path, fmt.Sprintf("unknown kind %q", e.Kind))
+		}
+	}
+	return out
+}
+
+// EnglishTargets lists the English files the owner must approve (SPEC-013 FR-008): every lesson file
+// marked "origin": "own", the quiz file once any quiz is ours, and every notebook. Path and Source are
+// the same file.
+func EnglishTargets(root string) ([]Target, error) {
+	var out []Target
+	lessons, err := filepath.Glob(filepath.Join(root, "public-content", "lessons", "*.json"))
+	if err != nil {
+		return nil, err
+	}
+	for _, f := range lessons {
+		raw, err := os.ReadFile(f)
+		if err != nil {
+			return nil, err
+		}
+		var l struct {
+			Origin string `json:"origin"`
+		}
+		if json.Unmarshal(raw, &l) == nil && l.Origin == "own" {
+			p := "public-content/lessons/" + filepath.Base(f)
+			out = append(out, Target{Path: p, Source: p, Kind: KindAdaptive})
+		}
+	}
+	const quiz = "web/src/data/quizzes/en.json"
+	if raw, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(quiz))); err == nil {
+		var quizzes map[string]struct {
+			Origin string `json:"origin"`
+		}
+		if err := json.Unmarshal(raw, &quizzes); err != nil {
+			return nil, fmt.Errorf("%s: %w", quiz, err)
+		}
+		for _, q := range quizzes {
+			if q.Origin == "own" {
+				out = append(out, Target{Path: quiz, Source: quiz, Kind: KindQuiz})
+				break
+			}
+		}
+	} else if !errors.Is(err, os.ErrNotExist) {
+		return nil, err
+	}
+	notebooks, err := filepath.Glob(filepath.Join(root, "notebooks", "*.ipynb"))
+	if err != nil {
+		return nil, err
+	}
+	for _, f := range notebooks {
+		p := "notebooks/" + filepath.Base(f)
+		out = append(out, Target{Path: p, Source: p, Kind: KindNotebook})
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Path < out[j].Path })
+	return out, nil
+}
+
+// EnglishStatus is "approved", "pending" (no approval) or "stale" (the file changed after approval).
+func EnglishStatus(root string, t Target, l *Ledger) string {
+	e := l.Find(t.Path)
+	if e == nil || e.Status != ReviewApproved {
+		return "pending"
+	}
+	if h, err := HashFile(filepath.Join(root, filepath.FromSlash(t.Path))); err != nil || h != e.SourceHash {
+		return "stale"
+	}
+	return "approved"
+}
+
+// CheckEnglish reports every English target without a current owner approval. Empty means ready.
+func CheckEnglish(root string) []Problem {
+	ledger, err := LoadLedger(root, English.Code)
+	if err != nil {
+		return []Problem{{Path: "content/review/en.json", Reason: err.Error()}}
+	}
+	targets, err := EnglishTargets(root)
+	if err != nil {
+		return []Problem{{Path: "public-content", Reason: err.Error()}}
+	}
+	var out []Problem
+	for _, t := range targets {
+		switch EnglishStatus(root, t, ledger) {
+		case "pending":
+			out = append(out, Problem{Path: t.Path, Reason: "pending"})
+		case "stale":
+			out = append(out, Problem{Path: t.Path, Reason: "stale: the text changed after approval"})
 		}
 	}
 	return out

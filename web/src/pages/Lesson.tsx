@@ -1,4 +1,4 @@
-// SPEC: FR-UI-03, FR-UI-08, FR-PRG-01, FR-PRG-02, FR-ADAPT-01..05, AC-20
+// SPEC: FR-UI-03, FR-UI-08, FR-PRG-01, FR-PRG-02, FR-ADAPT-01..05, AC-20; SPEC-013 (Detailed, own notebooks)
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
@@ -17,6 +17,8 @@ import { MarkdownBlock } from '../components/MarkdownBlock'
 import { TutorPanel } from '../components/TutorPanel'
 import { AudienceModeSelector } from '../components/AudienceModeSelector'
 import { AdaptiveLessonView } from '../components/AdaptiveLessonView'
+
+const OWN_COLAB_PREFIX = 'https://colab.research.google.com/github/ashishisme/AI-Learning-Mod/'
 
 export const Lesson: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -53,22 +55,24 @@ export const Lesson: React.FC = () => {
       })
   }, [id, code])
 
-  // 2. Fetch adaptive payload when mode changes
+  // 2. Fetch adaptive payload when mode changes. SPEC-013: the Standard journey ("Detailed") asks for our
+  // Detailed version and keeps the standard lesson until that lesson has one.
+  const adaptiveMode = audienceMode === 'standard' ? 'detailed' : audienceMode
   useEffect(() => {
-    if (!id || audienceMode === 'standard') {
+    if (!id) {
       setAdaptivePayload(null)
       return
     }
-
-    fetchAdaptiveLesson(id, audienceMode)
+    setAdaptivePayload(null)
+    fetchAdaptiveLesson(id, adaptiveMode)
       .then((payload) => {
         setAdaptivePayload(payload)
       })
       .catch((err) => {
-        console.warn('Could not load adaptive payload for mode:', audienceMode, err)
+        console.warn('Could not load adaptive payload for mode:', adaptiveMode, err)
         setAdaptivePayload(null)
       })
-  }, [id, audienceMode, code])
+  }, [id, adaptiveMode, code])
 
   if (loading) {
     return (
@@ -98,12 +102,17 @@ export const Lesson: React.FC = () => {
   }
 
   const isCompleted = !!completedLessons[lesson.id]
-  const hasNotebook = !!lesson.colabUrl || lesson.blocks.some((b) => b.type === 'notebook')
+  const isAdaptiveActive = adaptivePayload !== null
+  // SPEC-013 FR-016: our own lessons open only our own notebooks; derived lessons keep today's link until replaced.
+  const ownColab = adaptivePayload?.colabUrl?.startsWith(OWN_COLAB_PREFIX) ? adaptivePayload.colabUrl : undefined
+  const derivedNotebook = !!lesson.colabUrl || lesson.blocks.some((b) => b.type === 'notebook')
+  const hasNotebook = isAdaptiveActive && adaptivePayload?.origin === 'own' ? !!ownColab : !!ownColab || derivedNotebook
   const colabLink =
+    ownColab ||
     lesson.colabUrl ||
     `https://colab.research.google.com/github/microsoft/AI-For-Beginners/blob/main/${lesson.path.replace(/README\.md$/, 'lab.ipynb')}`
-
-  const isAdaptiveActive = audienceMode !== 'standard' && adaptivePayload !== null
+  // The tutor grounds on the version on screen (SPEC-013 research R4).
+  const tutorMode = audienceMode === 'standard' && isAdaptiveActive ? 'detailed' : audienceMode
   // FR-UI-26: Read section speaks in the language the lesson came back in (English fallback included).
   const lessonSpeechLang = languages.find((l) => l.code === (lesson.servedLang ?? 'en'))?.speechLang ?? 'en-US'
 
@@ -217,7 +226,7 @@ export const Lesson: React.FC = () => {
       )}
 
       {/* Grounded AI Teaching Assistant */}
-      {(tutorEnabled || tutorNeedsSetup) && <TutorPanel lessonId={lesson.id} needsSetup={tutorNeedsSetup} />}
+      {(tutorEnabled || tutorNeedsSetup) && <TutorPanel lessonId={lesson.id} needsSetup={tutorNeedsSetup} mode={tutorMode} />}
     </div>
   )
 }

@@ -429,6 +429,35 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
         })}
       </div>
 
+      {/* SPEC-013 FR-004: Detailed lessons end with a short "Go further" list of neutral, free sources */}
+      {payload.goFurther && payload.goFurther.length > 0 && (
+        <section
+          data-testid="go-further"
+          aria-labelledby="go-further-title"
+          className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3"
+        >
+          <h2 id="go-further-title" className="text-xl font-bold text-slate-900 dark:text-white">
+            🧭 {t('adaptive.goFurther')}
+          </h2>
+          <ul className="space-y-2">
+            {payload.goFurther.map((g, i) => (
+              <li key={i}>
+                <a
+                  href={g.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  data-testid="go-further-link"
+                  className="inline-flex min-h-[44px] items-center font-semibold text-indigo-700 dark:text-indigo-300 underline underline-offset-2 hover:text-indigo-900 dark:hover:text-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 rounded"
+                >
+                  {g.title}
+                </a>
+                <p className="text-sm text-slate-700 dark:text-slate-300">{g.note}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {/* SPEC FR-UI-23: "3 things you learned", before the quiz */}
       {banded && payload.recap && payload.recap.length > 0 && (
         <section data-testid="lesson-recap" aria-labelledby="lesson-recap-title" className="kids-card p-6 sm:p-8 space-y-3">

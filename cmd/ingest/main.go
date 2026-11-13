@@ -105,6 +105,11 @@ func verify(contentDir string, out io.Writer, checkAudio bool) int {
 	}
 	root := filepath.Dir(filepath.Clean(contentDir)) // public-content sits at the repository root
 	code := 0
+	// SPEC-013 FR-008: our own English lessons, quizzes and notebooks ship only with a current owner approval.
+	for _, p := range i18n.CheckEnglish(root) {
+		fmt.Fprintf(out, "en %s: %s\n", p.Path, p.Reason)
+		code = 1
+	}
 	for _, l := range langs.All() {
 		if l.Code == i18n.English.Code {
 			continue

@@ -76,9 +76,35 @@ func TestReviewRefusesBrokenOrUnknownFiles(t *testing.T) {
 	if e := l.Find("web/src/data/quizzes/hi.json"); e != nil && e.Status == i18n.ReviewApproved {
 		t.Error("a broken file was approved")
 	}
-	for _, args := range [][]string{{"-lang", "hi", "-approve", "web/src/i18n/hi.json"}, {"-lang", "en"}, {}} {
+	for _, args := range [][]string{{"-lang", "hi", "-approve", "web/src/i18n/hi.json"}, {"-lang", "en", "-approve", "x.json"}, {}} {
 		if code, out := review(root, args...); code != 2 {
 			t.Errorf("%v: exit %d\n%s", args, code, out)
 		}
+	}
+}
+
+// SPEC-013 FR-008: the owner approves our own English files; an edit afterwards makes them stale.
+func TestReviewEnglishOwnFiles(t *testing.T) {
+	root := repo(t)
+	lesson := "public-content/lessons/1-intro.junior.json"
+	f := filepath.Join(root, filepath.FromSlash(lesson))
+	_ = os.MkdirAll(filepath.Dir(f), 0o755)
+	_ = os.WriteFile(f, []byte(`{"origin":"own","title":"A"}`), 0o644)
+
+	if code, out := review(root, "-lang", "en"); code != 0 || !strings.Contains(out, "pending") || !strings.Contains(out, lesson) {
+		t.Fatalf("list: %d %q", code, out)
+	}
+	if code, out := review(root, "-lang", "en", "-reviewer", "owner", "-approve", "web/src/i18n/en.json"); code != 1 || !strings.Contains(out, "not an English file to approve") {
+		t.Fatalf("non-target should be refused: %d %q", code, out)
+	}
+	if code, out := review(root, "-lang", "en", "-reviewer", "owner", "-approve", lesson); code != 0 {
+		t.Fatalf("approve: %d %q", code, out)
+	}
+	if p := i18n.CheckEnglish(root); len(p) != 0 {
+		t.Fatalf("want approved, got %+v", p)
+	}
+	_ = os.WriteFile(f, []byte(`{"origin":"own","title":"B"}`), 0o644)
+	if _, out := review(root, "-lang", "en"); !strings.Contains(out, "stale") {
+		t.Fatalf("want stale, got %q", out)
 	}
 }

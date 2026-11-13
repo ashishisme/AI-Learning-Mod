@@ -70,7 +70,7 @@ type TutorRequest struct {
 // toneForMode returns the extra system-prompt guidance for an audience mode.
 func toneForMode(mode string) (string, bool) {
 	switch mode {
-	case "", "standard":
+	case "", "standard", "detailed": // SPEC-013: detailed is the Standard journey's own lesson
 		return "", true
 	case "junior":
 		return "Tone: explain in a friendly way for a 10-year-old, using playful analogies.", true
@@ -608,6 +608,71 @@ func fileExists(p string) bool {
 	return err == nil && !info.IsDir()
 }
 
+type tutorBlock struct {
+	Type    string `json:"type"`
+	Content string `json:"content"`
+}
+
+// tutorLesson reads either a standard lesson (blocks) or a section-format journey lesson (sections).
+type tutorLesson struct {
+	Title    string       `json:"title"`
+	Blocks   []tutorBlock `json:"blocks"`
+	Intro    string       `json:"intro"`
+	Sections []struct {
+		Heading      string `json:"heading"`
+		BigIdea      string `json:"bigIdea"`
+		BodyMarkdown string `json:"bodyMarkdown"`
+		Teen         *struct {
+			Body string `json:"body"`
+		} `json:"teen"`
+		More *struct {
+			Title        string `json:"title"`
+			BodyMarkdown string `json:"bodyMarkdown"`
+		} `json:"more"`
+	} `json:"sections"`
+}
+
+// sectionsMarkdown renders sections as "## heading" plus their text, including a banded lesson's 12+ layer.
+func (l tutorLesson) sectionsMarkdown() string {
+	var sb strings.Builder
+	if l.Intro != "" {
+		sb.WriteString(l.Intro + "\n\n")
+	}
+	for _, s := range l.Sections {
+		sb.WriteString("## " + s.Heading + "\n\n")
+		for _, part := range []string{s.BigIdea, s.BodyMarkdown} {
+			if part != "" {
+				sb.WriteString(part + "\n\n")
+			}
+		}
+		if s.Teen != nil && s.Teen.Body != "" {
+			sb.WriteString(s.Teen.Body + "\n\n")
+		}
+		if s.More != nil && s.More.BodyMarkdown != "" {
+			sb.WriteString(s.More.BodyMarkdown + "\n\n")
+		}
+	}
+	return sb.String()
+}
+
+// modeLessonPath is the journey's section-format file for a lesson, in the learner's language or English,
+// or "" when the mode is standard or has no file. mode is checked against a fixed list before use in a path.
+func modeLessonPath(contentDir, lessonID, mode string, language i18n.Language) string {
+	if mode != "junior" && mode != "plain-english" && mode != "detailed" {
+		return ""
+	}
+	name := lessonID + "." + mode + ".json"
+	if language.Code != i18n.English.Code && language.Code != "" {
+		if p := filepath.Join(contentDir, "lang", language.Code, "lessons", name); fileExists(p) {
+			return p
+		}
+	}
+	if p := filepath.Join(contentDir, "lessons", name); fileExists(p) {
+		return p
+	}
+	return ""
+}
+
 // loadTutorPrompt builds the prompt from the lesson on disk (FR-TUT-02, FR-TUT-04, §7.3).
 // emphaticCitation adds the explicit citation instruction that small local models need.
 func loadTutorPrompt(contentDir string, req TutorRequest, tone string, maxBytes int, emphaticCitation bool, language i18n.Language) (p tutorPrompt, status int, msg string) {
@@ -619,21 +684,23 @@ func loadTutorPrompt(contentDir string, req TutorRequest, tone string, maxBytes 
 			lessonPath = translated
 		}
 	}
+	// SPEC-013: ground on the version the learner sees. A journey's section-format file (learner's language,
+	// then English) wins over the standard lesson, so citations name headings that are on the page.
+	if modePath := modeLessonPath(contentDir, req.LessonID, req.Mode, language); modePath != "" {
+		lessonPath = modePath
+	}
 	lessonData, err := os.ReadFile(lessonPath)
 	if err != nil {
 		// Unknown lesson -> 404 per §7.1.3
 		return p, http.StatusNotFound, "unknown lesson"
 	}
 
-	var lesson struct {
-		Title  string `json:"title"`
-		Blocks []struct {
-			Type    string `json:"type"`
-			Content string `json:"content"`
-		} `json:"blocks"`
-	}
+	var lesson tutorLesson
 	if err := json.Unmarshal(lessonData, &lesson); err != nil {
 		return p, http.StatusInternalServerError, "internal error"
+	}
+	if len(lesson.Blocks) == 0 && len(lesson.Sections) > 0 {
+		lesson.Blocks = append(lesson.Blocks, tutorBlock{Type: "markdown", Content: lesson.sectionsMarkdown()})
 	}
 
 	// FR-TUT-02: Concatenate lesson Markdown in block order

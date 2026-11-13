@@ -10,9 +10,11 @@ interface TutorPanelProps {
   // SPEC-008 FR-024 (amended 2026-11-03): on a hosted site with its tutor off, the panel is shown greyed
   // out until the learner connects their own local AI in Settings (FR-021a).
   needsSetup?: boolean
+  // SPEC-013 research R4: the lesson version on screen ("detailed" when the Standard journey shows ours).
+  mode?: string
 }
 
-export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId, needsSetup = false }) => {
+export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId, needsSetup = false, mode }) => {
   const openSettings = useSettingsStore((s) => s.setDrawerOpen)
   const { mode: audienceMode } = useAudienceModeStore()
   const t = useT()
@@ -165,7 +167,7 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId, needsSetup = f
           setErrorMessage(msg)
         }
       },
-      audienceMode
+      mode ?? audienceMode
     )
   }
 

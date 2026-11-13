@@ -38,6 +38,8 @@ var Translatable = map[string][]string{
 		"sections[].teen.jargonBuster[].term", "sections[].teen.jargonBuster[].simpleExplanation",
 		"sections[].checkIn.question", "sections[].checkIn.options[]", "sections[].checkIn.praise",
 		"sections[].checkIn.explanation",
+		// SPEC-013: Detailed lessons. goFurther[].url, origin and colabUrl must equal English.
+		"goFurther[].title", "goFurther[].note",
 	},
 	KindQuiz: {
 		"*.title", "*.description", "*.questions[].prompt", "*.questions[].options[]",

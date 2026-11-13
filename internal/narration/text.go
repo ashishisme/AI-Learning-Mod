@@ -21,7 +21,7 @@ var (
 	tagRe      = regexp.MustCompile(`</?[^>]+(>|$)`)
 	markRe     = regexp.MustCompile("[*_#`~>]")
 	listNumRe  = regexp.MustCompile(`([0-9]+)\.\s+`)
-	modesInUse = []string{"junior", "plain-english"}
+	modesInUse = []string{"junior", "plain-english", "detailed"}
 )
 
 // Clean strips Markdown the way the browser does before speaking: links become their text, HTML tags

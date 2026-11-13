@@ -5,6 +5,8 @@
 //
 //	go run ./cmd/review -lang hi                                   # list every file and its status
 //	go run ./cmd/review -lang hi -reviewer "Name" -approve <path>…  # approve the files you checked
+//	go run ./cmd/review -lang en                                   # SPEC-013 FR-008: our own English files
+//	go run ./cmd/review -lang en -reviewer "owner" -approve <path>…  # the owner approves English text
 //
 // Approving records the current hashes of the file and its English source, the reviewer and today's
 // date in content/review/<lang>.json. A file whose structure differs from English is refused. Any later
@@ -36,9 +38,12 @@ func run(root string, args []string, now func() time.Time, stdout, stderr io.Wri
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
-	if *lang == "" || *lang == i18n.English.Code {
-		fmt.Fprintln(stderr, "-lang must name a translated language, for example -lang hi")
+	if *lang == "" {
+		fmt.Fprintln(stderr, "-lang must name a language, for example -lang hi or -lang en")
 		return 2
+	}
+	if *lang == i18n.English.Code {
+		return runEnglish(root, *approve, *reviewer, fs.Args(), now, stdout, stderr)
 	}
 	targets, err := i18n.Targets(root, *lang)
 	if err != nil {
@@ -132,4 +137,65 @@ func status(root string, t i18n.Target, l *i18n.Ledger) string {
 		return "stale"
 	}
 	return "approved"
+}
+
+// runEnglish lists or approves the English files that are ours (SPEC-013 FR-008). An approval records the
+// file's hash, so any later edit makes it stale.
+func runEnglish(root string, approve bool, reviewer string, paths []string, now func() time.Time, stdout, stderr io.Writer) int {
+	targets, err := i18n.EnglishTargets(root)
+	if err != nil {
+		fmt.Fprintln(stderr, err)
+		return 2
+	}
+	ledger, err := i18n.LoadLedger(root, i18n.English.Code)
+	if err != nil {
+		fmt.Fprintln(stderr, err)
+		return 2
+	}
+	if !approve {
+		for _, t := range targets {
+			fmt.Fprintf(stdout, "%-12s %-9s %s\n", i18n.EnglishStatus(root, t, ledger), t.Kind, t.Path)
+		}
+		return 0
+	}
+	if strings.TrimSpace(reviewer) == "" {
+		fmt.Fprintln(stderr, "-approve needs -reviewer \"Your Name\"")
+		return 2
+	}
+	if len(paths) == 0 {
+		fmt.Fprintln(stderr, "name the files to approve, as `-lang en` lists them")
+		return 2
+	}
+	byPath := map[string]i18n.Target{}
+	for _, t := range targets {
+		byPath[t.Path] = t
+	}
+	failed := false
+	for _, p := range paths {
+		p = filepath.ToSlash(filepath.Clean(p))
+		t, ok := byPath[p]
+		if !ok {
+			fmt.Fprintf(stderr, "%s: not an English file to approve (only \"origin\": \"own\" lessons, own quizzes and notebooks)\n", p)
+			failed = true
+			continue
+		}
+		h, err := i18n.HashFile(filepath.Join(root, filepath.FromSlash(t.Path)))
+		if err != nil {
+			fmt.Fprintf(stderr, "%s: %v\n", p, err)
+			failed = true
+			continue
+		}
+		ledger.Upsert(i18n.Entry{Path: t.Path, Kind: t.Kind, SourceHash: h})
+		e := ledger.Find(t.Path)
+		e.Status, e.Reviewer, e.Date = i18n.ReviewApproved, strings.TrimSpace(reviewer), now().Format("2006-01-02")
+		fmt.Fprintf(stdout, "approved  %s\n", p)
+	}
+	if err := ledger.Save(root); err != nil {
+		fmt.Fprintln(stderr, err)
+		return 1
+	}
+	if failed {
+		return 1
+	}
+	return 0
 }

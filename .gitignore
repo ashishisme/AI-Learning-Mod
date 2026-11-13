@@ -10,6 +10,7 @@ public-content/*
 public-content/lessons/*
 !public-content/lessons/*.junior.json
 !public-content/lessons/*.plain-english.json
+!public-content/lessons/*.detailed.json
 # SPEC-009: per-language content. Only the language list and hand-reviewed adaptive translations
 # are tracked; ingested base lessons, indexes and recorded audio are generated at build time.
 !public-content/languages.json
@@ -21,6 +22,7 @@ public-content/lang/*/*
 public-content/lang/*/lessons/*
 !public-content/lang/*/lessons/*.junior.json
 !public-content/lang/*/lessons/*.plain-english.json
+!public-content/lang/*/lessons/*.detailed.json
 .narration-cache/
 
 # Build artifacts and binaries (Rule 10, AC-30)

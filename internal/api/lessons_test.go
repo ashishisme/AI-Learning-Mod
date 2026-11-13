@@ -267,3 +267,34 @@ func TestGetLesson_AdaptiveModes(t *testing.T) {
 		t.Errorf("expected canonical title Lesson 2, got %v", resp2["title"])
 	}
 }
+
+// SPEC-013: the Standard journey asks for mode=detailed and gets our sections when they exist,
+// otherwise the standard lesson.
+func TestGetLesson_DetailedMode(t *testing.T) {
+	contentDir := setupTestContent(t)
+	detailed := `{"lessonId":"lesson-1","mode":"detailed","origin":"own","title":"Detailed One","sections":[{"heading":"What it is"}]}`
+	if err := os.WriteFile(filepath.Join(contentDir, "lessons", "lesson-1.detailed.json"), []byte(detailed), 0644); err != nil {
+		t.Fatal(err)
+	}
+	router := NewRouter(RouterConfig{ContentDir: contentDir})
+
+	get := func(path string) map[string]any {
+		t.Helper()
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, path, nil))
+		if rec.Code != http.StatusOK {
+			t.Fatalf("%s: expected 200, got %d", path, rec.Code)
+		}
+		var resp map[string]any
+		if err := json.Unmarshal(rec.Body.Bytes(), &resp); err != nil {
+			t.Fatal(err)
+		}
+		return resp
+	}
+	if r := get("/api/lessons/lesson-1?mode=detailed"); r["sections"] == nil || r["mode"] != "detailed" {
+		t.Errorf("want the detailed sections, got %v", r)
+	}
+	if r := get("/api/lessons/lesson-2?mode=detailed"); r["sections"] != nil || r["title"] != "Lesson 2 Title" {
+		t.Errorf("want the standard lesson as fallback, got %v", r)
+	}
+}

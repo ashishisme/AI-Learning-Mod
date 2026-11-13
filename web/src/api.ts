@@ -438,8 +438,11 @@ export interface ChoiceQuestion {
 
 export interface AdaptiveLessonPayload {
   lessonId: string
-  mode: "junior" | "plain-english"
+  mode: AdaptiveMode
   title: string
+  origin?: "own" // SPEC-013 FR-008: our own text, owner-approved in content/review/en.json
+  goFurther?: { title: string; url: string; note: string }[] // SPEC-013 FR-004: Detailed only
+  colabUrl?: string // SPEC-013 FR-016: our own notebook for this Detailed lesson
   readingTimeMinutes?: number
   mascot?: {
     name: string
@@ -464,7 +467,9 @@ export interface AdaptiveLessonPayload {
 
 // Returns null when the lesson has no adaptive version: the server then answers 200 with the
 // standard lesson, which has blocks instead of sections.
-export async function fetchAdaptiveLesson(id: string, mode: "junior" | "plain-english"): Promise<(AdaptiveLessonPayload & Served) | null> {
+export type AdaptiveMode = "junior" | "plain-english" | "detailed" // SPEC-013: detailed is the Standard journey's own version
+
+export async function fetchAdaptiveLesson(id: string, mode: AdaptiveMode): Promise<(AdaptiveLessonPayload & Served) | null> {
   const res = await fetch(withLang(`/api/lessons/${encodeURIComponent(id)}?mode=${encodeURIComponent(mode)}`))
   if (!res.ok) {
     const body = await res.json().catch(() => null)
