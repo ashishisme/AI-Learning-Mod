@@ -411,10 +411,18 @@ export interface AdaptiveSection {
       explanation: string
     }
   }
-  jargonBuster?: Array<{
-    term: string
-    simpleExplanation: string
-  }>
+  jargonBuster?: JargonEntry[]
+  // SPEC FR-CNT-09 (SPEC-012): banded Kids lessons
+  bigIdea?: string
+  more?: { title?: string; bodyMarkdown: string }
+  teen?: { add?: string; body?: string; jargonBuster?: JargonEntry[] }
+  checkIn?: ChoiceQuestion & { praise?: string }
+}
+
+export interface JargonEntry {
+  term: string
+  simpleExplanation: string
+  visual?: string // key of web/public/brand/words/<key>.svg (FR-UI-21)
 }
 
 export interface ChoiceQuestion {
@@ -438,6 +446,8 @@ export interface AdaptiveLessonPayload {
   }
   intro?: string
   sections: AdaptiveSection[]
+  bands?: true // SPEC FR-CNT-09: this lesson has the 12+ layer and follows the Kids reading rules
+  recap?: string[] // FR-UI-23: "3 things you learned"
   teachBack?: ChoiceQuestion // SPEC-006 FR-REV-12
   recall?: ChoiceQuestion[] // SPEC-006 FR-REV-13
   miniQuiz?: Array<{
@@ -446,6 +456,7 @@ export interface AdaptiveLessonPayload {
     correctIndex: number
     praise?: string
     explanation?: string
+    band?: "12-14" // FR-UI-20: shown only in the 12–14 band, always after the core questions
   }>
 }
 

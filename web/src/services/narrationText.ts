@@ -7,6 +7,11 @@ export function sectionNarration(heading: string, chipQuote: string | undefined,
   return `${heading}. ${chipQuote ? chipSays + chipQuote + '. ' : ''}${body}`
 }
 
+// SPEC-012: a banded Kids section reads its big idea first. internal/narration/text.go CoreBody is its twin.
+export function coreBody(bigIdea: string | undefined, body: string): string {
+  return bigIdea ? `${bigIdea}\n\n${body}` : body
+}
+
 // Markdown out, words in: links become their text, HTML tags go (before '>' is removed, so a tag
 // never swallows the rest of the text), then the marks *_#`~> go, and list numbers keep one space.
 export function cleanForSpeech(text: string): string {

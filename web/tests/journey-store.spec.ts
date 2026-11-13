@@ -27,8 +27,9 @@ test.describe('Journey preference (SPEC-011)', () => {
       await seed(page, mode)
       await page.goto('/')
       await expect(page.locator('[data-journey]')).toHaveAttribute('data-journey', mode)
-      await expect.poll(async () => (await stored(page))?.version).toBe(1)
-      expect((await stored(page)).state).toMatchObject({ mode, hasChosenJourney: true })
+      // Version 2 (SPEC FR-UI-16 amended 2.11.0) adds the Kids age band, defaulting to 8-11.
+      await expect.poll(async () => (await stored(page))?.version).toBe(2)
+      expect((await stored(page)).state).toMatchObject({ mode, hasChosenJourney: true, ageBand: '8-11' })
       // Nothing else is touched.
       for (const [k, v] of Object.entries(OTHER)) expect(await page.evaluate((k) => localStorage.getItem(k), k)).toBe(v)
       // A second load leaves it as it is.

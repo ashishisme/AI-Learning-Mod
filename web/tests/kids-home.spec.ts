@@ -21,6 +21,7 @@ test.describe('Kids home: Chip\'s Trail (SPEC-011)', () => {
     await expect(chooser).toBeVisible()
     for (const id of ['junior', 'plain-english', 'standard']) await expect(page.getByTestId(`journey-choice-${id}`)).toBeVisible()
     await page.getByTestId('journey-choice-junior').click()
+    await page.getByTestId('age-band-skip').click() // SPEC-012: Kids asks for an age band first
     await expect(page.getByTestId('kids-home')).toBeVisible()
     await expect(page.getByTestId('kids-continue-button')).toHaveAttribute('href', '/lesson/1-intro')
     await page.reload()
@@ -112,6 +113,7 @@ test('the Kids home in Hindi has Hindi chooser and trail text and fits a 360 px 
   await page.goto('/')
   await expect(page.getByTestId('journey-chooser')).toContainText('आप कैसे सीखना चाहेंगे?')
   await page.getByTestId('journey-choice-junior').click()
+  await page.getByTestId('age-band-skip').click() // SPEC-012: Kids asks for an age band first
   await expect(page.getByTestId('kids-stop-1-intro')).toContainText('आप यहाँ हैं')
   await expect(page.getByTestId('kids-continue-button')).toContainText('सफ़र शुरू करें')
   expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false)

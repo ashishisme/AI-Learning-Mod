@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { createContext, useContext, useId, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { AdaptiveLessonPayload, Served } from '../api'
+import { AdaptiveLessonPayload, AdaptiveSection, JargonEntry, Served } from '../api'
 import { ChipMascotBanner } from './ChipMascotBanner'
 import { ChipVectorAvatar } from './ChipVectorAvatar'
 import { TuringWidget } from './TuringWidget'
@@ -13,17 +13,65 @@ import { BiasDetectiveWidget } from './BiasDetectiveWidget'
 import { MermaidRenderer } from './MermaidRenderer'
 import { VisualMetaphorCard } from './VisualMetaphorCard'
 import { AudioNarrationButton } from './AudioNarrationButton'
-import { sectionNarration } from '../services/narrationText'
+import { coreBody, sectionNarration } from '../services/narrationText'
 import { speechService } from '../services/speechService'
-import { useAudioStore, useProgressStore } from '../store'
+import { useAudienceModeStore, useAudioStore, useProgressStore } from '../store'
 import { StepperDiagram } from './StepperDiagram'
 import { WidgetFrame } from './WidgetFrame'
 import { ChoiceCard } from './ChoiceCard'
+import { WordCard } from './WordCard'
 import { useLanguage, useT } from '../i18n'
 
 interface Props {
   payload: AdaptiveLessonPayload & Served
 }
+
+// SPEC FR-UI-20 (SPEC-012): what one band sees of a banded Kids section.
+function bandView(section: AdaptiveSection, teenOn: boolean): { body: string; terms: JargonEntry[]; teenText?: string; replaced: boolean } {
+  const core = section.jargonBuster ?? []
+  if (!teenOn || !section.teen) return { body: section.bodyMarkdown, terms: core, replaced: false }
+  const terms = [...core, ...(section.teen.jargonBuster ?? [])]
+  if (section.teen.body) return { body: section.teen.body, terms, teenText: section.teen.body, replaced: true }
+  const add = section.teen.add
+  return { body: add ? `${section.bodyMarkdown}\n\n${add}` : section.bodyMarkdown, terms, teenText: add, replaced: false }
+}
+
+// Same as Go's readability.normTerm, so every bold word the release check accepts gets its card.
+const termKey = (t: string) => t.toLowerCase().trim().replace(/es$/, '').replace(/s$/, '')
+
+// The text of a Markdown node's children, so a bold word can be matched with its entry.
+const textOf = (children: React.ReactNode): string =>
+  React.Children.toArray(children).map((c) => (typeof c === 'string' || typeof c === 'number' ? String(c) : '')).join('')
+
+// SPEC FR-UI-21: one stable <strong> renderer (so React keeps the word button, and its focus, between
+// renders) that reads its section's words from context.
+interface WordContext {
+  section: string
+  terms: Map<string, JargonEntry>
+  openWord: string | null
+  setOpenWord: React.Dispatch<React.SetStateAction<string | null>>
+  speechLang?: string
+}
+const Words = createContext<WordContext | null>(null)
+
+const KidsStrong: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+  const ctx = useContext(Words)
+  const entry = ctx?.terms.get(termKey(textOf(children)))
+  const key = useId() // one key per bold word, so the same term bold twice opens only the tapped one
+  if (!ctx || !entry) return <strong>{children}</strong>
+  return (
+    <WordCard
+      entry={entry}
+      open={ctx.openWord === key}
+      onOpen={() => ctx.setOpenWord(key)}
+      onClose={() => ctx.setOpenWord((k) => (k === key ? null : k))}
+      speechLang={ctx.speechLang}
+    >
+      {children}
+    </WordCard>
+  )
+}
+const KIDS_MARKDOWN = { strong: KidsStrong }
 
 export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({})
@@ -35,13 +83,20 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
   const { activeTrackId, currentSentence, isPlaying } = useAudioStore()
 
   const isJunior = payload.mode === 'junior'
+  const ageBand = useAudienceModeStore((st) => st.ageBand)
+  // SPEC FR-UI-20: only a lesson marked "bands": true changes with the age band; others look as before.
+  const banded = isJunior && payload.bands === true
+  const teenOn = banded && ageBand === '12-14'
+  const [openWord, setOpenWord] = useState<string | null>(null)
+  // Band questions always come after the core ones (FR-CNT-09), so core indexes never move.
+  const miniQuiz = (payload.miniQuiz ?? []).filter((q) => !q.band || teenOn)
   const completedLessons = useProgressStore((st) => st.completedLessons)
   // SPEC-006 FR-REV-13: warm-up questions about lessons the learner has already completed
   const recallQuestions = (payload.recall ?? []).filter((q) => q.fromLesson && completedLessons[q.fromLesson])
 
   const handleSelectQuizOption = (qIdx: number, optIdx: number) => {
     setQuizAnswers((prev) => ({ ...prev, [qIdx]: optIdx }))
-    const q = payload.miniQuiz?.[qIdx]
+    const q = miniQuiz[qIdx]
     if (q) {
       const isCorrect = optIdx === q.correctIndex
       speechService.playChime(isCorrect ? 'success' : 'click')
@@ -109,7 +164,37 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
       <div className="space-y-12">
         {payload.sections.map((section, sIdx) => {
           const sectionTrackId = `section-${section.id || sIdx}`
-          const isThisSectionPlaying = isPlaying && activeTrackId === sectionTrackId
+          const teenTrackId = `${sectionTrackId}-teen`
+          const view = bandView(section, teenOn)
+          const isThisSectionPlaying = isPlaying && (activeTrackId === sectionTrackId || activeTrackId === teenTrackId)
+          const termsByKey = new Map(view.terms.map((j) => [termKey(j.term), j]))
+          const firstVisual = banded && !section.diagram ? view.terms.find((j) => j.visual) : undefined
+          const diagramBlock = (
+            <>
+              {section.diagram && section.diagram.type === 'stepper' && section.diagram.steps && (
+                <StepperDiagram
+                  caption={section.diagram.caption}
+                  alt={section.diagram.alt}
+                  steps={section.diagram.steps}
+                />
+              )}
+              {section.diagram && section.diagram.type !== 'stepper' && section.diagram.content && (
+                <MermaidRenderer
+                  chart={section.diagram.content}
+                  caption={section.diagram.caption}
+                  alt={section.diagram.alt}
+                />
+              )}
+              {firstVisual && (
+                <img
+                  src={`/brand/words/${firstVisual.visual}.svg`}
+                  alt={t('adaptive.wordPicture', { term: firstVisual.term })}
+                  data-testid="section-picture"
+                  className="block w-full max-w-sm mx-auto h-auto rounded-2xl bg-amber-50 dark:bg-slate-800"
+                />
+              )}
+            </>
+          )
 
           return (
             <article
@@ -128,14 +213,37 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                 <h2 className={isJunior ? "kids-heading text-xl sm:text-2xl flex items-center gap-2.5" : "text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5"}>
                   {section.heading}
                 </h2>
-                <AudioNarrationButton
-                  id={sectionTrackId}
-                  trackKey={trackPrefix + sectionTrackId}
-                  speechLang={contentSpeechLang}
-                  textToRead={sectionNarration(section.heading, section.chipQuote, section.bodyMarkdown, t('narration.chipSays'))}
-                  label={t('narration.readSection')}
-                  variant="pill"
-                />
+                <span className="flex flex-wrap items-center gap-2">
+                  {view.replaced ? (
+                    <AudioNarrationButton
+                      id={teenTrackId}
+                      trackKey={trackPrefix + teenTrackId}
+                      speechLang={contentSpeechLang}
+                      textToRead={view.teenText ?? ''}
+                      label={t('narration.readSection')}
+                      variant="pill"
+                    />
+                  ) : (
+                    <AudioNarrationButton
+                      id={sectionTrackId}
+                      trackKey={trackPrefix + sectionTrackId}
+                      speechLang={contentSpeechLang}
+                      textToRead={sectionNarration(section.heading, section.chipQuote, coreBody(section.bigIdea, section.bodyMarkdown), t('narration.chipSays'))}
+                      label={t('narration.readSection')}
+                      variant="pill"
+                    />
+                  )}
+                  {view.teenText && !view.replaced && (
+                    <AudioNarrationButton
+                      id={teenTrackId}
+                      trackKey={trackPrefix + teenTrackId}
+                      speechLang={contentSpeechLang}
+                      textToRead={view.teenText}
+                      label={t('narration.readTeen')}
+                      variant="pill"
+                    />
+                  )}
+                </span>
               </div>
 
               {/* Active Karaoke Spoken Sentence Indicator */}
@@ -148,9 +256,21 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                   <span className="font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider text-[10px] flex-shrink-0">
                     {t('narration.speaking')}
                   </span>
-                  <span className="italic line-clamp-2">"{currentSentence}"</span>
+                  <span data-reading="true" className="italic line-clamp-2">"{currentSentence}"</span>
                 </div>
               )}
+
+              {/* SPEC FR-UI-23: a banded card opens with its big idea, then its picture */}
+              {section.bigIdea && (
+                <p data-testid="big-idea" className="flex items-start gap-3 p-4 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border-2 border-sky-300 dark:border-sky-700 text-base sm:text-lg font-bold text-sky-950 dark:text-sky-50">
+                  <span aria-hidden="true">💡</span>
+                  <span>
+                    <span className="sr-only">{t('adaptive.bigIdea')}: </span>
+                    {section.bigIdea}
+                  </span>
+                </p>
+              )}
+              {banded && diagramBlock}
 
               {/* Chip Quote if Junior Mode */}
               {isJunior && section.chipQuote && (
@@ -173,31 +293,37 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
 
               {/* Body Markdown Content */}
               <div className="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-200 text-sm sm:text-base leading-relaxed">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {section.bodyMarkdown}
-                </ReactMarkdown>
+                <Words.Provider value={{ section: String(sIdx), terms: termsByKey, openWord, setOpenWord, speechLang: contentSpeechLang }}>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} components={isJunior ? KIDS_MARKDOWN : undefined}>
+                    {view.body}
+                  </ReactMarkdown>
+                </Words.Provider>
               </div>
 
               {/* Visual diagram: stepper (junior) or Mermaid SVG, always with alt text */}
-              {section.diagram && section.diagram.type === 'stepper' && section.diagram.steps && (
-                <StepperDiagram
-                  caption={section.diagram.caption}
-                  alt={section.diagram.alt}
-                  steps={section.diagram.steps}
-                />
-              )}
-              {section.diagram && section.diagram.type !== 'stepper' && section.diagram.content && (
-                <MermaidRenderer
-                  chart={section.diagram.content}
-                  caption={section.diagram.caption}
-                  alt={section.diagram.alt}
-                />
+              {!banded && diagramBlock}
+
+              {/* SPEC FR-CNT-09: "Want to know more?", open for 12-14 and closed for 8-11 */}
+              {banded && section.more && (
+                <details
+                  key={`more-${ageBand}`}
+                  open={teenOn}
+                  data-testid="want-to-know-more"
+                  className="rounded-2xl border-2 border-violet-200 dark:border-violet-800 bg-violet-50/60 dark:bg-violet-950/30"
+                >
+                  <summary className="min-h-[44px] flex items-center px-4 py-2 cursor-pointer text-sm font-bold text-violet-950 dark:text-violet-100 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500">
+                    {section.more.title || t('adaptive.wantToKnowMore')}
+                  </summary>
+                  <div className="px-4 pb-4 prose prose-slate dark:prose-invert max-w-none text-sm text-slate-800 dark:text-slate-100">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{section.more.bodyMarkdown}</ReactMarkdown>
+                  </div>
+                </details>
               )}
 
               {section.interactiveWidget && (
                 <WidgetFrame
                   goal={section.interactiveWidget.goal}
-                  scaffold={section.interactiveWidget.scaffold}
+                  scaffold={banded && !teenOn ? 'guided' : section.interactiveWidget.scaffold}
                   predictionPrompt={section.interactiveWidget.predictionPrompt}
                   hints={section.interactiveWidget.hints}
                   successMessage={section.interactiveWidget.successMessage}
@@ -252,13 +378,24 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
               )}
 
               {/* Jargon Buster List */}
-              {section.jargonBuster && section.jargonBuster.length > 0 && (
+              {/* SPEC FR-UI-23: a section's check-in, never scored */}
+              {banded && section.checkIn && (
+                <ChoiceCard
+                  testId={`check-in-${section.id || sIdx}`}
+                  heading={t('adaptive.checkIn')}
+                  emoji="🤖"
+                  question={section.checkIn}
+                  praise={section.checkIn.praise}
+                />
+              )}
+
+              {view.terms.length > 0 && (
                 <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80">
                   <span className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-2.5">
-                    💡 {t('adaptive.jargonBuster')}
+                    💡 {t(banded ? 'adaptive.wordsYouLearned' : 'adaptive.jargonBuster')}
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {section.jargonBuster.map((jb, jIdx) => (
+                    {view.terms.map((jb, jIdx) => (
                       <div
                         key={jIdx}
                         className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 text-xs shadow-2xs"
@@ -290,6 +427,18 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
         })}
       </div>
 
+      {/* SPEC FR-UI-23: "3 things you learned", before the quiz */}
+      {banded && payload.recap && payload.recap.length > 0 && (
+        <section data-testid="lesson-recap" aria-labelledby="lesson-recap-title" className="kids-card p-6 sm:p-8 space-y-3">
+          <h2 id="lesson-recap-title" className="kids-heading text-xl sm:text-2xl">🎒 {t('adaptive.recapTitle')}</h2>
+          <ol className="space-y-2 list-decimal pl-6 text-base text-slate-800 dark:text-slate-100">
+            {payload.recap.map((r, i) => (
+              <li key={i}>{r}</li>
+            ))}
+          </ol>
+        </section>
+      )}
+
       {/* Teach-it-back (SPEC-006 FR-REV-12) */}
       {payload.teachBack && (
         <ChoiceCard
@@ -301,7 +450,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
       )}
 
       {/* Mini-Quiz Section */}
-      {payload.miniQuiz && payload.miniQuiz.length > 0 && (
+      {miniQuiz.length > 0 && (
         <section className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-blue-50/60 via-indigo-50/40 to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 border-2 border-blue-300 dark:border-blue-800 shadow-lg">
           <div className="flex items-center gap-3 mb-6">
             <span className="text-3xl">🎯</span>
@@ -316,7 +465,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
           </div>
 
           <div className="space-y-6">
-            {payload.miniQuiz.map((q, qIdx) => {
+            {miniQuiz.map((q, qIdx) => {
               const selectedOpt = quizAnswers[qIdx]
               const hasAnswered = selectedOpt !== undefined
               const isCorrect = selectedOpt === q.correctIndex

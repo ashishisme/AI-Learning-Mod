@@ -1,5 +1,6 @@
 // SPEC-006 FR-REV-05: junior-track "stepper" diagram, one idea revealed per tap.
-import React, { useState } from 'react'
+// SPEC FR-UI-22 (SPEC-012): Play steps through on its own every 3 s; no Play under reduced motion.
+import React, { useEffect, useState } from 'react'
 import { useT } from '../i18n'
 
 interface Props {
@@ -8,10 +9,24 @@ interface Props {
   steps: string[]
 }
 
+export const STEP_MS = 3000
+
 export const StepperDiagram: React.FC<Props> = ({ caption, alt, steps }) => {
   const [shown, setShown] = useState(1)
   const t = useT()
   const done = shown >= steps.length
+  const [playing, setPlaying] = useState(false)
+  const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+
+  useEffect(() => {
+    if (!playing) return
+    if (done) {
+      setPlaying(false)
+      return
+    }
+    const timer = window.setInterval(() => setShown((n) => Math.min(steps.length, n + 1)), STEP_MS)
+    return () => window.clearInterval(timer)
+  }, [playing, done, steps.length])
 
   return (
     <figure
@@ -47,11 +62,22 @@ export const StepperDiagram: React.FC<Props> = ({ caption, alt, steps }) => {
       <div className="px-4 sm:px-6 pb-4 flex flex-wrap items-center gap-3">
         {!done ? (
           <>
+            {!reduceMotion && (
+              <button
+                type="button"
+                onClick={() => setPlaying((p) => !p)}
+                data-testid={playing ? 'stepper-pause' : 'stepper-play'}
+                aria-pressed={playing}
+                className="min-h-[44px] px-4 py-2 rounded-xl border-2 border-blue-600 text-blue-800 dark:border-sky-400 dark:text-sky-200 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+              >
+                {t(playing ? 'widget.stepPause' : 'widget.stepPlay')}
+              </button>
+            )}
             <button
               type="button"
               onClick={() => setShown((n) => Math.min(steps.length, n + 1))}
               data-testid="stepper-next"
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+              className="min-h-[44px] px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
             >
               {t('widget.stepNext')}
             </button>

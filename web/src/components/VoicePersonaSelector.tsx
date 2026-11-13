@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useAudioStore, VoicePersonaId } from '../store';
+import { useAudienceModeStore, useAudioStore, VoicePersonaId } from '../store';
+import { AgeBandPicker } from './AgeBandPicker';
 import { speechService, VOICE_PERSONAS } from '../services/speechService';
 import { useLanguage, useT } from '../i18n';
 
@@ -13,6 +14,7 @@ export const VoicePersonaSelector: React.FC<Props> = ({ compact = false }) => {
   const { language } = useLanguage();
   const { persona, setPersona, speechRate, setSpeechRate, isMuted, toggleMute, stopAudio } = useAudioStore();
 
+  const audienceMode = useAudienceModeStore((s) => s.mode);
   const activePersona = VOICE_PERSONAS[persona] || VOICE_PERSONAS.chip;
 
   const handleSelectPersona = (pId: VoicePersonaId) => {
@@ -79,6 +81,16 @@ export const VoicePersonaSelector: React.FC<Props> = ({ compact = false }) => {
                 ✕
               </button>
             </div>
+
+            {/* SPEC FR-UI-16 (amended 2.11.0): Kids age band */}
+            {audienceMode === 'junior' && (
+              <div data-testid="voice-studio-age-band" className="mb-4">
+                <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 block mb-1">
+                  {t('ageBand.settingTitle')}
+                </span>
+                <AgeBandPicker />
+              </div>
+            )}
 
             {/* Persona Cards */}
             <div className="space-y-2 mb-4">

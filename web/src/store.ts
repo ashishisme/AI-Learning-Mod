@@ -144,7 +144,13 @@ export interface AudienceModeState {
   hasChosenJourney: boolean
   setMode: (mode: AudienceMode) => void
   chooseJourney: (mode: AudienceMode) => void
+  // SPEC FR-UI-16 (amended 2.11.0, SPEC-012): Kids age band. Browser-only: never sent, logged or put in feedback.
+  ageBand: AgeBand
+  setAgeBand: (band: AgeBand) => void
 }
+
+export type AgeBand = "8-11" | "12-14"
+export const AGE_BANDS: AgeBand[] = ["8-11", "12-14"]
 
 const AUDIENCE_MODES: AudienceMode[] = ["standard", "junior", "plain-english"]
 
@@ -155,17 +161,23 @@ export const useAudienceModeStore = create<AudienceModeState>()(
       hasChosenJourney: false,
       setMode: (mode: AudienceMode) => set({ mode, hasChosenJourney: true }),
       chooseJourney: (mode: AudienceMode) => set({ mode, hasChosenJourney: true }),
+      ageBand: "8-11",
+      setAgeBand: (ageBand: AgeBand) => set({ ageBand }),
     }),
     {
       name: "ai-foundations-audience-mode",
-      version: 1,
+      version: 2,
       // A mode saved by an earlier release (version 0) is kept, and counts as chosen, so returning
       // learners never see the chooser. Only this store changes; progress and settings are untouched.
       migrate: (persisted, version) => {
         const old = (persisted ?? {}) as { mode?: AudienceMode }
         const valid = old.mode !== undefined && AUDIENCE_MODES.includes(old.mode)
-        if (version < 1) return { mode: valid ? old.mode : "standard", hasChosenJourney: valid } as AudienceModeState
-        return persisted as AudienceModeState
+        // Version 2 (SPEC-012) adds the Kids age band; every earlier saved choice keeps its mode and gets 8-11.
+        const kept = version < 1
+          ? { mode: valid ? old.mode : "standard", hasChosenJourney: valid }
+          : (persisted as Partial<AudienceModeState>)
+        const band = (persisted as { ageBand?: AgeBand })?.ageBand
+        return { ...kept, ageBand: band && AGE_BANDS.includes(band) ? band : "8-11" } as AudienceModeState
       },
     }
   )

@@ -9,9 +9,10 @@ interface Props {
   emoji: string
   question: ChoiceQuestion
   testId: string
+  praise?: string // Chip's reaction to a right answer (SPEC FR-UI-23)
 }
 
-export const ChoiceCard: React.FC<Props> = ({ heading, emoji, question, testId }) => {
+export const ChoiceCard: React.FC<Props> = ({ heading, emoji, question, testId, praise }) => {
   const [picked, setPicked] = useState<number | null>(null)
   const t = useT()
   const text = question.prompt || question.question || ''
@@ -55,7 +56,7 @@ export const ChoiceCard: React.FC<Props> = ({ heading, emoji, question, testId }
       </div>
       {answered && (
         <p role="status" className="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-sm text-violet-950 dark:text-violet-100">
-          {correct ? '✅ ' : t('widget.goodTry')}
+          {correct ? `✅ ${praise ? `${praise} ` : ''}` : t('widget.goodTry')}
           {question.explanation}
         </p>
       )}

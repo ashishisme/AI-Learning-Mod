@@ -305,7 +305,24 @@ class SpeechService {
   /**
    * Play a recorded narration file (SPEC-009 FR-012). Stopping, or starting other speech, ends it.
    */
-  public playRecording(url: string, options: { rate?: number; onStart?: () => void; onEnd?: () => void; onError?: (err: unknown) => void } = {}): void {
+  // SPEC FR-UI-25 (SPEC-012, research R7): a recording has no sentence events, so the sentence being read
+  // is estimated from playback progress against each sentence's share of the text's characters.
+  public sentenceAt(text: string, fraction: number): { sentence: string; index: number; total: number } | null {
+    return this.sentenceIn(this.cleanAndChunkText(text), fraction);
+  }
+
+  private sentenceIn(chunks: string[], fraction: number): { sentence: string; index: number; total: number } | null {
+    if (chunks.length === 0) return null;
+    const total = chunks.reduce((n, c) => n + c.length, 0);
+    let reached = 0;
+    for (let i = 0; i < chunks.length; i++) {
+      reached += chunks[i].length;
+      if (fraction * total < reached) return { sentence: chunks[i], index: i, total: chunks.length };
+    }
+    return { sentence: chunks[chunks.length - 1], index: chunks.length - 1, total: chunks.length };
+  }
+
+  public playRecording(url: string, options: { rate?: number; text?: string; onSentenceStart?: (sentence: string, index: number, total: number) => void; onStart?: () => void; onEnd?: () => void; onError?: (err: unknown) => void } = {}): void {
     this.stop();
     if (muted()) {
       options.onEnd?.();
@@ -317,6 +334,16 @@ class SpeechService {
     player.playbackRate = options.rate ?? 1;
     player.onended = () => { if (gen === this.generation && options.onEnd) options.onEnd(); };
     player.onerror = (e) => { if (gen === this.generation && options.onError) options.onError(e); };
+    let lastIndex = -1;
+    const chunks = options.text && options.onSentenceStart ? this.cleanAndChunkText(options.text) : []; // once, not per tick
+    player.ontimeupdate = () => {
+      if (gen !== this.generation || !options.onSentenceStart || !(player.duration > 0)) return;
+      const at = this.sentenceIn(chunks, player.currentTime / player.duration);
+      if (at && at.index !== lastIndex) {
+        lastIndex = at.index;
+        options.onSentenceStart(at.sentence, at.index, at.total);
+      }
+    };
     player.play().then(
       () => { if (gen === this.generation && options.onStart) options.onStart(); },
       (err) => { if (gen === this.generation && options.onError) options.onError(err); },

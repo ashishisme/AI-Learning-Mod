@@ -114,6 +114,8 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
       }
       speechService.playRecording(url, {
         rate: speechRate,
+        text: textToRead,
+        onSentenceStart: (sentence) => setCurrentSentence(sentence),
         onStart: () => setActiveTrack(id, true),
         onEnd: () => stopAudio(),
         onError: () => speakOnDevice(), // a file that will not play falls back to the device

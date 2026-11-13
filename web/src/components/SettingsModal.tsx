@@ -1,6 +1,7 @@
 // SPEC: FR-SET-01, FR-SET-02, FR-SET-03, FR-UI-14, FR-UI-15, NFR-SEC-01
 import React, { useState } from 'react'
-import { useSettingsStore, useThemeStore, useRuntimeStore, AISettings } from '../store'
+import { useSettingsStore, useThemeStore, useRuntimeStore, useAudienceModeStore, AISettings } from '../store'
+import { AgeBandPicker } from './AgeBandPicker'
 import { testAIConfig, testLocalLLM, ConfigTestResult } from '../api'
 import { LocalLLMSettings } from './LocalLLMSettings'
 import pkg from '../../package.json'
@@ -28,6 +29,7 @@ export const SettingsModal: React.FC = () => {
     }
   }, [isDrawerOpen, settings])
 
+  const audienceMode = useAudienceModeStore((st) => st.mode)
   if (!isDrawerOpen) return null
   // The model name is styled, so the sentence is split around its placeholder.
   const modelReady = t('settings.modelReady').split('{model}')
@@ -123,6 +125,16 @@ export const SettingsModal: React.FC = () => {
         </div>
 
         <LanguageSwitcher variant="settings" />
+
+        {/* SPEC FR-UI-16 (amended 2.11.0): Kids age band, shown only in the Kids journey */}
+        {audienceMode === 'junior' && (
+          <div data-testid="settings-age-band">
+            <span className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              {t('ageBand.settingTitle')}
+            </span>
+            <AgeBandPicker />
+          </div>
+        )}
 
         {/* Theme Preference (FR-UI-15) */}
         <div>
