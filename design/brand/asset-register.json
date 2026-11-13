@@ -549,8 +549,8 @@
     },
     {
       "id": "word-neuron",
-      "status": "draft",
-      "trademarkScreen": "pending",
+      "status": "approved",
+      "trademarkScreen": "clear",
       "creator": "hand-authored SVG (Claude, 2026-11-13)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
@@ -567,13 +567,24 @@
       ],
       "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
       "motion": "2-3 s CSS loop, still under reduced motion",
-      "reviewers": [],
-      "altKey": "adaptive.wordPicture"
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "altKey": "adaptive.wordPicture",
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
     },
     {
       "id": "word-weight",
-      "status": "draft",
-      "trademarkScreen": "pending",
+      "status": "approved",
+      "trademarkScreen": "clear",
       "creator": "hand-authored SVG (Claude, 2026-11-13)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
@@ -590,13 +601,24 @@
       ],
       "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
       "motion": "2-3 s CSS loop, still under reduced motion",
-      "reviewers": [],
-      "altKey": "adaptive.wordPicture"
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "altKey": "adaptive.wordPicture",
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
     },
     {
       "id": "word-bias",
-      "status": "draft",
-      "trademarkScreen": "pending",
+      "status": "approved",
+      "trademarkScreen": "clear",
       "creator": "hand-authored SVG (Claude, 2026-11-13)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
@@ -613,13 +635,24 @@
       ],
       "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
       "motion": "2-3 s CSS loop, still under reduced motion",
-      "reviewers": [],
-      "altKey": "adaptive.wordPicture"
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "altKey": "adaptive.wordPicture",
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
     },
     {
       "id": "word-perceptron",
-      "status": "draft",
-      "trademarkScreen": "pending",
+      "status": "approved",
+      "trademarkScreen": "clear",
       "creator": "hand-authored SVG (Claude, 2026-11-13)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
@@ -636,13 +669,24 @@
       ],
       "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
       "motion": "2-3 s CSS loop, still under reduced motion",
-      "reviewers": [],
-      "altKey": "adaptive.wordPicture"
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "altKey": "adaptive.wordPicture",
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
     },
     {
       "id": "word-weighted-sum",
-      "status": "draft",
-      "trademarkScreen": "pending",
+      "status": "approved",
+      "trademarkScreen": "clear",
       "creator": "hand-authored SVG (Claude, 2026-11-13)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
@@ -659,13 +703,24 @@
       ],
       "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
       "motion": "2-3 s CSS loop, still under reduced motion",
-      "reviewers": [],
-      "altKey": "adaptive.wordPicture"
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "altKey": "adaptive.wordPicture",
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
     },
     {
       "id": "word-layer",
-      "status": "draft",
-      "trademarkScreen": "pending",
+      "status": "approved",
+      "trademarkScreen": "clear",
       "creator": "hand-authored SVG (Claude, 2026-11-13)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
@@ -682,13 +737,24 @@
       ],
       "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
       "motion": "2-3 s CSS loop, still under reduced motion",
-      "reviewers": [],
-      "altKey": "adaptive.wordPicture"
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "altKey": "adaptive.wordPicture",
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
     },
     {
       "id": "scene-easy-or-picky",
-      "status": "draft",
-      "trademarkScreen": "pending",
+      "status": "approved",
+      "trademarkScreen": "clear",
       "creator": "hand-authored SVG (Claude, 2026-11-13)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
@@ -705,13 +771,24 @@
       ],
       "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
       "motion": "static",
-      "reviewers": [],
-      "decorative": true
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
     },
     {
       "id": "scene-learning-bike",
-      "status": "draft",
-      "trademarkScreen": "pending",
+      "status": "approved",
+      "trademarkScreen": "clear",
       "creator": "hand-authored SVG (Claude, 2026-11-13)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
@@ -728,13 +805,24 @@
       ],
       "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
       "motion": "tap-to-play, once, 4.5 s",
-      "reviewers": [],
-      "decorative": true
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
     },
     {
       "id": "scene-fruit-sorter",
-      "status": "draft",
-      "trademarkScreen": "pending",
+      "status": "approved",
+      "trademarkScreen": "clear",
       "creator": "hand-authored SVG (Claude, 2026-11-13)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
@@ -751,8 +839,19 @@
       ],
       "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
       "motion": "static",
-      "reviewers": [],
-      "decorative": true
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
     }
   ]
 }

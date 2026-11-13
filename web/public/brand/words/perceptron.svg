@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" width="240" height="140" role="img">
+  <style>
+    .in { animation: in 2.8s ease-in-out infinite; }
+    .in2 { animation-delay: .2s; } .in3 { animation-delay: .4s; }
+    .out { animation: out 2.8s ease-in-out infinite; }
+    @keyframes in { 0%, 100% { opacity: .3; } 25%, 45% { opacity: 1; } }
+    @keyframes out { 0%, 45%, 100% { opacity: .2; } 60%, 85% { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } .in, .out { opacity: 1; } }
+  </style>
+  <rect x="2" y="2" width="236" height="136" rx="18" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="2"/>
+  <!-- three inputs -->
+  <g stroke="#818CF8" stroke-width="4" stroke-linecap="round">
+    <line x1="40" y1="34" x2="98" y2="62"/><line x1="40" y1="70" x2="96" y2="70"/><line x1="40" y1="106" x2="98" y2="78"/>
+  </g>
+  <circle class="in" cx="34" cy="34" r="12" fill="#F59E0B" stroke="#B45309" stroke-width="3"/>
+  <circle class="in in2" cx="34" cy="70" r="12" fill="#F59E0B" stroke="#B45309" stroke-width="3"/>
+  <circle class="in in3" cx="34" cy="106" r="12" fill="#F59E0B" stroke="#B45309" stroke-width="3"/>
+  <!-- the adder: a circle with a plus -->
+  <circle cx="114" cy="70" r="22" fill="#FFFFFF" stroke="#6366F1" stroke-width="5"/>
+  <path d="M104 70 h20 M114 60 v20" stroke="#6366F1" stroke-width="5" stroke-linecap="round"/>
+  <line x1="136" y1="70" x2="152" y2="70" stroke="#6366F1" stroke-width="4" stroke-linecap="round"/>
+  <!-- the step: off below the line, on above it -->
+  <rect x="152" y="48" width="36" height="44" rx="8" fill="#FFFFFF" stroke="#6366F1" stroke-width="4"/>
+  <path d="M158 84 h12 v-26 h12" stroke="#4338CA" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="188" y1="70" x2="200" y2="70" stroke="#6366F1" stroke-width="4" stroke-linecap="round"/>
+  <!-- the answer light -->
+  <circle cx="214" cy="70" r="14" fill="#E2E8F0" stroke="#94A3B8" stroke-width="3"/>
+  <circle class="out" cx="214" cy="70" r="14" fill="#10B981" stroke="#059669" stroke-width="3"/>
+  <circle class="out" cx="210" cy="66" r="4" fill="#A7F3D0"/>
+</svg>

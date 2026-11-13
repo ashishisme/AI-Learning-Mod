@@ -13,6 +13,7 @@
     "A weight says how much each clue counts.",
     "A neuron learns by fixing its weights after each mistake."
   ],
+  "bands": true,
   "sections": [
     {
       "id": "meet-the-neuron",
@@ -27,7 +28,8 @@
       "jargonBuster": [
         {
           "term": "Neuron",
-          "simpleExplanation": "A tiny cell in your brain. It listens to clues and then says yes or no."
+          "simpleExplanation": "A tiny cell in your brain. It listens to clues and then says yes or no.",
+          "visual": "neuron"
         }
       ],
       "diagram": {
@@ -51,7 +53,10 @@
       },
       "checkIn": {
         "question": "A neuron got enough clues. What does it do?",
-        "options": ["⚡ It sends a spark", "💤 It stays quiet"],
+        "options": [
+          "⚡ It sends a spark",
+          "💤 It stays quiet"
+        ],
         "correctIndex": 0,
         "praise": "Yes! Enough clues means it switches on.",
         "explanation": "A neuron switches on and sends a spark when it gets enough clues."
@@ -70,7 +75,8 @@
       "jargonBuster": [
         {
           "term": "Weight",
-          "simpleExplanation": "A number that says how much a clue counts. A big weight means a big say."
+          "simpleExplanation": "A number that says how much a clue counts. A big weight means a big say.",
+          "visual": "weight"
         }
       ],
       "diagram": {
@@ -84,7 +90,8 @@
         "jargonBuster": [
           {
             "term": "Weighted sum",
-            "simpleExplanation": "Each clue times its weight, all added together."
+            "simpleExplanation": "Each clue times its weight, all added together.",
+            "visual": "weighted-sum"
           }
         ]
       }
@@ -93,6 +100,7 @@
       "id": "bias",
       "heading": "3. Easy or Picky?",
       "bigIdea": "Some neurons switch on easily. Some need lots of proof.",
+      "scene": "easy-or-picky",
       "chipQuote": "One of my friends says yes to every game. Another one needs a lot of asking!",
       "analogy": {
         "metaphorName": "The Picky Friend",
@@ -102,7 +110,8 @@
       "jargonBuster": [
         {
           "term": "Bias",
-          "simpleExplanation": "A number that makes a neuron easier or harder to switch on."
+          "simpleExplanation": "A number that makes a neuron easier or harder to switch on.",
+          "visual": "bias"
         }
       ],
       "teen": {
@@ -113,6 +122,8 @@
       "id": "how-it-learns",
       "heading": "4. A Neuron in a Computer",
       "bigIdea": "A computer neuron learns by fixing its mistakes.",
+      "scene": "learning-bike",
+      "scenePlays": true,
       "chipQuote": "When you learn to ride a bike, you wobble, fix it and try again!",
       "analogy": {
         "metaphorName": "Learning to Ride a Bike",
@@ -122,7 +133,8 @@
       "jargonBuster": [
         {
           "term": "Perceptron",
-          "simpleExplanation": "A neuron made of math inside a computer. It adds up clues and says yes or no."
+          "simpleExplanation": "A neuron made of math inside a computer. It adds up clues and says yes or no.",
+          "visual": "perceptron"
         }
       ],
       "more": {
@@ -134,13 +146,18 @@
         "jargonBuster": [
           {
             "term": "Layer",
-            "simpleExplanation": "A row of neurons that all get the same clues and pass their answers on to the next row."
+            "simpleExplanation": "A row of neurons that all get the same clues and pass their answers on to the next row.",
+            "visual": "layer"
           }
         ]
       },
       "checkIn": {
         "question": "The perceptron got an answer wrong. What does it do next?",
-        "options": ["It moves its weights a bit", "It gives up", "It turns itself off"],
+        "options": [
+          "It moves its weights a bit",
+          "It gives up",
+          "It turns itself off"
+        ],
         "correctIndex": 0,
         "praise": "Right! Small fixes after each mistake are how it learns.",
         "explanation": "After each mistake, the perceptron moves its weights a little, so its next guess is better."
@@ -150,6 +167,7 @@
       "id": "interactive-perceptron-demo",
       "heading": "5. Train Your Own Neuron: The Fruit Sorter",
       "bigIdea": "Now you get to teach a neuron!",
+      "scene": "fruit-sorter",
       "chipQuote": "Move the sliders until the neuron can tell apples from lemons.",
       "analogy": {
         "metaphorName": "The Fruit Stand Inspector",
