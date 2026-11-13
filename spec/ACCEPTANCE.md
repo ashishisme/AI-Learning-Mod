@@ -70,3 +70,4 @@
 | AC-66 | FR-UI-23 | `web/tests/kids-aids.spec.ts` | PASS (automated) | SPEC-012: big idea, recap, check-ins, teach-back |
 | AC-67 | FR-UI-24 | `web/tests/kids-aids.spec.ts` | PASS (automated) | SPEC-012: guided widgets in 8–11 |
 | AC-68 | FR-UI-25 | `web/tests/kids-aids.spec.ts` | PASS (automated) | SPEC-012: read-along for recordings |
+| AC-69 | FR-UI-26 | `web/tests/standard-listen.spec.ts` | N/A (pending) | Issue #3: Read section buttons in Standard lessons |

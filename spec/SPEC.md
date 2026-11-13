@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.11.1 |
+| Version | 2.12.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Source curriculum | microsoft/AI-For-Beginners @ pinned SHA (see §6.1) |
@@ -332,6 +332,11 @@ wording and a "Chip's hint"; their behaviour is unchanged.
 
 **FR-UI-25.** Added 2.11.0 (SPEC-012). While a recorded narration plays, the sentence being read shall be
 highlighted, as it is for device voices. The position may be estimated from the recording's progress.
+
+**FR-UI-26.** Added 2.12.0 (issue #3, SPEC-004 AC-AUD-02.1). In Standard mode each heading of a lesson (levels 1 to 3)
+shall have a "Read section" button. It reads the heading and the text under it up to the next heading, leaving out
+code, images, tables and link addresses, in the language the lesson was served in, with the Standard voice. It follows
+mute (FR-UI-19) and only one section plays at a time (AC-AUD-02.4).
 
 ### 4.5 Settings & AI Configuration — `FR-SET-*`
 
@@ -1047,6 +1052,9 @@ recap before the quiz, and check-ins that leave saved progress unchanged; teach-
 
 **AC-68 (FR-UI-25).** While a recording plays exactly one sentence is marked as being read, and it moves forward as
 playback advances. Covered by `web/tests/kids-aids.spec.ts`.
+
+**AC-69 (FR-UI-26).** A Standard lesson shows one "Read section" button per heading; pressing one speaks that heading
+and its text without code, and pressing another stops the first. Covered by `web/tests/standard-listen.spec.ts`.
 
 ---
 
