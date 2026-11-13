@@ -24,14 +24,15 @@ var Translatable = map[string][]string{
 		"sections[].jargonBuster[].term", "sections[].jargonBuster[].simpleExplanation",
 		"sections[].diagram.caption", "sections[].diagram.alt", "sections[].diagram.content", "sections[].diagram.steps[]",
 		"sections[].interactiveWidget.title", "sections[].interactiveWidget.instruction", "sections[].interactiveWidget.goal",
-		"sections[].interactiveWidget.scaffold", "sections[].interactiveWidget.predictionPrompt",
+		"sections[].interactiveWidget.predictionPrompt",
 		"sections[].interactiveWidget.successMessage", "sections[].interactiveWidget.hints[]",
 		"sections[].interactiveWidget.scenario.userPrompt", "sections[].interactiveWidget.scenario.terminalA",
 		"sections[].interactiveWidget.scenario.terminalB", "sections[].interactiveWidget.scenario.explanation",
 		"miniQuiz[].question", "miniQuiz[].options[]", "miniQuiz[].praise", "miniQuiz[].explanation",
 		"teachBack.prompt", "teachBack.options[]", "teachBack.explanation",
 		// SPEC FR-CNT-09 (SPEC-012): banded Kids lessons. bands, miniQuiz[].band, jargonBuster[].visual and
-		// checkIn.correctIndex are left out on purpose: they must equal the English values.
+		// checkIn.correctIndex are left out on purpose: they must equal the English values. So are
+		// sections[].scene and interactiveWidget.scaffold (a mode, "guided" or "free", not text).
 		"recap[]", "sections[].bigIdea", "sections[].more.title", "sections[].more.bodyMarkdown",
 		"sections[].teen.add", "sections[].teen.body",
 		"sections[].teen.jargonBuster[].term", "sections[].teen.jargonBuster[].simpleExplanation",
