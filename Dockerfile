@@ -16,7 +16,7 @@ COPY web/ ./
 RUN npm run build
 
 # Stage 2: Build Go Server
-FROM --platform=$BUILDPLATFORM golang:1.27.3-alpine3.24 AS backend-builder
+FROM --platform=$BUILDPLATFORM golang:1.27.4-alpine3.24 AS backend-builder
 ARG TARGETARCH
 WORKDIR /app
 COPY go.mod go.sum ./
