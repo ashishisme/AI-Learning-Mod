@@ -147,12 +147,12 @@ Rules for every Kids file:
 
 Each file: `"origin": "own"`, same card format, the existing `interactiveWidget` and `realWorld` kept, and new wording and examples (spec US2 scenario 2).
 
-- [ ] T033 [P] [US2] Rewrite `public-content/lessons/1-intro.plain-english.json`. Release it.
-- [ ] T034 [P] [US2] Rewrite `public-content/lessons/2-symbolic.plain-english.json`. Release it.
-- [ ] T035 [P] [US2] Rewrite `public-content/lessons/3-neuralnetworks.plain-english.json`. Release it.
-- [ ] T036 [P] [US2] Rewrite `public-content/lessons/4-computervision.plain-english.json`. Release it.
-- [ ] T037 [P] [US2] Rewrite `public-content/lessons/5-nlp.plain-english.json`. Release it.
-- [ ] T038 [P] [US2] Rewrite `public-content/lessons/7-ethics.plain-english.json`. Release it.
+- [X] T033 [P] [US2] Rewrite `public-content/lessons/1-intro.plain-english.json`. Release it.
+- [X] T034 [P] [US2] Rewrite `public-content/lessons/2-symbolic.plain-english.json`. Release it.
+- [X] T035 [P] [US2] Rewrite `public-content/lessons/3-neuralnetworks.plain-english.json`. Release it.
+- [X] T036 [P] [US2] Rewrite `public-content/lessons/4-computervision.plain-english.json`. Release it.
+- [X] T037 [P] [US2] Rewrite `public-content/lessons/5-nlp.plain-english.json`. Release it.
+- [X] T038 [P] [US2] Rewrite `public-content/lessons/7-ethics.plain-english.json`. Release it.
 
 These are drafted in parallel, but each one is approved and released alone (FR-010).
 
