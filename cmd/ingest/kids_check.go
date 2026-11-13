@@ -20,7 +20,7 @@ func kidsCheck(root, contentDir string, out io.Writer) int {
 		fmt.Fprintf(out, "kids-check: FAIL %v\n", err)
 		return 1
 	}
-	visualOK := approvedWordPictures(root)
+	visualOK := approvedPictures(root)
 	code := 0
 	for _, f := range files {
 		name := strings.TrimSuffix(filepath.Base(f), ".json")
@@ -51,9 +51,9 @@ func kidsCheck(root, contentDir string, out io.Writer) int {
 	return code
 }
 
-// approvedWordPictures reports whether web/public/brand/words/<key>.svg exists and has an approved,
-// trademark-clear asset-register entry (NFR-LIC-05).
-func approvedWordPictures(root string) func(string) bool {
+// approvedPictures reports whether web/public/brand/<path> (a word or scene picture) exists and has an
+// approved, trademark-clear asset-register entry (NFR-LIC-05).
+func approvedPictures(root string) func(string) bool {
 	approved := map[string]bool{}
 	if raw, err := os.ReadFile(filepath.Join(root, "design", "brand", "asset-register.json")); err == nil {
 		var reg struct {
@@ -75,8 +75,7 @@ func approvedWordPictures(root string) func(string) bool {
 			}
 		}
 	}
-	return func(key string) bool {
-		p := "words/" + key + ".svg"
+	return func(p string) bool {
 		_, err := os.Stat(filepath.Join(root, "web", "public", "brand", filepath.FromSlash(p)))
 		return err == nil && approved[p]
 	}

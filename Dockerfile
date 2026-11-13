@@ -30,6 +30,9 @@ COPY public-content ./public-content
 COPY content ./content
 COPY web/src/i18n ./web/src/i18n
 COPY web/src/data/quizzes ./web/src/data/quizzes
+# SPEC-012 FR-CNT-09: Kids word and scene pictures must exist and be approved in the register.
+COPY design/brand/asset-register.json ./design/brand/asset-register.json
+COPY web/public/brand ./web/public/brand
 RUN CONTENT_DIR=public-content go run ./cmd/ingest -verify
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=$TARGETARCH go build -trimpath -ldflags="-w -s" -o /app/server ./cmd/server
 

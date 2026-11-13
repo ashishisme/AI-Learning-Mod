@@ -13,6 +13,7 @@ import { BiasDetectiveWidget } from './BiasDetectiveWidget'
 import { MermaidRenderer } from './MermaidRenderer'
 import { VisualMetaphorCard } from './VisualMetaphorCard'
 import { AudioNarrationButton } from './AudioNarrationButton'
+import { ScenePicture } from './ScenePicture'
 import { coreBody, sectionNarration } from '../services/narrationText'
 import { speechService } from '../services/speechService'
 import { useAudienceModeStore, useAudioStore, useProgressStore } from '../store'
@@ -271,6 +272,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                 </p>
               )}
               {banded && diagramBlock}
+              {section.scene && <ScenePicture name={section.scene} plays={section.scenePlays} />}
 
               {/* Chip Quote if Junior Mode */}
               {isJunior && section.chipQuote && (

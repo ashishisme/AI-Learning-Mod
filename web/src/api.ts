@@ -414,6 +414,8 @@ export interface AdaptiveSection {
   jargonBuster?: JargonEntry[]
   // SPEC FR-CNT-09 (SPEC-012): banded Kids lessons
   bigIdea?: string
+  scene?: string // FR-UI-27: web/public/brand/scenes/<scene>.svg
+  scenePlays?: boolean
   more?: { title?: string; bodyMarkdown: string }
   teen?: { add?: string; body?: string; jargonBuster?: JargonEntry[] }
   checkIn?: ChoiceQuestion & { praise?: string }

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="play" viewBox="0 0 320 180" width="320" height="180" role="img">
+  <style>
+    /* Still until opened as learning-bike.svg#play; then 4.5 s: wobbly first tries, then riding straight. */
+    .ride { transform-box: view-box; transform-origin: 160px 150px; }
+    .shake { opacity: 0; }
+    #play:target .ride { animation: learn 4.5s ease-in-out 1 forwards; }
+    #play:target .shake { animation: shake 4.5s ease-in-out 1 forwards; }
+    @keyframes learn {
+      0% { transform: translateX(-70px) rotate(0deg); }
+      12% { transform: translateX(-55px) rotate(-9deg); }
+      24% { transform: translateX(-40px) rotate(8deg); }
+      36% { transform: translateX(-26px) rotate(-6deg); }
+      48% { transform: translateX(-12px) rotate(4deg); }
+      60% { transform: translateX(0) rotate(-2deg); }
+      72%, 100% { transform: translateX(0) rotate(0deg); }
+    }
+    @keyframes shake { 0%, 50% { opacity: 1; } 65%, 100% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <rect x="2" y="2" width="316" height="176" rx="20" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="2"/>
+  <circle cx="270" cy="38" r="18" fill="#FDE68A"/>
+  <path d="M20 150 H300" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <g fill="#A7F3D0"><ellipse cx="46" cy="148" rx="22" ry="8"/><ellipse cx="290" cy="148" rx="18" ry="7"/></g>
+  <!-- wobble marks, shown only while learning -->
+  <g class="shake" stroke="#F43F5E" stroke-width="3" stroke-linecap="round" fill="none">
+    <path d="M96 70 q-8 6 0 12 M88 64 q-12 12 0 24"/><path d="M226 70 q8 6 0 12 M234 64 q12 12 0 24"/>
+  </g>
+  <g class="ride">
+    <!-- bike -->
+    <g fill="none" stroke="#334155" stroke-width="5">
+      <circle cx="122" cy="126" r="22"/><circle cx="200" cy="126" r="22"/>
+    </g>
+    <g stroke="#6366F1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M122 126 L150 96 L190 96 L200 126 M150 96 L160 126 L122 126 M190 96 L184 80 M176 80 h16 M150 96 L146 86"/>
+    </g>
+    <path d="M140 84 h14" stroke="#334155" stroke-width="6" stroke-linecap="round"/>
+    <!-- rider -->
+    <path d="M150 84 L162 58 L182 80" stroke="#F59E0B" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M152 86 L158 110 L162 126" stroke="#334155" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <circle cx="166" cy="44" r="14" fill="#FDBA74" stroke="#C2410C" stroke-width="2"/>
+    <path d="M152 40 q14 -18 28 0 z" fill="#10B981" stroke="#059669" stroke-width="2"/>
+    <circle cx="171" cy="44" r="2" fill="#334155"/>
+    <path d="M167 51 q4 3 8 0" stroke="#334155" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>

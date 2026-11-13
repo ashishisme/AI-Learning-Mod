@@ -61,6 +61,7 @@ type kidsLesson struct {
 		} `json:"analogy"`
 		BodyMarkdown string    `json:"bodyMarkdown"`
 		Diagram      *struct{} `json:"diagram"`
+		Scene        string    `json:"scene"` // FR-CNT-09 (2.12.0): a card picture, web/public/brand/scenes/<key>.svg
 		Jargon       []jargon  `json:"jargonBuster"`
 		More         *struct {
 			Title        string `json:"title"`
@@ -80,8 +81,9 @@ type kidsLesson struct {
 
 // CheckKidsLesson measures an English Kids lesson for both bands. A lesson with "bands": true fails on
 // every broken rule except quiz-answer, which is a heuristic and only ever warns; other lessons only
-// warn. A word picture that does not exist (visualOK false) always fails.
-func CheckKidsLesson(raw []byte, visualOK func(key string) bool) ([]Summary, []Finding, error) {
+// warn. A word or scene picture that does not exist always fails: visualOK gets its path under
+// web/public/brand/, such as "words/neuron.svg" or "scenes/bike.svg".
+func CheckKidsLesson(raw []byte, visualOK func(path string) bool) ([]Summary, []Finding, error) {
 	var l kidsLesson
 	if err := json.Unmarshal(raw, &l); err != nil {
 		return nil, nil, err
@@ -177,9 +179,12 @@ func CheckKidsLesson(raw []byte, visualOK func(key string) bool) ([]Summary, []F
 
 	for _, s := range l.Sections {
 		for _, j := range append(append([]jargon{}, s.Jargon...), teenJargon(s.Teen)...) {
-			if j.Visual != "" && !visualOK(j.Visual) {
+			if j.Visual != "" && !visualOK("words/"+j.Visual+".svg") {
 				add(Fail, "-", s.ID, "missing-visual", "word picture %q has no file or approved register entry", j.Visual)
 			}
+		}
+		if s.Scene != "" && !visualOK("scenes/"+s.Scene+".svg") {
+			add(Fail, "-", s.ID, "missing-visual", "scene picture %q has no file or approved register entry", s.Scene)
 		}
 	}
 
@@ -191,12 +196,12 @@ func CheckKidsLesson(raw []byte, visualOK func(key string) bool) ([]Summary, []F
 			if strings.TrimSpace(s.BigIdea) == "" {
 				add(Fail, "-", s.ID, "structure", "no bigIdea")
 			}
-			hasVisual := s.Diagram != nil
+			hasVisual := s.Diagram != nil || s.Scene != ""
 			for _, j := range s.Jargon {
 				hasVisual = hasVisual || j.Visual != ""
 			}
 			if !hasVisual {
-				add(Fail, "-", s.ID, "structure", "no picture: needs a diagram or a word picture")
+				add(Fail, "-", s.ID, "structure", "no picture: needs a diagram, a scene or a word picture")
 			}
 		}
 		if len(l.Recap) != 3 {

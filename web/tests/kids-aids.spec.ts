@@ -92,6 +92,34 @@ test.describe('Kids lesson aids', () => {
     await stepper.getByTestId('stepper-next').click()
     await expect(stepper.getByTestId('stepper-step')).toHaveCount(2)
   })
+
+  // FR-UI-27: a scene picture is still first; Play restarts its one-off animation; reduced motion has no Play.
+  const sceneLesson = {
+    ...bandedLesson,
+    sections: [{ ...bandedLesson.sections[0], scene: 'test-bike', scenePlays: true }, { ...bandedLesson.sections[1], scene: 'test-still' }],
+  }
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180"><rect width="320" height="180" fill="#EEF2FF"/></svg>'
+
+  test('scene pictures show, and a playing scene restarts on Play (AC-70)', async ({ page }) => {
+    await stubKidsLesson(page, sceneLesson)
+    await page.route('**/brand/scenes/*.svg', (r) => r.fulfill({ contentType: 'image/svg+xml', body: svg }))
+    await openKidsLesson(page)
+    const scenes = page.getByTestId('scene-picture')
+    await expect(scenes).toHaveCount(2)
+    await expect(scenes.nth(0).locator('img')).toHaveAttribute('src', '/brand/scenes/test-bike.svg')
+    await expect(scenes.nth(1).getByTestId('scene-play')).toHaveCount(0)
+    await scenes.nth(0).getByTestId('scene-play').click()
+    await expect(scenes.nth(0).locator('img')).toHaveAttribute('src', '/brand/scenes/test-bike.svg#play')
+  })
+
+  test('under reduced motion a scene has no Play (AC-70)', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await stubKidsLesson(page, sceneLesson)
+    await page.route('**/brand/scenes/*.svg', (r) => r.fulfill({ contentType: 'image/svg+xml', body: svg }))
+    await openKidsLesson(page)
+    await expect(page.getByTestId('scene-picture')).toHaveCount(2)
+    await expect(page.getByTestId('scene-play')).toHaveCount(0)
+  })
 })
 
 // FR-UI-25: a recording has no sentence events, so the sentence is estimated from playback progress.

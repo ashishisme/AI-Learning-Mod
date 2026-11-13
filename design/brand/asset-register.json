@@ -546,6 +546,213 @@
         "method": "Reverse image search and Chip name check asserted by T028 completion note",
         "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
       }
+    },
+    {
+      "id": "word-neuron",
+      "status": "draft",
+      "trademarkScreen": "pending",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "words/neuron.svg",
+          "sha256": "908c053365d7d7553e1ea11ee05ab2e738dc92a53f3b9376a73bdf4388fa8cd4"
+        }
+      ],
+      "purpose": "a neuron collecting clues and sending a signal",
+      "sourceMaster": "design/brand/source/words/neuron.svg",
+      "sourceSha256": "908c053365d7d7553e1ea11ee05ab2e738dc92a53f3b9376a73bdf4388fa8cd4",
+      "usageLocation": [
+        "web/src/components/WordCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "2-3 s CSS loop, still under reduced motion",
+      "reviewers": [],
+      "altKey": "adaptive.wordPicture"
+    },
+    {
+      "id": "word-weight",
+      "status": "draft",
+      "trademarkScreen": "pending",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "words/weight.svg",
+          "sha256": "db1c13026e329c3910f6536a6d4495668b6450d4aff154aa65675415f5a69345"
+        }
+      ],
+      "purpose": "clues with thick and thin lines: some count more",
+      "sourceMaster": "design/brand/source/words/weight.svg",
+      "sourceSha256": "db1c13026e329c3910f6536a6d4495668b6450d4aff154aa65675415f5a69345",
+      "usageLocation": [
+        "web/src/components/WordCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "2-3 s CSS loop, still under reduced motion",
+      "reviewers": [],
+      "altKey": "adaptive.wordPicture"
+    },
+    {
+      "id": "word-bias",
+      "status": "draft",
+      "trademarkScreen": "pending",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "words/bias.svg",
+          "sha256": "afc82dc9bdec5036c88a1b78fcba7f853579a986039254657d0f2b46a2880dc3"
+        }
+      ],
+      "purpose": "a bar that sets how full the total must be to switch on",
+      "sourceMaster": "design/brand/source/words/bias.svg",
+      "sourceSha256": "afc82dc9bdec5036c88a1b78fcba7f853579a986039254657d0f2b46a2880dc3",
+      "usageLocation": [
+        "web/src/components/WordCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "2-3 s CSS loop, still under reduced motion",
+      "reviewers": [],
+      "altKey": "adaptive.wordPicture"
+    },
+    {
+      "id": "word-perceptron",
+      "status": "draft",
+      "trademarkScreen": "pending",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "words/perceptron.svg",
+          "sha256": "26069b165d0509ce85000598be6f6ff896c020b9624844e4d91c788230659a26"
+        }
+      ],
+      "purpose": "inputs, an adder, a step and an answer light",
+      "sourceMaster": "design/brand/source/words/perceptron.svg",
+      "sourceSha256": "26069b165d0509ce85000598be6f6ff896c020b9624844e4d91c788230659a26",
+      "usageLocation": [
+        "web/src/components/WordCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "2-3 s CSS loop, still under reduced motion",
+      "reviewers": [],
+      "altKey": "adaptive.wordPicture"
+    },
+    {
+      "id": "word-weighted-sum",
+      "status": "draft",
+      "trademarkScreen": "pending",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "words/weighted-sum.svg",
+          "sha256": "19839c7b2def12f9889c7f5d02afa33cc157bac1c1d4b5ae9f55fc42190c0ba9"
+        }
+      ],
+      "purpose": "weighted pieces stacked into one total",
+      "sourceMaster": "design/brand/source/words/weighted-sum.svg",
+      "sourceSha256": "19839c7b2def12f9889c7f5d02afa33cc157bac1c1d4b5ae9f55fc42190c0ba9",
+      "usageLocation": [
+        "web/src/components/WordCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "2-3 s CSS loop, still under reduced motion",
+      "reviewers": [],
+      "altKey": "adaptive.wordPicture"
+    },
+    {
+      "id": "word-layer",
+      "status": "draft",
+      "trademarkScreen": "pending",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "words/layer.svg",
+          "sha256": "81727e023bf86efdccafdf81eeaa6deef70acf88b42e37cbf5ce1ebad3f0144d"
+        }
+      ],
+      "purpose": "three columns of neurons lighting up in turn",
+      "sourceMaster": "design/brand/source/words/layer.svg",
+      "sourceSha256": "81727e023bf86efdccafdf81eeaa6deef70acf88b42e37cbf5ce1ebad3f0144d",
+      "usageLocation": [
+        "web/src/components/WordCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "2-3 s CSS loop, still under reduced motion",
+      "reviewers": [],
+      "altKey": "adaptive.wordPicture"
+    },
+    {
+      "id": "scene-easy-or-picky",
+      "status": "draft",
+      "trademarkScreen": "pending",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "scenes/easy-or-picky.svg",
+          "sha256": "97c020b38328f328661581b215e77f3aa5594444a4a1990e32d2eb175c88c179"
+        }
+      ],
+      "purpose": "two friends, one says yes easily and one is picky",
+      "sourceMaster": "design/brand/source/scenes/easy-or-picky.svg",
+      "sourceSha256": "97c020b38328f328661581b215e77f3aa5594444a4a1990e32d2eb175c88c179",
+      "usageLocation": [
+        "web/src/components/ScenePicture.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [],
+      "decorative": true
+    },
+    {
+      "id": "scene-learning-bike",
+      "status": "draft",
+      "trademarkScreen": "pending",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "scenes/learning-bike.svg",
+          "sha256": "40831334b55f8bd43c3e1f6029941b8b71e75abf61162df40cd3c1a02753f55b"
+        }
+      ],
+      "purpose": "a kid wobbling on a bike, then riding straight",
+      "sourceMaster": "design/brand/source/scenes/learning-bike.svg",
+      "sourceSha256": "40831334b55f8bd43c3e1f6029941b8b71e75abf61162df40cd3c1a02753f55b",
+      "usageLocation": [
+        "web/src/components/ScenePicture.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play, once, 4.5 s",
+      "reviewers": [],
+      "decorative": true
+    },
+    {
+      "id": "scene-fruit-sorter",
+      "status": "draft",
+      "trademarkScreen": "pending",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "scenes/fruit-sorter.svg",
+          "sha256": "42c72897db713955b87d71bcb9be718a3be60e52817d161c30875b3d24612222"
+        }
+      ],
+      "purpose": "an apple and a lemon sorted into two boxes by a neuron",
+      "sourceMaster": "design/brand/source/scenes/fruit-sorter.svg",
+      "sourceSha256": "42c72897db713955b87d71bcb9be718a3be60e52817d161c30875b3d24612222",
+      "usageLocation": [
+        "web/src/components/ScenePicture.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [],
+      "decorative": true
     }
   ]
 }

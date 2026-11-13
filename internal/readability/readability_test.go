@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -65,5 +66,29 @@ func TestStarListItemsAreSentences(t *testing.T) {
 	md := "Look for clues:\n* big floppy ears on its head\n* a long curly tail behind it\n+ soft brown fur"
 	if got := Sentences(StripMarkdown(md)); len(got) != 4 {
 		t.Errorf("Sentences = %q, want 4", got)
+	}
+}
+
+// A scene picture counts as a card's picture (FR-CNT-09, 2.12.0), and a missing scene file fails.
+func TestScenePictureCountsAndMustExist(t *testing.T) {
+	lesson := []byte(`{"bands":true,"recap":["a","b","c"],"sections":[{"id":"s1","heading":"H","bigIdea":"A cat sat.","bodyMarkdown":"The cat sat on the mat.","scene":"cat-mat"}],"miniQuiz":[]}`)
+	rules := func(ok bool) map[string]bool {
+		_, findings, err := CheckKidsLesson(lesson, func(p string) bool { return ok && p == "scenes/cat-mat.svg" })
+		if err != nil {
+			t.Fatal(err)
+		}
+		got := map[string]bool{}
+		for _, f := range findings {
+			got[f.Rule+":"+f.Detail] = true
+		}
+		return got
+	}
+	for k := range rules(true) {
+		if strings.HasPrefix(k, "structure:no picture") || strings.HasPrefix(k, "missing-visual") {
+			t.Errorf("approved scene still reported: %s", k)
+		}
+	}
+	if !rules(false)[`missing-visual:scene picture "cat-mat" has no file or approved register entry`] {
+		t.Errorf("missing scene not reported: %v", rules(false))
 	}
 }

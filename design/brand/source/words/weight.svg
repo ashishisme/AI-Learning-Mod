@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" width="240" height="140" role="img">
+  <style>
+    .d { animation: flow 2.4s linear infinite; }
+    .d2 { animation-delay: .3s; } .d3 { animation-delay: .6s; }
+    @keyframes flow { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)); opacity: 0; } }
+    .a { --dx: 112px; --dy: 38px; } .b { --dx: 112px; --dy: 0px; } .c { --dx: 112px; --dy: -38px; }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <rect x="2" y="2" width="236" height="136" rx="18" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="2"/>
+  <!-- three clues with different importance: thick line counts a lot, thin line a little -->
+  <line x1="58" y1="32" x2="170" y2="70" stroke="#6366F1" stroke-width="12" stroke-linecap="round"/>
+  <line x1="58" y1="70" x2="170" y2="70" stroke="#818CF8" stroke-width="6" stroke-linecap="round"/>
+  <line x1="58" y1="108" x2="170" y2="70" stroke="#C7D2FE" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- clue circles: sweet (berry), round (ball), sticker (star) -->
+  <circle cx="44" cy="32" r="16" fill="#F43F5E" stroke="#BE123C" stroke-width="3"/>
+  <path d="M44 16 q4 -6 10 -4" stroke="#059669" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="44" cy="70" r="16" fill="#FDE68A" stroke="#F59E0B" stroke-width="3"/>
+  <path d="M30 70 h28 M44 56 v28" stroke="#F59E0B" stroke-width="2" opacity=".6"/>
+  <path d="M44 94 l4.7 9.6 10.6 1.5 -7.7 7.4 1.8 10.5 -9.4 -5 -9.4 5 1.8 -10.5 -7.7 -7.4 10.6 -1.5z" fill="#94A3B8"/>
+  <!-- the neuron that adds them up -->
+  <circle cx="186" cy="70" r="22" fill="#A7F3D0" stroke="#10B981" stroke-width="4"/>
+  <circle cx="186" cy="70" r="8" fill="#059669"/>
+  <!-- signals: big from the important clue, tiny from the unimportant one -->
+  <circle class="d a" cx="58" cy="32" r="8" fill="#F59E0B"/>
+  <circle class="d b d2" cx="58" cy="70" r="5" fill="#F59E0B"/>
+  <circle class="d c d3" cx="58" cy="108" r="2.5" fill="#F59E0B"/>
+</svg>

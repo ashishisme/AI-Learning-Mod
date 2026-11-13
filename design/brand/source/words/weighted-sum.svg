@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" width="240" height="140" role="img">
+  <style>
+    .p { animation: stack 3s ease-in-out infinite; }
+    .p2 { animation-delay: .35s; } .p3 { animation-delay: .7s; }
+    @keyframes stack { 0%, 10% { transform: translateX(-104px); opacity: 0; } 35%, 85% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(0); opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <rect x="2" y="2" width="236" height="136" rx="18" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="2"/>
+  <!-- each clue times its weight: a tall, a middle and a short piece -->
+  <g>
+    <rect x="28" y="40" width="24" height="76" rx="6" fill="#6366F1"/>
+    <rect x="62" y="74" width="24" height="42" rx="6" fill="#818CF8"/>
+    <rect x="96" y="102" width="24" height="14" rx="6" fill="#C7D2FE"/>
+  </g>
+  <line x1="20" y1="120" x2="128" y2="120" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+  <!-- arrow: the pieces move across into the total -->
+  <path d="M60 24 C100 4 140 4 168 22" stroke="#818CF8" stroke-width="3" fill="none" stroke-dasharray="5 5" stroke-linecap="round"/>
+  <path d="M162 14 l8 9 -11 3" stroke="#818CF8" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- equals -->
+  <path d="M140 70 h18 M140 82 h18" stroke="#334155" stroke-width="5" stroke-linecap="round"/>
+  <!-- the total: the pieces stacked into one bar -->
+  <rect x="176" y="10" width="40" height="112" rx="10" fill="#FFFFFF" stroke="#C7D2FE" stroke-width="3"/>
+  <rect class="p" x="182" y="68" width="28" height="50" rx="4" fill="#6366F1"/>
+  <rect class="p p2" x="182" y="38" width="28" height="28" rx="4" fill="#818CF8"/>
+  <rect class="p p3" x="182" y="26" width="28" height="10" rx="4" fill="#C7D2FE" stroke="#818CF8" stroke-width="1.5"/>
+  <!-- the same pieces, same colours, now one total -->
+  <g fill="#FFFFFF" opacity=".55"><rect x="186" y="72" width="5" height="40" rx="2.5"/><rect x="186" y="41" width="5" height="21" rx="2.5"/><rect x="32" y="44" width="5" height="64" rx="2.5"/><rect x="66" y="78" width="5" height="32" rx="2.5"/></g>
+  <line x1="168" y1="124" x2="224" y2="124" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+</svg>
