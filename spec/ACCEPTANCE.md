@@ -77,6 +77,6 @@
 | AC-73 | FR-TUT-14 | `internal/api/tutor_mode_test.go` | PASS (automated) | SPEC-013: the tutor grounds on the version on screen, else on Detailed |
 | AC-74 | FR-CNT-12 | `internal/ingest/verify_test.go`, `internal/api/lessons_test.go` | PASS (automated) | SPEC-013: every lesson is ours, three versions each; Detailed is the fallback |
 | AC-75 | FR-CNT-12, NFR-LIC-01 | `cmd/ingest/own_course_test.go` | PASS (automated) | SPEC-013 SC-003: the shipped text names no other course |
-| AC-76 | FR-UI-28 | `web/tests/clips.spec.ts` | pending | SPEC-014: clip player controls, reduced motion, description |
-| AC-77 | FR-CNT-13 | `internal/ingest/clips_test.go`, `internal/narration/text_test.go`, `internal/api/tutor_mode_test.go` | pending | SPEC-014: clip data, release check, narration tracks, tutor text |
-| AC-78 | FR-UI-28 | `web/tests/clips.spec.ts` | pending | SPEC-014: clip voice, one sound at a time, mute |
+| AC-76 | FR-UI-28 | `web/tests/clips.spec.ts` | PASS (automated) | SPEC-014: clip player controls, reduced motion, description |
+| AC-77 | FR-CNT-13 | `internal/ingest/clips_test.go`, `internal/narration/text_test.go`, `internal/api/tutor_mode_test.go` | PASS (automated) | SPEC-014: clip data, release check, narration tracks, tutor text |
+| AC-78 | FR-UI-28 | `web/tests/clips.spec.ts` | PASS (automated) | SPEC-014: clip voice, one sound at a time, mute |

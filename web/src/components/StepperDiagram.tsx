@@ -67,7 +67,6 @@ export const StepperDiagram: React.FC<Props> = ({ caption, alt, steps }) => {
                 type="button"
                 onClick={() => setPlaying((p) => !p)}
                 data-testid={playing ? 'stepper-pause' : 'stepper-play'}
-                aria-pressed={playing}
                 className="min-h-[44px] px-4 py-2 rounded-xl border-2 border-blue-600 text-blue-800 dark:border-sky-400 dark:text-sky-200 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
               >
                 {t(playing ? 'widget.stepPause' : 'widget.stepPlay')}

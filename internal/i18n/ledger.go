@@ -167,6 +167,10 @@ func Check(root, code string) []Problem {
 		for _, p := range Parity(root, t) {
 			add(t.Path, p)
 		}
+		// SPEC-015 SC-001: text left in English is not a translation.
+		for _, p := range Untranslated(root, t) {
+			add(t.Path, p)
+		}
 		e := ledger.Find(t.Path)
 		if e == nil {
 			add(t.Path, "no review entry")
