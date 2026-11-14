@@ -1,6 +1,6 @@
 # Plan: moving from Microsoft's course to our own lessons
 
-Draft, 2026-11-13. This is the plan for the SPEC-013 spec. Nothing changes in the app until SPEC-013 is approved.
+Plan for SPEC-013, written 2026-11-13. Progress is in section 5.
 
 ## 1. What the owner asked for (2026-11-13)
 
@@ -108,3 +108,13 @@ Kids lesson 3 already went through steps 1–5 in SPEC-012.
 2. **Writing:** Claude writes every lesson; the owner reviews.
 3. **English recordings:** held back for now. English stays on the device voice; only Hindi is recorded.
 4. **SPEC-010** (upstream translation sync) is closed, not built.
+
+## 5. Progress (2026-11-14)
+
+| Phase | State |
+|---|---|
+| 0 | Done: SPEC-013, SPEC 2.14.0 (Phase A, v0.7.0) |
+| 1 | Done: all six Kids lessons ours, English and Hindi, Hindi recorded (v0.8.0) |
+| 2 | Done: all six Plain English lessons ours, English and Hindi, Hindi recorded (v0.9.0) |
+| 3 | Done in code: six Detailed lessons, notebooks and quizzes approved and committed (`0f87d18`). Hindi narration recorded locally; waiting for the owner's upload, then v0.10.0 |
+| 4 | Done in the working tree, not yet committed: SPEC 2.15.0 (FR-CNT-12, AC-74, AC-75), the import step and its pinned commit removed, Microsoft images and base lessons deleted, Detailed serves the Standard journey, attribution footer replaced by our own, tutor identity rewritten, `TestShippedTextNamesNoOtherCourse` guards SC-003. Waiting on owner Hindi re-approval of `web/src/i18n/hi.json` |

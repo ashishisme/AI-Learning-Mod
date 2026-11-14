@@ -56,12 +56,8 @@ func translatable(kind, p string) bool {
 	return false
 }
 
-// Parity compares a translated file with its English source. Base lessons are the course's own
-// published translation and are not compared field by field.
+// Parity compares a translated file with its English source.
 func Parity(root string, t Target) []string {
-	if t.Kind == KindBase {
-		return nil
-	}
 	var en, tr any
 	for _, f := range []struct {
 		p string

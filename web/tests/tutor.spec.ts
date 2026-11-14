@@ -3,21 +3,17 @@ import { test, expect } from '@playwright/test'
 // SPEC: AC-24 (FR-UI-07): With /api/tutor returning 503, the tutor panel shows "Tutor offline" and the input is disabled.
 test.describe('Tutor Panel Acceptance', () => {
   test('AC-24: with /api/tutor returning 503, tutor panel shows "Tutor offline" and input is disabled', async ({ page }) => {
-    await page.route('**/api/lessons/tutor-test', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          id: 'tutor-test',
-          module: 'Test',
+    await page.route('**/api/lessons/tutor-test?*', (route) =>
+      route.fulfill({
+        json: {
+          lessonId: 'tutor-test',
+          mode: 'detailed',
+          origin: 'own',
           title: 'Tutor Test Lesson',
-          order: 0,
-          path: 'lessons/test/README.md',
-          commitSha: '1234567890123456789012345678901234567890',
-          blocks: [{ type: 'markdown', content: 'Lesson content here.' }],
-        }),
+          sections: [{ id: 's1', heading: 'One', bodyMarkdown: 'Lesson content here.' }],
+        },
       })
-    })
+    )
 
     // Mock /api/tutor to return 503
     await page.route('**/api/tutor', async (route) => {
@@ -47,21 +43,17 @@ test.describe('Tutor Panel Acceptance', () => {
 
   // SPEC: FR-UI-12, FR-TUT-11: Progressive SSE token streaming in UI
   test('FR-UI-12: progressively renders streaming SSE tokens with cursor', async ({ page }) => {
-    await page.route('**/api/lessons/streaming-test', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          id: 'streaming-test',
-          module: 'Neural Networks',
+    await page.route('**/api/lessons/streaming-test?*', (route) =>
+      route.fulfill({
+        json: {
+          lessonId: 'streaming-test',
+          mode: 'detailed',
+          origin: 'own',
           title: 'Perceptrons',
-          order: 0,
-          path: 'lessons/perceptrons/README.md',
-          commitSha: '1234567890123456789012345678901234567890',
-          blocks: [{ type: 'markdown', content: 'Sample perceptron content.' }],
-        }),
+          sections: [{ id: 's1', heading: 'One', bodyMarkdown: 'Sample perceptron content.' }],
+        },
       })
-    })
+    )
 
     // Mock streaming SSE response
     await page.route('**/api/tutor', async (route) => {
@@ -91,21 +83,17 @@ test.describe('Tutor Panel Acceptance', () => {
   })
 
   test('FR-UI-07: handles non-fatal inline errors and keeps input enabled for retries', async ({ page }) => {
-    await page.route('**/api/lessons/retry-test', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          id: 'retry-test',
-          module: 'Test',
+    await page.route('**/api/lessons/retry-test?*', (route) =>
+      route.fulfill({
+        json: {
+          lessonId: 'retry-test',
+          mode: 'detailed',
+          origin: 'own',
           title: 'Retry Test Lesson',
-          order: 0,
-          path: 'lessons/test/README.md',
-          commitSha: '1234567890123456789012345678901234567890',
-          blocks: [{ type: 'markdown', content: 'Lesson content here.' }],
-        }),
+          sections: [{ id: 's1', heading: 'One', bodyMarkdown: 'Lesson content here.' }],
+        },
       })
-    })
+    )
 
     // 1. First request returns 504 Gateway Timeout
     let requestCount = 0

@@ -11,13 +11,11 @@ const hindiLabel = (key: string): string => {
 }
 
 const lesson = {
-  id: 'cloud-test',
-  module: 'Test',
+  lessonId: 'cloud-test',
+  mode: 'detailed',
+  origin: 'own',
   title: 'Cloud Test Lesson',
-  order: 1,
-  path: 'cloud-test/README.md',
-  commitSha: '1234567890123456789012345678901234567890',
-  blocks: [{ type: 'markdown', content: 'Sample lesson content.' }],
+  sections: [{ id: 's1', heading: 'One', bodyMarkdown: 'Sample lesson content.' }],
 }
 
 async function mockLesson(page: Page) {

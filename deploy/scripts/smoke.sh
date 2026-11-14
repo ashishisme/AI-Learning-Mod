@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
-# SPEC: FR-030, FR-031, FR-033, FR-034, SC-013
+# SPEC: FR-030, FR-031, FR-034, SC-013
 # Checks a deployed revision without signing in. Used before and after traffic moves.
-# Usage: smoke.sh BASE_URL [EXPECTED_RELEASE] [BUNDLED_IMAGE_NAME]
+# Usage: smoke.sh BASE_URL [EXPECTED_RELEASE]
 set -euo pipefail
 
 base="${1:?base URL required}"
 release="${2:-}"
-image="${3:-}"
 fail() { echo "SMOKE FAILED: $*" >&2; exit 1; }
 
 health=""
@@ -38,9 +37,4 @@ done
 
 code="$(curl -sS --max-time 20 -o /dev/null -w '%{http_code}' "$base/api/lessons")"
 [ "$code" = "401" ] || fail "lessons without a session returned $code, want 401"
-
-if [ -n "$image" ]; then
-  type="$(curl -sS --max-time 20 -o /dev/null -w '%{http_code} %{content_type}' "$base/lesson-assets/$image")"
-  case "$type" in "200 image/"*) ;; *) fail "bundled image returned: $type" ;; esac
-fi
 echo "Smoke checks passed for $base"

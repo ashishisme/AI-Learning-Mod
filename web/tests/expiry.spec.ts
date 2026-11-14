@@ -2,7 +2,7 @@
 import { test, expect, Page } from '@playwright/test'
 import { mockAdmin } from './helpers/admin-mock'
 
-const LESSONS = { commitSha: 'a'.repeat(40), lessons: [{ id: 'lesson-1', module: 'Intro', title: 'First Lesson', order: 0, path: 'a.md', commitSha: 'a'.repeat(40) }] }
+const LESSONS = { lessons: [{ id: 'lesson-1', module: 'Intro', title: 'First Lesson', order: 0 }] }
 
 async function learner(page: Page, session: object) {
   await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, authRequired: true, tutorEnabled: false, feedbackEnabled: false } }))

@@ -112,8 +112,8 @@ func TestTutorInsecureTLSHeaderOptIn(t *testing.T) {
 	if err := os.MkdirAll(filepath.Join(dir, "lessons"), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	lesson := `{"title":"Lesson","blocks":[{"type":"markdown","content":"## Intro\nNeurons add signals."}]}`
-	if err := os.WriteFile(filepath.Join(dir, "lessons", "1-intro.json"), []byte(lesson), 0o644); err != nil {
+	lesson := `{"title":"Lesson","sections":[{"heading":"Intro","bodyMarkdown":"Neurons add signals."}]}`
+	if err := os.WriteFile(filepath.Join(dir, "lessons", "1-intro.detailed.json"), []byte(lesson), 0o644); err != nil {
 		t.Fatal(err)
 	}
 

@@ -2,13 +2,11 @@
 import { test, expect, Page } from '@playwright/test'
 
 const lesson = {
-  id: 'tutor-test',
-  module: 'Test',
+  lessonId: 'tutor-test',
+  mode: 'detailed',
+  origin: 'own',
   title: 'Tutor Test Lesson',
-  order: 1,
-  path: 'tutor-test/README.md',
-  commitSha: '1234567890123456789012345678901234567890',
-  blocks: [{ type: 'markdown', content: 'Sample lesson content.' }],
+  sections: [{ id: 's1', heading: 'One', bodyMarkdown: 'Sample lesson content.' }],
 }
 
 async function setup(page: Page, tutorEnabled: boolean) {

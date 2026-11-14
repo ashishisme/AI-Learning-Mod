@@ -39,7 +39,7 @@ export const Home: React.FC = () => {
       })
       .catch((err) => {
         if (err instanceof ApiError && err.status === 503) {
-          // FR-UI-06, AC-23: operator message to run ingest
+          // FR-UI-06, AC-23: this install has no lessons; tell the operator
           setIngestRequired(true)
         } else {
           setErrorMessage(err instanceof Error ? err.message : t('home.loadFailed'))
@@ -95,7 +95,7 @@ export const Home: React.FC = () => {
     )
   }
 
-  // FR-UI-06, AC-23: Message instructing operator to run ingestion
+  // FR-UI-06, AC-23: lessons ship with the code, so a missing list is an install fault
   if (ingestRequired) {
     return (
       <div className="max-w-2xl mx-auto my-16 px-4">
@@ -109,16 +109,8 @@ export const Home: React.FC = () => {
             </div>
             <div className="flex-1">
               <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">{t('home.ingest.title')}</h2>
-              <p className="text-sm text-slate-600 dark:text-slate-300 mb-5 leading-relaxed">
+              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 {t('home.ingest.body')}
-              </p>
-              <div className="relative group">
-                <code className="block bg-slate-900 dark:bg-slate-950 text-slate-100 font-mono text-xs px-4 py-3 rounded-lg overflow-x-auto shadow-inner border border-slate-800">
-                  GITHUB_TOKEN=your_token go run ./cmd/ingest
-                </code>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-4">
-                {t('home.ingest.after')}
               </p>
             </div>
           </div>

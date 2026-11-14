@@ -199,29 +199,29 @@ Each `notebooks/<id>.ipynb` runs the worked example step by step, using only Col
 
 **Precondition**: `go run ./cmd/review -lang en` shows every lesson, quiz and notebook approved, and no derived file ships.
 
-- [ ] T047 [US4] `spec:` commit amending `spec/SPEC.md`:
+- [X] T047 [US4] `spec:` commit amending `spec/SPEC.md`:
   - §1 now describes our own course;
   - §6.1 removes the curriculum source;
   - §7.3.1 gets the new identity line, with the grounding, citation and safety rules unchanged;
   - FR-UI-08 drops the Microsoft link pattern;
   - NFR-LIC-01..03: remove the attribution, and rewrite NFR-LIC-03 so `public-content/` is committed source rather than ingest output.
-- [ ] T048 [US4] Remove the lesson import:
+- [X] T048 [US4] Remove the lesson import:
   - the fetch, pin and Markdown conversion in `cmd/ingest/`, keeping `-verify` and its gates;
   - the pinned commit and the logo blocklist;
   - the ingest steps in `.github/workflows/deploy.yml`.
-- [ ] T049 [P] [US4] Delete `public-content/assets/` (Microsoft images), the base standard lessons `public-content/lessons/<id>.json`, and the base Hindi lessons. Update `public-content/index.json` so the lesson list no longer needs them, with ids unchanged (FR-011).
-- [ ] T050 [US4] In `web/src/pages/Lesson.tsx`:
+- [X] T049 [P] [US4] Delete `public-content/assets/` (Microsoft images), the base standard lessons `public-content/lessons/<id>.json`, and the base Hindi lessons. Update `public-content/index.json` so the lesson list no longer needs them, with ids unchanged (FR-011).
+- [X] T050 [US4] In `web/src/pages/Lesson.tsx`:
   - remove the Markdown standard view and the Microsoft Colab fallback at line ~104;
   - the Standard journey always uses `detailed`;
   - remove the `lesson.modeUnavailable` fallback copy where it no longer applies.
-- [ ] T051 [P] [US4] Remove the attribution:
+- [X] T051 [P] [US4] Remove the attribution:
   - `web/src/components/Attribution.tsx` and its uses;
   - the HelpModal link;
   - `widget.basedOn` in `web/src/i18n/en.json` and `hi.json`;
   - delete or rewrite `web/tests/attribution.spec.ts` so it asserts no Microsoft footer or link.
-- [ ] T052 [US4] Rewrite the `SystemPrompt` identity line in `internal/api/tutor.go` line 36. It currently reads "You are a teaching assistant for Microsoft AI-For-Beginners." It becomes this course's assistant. Leave the rest of the prompt verbatim, and update the tutor tests.
-- [ ] T053 [P] [US4] Update `README.md` and the licence notice, keeping the MIT credit only where the licence still needs it.
-- [ ] T054 [US4] Add the SC-003 check: a Go test or verify step that greps `public-content/`, `web/src/`, `web/public/` and `internal/` for `AI-For-Beginners` and `microsoft/`, and fails on a hit. Allowed exceptions are listed in the test. Release with the per-lesson step 6.
+- [X] T052 [US4] Rewrite the `SystemPrompt` identity line in `internal/api/tutor.go` line 36. It currently reads "You are a teaching assistant for Microsoft AI-For-Beginners." It becomes this course's assistant. Leave the rest of the prompt verbatim, and update the tutor tests.
+- [X] T053 [P] [US4] Update `README.md` and the licence notice, keeping the MIT credit only where the licence still needs it.
+- [X] T054 [US4] Add the SC-003 check: a Go test or verify step that greps `public-content/`, `web/src/`, `web/public/` and `internal/` for `AI-For-Beginners` and `microsoft/`, and fails on a hit. Allowed exceptions are listed in the test. Release with the per-lesson step 6.
 
 **Checkpoint**: Microsoft's course is no longer used (SC-003, SC-004).
 
@@ -229,8 +229,8 @@ Each `notebooks/<id>.ipynb` runs the worked example step by step, using only Col
 
 ## Phase 7: Polish & Cross-Cutting
 
-- [ ] T055 [P] Update `docs/own-content-plan.md` and memory `spec-013-own-lessons.md` after each phase.
-- [ ] T056 Run `web/tests/progress.spec.ts` after each release to confirm no saved progress is lost (SC-005). It is part of the full Playwright run.
+- [X] T055 [P] Update `docs/own-content-plan.md` and memory `spec-013-own-lessons.md` after each phase.
+- [X] T056 Run `web/tests/progress.spec.ts` after each release to confirm no saved progress is lost (SC-005). It is part of the full Playwright run.
 - [ ] T057 Close SPEC-013 in `spec/SPEC.md` and the spec status once SC-001..007 are met.
 
 ---

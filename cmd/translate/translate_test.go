@@ -253,34 +253,6 @@ func TestTranslateUsage(t *testing.T) {
 	}
 }
 
-// T049: the ingested base lessons get draft review entries. No key is set, so a model call would fail.
-func TestRecordBaseLessons(t *testing.T) {
-	root := repo(t)
-	for p, body := range map[string]string{
-		"public-content/index.json":                   `{"lessons":[{"id":"1-intro"},{"id":"2-next"}]}`,
-		"public-content/lessons/1-intro.json":         `{"id":"1-intro","blocks":[]}`,
-		"public-content/lang/hi/lessons/1-intro.json": `{"id":"1-intro","sourceHash":"readme-hash","blocks":[]}`,
-	} {
-		f := filepath.Join(root, filepath.FromSlash(p))
-		_ = os.MkdirAll(filepath.Dir(f), 0o755)
-		_ = os.WriteFile(f, []byte(body), 0o644)
-	}
-	var out bytes.Buffer
-	if code := run(root, []string{"-lang", "hi", "-record-base"}, func(string) string { return "" }, &out, &out); code != 0 || !strings.Contains(out.String(), "1 base lessons recorded") {
-		t.Fatalf("exit %d\n%s", code, out.String())
-	}
-	l, _ := i18n.LoadLedger(root, "hi")
-	e := l.Find("public-content/lang/hi/lessons/1-intro.json")
-	if e == nil || e.Kind != i18n.KindBase || e.Status != i18n.ReviewDraft || e.SourceHash != "readme-hash" {
-		t.Errorf("entry: %+v", e)
-	}
-	// Running it again changes nothing.
-	out.Reset()
-	if run(root, []string{"-lang", "hi", "-record-base"}, func(string) string { return "" }, &out, &out); !strings.Contains(out.String(), "0 base lessons recorded") {
-		t.Errorf("second run: %s", out.String())
-	}
-}
-
 // A rate limit is waited out and retried; the file is still written once.
 func TestTranslateRetriesWhenRateLimited(t *testing.T) {
 	old := retryWaits

@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
-	"testing"
 	"strings"
+	"testing"
 )
 
 func setupTestContent(t *testing.T) string {
@@ -16,23 +16,18 @@ func setupTestContent(t *testing.T) string {
 
 	// Create index.json
 	indexJSON := `{
-		"commitSha": "abcdef1234567890abcdef1234567890abcdef12",
 		"lessons": [
 			{
 				"id": "lesson-1",
 				"module": "intro",
 				"title": "Lesson 1 Title",
-				"order": 0,
-				"path": "lessons/01-Intro/README.md",
-				"commitSha": "abcdef1234567890abcdef1234567890abcdef12"
+				"order": 0
 			},
 			{
 				"id": "lesson-2",
 				"module": "symbolic",
 				"title": "Lesson 2 Title",
-				"order": 1,
-				"path": "lessons/02-Symbolic/README.md",
-				"commitSha": "abcdef1234567890abcdef1234567890abcdef12"
+				"order": 1
 			}
 		]
 	}`
@@ -45,35 +40,26 @@ func setupTestContent(t *testing.T) string {
 		t.Fatalf("failed to create lessons dir: %v", err)
 	}
 
-	// Create lesson-1.json
+	// Every lesson has a Detailed version, which is also the fallback (FR-CNT-12).
 	l1 := `{
-		"id": "lesson-1",
-		"module": "intro",
+		"lessonId": "lesson-1",
+		"mode": "detailed",
+		"origin": "own",
 		"title": "Lesson 1 Title",
-		"order": 0,
-		"path": "lessons/01-Intro/README.md",
-		"commitSha": "abcdef1234567890abcdef1234567890abcdef12",
-		"blocks": [
-			{"type": "markdown", "content": "# Lesson 1\n\nIntroductory text."}
-		]
+		"sections": [{"id": "s1", "heading": "Lesson 1", "bodyMarkdown": "Introductory text."}]
 	}`
-	if err := os.WriteFile(filepath.Join(lessonsDir, "lesson-1.json"), []byte(l1), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(lessonsDir, "lesson-1.detailed.json"), []byte(l1), 0644); err != nil {
 		t.Fatalf("failed to write lesson-1: %v", err)
 	}
 
-	// Create lesson-2.json (valid)
 	l2 := `{
-		"id": "lesson-2",
-		"module": "symbolic",
+		"lessonId": "lesson-2",
+		"mode": "detailed",
+		"origin": "own",
 		"title": "Lesson 2 Title",
-		"order": 1,
-		"path": "lessons/02-Symbolic/README.md",
-		"commitSha": "abcdef1234567890abcdef1234567890abcdef12",
-		"blocks": [
-			{"type": "markdown", "content": "# Lesson 2\n\nSymbolic reasoning."}
-		]
+		"sections": [{"id": "s1", "heading": "Lesson 2", "bodyMarkdown": "Symbolic reasoning."}]
 	}`
-	if err := os.WriteFile(filepath.Join(lessonsDir, "lesson-2.json"), []byte(l2), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(lessonsDir, "lesson-2.detailed.json"), []byte(l2), 0644); err != nil {
 		t.Fatalf("failed to write lesson-2: %v", err)
 	}
 
@@ -121,8 +107,8 @@ func TestAC04_GetLessons(t *testing.T) {
 	if err := json.Unmarshal(rec2.Body.Bytes(), &lessonMap); err != nil {
 		t.Fatalf("failed to parse lesson response as JSON: %v", err)
 	}
-	if lessonMap["id"] != "lesson-1" {
-		t.Errorf("expected id 'lesson-1', got %v", lessonMap["id"])
+	if lessonMap["lessonId"] != "lesson-1" {
+		t.Errorf("expected lessonId 'lesson-1', got %v", lessonMap["lessonId"])
 	}
 }
 
@@ -157,7 +143,7 @@ func TestAC06_CorruptedLesson(t *testing.T) {
 	contentDir := setupTestContent(t)
 
 	// Corrupt lesson-2.json
-	corruptPath := filepath.Join(contentDir, "lessons", "lesson-2.json")
+	corruptPath := filepath.Join(contentDir, "lessons", "lesson-2.detailed.json")
 	if err := os.WriteFile(corruptPath, []byte("NOT_VALID_JSON{{{"), 0644); err != nil {
 		t.Fatalf("failed to corrupt lesson-2: %v", err)
 	}
@@ -251,7 +237,7 @@ func TestGetLesson_AdaptiveModes(t *testing.T) {
 		t.Errorf("expected mode junior, got %v", resp["mode"])
 	}
 
-	// Case 2: Fallback when mode payload does not exist (lesson-2?mode=junior returns canonical)
+	// Case 2: a lesson with no file for the mode answers with its Detailed version (FR-CNT-12)
 	req2 := httptest.NewRequest(http.MethodGet, "/api/lessons/lesson-2?mode=junior", nil)
 	rec2 := httptest.NewRecorder()
 	router.ServeHTTP(rec2, req2)
@@ -263,23 +249,15 @@ func TestGetLesson_AdaptiveModes(t *testing.T) {
 	if err := json.Unmarshal(rec2.Body.Bytes(), &resp2); err != nil {
 		t.Fatalf("failed to parse json: %v", err)
 	}
-	if resp2["title"] != "Lesson 2 Title" {
-		t.Errorf("expected canonical title Lesson 2, got %v", resp2["title"])
+	if resp2["title"] != "Lesson 2 Title" || resp2["mode"] != "detailed" {
+		t.Errorf("expected the Detailed version of lesson 2, got %v", resp2)
 	}
 }
 
-// SPEC-013: the Standard journey asks for mode=detailed and gets our sections when they exist,
-// otherwise the standard lesson.
+// AC-74 (FR-CNT-12): mode=detailed, no mode and an unknown mode all answer with the Detailed version.
 func TestGetLesson_DetailedMode(t *testing.T) {
-	contentDir := setupTestContent(t)
-	detailed := `{"lessonId":"lesson-1","mode":"detailed","origin":"own","title":"Detailed One","sections":[{"heading":"What it is"}]}`
-	if err := os.WriteFile(filepath.Join(contentDir, "lessons", "lesson-1.detailed.json"), []byte(detailed), 0644); err != nil {
-		t.Fatal(err)
-	}
-	router := NewRouter(RouterConfig{ContentDir: contentDir})
-
-	get := func(path string) map[string]any {
-		t.Helper()
+	router := NewRouter(RouterConfig{ContentDir: setupTestContent(t)})
+	for _, path := range []string{"/api/lessons/lesson-1?mode=detailed", "/api/lessons/lesson-1", "/api/lessons/lesson-1?mode=nope"} {
 		rec := httptest.NewRecorder()
 		router.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, path, nil))
 		if rec.Code != http.StatusOK {
@@ -289,12 +267,8 @@ func TestGetLesson_DetailedMode(t *testing.T) {
 		if err := json.Unmarshal(rec.Body.Bytes(), &resp); err != nil {
 			t.Fatal(err)
 		}
-		return resp
-	}
-	if r := get("/api/lessons/lesson-1?mode=detailed"); r["sections"] == nil || r["mode"] != "detailed" {
-		t.Errorf("want the detailed sections, got %v", r)
-	}
-	if r := get("/api/lessons/lesson-2?mode=detailed"); r["sections"] != nil || r["title"] != "Lesson 2 Title" {
-		t.Errorf("want the standard lesson as fallback, got %v", r)
+		if resp["sections"] == nil || resp["mode"] != "detailed" {
+			t.Errorf("%s: want the Detailed sections, got %v", path, resp)
+		}
 	}
 }

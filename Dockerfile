@@ -23,7 +23,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY cmd/ ./cmd/
 COPY internal/ ./internal/
-# FR-033: refuse to build an image with missing lessons or damaged or forbidden images.
+# FR-033: refuse to build an image whose lessons are incomplete, not ours or not approved.
 COPY public-content ./public-content
 # SPEC-009 FR-017: the language gate compares each translation with its English source and its review
 # ledger. These files are read here only; none of them reaches the runtime image from this stage.
@@ -52,7 +52,7 @@ RUN addgroup -g 10001 -S appgroup && \
 COPY --from=frontend-builder --chown=appuser:appgroup /app/web/dist ./web/dist
 COPY --from=backend-builder --chown=appuser:appgroup /app/server ./server
 
-# Generated lessons (run cmd/ingest before building) plus the committed adaptive lessons.
+# The lessons, committed with the code (NFR-LIC-03).
 COPY --chown=appuser:appgroup public-content ./public-content
 
 # NFR-OPS-04: Remove package managers from production container

@@ -18,7 +18,6 @@ const (
 	ReviewDraft    = "draft"
 	ReviewApproved = "approved"
 
-	KindBase     = "base"
 	KindAdaptive = "adaptive"
 	KindQuiz     = "quiz"
 	KindUI       = "ui"
@@ -117,8 +116,8 @@ type Target struct {
 	Kind   string
 }
 
-// Targets lists every file an approved language must have: the UI catalogue, the quizzes, each
-// English adaptive lesson and each English base lesson in the index.
+// Targets lists every file an approved language must have: the UI catalogue, the quizzes and each
+// English lesson file.
 func Targets(root, code string) ([]Target, error) {
 	out := []Target{
 		{Path: "web/src/i18n/" + code + ".json", Source: "web/src/i18n/en.json", Kind: KindUI},
@@ -134,44 +133,13 @@ func Targets(root, code string) ([]Target, error) {
 			out = append(out, Target{Path: "public-content/lang/" + code + "/lessons/" + name, Source: "public-content/lessons/" + name, Kind: KindAdaptive})
 		}
 	}
-	raw, err := os.ReadFile(filepath.Join(root, "public-content", "index.json"))
-	if err != nil && !errors.Is(err, os.ErrNotExist) {
-		return nil, err
-	}
-	if err == nil {
-		var index struct {
-			Lessons []struct {
-				ID string `json:"id"`
-			} `json:"lessons"`
-		}
-		if err := json.Unmarshal(raw, &index); err != nil {
-			return nil, fmt.Errorf("public-content/index.json: %w", err)
-		}
-		for _, l := range index.Lessons {
-			out = append(out, Target{Path: "public-content/lang/" + code + "/lessons/" + l.ID + ".json", Source: "public-content/lessons/" + l.ID + ".json", Kind: KindBase})
-		}
-	}
 	sort.Slice(out, func(i, j int) bool { return out[i].Path < out[j].Path })
 	return out, nil
 }
 
-// SourceHash is what a ledger entry's sourceHash must equal: the English file's hash, or for a base
-// lesson the hash of the upstream README recorded in the generated file.
+// SourceHash is what a ledger entry's sourceHash must equal: the English file's hash.
 func SourceHash(root string, t Target) (string, error) {
-	if t.Kind != KindBase {
-		return HashFile(filepath.Join(root, filepath.FromSlash(t.Source)))
-	}
-	raw, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(t.Path)))
-	if err != nil {
-		return "", err
-	}
-	var lesson struct {
-		SourceHash string `json:"sourceHash"`
-	}
-	if err := json.Unmarshal(raw, &lesson); err != nil || lesson.SourceHash == "" {
-		return "", fmt.Errorf("no sourceHash in %s", t.Path)
-	}
-	return lesson.SourceHash, nil
+	return HashFile(filepath.Join(root, filepath.FromSlash(t.Source)))
 }
 
 // Check reports everything that stops a language from being approved: a missing translation, a missing,
@@ -234,7 +202,7 @@ func Check(root, code string) []Problem {
 		switch {
 		case !wanted[e.Path]:
 			add(e.Path, "review entry for a file this language does not need")
-		case e.Kind != KindBase && e.Kind != KindAdaptive && e.Kind != KindQuiz && e.Kind != KindUI:
+		case e.Kind != KindAdaptive && e.Kind != KindQuiz && e.Kind != KindUI:
 			add(e.Path, fmt.Sprintf("unknown kind %q", e.Kind))
 		}
 	}

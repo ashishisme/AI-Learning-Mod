@@ -17,10 +17,7 @@ func fixture(t *testing.T) string {
 		"web/src/i18n/hi.json":                               `{"a.hello":"नमस्ते {name}","n.count.one":"{count} चीज़","n.count.other":"{count} चीज़ें"}`,
 		"web/src/data/quizzes/en.json":                       `{"1-intro":{"lessonId":"1-intro","title":"Intro","description":"D","questions":[{"id":"q1","prompt":"P","options":["a","b"],"correctIndex":1,"rationale":"R","hintKeyword":"k"}]}}`,
 		"web/src/data/quizzes/hi.json":                       `{"1-intro":{"lessonId":"1-intro","title":"परिचय","description":"वि","questions":[{"id":"q1","prompt":"प्र","options":["क","ख"],"correctIndex":1,"rationale":"का","hintKeyword":"कु"}]}}`,
-		"public-content/index.json":                          `{"lessons":[{"id":"1-intro"}]}`,
-		"public-content/lessons/1-intro.json":                `{"id":"1-intro","blocks":[]}`,
 		"public-content/lessons/1-intro.junior.json":         `{"lessonId":"1-intro","mode":"junior","title":"T","sections":[{"id":"s1","heading":"H","bodyMarkdown":"See ` + "`x`" + ` at [docs](https://a.b) §1"}]}`,
-		"public-content/lang/hi/lessons/1-intro.json":        `{"id":"1-intro","sourceHash":"upstream-readme-hash","blocks":[]}`,
 		"public-content/lang/hi/lessons/1-intro.junior.json": `{"lessonId":"1-intro","mode":"junior","title":"शी","sections":[{"id":"s1","heading":"शी","bodyMarkdown":"` + "`x`" + ` को [दस्तावेज़](https://a.b) पर देखें §1"}]}`,
 	}
 	for p, body := range files {
@@ -94,7 +91,6 @@ func TestLedgerTargetsCoverEveryKind(t *testing.T) {
 		"web/src/i18n/hi.json":                               KindUI,
 		"web/src/data/quizzes/hi.json":                       KindQuiz,
 		"public-content/lang/hi/lessons/1-intro.junior.json": KindAdaptive,
-		"public-content/lang/hi/lessons/1-intro.json":        KindBase,
 	}
 	if len(kinds) != len(want) {
 		t.Errorf("targets: %v", kinds)
@@ -118,7 +114,7 @@ func TestLedgerMissingEntriesAndFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 	ps := Check(root, "hi")
-	if len(ps) != 4 || !strings.Contains(reasons(ps), "web/src/i18n/hi.json: no review entry") {
+	if len(ps) != 3 || !strings.Contains(reasons(ps), "web/src/i18n/hi.json: no review entry") {
 		t.Errorf("want a missing entry per file:\n%s", reasons(ps))
 	}
 
@@ -151,11 +147,6 @@ func TestLedgerDraftAndStale(t *testing.T) {
 	root = fixture(t)
 	write(t, root, "web/src/i18n/hi.json", `{"a.hello":"नमस्कार {name}","n.count.other":"{count} चीज़ें"}`)
 	expectProblem(t, root, "web/src/i18n/hi.json", "stale: the translation changed after approval")
-
-	// Upstream changed its README: the base lesson records a new source hash.
-	root = fixture(t)
-	write(t, root, "public-content/lang/hi/lessons/1-intro.json", `{"id":"1-intro","sourceHash":"new-upstream-hash","blocks":[]}`)
-	expectProblem(t, root, "public-content/lang/hi/lessons/1-intro.json", "stale: the English source changed after approval")
 }
 
 func TestLedgerRejectsBadEntries(t *testing.T) {
@@ -163,13 +154,13 @@ func TestLedgerRejectsBadEntries(t *testing.T) {
 	l, _ := LoadLedger(root, "hi")
 	l.Find("web/src/i18n/hi.json").Status = "ok"
 	l.Find("web/src/data/quizzes/hi.json").Kind = "image"
-	l.Find("public-content/lang/hi/lessons/1-intro.json").Reviewer = ""
-	l.Entries = append(l.Entries, Entry{Path: "public-content/lang/hi/lessons/9-x.json", Kind: KindBase, Status: ReviewApproved})
+	l.Find("public-content/lang/hi/lessons/1-intro.junior.json").Reviewer = ""
+	l.Entries = append(l.Entries, Entry{Path: "public-content/lang/hi/lessons/9-x.json", Kind: KindAdaptive, Status: ReviewApproved})
 	if err := l.Save(root); err != nil {
 		t.Fatal(err)
 	}
 	expectProblem(t, root, "web/src/i18n/hi.json", `review status "ok" is not draft or approved`)
 	expectProblem(t, root, "web/src/data/quizzes/hi.json", `unknown kind "image"`)
-	expectProblem(t, root, "public-content/lang/hi/lessons/1-intro.json", "approved without a reviewer and date")
+	expectProblem(t, root, "public-content/lang/hi/lessons/1-intro.junior.json", "approved without a reviewer and date")
 	expectProblem(t, root, "public-content/lang/hi/lessons/9-x.json", "review entry for a file this language does not need")
 }

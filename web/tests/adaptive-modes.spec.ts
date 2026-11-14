@@ -112,20 +112,18 @@ test.describe('Adaptive Audience Modes (Kids 8-14 & Plain English)', () => {
     await expect(page.getByText('Chip the Robot', { exact: true })).toBeVisible()
   })
 
-  test('falls back to the standard lesson when a lesson has no adaptive version', async ({ page }) => {
+  test('shows the Detailed version when a lesson has no file for the journey', async ({ page }) => {
     const pageErrors: string[] = []
     page.on('pageerror', (err) => pageErrors.push(err.message))
 
     const lesson = {
-      id: 'no-adaptive',
-      module: 'general',
-      title: 'Lesson Without Adaptive Version',
-      order: 99,
-      path: 'no-adaptive/README.md',
-      commitSha: 'abc',
-      blocks: [{ type: 'markdown', content: 'Standard lesson body.' }],
+      lessonId: 'no-adaptive',
+      mode: 'detailed',
+      origin: 'own',
+      title: 'Lesson Without A Kids Version',
+      sections: [{ id: 's1', heading: 'One', bodyMarkdown: 'Detailed lesson body.' }],
     }
-    // The server answers ?mode=junior with the canonical lesson when no adaptive file exists.
+    // FR-CNT-12: the server answers ?mode=junior with the Detailed version when there is no Kids file.
     await page.route('**/api/lessons/no-adaptive*', (route) => route.fulfill({ json: lesson }))
     await page.evaluate(() =>
       localStorage.setItem('ai-foundations-audience-mode', JSON.stringify({ state: { mode: 'junior' }, version: 0 })),
@@ -134,8 +132,7 @@ test.describe('Adaptive Audience Modes (Kids 8-14 & Plain English)', () => {
     await page.goto('/lesson/no-adaptive')
 
     await expect(page.locator('[data-testid="lesson-title"]')).toHaveText(lesson.title)
-    await expect(page.getByText('Standard lesson body.')).toBeVisible()
-    await expect(page.getByText("isn't available for this lesson yet")).toBeVisible()
+    await expect(page.getByText('Detailed lesson body.')).toBeVisible()
     expect(pageErrors).toEqual([])
   })
 })

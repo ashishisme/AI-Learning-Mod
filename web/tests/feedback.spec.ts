@@ -8,7 +8,7 @@ const session = { authenticated: true, betaId: 'BETA-7KQ3-M9XP', label: 'School 
 test('learner feedback is gated, warns about personal details, and does not echo a rejected message', async ({ page }) => {
   await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, authRequired: true, tutorEnabled: false, feedbackEnabled: true } }))
   await page.route('**/api/auth/session', (r) => r.fulfill({ json: session }))
-  await page.route('**/api/lessons', (r) => r.fulfill({ json: { commitSha: '', lessons: [] } }))
+  await page.route('**/api/lessons', (r) => r.fulfill({ json: { lessons: [] } }))
   let calls = 0
   await page.route('**/api/feedback', (r) => {
     calls++
@@ -50,7 +50,7 @@ test('admin console hides Feedback and shows no error when the auditor is not co
 test('learner sees the hourly feedback limit without losing the draft', async ({ page }) => {
   await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, authRequired: true, tutorEnabled: false, feedbackEnabled: true } }))
   await page.route('**/api/auth/session', (r) => r.fulfill({ json: session }))
-  await page.route('**/api/lessons', (r) => r.fulfill({ json: { commitSha: '', lessons: [] } }))
+  await page.route('**/api/lessons', (r) => r.fulfill({ json: { lessons: [] } }))
   await page.route('**/api/feedback', (r) => r.fulfill({ status: 429, json: { code: 'feedback_limit', error: 'limit' } }))
   await page.goto('/')
   await page.getByRole('button', { name: 'Feedback' }).click()
@@ -68,7 +68,7 @@ test('feedback sends the language and shows the localised rejection', async ({ p
   await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: true, authRequired: true, tutorEnabled: false, feedbackEnabled: true,
     languages: [{ code: 'en', name: 'English', speechLang: 'en-US' }, { code: 'hi', name: 'हिन्दी', speechLang: 'hi-IN' }] } }))
   await page.route('**/api/auth/session', (r) => r.fulfill({ json: session }))
-  await page.route('**/api/lessons**', (r) => r.fulfill({ json: { commitSha: '', lessons: [] } }))
+  await page.route('**/api/lessons**', (r) => r.fulfill({ json: { lessons: [] } }))
   let sent: Record<string, unknown> = {}
   await page.route('**/api/feedback', (r) => {
     sent = r.request().postDataJSON()

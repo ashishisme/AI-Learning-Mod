@@ -46,7 +46,6 @@ func run(root string, args []string, getenv func(string) string, stdout, stderr 
 	only := fs.String("only", "", "translate just this file, as its path in the review ledger")
 	force := fs.Bool("force", false, "overwrite a file even if it is approved and current")
 	dryRun := fs.Bool("dry-run", false, "count the fields and characters; make no request")
-	recordBase := fs.Bool("record-base", false, "record draft review entries for the ingested base lessons; make no request")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
@@ -75,7 +74,7 @@ func run(root string, args []string, getenv func(string) string, stdout, stderr 
 	}
 	var todo []i18n.Target
 	for _, t := range targets {
-		if t.Kind != i18n.KindBase && (*kind == "all" || *kind == t.Kind) && (*only == "" || *only == t.Path) {
+		if (*kind == "all" || *kind == t.Kind) && (*only == "" || *only == t.Path) {
 			todo = append(todo, t)
 		}
 	}
@@ -88,10 +87,6 @@ func run(root string, args []string, getenv func(string) string, stdout, stderr 
 		fmt.Fprintln(stderr, err)
 		return 2
 	}
-	if *recordBase {
-		return recordBaseLessons(root, targets, ledger, stdout, stderr)
-	}
-
 	var client *openai.Client
 	key := getenv("TRANSLATE_API_KEY")
 	model := getenv("TRANSLATE_MODEL")
@@ -171,38 +166,6 @@ func run(root string, args []string, getenv func(string) string, stdout, stderr 
 	if failed {
 		return 1
 	}
-	return 0
-}
-
-// recordBaseLessons adds a draft ledger entry for each ingested base lesson (the course's own
-// translation), so a reviewer approves it like every other file. Approved and current entries stay.
-func recordBaseLessons(root string, targets []i18n.Target, ledger *i18n.Ledger, stdout, stderr io.Writer) int {
-	added := 0
-	for _, t := range targets {
-		if t.Kind != i18n.KindBase {
-			continue
-		}
-		file := filepath.Join(root, filepath.FromSlash(t.Path))
-		if _, err := os.Stat(file); err != nil || approvedAndCurrent(root, t, ledger) {
-			continue // not ingested yet, or already approved
-		}
-		src, err1 := i18n.SourceHash(root, t)
-		tr, err2 := i18n.HashFile(file)
-		if err := errors.Join(err1, err2); err != nil {
-			fmt.Fprintln(stderr, err)
-			return 1
-		}
-		if e := ledger.Find(t.Path); e != nil && e.Status == i18n.ReviewDraft && e.SourceHash == src && e.TranslationHash == tr {
-			continue // the same draft is already recorded
-		}
-		ledger.Upsert(i18n.Entry{Path: t.Path, Kind: t.Kind, SourceHash: src, TranslationHash: tr})
-		added++
-	}
-	if err := ledger.Save(root); err != nil {
-		fmt.Fprintln(stderr, err)
-		return 1
-	}
-	fmt.Fprintf(stdout, "%d base lessons recorded as drafts for review\n", added)
 	return 0
 }
 

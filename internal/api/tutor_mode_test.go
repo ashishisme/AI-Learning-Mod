@@ -48,8 +48,8 @@ func TestTutorGroundsOnTheShownVersion(t *testing.T) {
 	}
 	for _, mode := range []string{"plain-english", "standard", ""} {
 		got := ask(`{"lessonId":"lesson-1","question":"What is AI?","mode":"` + mode + `"}`)
-		if !strings.HasPrefix(got.Citation, "[Lesson 1 Title") {
-			t.Errorf("mode %q should fall back to the standard lesson, citation %q", mode, got.Citation)
+		if got.Citation != "[Detailed One § What it is]" {
+			t.Errorf("mode %q should ground on the Detailed lesson, citation %q", mode, got.Citation)
 		}
 	}
 }

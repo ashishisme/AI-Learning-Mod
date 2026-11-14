@@ -18,23 +18,18 @@ test.describe('AC-19 Home Page', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          commitSha: '1234567890123456789012345678901234567890',
           lessons: [
             {
               id: 'lesson-1',
               module: 'Introduction',
               title: 'Introduction to AI',
               order: 0,
-              path: 'lessons/01-Intro/README.md',
-              commitSha: '1234567890123456789012345678901234567890',
             },
             {
               id: 'lesson-2',
               module: 'Neural Networks',
               title: 'Perceptrons',
               order: 1,
-              path: 'lessons/02-Perceptrons/README.md',
-              commitSha: '1234567890123456789012345678901234567890',
             },
           ],
         }),
@@ -74,10 +69,9 @@ test.describe('AC-19 Home Page', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          commitSha: '1234567890123456789012345678901234567890',
           lessons: [
-            { id: 'lesson-1', module: 'Intro', title: 'Introduction to AI', order: 0, path: '', commitSha: '' },
-            { id: 'lesson-2', module: 'CV', title: 'Convolutional Networks', order: 1, path: '', commitSha: '' },
+            { id: 'lesson-1', module: 'Intro', title: 'Introduction to AI', order: 0 },
+            { id: 'lesson-2', module: 'CV', title: 'Convolutional Networks', order: 1 },
           ],
         }),
       })

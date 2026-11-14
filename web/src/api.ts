@@ -7,27 +7,10 @@ export interface LessonMeta {
   module: string
   title: string
   order: number
-  path: string
-  commitSha: string
-  colabUrl?: string
 }
 
 export interface LessonIndex {
-  commitSha: string
   lessons: LessonMeta[]
-}
-
-export interface Block {
-  type: string
-  content?: string
-  lang?: string
-  src?: string
-  alt?: string
-  raw?: unknown
-}
-
-export interface Lesson extends LessonMeta {
-  blocks: Block[]
 }
 
 export interface TutorResponse {
@@ -70,15 +53,6 @@ export async function fetchLessons(): Promise<LessonIndex & Served> {
   if (!res.ok) {
     const body = await res.json().catch(() => null)
     throw new ApiError(res.status, body?.error || `Failed to fetch lessons (${res.status})`, body)
-  }
-  return { ...(await res.json()), servedLang: servedLang(res) }
-}
-
-export async function fetchLesson(id: string): Promise<Lesson & Served> {
-  const res = await fetch(withLang(`/api/lessons/${encodeURIComponent(id)}`))
-  if (!res.ok) {
-    const body = await res.json().catch(() => null)
-    throw new ApiError(res.status, body?.error || `Failed to fetch lesson (${res.status})`, body)
   }
   return { ...(await res.json()), servedLang: servedLang(res) }
 }
@@ -465,8 +439,7 @@ export interface AdaptiveLessonPayload {
   }>
 }
 
-// Returns null when the lesson has no adaptive version: the server then answers 200 with the
-// standard lesson, which has blocks instead of sections.
+// Returns null when the answer is not a lesson in the sections format.
 export type AdaptiveMode = "junior" | "plain-english" | "detailed" // SPEC-013: detailed is the Standard journey's own version
 
 export async function fetchAdaptiveLesson(id: string, mode: AdaptiveMode): Promise<(AdaptiveLessonPayload & Served) | null> {

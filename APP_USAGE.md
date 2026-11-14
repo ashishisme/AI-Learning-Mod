@@ -33,13 +33,13 @@ Open **[http://localhost:3000](http://localhost:3000)** in Chrome, Safari, Firef
 When launching the application for the first time, learners are greeted by a friendly three-way chooser presenting all three journeys equally:
 - **Kids (Ages 8–14)**: Guided by Chip the Robot with colourful clay cards, tactile illustrations, and Chip's Trail.
 - **Plain English**: Friendly everyday non-technical intuitions, jargon busters, and relatable workplace analogies.
-- **Standard**: Canonical technical curriculum derived from Microsoft AI-For-Beginners with formal definitions and architecture diagrams.
+- **Detailed**: The full treatment of each topic, with worked examples, a notebook to run and links to go further.
 
 Your journey preference is saved in this browser and can be switched anytime.
 
 ### Dedicated Sub-Header Toolbar
 A dedicated toolbar sits directly below the top application bar on both Home and Lesson pages:
-- **Segmented 44 px Tabs**: Switch between Standard, Kids, and Plain English at any point. Mid-lesson switches stop narration and reset scroll to the top.
+- **Segmented 44 px Tabs**: Switch between Kids, Plain English and Detailed at any point. Mid-lesson switches stop narration and reset scroll to the top.
 - **Compact Voice Studio (`🤖`)**: Open voice persona and mute controls.
 
 ### Kids Home: Chip's Trail
@@ -50,7 +50,7 @@ Young explorers in Kids mode experience a playful, focused curriculum interface:
 
 | Journey | Target Audience | Guide Persona | Characteristics |
 | :--- | :--- | :--- | :--- |
-| **🎓 Standard** | University & Adult Learners | Prof. Alan | Canonical academic foundations. Complete formulas, architecture diagrams, and formal definitions. |
+| **🎓 Detailed** | University & Adult Learners | Prof. Alan | Canonical academic foundations. Complete formulas, architecture diagrams, and formal definitions. |
 | **🚀 Kids (Ages 8–14)** | Young Explorers & Middle School | **Chip the Robot 🤖** | Story-driven trail with original approved clay illustrations, everyday physical metaphors, and Flesch-Kincaid Grade 4–6 reading levels. |
 | **💡 Plain English** | Non-Technical Professionals | **Nova 🎙️** | Executive summaries, workplace intuitions, zero math barriers, and relatable everyday analogies. |
 
@@ -156,7 +156,7 @@ Click the **❓ Help** button in the top navigation bar (or click *❓ Help & Se
 
 The Help window contains three dedicated tabs:
 1. **📖 How to Use the App:**
-   - **3 Adaptive Modes:** Switch between *Standard*, *Kids (8–14)* with Chip 🤖, and *Plain English* with Nova 🎙️ on any lesson.
+   - **3 Adaptive Modes:** Switch between *Detailed*, *Kids (8–14)* with Chip 🤖, and *Plain English* with Nova 🎙️ on any lesson.
    - **6 Kid-Friendly Simulators:** Hands-on visual playgrounds (Turing curtain, Mars Rover live lab, Sparky the brain cell fruit sorter, Magic Sunglasses convolution filter, Word galaxy constellations, and the AI Fairness see-saw).
    - **Audio Studio 2.0:** Read along with live karaoke sentence highlighting and neural voice personas.
    - **AI Teaching Assistant:** Grounded, citation-enforced answers with voice input ("Talk to Chip").
@@ -190,7 +190,7 @@ Click the **⚙️ Settings** icon in the top-right navigation bar:
 ## 🏢 Freeware Notice & Attribution
 
 - **Developed and distributed as freeware by Qunisphere Pvt Limited, Bangalore.**
-- Curriculum content is derived from [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners) under the [MIT License](https://github.com/microsoft/AI-For-Beginners/blob/main/LICENSE).
+- The lessons, quizzes and notebooks are written for this course and released under the [MIT License](LICENSE). This project is independent and not affiliated with, sponsored by, or endorsed by Microsoft.
 - Application code, simulators, and audio pipeline released under the [MIT License](LICENSE).
 
 ---

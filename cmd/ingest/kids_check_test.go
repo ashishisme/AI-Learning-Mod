@@ -82,7 +82,7 @@ func TestKidsCheckNeedsARegisteredWordPicture(t *testing.T) {
 // AC-61: an English Kids lesson change with the Hindi review left as it was fails the release gate.
 func TestVerifyFailsWhenEnglishKidsLessonChangesAlone(t *testing.T) {
 	root, dir := langRepo(t, "approved")
-	writeFile(t, filepath.Join(root, "public-content", "lessons", "1-intro.junior.json"), `{"lessonId":"1-intro","mode":"junior","title":"Easier"}`)
+	writeFile(t, filepath.Join(root, "public-content", "lessons", "1-intro.junior.json"), `{"lessonId":"1-intro","mode":"junior","origin":"own","title":"Easier"}`)
 	code, out := runVerify(dir)
 	if code != 1 || !strings.Contains(out, "hi public-content/lang/hi/lessons/1-intro.junior.json") {
 		t.Errorf("exit %d\n%s", code, out)

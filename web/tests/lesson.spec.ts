@@ -1,26 +1,19 @@
 import { test, expect } from '@playwright/test'
 
-// SPEC: AC-20 (FR-UI-03, FR-UI-08): /lesson/:id renders title, back link, rendered Markdown, Colab button, Mark complete, and tutor panel.
+// SPEC: AC-20 (FR-UI-03, FR-UI-08): /lesson/:id renders title, back link, the lesson's sections, Colab button, Mark complete, and tutor panel.
 test.describe('AC-20 Lesson Detail Page', () => {
-  test('AC-20: renders title, back link, rendered markdown, Colab button, Mark complete, and tutor panel', async ({ page }) => {
-    await page.route('**/api/lessons/intro-lesson', async (route) => {
+  test('AC-20: renders title, back link, sections, Colab button, Mark complete, and tutor panel', async ({ page }) => {
+    await page.route('**/api/lessons/intro-lesson?*', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          id: 'intro-lesson',
-          module: 'Basics',
+          lessonId: 'intro-lesson',
+          mode: 'detailed',
+          origin: 'own',
           title: 'Deep Learning Basics',
-          order: 0,
-          path: 'lessons/01-Basics/README.md',
-          commitSha: '1234567890123456789012345678901234567890',
-          colabUrl: 'https://colab.research.google.com/github/microsoft/AI-For-Beginners/blob/main/lessons/01-Basics/lab.ipynb',
-          blocks: [
-            {
-              type: 'markdown',
-              content: '# Header 1\n\nThis is **bold** text and markdown explanation.',
-            },
-          ],
+          colabUrl: 'https://colab.research.google.com/github/ashishisme/AI-Learning-Mod/blob/cloud-beta/notebooks/intro-lesson.ipynb',
+          sections: [{ id: 's1', heading: 'Header 1', bodyMarkdown: 'This is **bold** text and markdown explanation.' }],
         }),
       })
     })
@@ -36,10 +29,9 @@ test.describe('AC-20 Lesson Detail Page', () => {
     await expect(backLink).toBeVisible()
     await expect(backLink).toHaveAttribute('href', '/')
 
-    // 3. Rendered Markdown
-    const content = page.locator('[data-testid="lesson-content"]')
-    await expect(content).toContainText('Header 1')
-    await expect(content).toContainText('bold text')
+    // 3. The section, with its Markdown rendered
+    await expect(page.getByRole('heading', { name: 'Header 1' })).toBeVisible()
+    await expect(page.locator('strong', { hasText: 'bold' })).toBeVisible()
 
     // 4. Colab button with rel="noreferrer"
     const colabBtn = page.locator('[data-testid="colab-button"]')

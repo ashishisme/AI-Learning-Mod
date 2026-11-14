@@ -19,8 +19,6 @@ export const HelpModal: React.FC = () => {
   }, [isHelpOpen, setHelpOpen])
 
   if (!isHelpOpen) return null
-  // The repository link sits inside the sentence, so the sentence is split around its placeholder.
-  const curriculum = t('help.licenseCurriculum').split('{link}')
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text)
@@ -318,10 +316,7 @@ export const HelpModal: React.FC = () => {
                     {rich(t('help.licenseCode'))}
                   </p>
                   <p>
-                    {rich(curriculum[0])}<a href="https://github.com/microsoft/AI-For-Beginners" target="_blank" rel="noreferrer" className="text-blue-600 dark:text-blue-400 underline font-semibold">microsoft/AI-For-Beginners</a>{rich(curriculum[1])}
-                  </p>
-                  <p className="text-[11px] text-slate-500">
-                    {t('help.disclaimer')}
+                    {rich(t('help.licenseCurriculum'))}
                   </p>
                 </div>
               </div>

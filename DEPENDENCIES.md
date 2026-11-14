@@ -42,7 +42,7 @@ npm --prefix web run check:deps
   - `react-router-dom` (`^6.28.0`): Client-side routing
   - `zustand` (`^4.5.5`): Lightweight state store (persists theme and audience mode to `localStorage`)
   - `mermaid` (`^12.2.0`): Dynamic SVG flowchart and architecture diagram generation
-  - `react-markdown` (`^9.0.1`), `remark-gfm`, `rehype-highlight`, `rehype-raw`, `rehype-sanitize`: Markdown lesson parser
+  - `react-markdown` (`^9.0.1`), `remark-gfm`: lesson Markdown renderer; raw HTML in lesson text is shown as text, never interpreted
 - **Development & Testing Dependencies:**
   - `@playwright/test` (`^1.48.0`): End-to-end browser regression testing
   - `tailwindcss` (`^3.4.14`), `postcss`, `autoprefixer`: Modern styling system

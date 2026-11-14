@@ -80,7 +80,7 @@ graph TD
 ```
 
 - **Backend:** Go 1.23 standard library `net/http` router, bounded in-memory sliding window rate limiter (10 req/min/IP), panic recovery middleware, and SSE streamer with non-blocking write deadlines.
-- **Frontend:** React 18, Vite, TypeScript, Tailwind CSS, Zustand client-side storage, and a customized rehype/remark pipeline that strips scripts, iframe embeds, and dangerous HTML event handlers (`NFR-SEC-05`).
+- **Frontend:** React 18, Vite, TypeScript, Tailwind CSS, Zustand client-side storage, and a Markdown renderer that never interprets HTML in lesson text, so no script, iframe or event handler can run (`NFR-SEC-05`).
 - **Ingestion Pipeline:** Decoupled `internal/ingest` module supporting exponential egress backoff (AC-16) and absolute asset re-routing to `raw.githubusercontent.com`.
 
 ---

@@ -33,7 +33,7 @@ const (
 	TutorTimeout        = 60 * time.Second // 60s per FR-TUT-09
 
 	// SystemPrompt defines the verbatim grounding & injection defense block (FR-TUT-03, §7.3.1, NFR-AI-01)
-	SystemPrompt = `You are a teaching assistant for Microsoft AI-For-Beginners.
+	SystemPrompt = `You are the teaching assistant for AI Foundations Coach, a beginner course on artificial intelligence.
 Answer the user's question directly, clearly, and conversationally in 2-4 sentences using only the provided lesson content.
 Provide helpful conceptual explanations, not raw markdown headers or image links.
 Cite sections as [<lesson title> § <heading>].
@@ -608,16 +608,10 @@ func fileExists(p string) bool {
 	return err == nil && !info.IsDir()
 }
 
-type tutorBlock struct {
-	Type    string `json:"type"`
-	Content string `json:"content"`
-}
-
-// tutorLesson reads either a standard lesson (blocks) or a section-format journey lesson (sections).
+// tutorLesson is the part of a lesson version the tutor grounds on (SPEC §6.3).
 type tutorLesson struct {
-	Title    string       `json:"title"`
-	Blocks   []tutorBlock `json:"blocks"`
-	Intro    string       `json:"intro"`
+	Title    string `json:"title"`
+	Intro    string `json:"intro"`
 	Sections []struct {
 		Heading      string `json:"heading"`
 		BigIdea      string `json:"bigIdea"`
@@ -656,7 +650,7 @@ func (l tutorLesson) sectionsMarkdown() string {
 }
 
 // modeLessonPath is the journey's section-format file for a lesson, in the learner's language or English,
-// or "" when the mode is standard or has no file. mode is checked against a fixed list before use in a path.
+// or "" when the mode is not a journey file or has none. mode is checked against a fixed list before use in a path.
 func modeLessonPath(contentDir, lessonID, mode string, language i18n.Language) string {
 	if mode != "junior" && mode != "plain-english" && mode != "detailed" {
 		return ""
@@ -676,18 +670,12 @@ func modeLessonPath(contentDir, lessonID, mode string, language i18n.Language) s
 // loadTutorPrompt builds the prompt from the lesson on disk (FR-TUT-02, FR-TUT-04, §7.3).
 // emphaticCitation adds the explicit citation instruction that small local models need.
 func loadTutorPrompt(contentDir string, req TutorRequest, tone string, maxBytes int, emphaticCitation bool, language i18n.Language) (p tutorPrompt, status int, msg string) {
-	// Load lesson content from disk: the learner's language first, then English (SPEC-009 FR-025).
-	// language.Code comes from the approved list, never from the request, so it is safe in a path.
-	lessonPath := filepath.Join(contentDir, "lessons", req.LessonID+".json")
-	if language.Code != i18n.English.Code && language.Code != "" {
-		if translated := filepath.Join(contentDir, "lang", language.Code, "lessons", req.LessonID+".json"); fileExists(translated) {
-			lessonPath = translated
-		}
-	}
-	// SPEC-013: ground on the version the learner sees. A journey's section-format file (learner's language,
-	// then English) wins over the standard lesson, so citations name headings that are on the page.
-	if modePath := modeLessonPath(contentDir, req.LessonID, req.Mode, language); modePath != "" {
-		lessonPath = modePath
+	// SPEC-013: ground on the version the learner sees, in their language first, then English
+	// (SPEC-009 FR-025). The Standard journey's version, and the fallback for any journey, is Detailed,
+	// so citations name headings that are on the page.
+	lessonPath := modeLessonPath(contentDir, req.LessonID, req.Mode, language)
+	if lessonPath == "" {
+		lessonPath = modeLessonPath(contentDir, req.LessonID, "detailed", language)
 	}
 	lessonData, err := os.ReadFile(lessonPath)
 	if err != nil {
@@ -699,41 +687,22 @@ func loadTutorPrompt(contentDir string, req TutorRequest, tone string, maxBytes 
 	if err := json.Unmarshal(lessonData, &lesson); err != nil {
 		return p, http.StatusInternalServerError, "internal error"
 	}
-	if len(lesson.Blocks) == 0 && len(lesson.Sections) > 0 {
-		lesson.Blocks = append(lesson.Blocks, tutorBlock{Type: "markdown", Content: lesson.sectionsMarkdown()})
-	}
-
-	// FR-TUT-02: Concatenate lesson Markdown in block order
-	var sb strings.Builder
-	for _, b := range lesson.Blocks {
-		if b.Type == "markdown" {
-			sb.WriteString(b.Content)
-			sb.WriteString("\n\n")
-		}
-	}
-	content := sb.String()
+	// FR-TUT-02, FR-TUT-14: the lesson's intro and sections, in order
+	full := lesson.sectionsMarkdown()
 	// Strip image links so local LLMs do not repeat raw image URLs
-	content = mdImageRegex.ReplaceAllString(content, "")
+	content := mdImageRegex.ReplaceAllString(full, "")
 	content = htmlImageRegex.ReplaceAllString(content, "")
 
 	if len(content) > maxBytes {
 		content = content[:maxBytes]
 	}
 
-	// Extract available section headings from markdown blocks
-	headingRegex := regexp.MustCompile(`(?m)^#{1,3}\s+(.+)$`)
+	// The headings a citation may name
 	var headings []string
-	for _, block := range lesson.Blocks {
-		if block.Type == "markdown" {
-			matches := headingRegex.FindAllStringSubmatch(block.Content, -1)
-			for _, m := range matches {
-				if len(m) > 1 {
-					h := strings.TrimSpace(m[1])
-					if h != "" && !strings.HasPrefix(h, "!") && !strings.HasPrefix(h, "[") {
-						headings = append(headings, h)
-					}
-				}
-			}
+	for _, m := range regexp.MustCompile(`(?m)^#{1,3}\s+(.+)$`).FindAllStringSubmatch(full, -1) {
+		h := strings.TrimSpace(m[1])
+		if h != "" && !strings.HasPrefix(h, "!") && !strings.HasPrefix(h, "[") {
+			headings = append(headings, h)
 		}
 	}
 	defaultSection := "Overview"

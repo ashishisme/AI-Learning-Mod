@@ -13,12 +13,10 @@ Each step below has a short reason. Commands run from the repository root on the
 
 ## Before you start
 
-- **Base lessons from the course.** The upstream course has translated base lessons for `hi`, `bn`, `mr`, `ta`, `te`, `kn`, `ml`, `pa` and `ur` at the pinned commit. **Gujarati and Odia have none.** For them, the base lessons would need translating too, which this pipeline does not do yet. That is out of scope until it's planned.
 - **Right-to-left scripts.** **Urdu** is written right to left. The layout, icons and text direction need work before Urdu can ship.
 - **A reviewer.** You need a native-speaker reviewer for the language before anything goes live.
 - **Sign-ins:**
-  - `gcloud` signed in to the project: `gcloud auth login`, then `gcloud config set project <project>`;
-  - a GitHub token in `.env` with read access to public repositories.
+  - `gcloud` signed in to the project: `gcloud auth login`, then `gcloud config set project <project>`.
 
 ## Steps
 
@@ -30,14 +28,10 @@ Each step below has a short reason. Commands run from the repository root on the
 
 A hidden language is built and checked, but learners never see it. `name` is written in the language's own script, because that is how learners find it in the switcher.
 
-**2. Ingest the course's own translation.**
+**2. Translate the lesson list.** Copy `public-content/index.json` to `public-content/lang/ta/index.json` and translate each `title`. Keep every `id`, `module` and `order` as they are.
 
-```bash
-GITHUB_TOKEN=… INGEST_PINNED_SHA=<pin from deploy.yml> go run ./cmd/ingest -lang ta
-go run ./cmd/translate -lang ta -record-base   # draft review entries for those lessons
-```
-
-- **Review the new images for logos,** as the README's "Curriculum pin" section describes. Translated sketchnotes can carry the same Microsoft logo as the English ones.
+- **The rule:** each title must be the start of that lesson's translated Detailed title, so the list shows only words the reviewer approved with the lesson. Finish this after step 4 has drafted the lessons; the release check names any title that does not match.
+- **Without this file** the lesson list stays in English.
 
 **3. Seed the glossary.** Create `content/glossary/ta.json` with the key terms in the same shape as `hi.json`. The reviewer confirms each term in step 6.
 
@@ -52,7 +46,7 @@ go run ./cmd/translate -lang ta -only public-content/lang/ta/lessons/1-intro.jun
 go run ./cmd/translate -lang ta                                  # the rest
 ```
 
-- **What it does:** it drafts the UI catalogue, the quizzes and the Kids and Plain English lessons.
+- **What it does:** it drafts the UI catalogue, the quizzes and all three versions of every lesson (Kids, Plain English and Detailed).
 - **What it protects:** it never overwrites a file that is approved and current, and it refuses an answer that breaks Markdown, code, links or placeholders. Rerun it for any file it reports.
 - **The key:** never put `TRANSLATE_API_KEY` in CI, Terraform or the image.
 

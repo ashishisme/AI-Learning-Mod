@@ -1,10 +1,12 @@
-// SPEC: FR-ING-01, FR-ING-02, FR-ING-03, FR-ING-04, FR-ING-05, FR-ING-06, FR-ING-07, FR-ING-08, NFR-SEC-09, DC-03, DC-07
-// SPEC-009: FR-005 (-lang), FR-017..FR-019 (the language release gate in -verify)
-// SPEC-012: FR-CNT-08 (the Kids reading check in -verify)
+// SPEC: FR-033, NFR-LIC-03, DC-07
+// SPEC-009: FR-017..FR-019 (the language release gate)
+// SPEC-012: FR-CNT-08 (the Kids reading check)
+// SPEC-013: FR-008, FR-012 (every lesson is ours and owner-approved; nothing is fetched)
+//
+// The command keeps its name from when it imported the lessons. It now only checks them.
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"io"
@@ -18,75 +20,21 @@ import (
 	"ai-foundations-coach/internal/narration"
 )
 
-type Config = ingest.Config
-type LessonMeta = ingest.LessonMeta
-type Block = ingest.Block
-type Lesson = ingest.Lesson
-type LessonIndex = ingest.LessonIndex
-
-var (
-	Run = func(ctx context.Context, cfg Config) error {
-		_, _, err := ingest.Run(ctx, cfg)
-		return err
-	}
-	fetchWithRetry = ingest.FetchWithRetry
-)
-
 func main() {
-	verifyOnly := flag.Bool("verify", false, "check that the content directory is complete and self-contained, then exit")
-	lang := flag.String("lang", "", "ingest only this language from languages.json, for example hi")
-	audio := flag.Bool("audio", true, "with -verify: also check recorded narration (off where recordings are not present yet)")
+	_ = flag.Bool("verify", true, "kept so existing release commands keep working; the check always runs")
+	audio := flag.Bool("audio", true, "also check recorded narration (off where recordings are not present yet)")
 	flag.Parse()
 
 	contentDir := os.Getenv("CONTENT_DIR")
 	if strings.TrimSpace(contentDir) == "" {
 		contentDir = "public-content"
 	}
-	if *verifyOnly {
-		code := verify(contentDir, os.Stderr, *audio)
-		// SPEC-012 FR-CNT-08: the Kids reading check runs in the same release gate.
-		if kidsCheck(filepath.Dir(filepath.Clean(contentDir)), contentDir, os.Stderr) != 0 {
-			code = 1
-		}
-		os.Exit(code)
+	code := verify(contentDir, os.Stderr, *audio)
+	// SPEC-012 FR-CNT-08: the Kids reading check runs in the same release gate.
+	if kidsCheck(filepath.Dir(filepath.Clean(contentDir)), contentDir, os.Stderr) != 0 {
+		code = 1
 	}
-
-	token := os.Getenv("GITHUB_TOKEN")
-	if strings.TrimSpace(token) == "" {
-		slog.Error("GITHUB_TOKEN environment variable is required")
-		os.Exit(1)
-	}
-
-	langs, err := i18n.Load(contentDir)
-	if err != nil {
-		slog.Error("Language list is invalid", "error", err.Error())
-		os.Exit(2)
-	}
-	cfg := Config{
-		GitHubToken: token,
-		ContentDir:  contentDir,
-		PinnedSHA:   strings.TrimSpace(os.Getenv("INGEST_PINNED_SHA")),
-	}
-	// Every listed language is ingested, hidden or approved, so a reviewer can work on it.
-	for _, l := range langs.All() {
-		if l.Code != i18n.English.Code && (*lang == "" || *lang == l.Code) {
-			cfg.Languages = append(cfg.Languages, l.Code)
-		}
-	}
-	if *lang != "" {
-		if len(cfg.Languages) == 0 {
-			slog.Error("Language is not in languages.json", "lang", *lang)
-			os.Exit(2)
-		}
-		cfg.SkipEnglish = true
-	}
-
-	sha, count, err := ingest.Run(context.Background(), cfg)
-	if err != nil {
-		slog.Error("Ingestion failed", "error", err.Error())
-		os.Exit(1)
-	}
-	slog.Info("Ingestion completed successfully", "contentDir", contentDir, "commitSha", sha, "lessonsCount", count, "languages", cfg.Languages)
+	os.Exit(code)
 }
 
 // verify is the release gate. The English content checks come first (FR-033). Then each listed

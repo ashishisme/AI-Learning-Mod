@@ -10,7 +10,7 @@ import { ExpiryBanner } from './components/ExpiryBanner'
 import { FeedbackButton } from './components/FeedbackButton'
 import { LanguageSwitcher } from './components/LanguageSwitcher'
 import { AuthGate, SignOutControl } from './components/AuthGate'
-import { Attribution } from './components/Attribution'
+import { SiteFooter } from './components/SiteFooter'
 import { SettingsModal } from './components/SettingsModal'
 import { HelpModal } from './components/HelpModal'
 import { KidVisual } from './components/KidVisual'
@@ -139,8 +139,8 @@ export const App: React.FC = () => {
       {/* Global Settings Modal Drawer (FR-SET-01, FR-SET-02) */}
       <SettingsModal />
 
-      {/* FR-ATT-01, NFR-LIC-01, AC-26: Mandatory footer across all routes */}
-      <Attribution />
+      {/* FR-ATT-01, AC-26: footer across all routes */}
+      <SiteFooter />
     </div>
   )
 }

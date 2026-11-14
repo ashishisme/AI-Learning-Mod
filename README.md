@@ -6,7 +6,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-A self-paced, multimodal artificial intelligence curriculum platform derived from [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners). Learn artificial intelligence from fundamental concepts to deep neural networks, computer vision, natural language processing, and ethical AI with **3 adaptive audience modes**, **hands-on interactive simulators**, **Audio Studio 2.0 narration**, and a grounded **AI teaching assistant** that runs completely offline with local models or in the cloud.
+A self-paced, multimodal artificial intelligence course with its own lessons, quizzes and notebooks. Learn artificial intelligence from fundamental concepts to deep neural networks, computer vision, natural language processing, and ethical AI with **3 adaptive audience modes**, **hands-on interactive simulators**, **Audio Studio 2.0 narration**, and a grounded **AI teaching assistant** that runs completely offline with local models or in the cloud.
 
 ---
 
@@ -14,7 +14,7 @@ A self-paced, multimodal artificial intelligence curriculum platform derived fro
 
 ### 1. 🎚️ 3-Tier Adaptive Learning Modes
 Every curriculum module provides three purpose-built learning experiences accessible via a single click:
-* **Standard (Beginner):** Complete academic foundations derived from Microsoft AI-For-Beginners.
+* **Detailed:** The full treatment of each topic, with worked examples, a notebook to run and links to go further.
 * **Kids Mode (Ages 8–14):** Guided by **Chip the Robot 🤖**, featuring toy block models, everyday physical metaphors, gamified quizzes, and Flesch-Kincaid Grade 4–6 cognitive pacing.
 * **Plain English:** Hosted by **Nova 🎙️**, providing executive analogies, workplace intuition, and jargon-free explanations for non-technical professionals.
 
@@ -148,17 +148,11 @@ npm --prefix web run dev
 
 ## 🐳 How to Deploy
 
-### Curriculum pin
+### Lessons
 
-A release ingests `microsoft/AI-For-Beginners` at commit `392d0df1b2647cbee104942390551f1ed9e072c8` (NFR-LIC-03), set by `INGEST_PINNED_SHA` in `.github/workflows/deploy.yml`.
+Every lesson is written for this course and committed in `public-content/` (NFR-LIC-03, SPEC-013). Nothing is downloaded at build time. Each lesson has three versions, one per journey: `<id>.junior.json` (Kids), `<id>.plain-english.json` and `<id>.detailed.json`. `public-content/index.json` lists the lessons, and each title in it must be the start of that lesson's Detailed title.
 
-**Changing the pin needs a human image review.** NFR-LIC-02 forbids Microsoft logos and brand assets, and no automated check can find a hand-drawn one. At a size where a thumbnail looked clean, two sketchnotes turned out to have the logo. When the pin changes:
-
-1. Run ingest, then view every file in `public-content/assets/` at full size. Zoom in on sketchnotes.
-2. Add the content hash of any image with a logo to `brandedImages` in `internal/ingest/ingest.go`. It is then left out of the lessons, and the build refuses it.
-3. Update the image count in `web/tests/lesson-assets.spec.ts`.
-
-Review record for the current pin (2026-11-02): 22 images reviewed. 2 left out for a Microsoft logo (the Symbolic AI and NLP sketchnotes), 20 kept. Licensing beyond the upstream MIT grant was not checked for each image.
+The owner approves every English lesson, quiz and notebook with `go run ./cmd/review -lang en -reviewer owner -approve <path>…`. A later edit makes the approval stale, and the release check then fails until it is approved again.
 
 ### Languages (SPEC-009)
 
@@ -166,8 +160,7 @@ Languages are listed in `public-content/languages.json`. A language marked `hidd
 
 To add a language, follow [docs/adding-a-language.md](docs/adding-a-language.md).
 
-- **Base lessons** come from the course's own translation at the same pin: `go run ./cmd/ingest` ingests every listed language, and `go run ./cmd/ingest -lang hi` ingests just one. Translated images are new images, so **review them for logos as above** before a language is approved.
-- **App-written content** (kids and plain-English lessons, quizzes, UI text) is drafted with `go run ./cmd/translate -lang hi [-kind adaptive|quiz|ui] [-only <path>] [-force] [-dry-run]`. It uses the glossary in `content/glossary/<code>.json` and records each draft in `content/review/<code>.json`.
+- **Translations** (lessons, quizzes, UI text) are drafted with `go run ./cmd/translate -lang hi [-kind adaptive|quiz|ui] [-only <path>] [-force] [-dry-run]`. It uses the glossary in `content/glossary/<code>.json` and records each draft in `content/review/<code>.json`.
 - **Review:** a native reviewer corrects each file in a PR, then approves it with `go run ./cmd/review -lang hi -reviewer "Name" -approve <path>…`. `go run ./cmd/review -lang hi` lists every file as draft, approved, stale or missing. Any later change to the file or its English source makes the approval stale.
 - **Release gate:** `go run ./cmd/ingest -verify` prints `LANG PATH: reason` for anything missing, draft, stale or structurally different from English. Such a line fails the build for an approved language and is a warning for a hidden one.
 
@@ -191,11 +184,8 @@ Choose one voice per persona (Chip, Nova, Prof. Alan) in `content/voices/<code>.
 The application compiles into an optimized non-root container (`UID 10001`):
 
 ```bash
-# Generate the lessons first: the image bundles public-content/ as it is at build time.
-# INGEST_PINNED_SHA is the upstream commit a release uses (see "Curriculum pin"). The image build
-# fails if the content is incomplete or an image is damaged.
-GITHUB_TOKEN=<your-token> INGEST_PINNED_SHA=392d0df1b2647cbee104942390551f1ed9e072c8 go run ./cmd/ingest
-
+# The image bundles public-content/ as it is at build time. The build fails if a lesson is
+# missing, not ours or not approved.
 # Build production image
 docker build -t ai-foundations-coach .
 
@@ -262,7 +252,7 @@ The Go server automatically serves the compiled frontend assets from `web/dist/`
    - **Module 6:** Ethical and Responsible AI
 
 2. **Switch Audience Modes:**
-   At the top of any lesson, click between **Standard**, **Kids (8–14)**, or **Plain English**. The explanations, metaphors, and visual representations adjust instantly without page reload.
+   At the top of any lesson, click between **Kids (8–14)**, **Plain English**, or **Detailed**. The explanations, metaphors, and visual representations adjust instantly without page reload.
 
 3. **Interact with Kid-Friendly Simulators:**
    Engage with the embedded interactive widgets to develop physical intuition:
@@ -479,7 +469,7 @@ cd web && npm test
 ## 📄 Attribution & Licensing
 
 - **Developed and distributed as freeware by Qunisphere Pvt Limited, Bangalore.**
-- Curriculum content is derived from [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners) under the [MIT License](https://github.com/microsoft/AI-For-Beginners/blob/main/LICENSE). This project is independent and not affiliated with, sponsored by, or endorsed by Microsoft.
+- The lessons, quizzes and notebooks are written for this course and released under the [MIT License](LICENSE). Releases up to v0.9 carried lessons derived from an MIT-licensed open course by Microsoft; none of that text or imagery ships now. This project is independent and not affiliated with, sponsored by, or endorsed by Microsoft.
 - Application source code, simulators, and architecture are released under the [MIT License](LICENSE).
 - Hindi text uses [Noto Sans Devanagari](https://github.com/notofonts/devanagari) (Devanagari subset, variable weight), © 2022 The Noto Project Authors, under the [SIL Open Font License 1.1](web/public/fonts/OFL.txt). It is served from the app's own origin and loaded only when Devanagari text is on screen (SPEC-009 R12).
 

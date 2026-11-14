@@ -24,18 +24,20 @@ import (
 func TestASecondLanguageNeedsOnlyContent(t *testing.T) {
 	root := t.TempDir()
 	files := map[string]string{
-		"public-content/index.json":                          `{"commitSha":"x","lessons":[{"id":"1-intro","title":"Intro"}]}`,
-		"public-content/lessons/1-intro.json":                `{"id":"1-intro","title":"Intro","blocks":[{"type":"markdown","content":"# Intro"}]}`,
-		"public-content/lessons/1-intro.junior.json":         `{"lessonId":"1-intro","mode":"junior","title":"Kids","sections":[{"id":"s1","heading":"What","bodyMarkdown":"AI learns."}]}`,
-		"public-content/languages.json":                      `{"languages":[{"code":"ta","name":"தமிழ்","speechLang":"ta-IN","status":"approved"}]}`,
-		"public-content/lang/ta/index.json":                  `{"commitSha":"x","lessons":[{"id":"1-intro","title":"அறிமுகம்"}]}`,
-		"public-content/lang/ta/lessons/1-intro.json":        `{"id":"1-intro","title":"அறிமுகம்","sourceHash":"upstream","blocks":[{"type":"markdown","content":"# அறிமுகம்"}]}`,
-		"public-content/lang/ta/lessons/1-intro.junior.json": `{"lessonId":"1-intro","mode":"junior","title":"குழந்தைகள்","sections":[{"id":"s1","heading":"என்ன","bodyMarkdown":"AI கற்கிறது."}]}`,
-		"web/src/i18n/en.json":                               `{"a.hello":"Hello","adaptive.chipGreeting":"Hi!","narration.chipSays":"Chip says: "}`,
-		"web/src/i18n/ta.json":                               `{"a.hello":"வணக்கம்","adaptive.chipGreeting":"வணக்கம்!","narration.chipSays":"சிப் சொல்கிறது: "}`,
-		"web/src/data/quizzes/en.json":                       `{}`,
-		"web/src/data/quizzes/ta.json":                       `{}`,
-		"content/voices/ta.json":                             `{"personas":{"chip":{"voice":"ta-IN-Wavenet-A"},"nova":{"voice":"ta-IN-Wavenet-C"},"alan":{"voice":"ta-IN-Wavenet-B"}}}`,
+		"public-content/index.json":                                 `{"lessons":[{"id":"1-intro","module":"intro","title":"Intro","order":0}]}`,
+		"public-content/lessons/1-intro.junior.json":                `{"lessonId":"1-intro","mode":"junior","origin":"own","title":"Kids","sections":[{"id":"s1","heading":"What","bodyMarkdown":"AI learns."}]}`,
+		"public-content/lessons/1-intro.plain-english.json":         `{"lessonId":"1-intro","mode":"plain-english","origin":"own","title":"Plain","sections":[{"id":"s1","heading":"What","bodyMarkdown":"AI learns."}]}`,
+		"public-content/lessons/1-intro.detailed.json":              `{"lessonId":"1-intro","mode":"detailed","origin":"own","title":"Intro: in depth","sections":[{"id":"s1","heading":"What","bodyMarkdown":"AI learns."}]}`,
+		"public-content/languages.json":                             `{"languages":[{"code":"ta","name":"தமிழ்","speechLang":"ta-IN","status":"approved"}]}`,
+		"public-content/lang/ta/index.json":                         `{"lessons":[{"id":"1-intro","module":"intro","title":"அறிமுகம்","order":0}]}`,
+		"public-content/lang/ta/lessons/1-intro.junior.json":        `{"lessonId":"1-intro","mode":"junior","origin":"own","title":"குழந்தைகள்","sections":[{"id":"s1","heading":"என்ன","bodyMarkdown":"AI கற்கிறது."}]}`,
+		"public-content/lang/ta/lessons/1-intro.plain-english.json": `{"lessonId":"1-intro","mode":"plain-english","origin":"own","title":"எளிய","sections":[{"id":"s1","heading":"என்ன","bodyMarkdown":"AI கற்கிறது."}]}`,
+		"public-content/lang/ta/lessons/1-intro.detailed.json":      `{"lessonId":"1-intro","mode":"detailed","origin":"own","title":"அறிமுகம்: ஆழமாக","sections":[{"id":"s1","heading":"என்ன","bodyMarkdown":"AI கற்கிறது."}]}`,
+		"web/src/i18n/en.json":                                      `{"a.hello":"Hello","adaptive.chipGreeting":"Hi!","narration.chipSays":"Chip says: "}`,
+		"web/src/i18n/ta.json":                                      `{"a.hello":"வணக்கம்","adaptive.chipGreeting":"வணக்கம்!","narration.chipSays":"சிப் சொல்கிறது: "}`,
+		"web/src/data/quizzes/en.json":                              `{}`,
+		"web/src/data/quizzes/ta.json":                              `{}`,
+		"content/voices/ta.json":                                    `{"personas":{"chip":{"voice":"ta-IN-Wavenet-A"},"nova":{"voice":"ta-IN-Wavenet-C"},"alan":{"voice":"ta-IN-Wavenet-B"}}}`,
 	}
 	for p, body := range files {
 		write(t, filepath.Join(root, filepath.FromSlash(p)), body)

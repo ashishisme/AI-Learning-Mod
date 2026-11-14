@@ -16,10 +16,6 @@ concurrency:
   group: staging-release
   cancel-in-progress: false
 
-env:
-  # NFR-LIC-03. Changing this needs a human image review: see "Curriculum pin" in README.md.
-  INGEST_PINNED_SHA: 392d0df1b2647cbee104942390551f1ed9e072c8
-
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -38,11 +34,7 @@ jobs:
       - run: go test -race ./...
       - name: Check Go dependencies for known vulnerabilities
         run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
-      - name: Generate lessons at the pinned commit
-        run: go run ./cmd/ingest
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-      - name: Check lessons and images
+      - name: Check the lessons are complete, ours and approved
         run: go run ./cmd/ingest -verify -audio=false # recordings join in the build job; its Docker build checks them
       - name: Product art is approved and matches the register (SPEC-011 NFR-LIC-05)
         run: go run ./cmd/assetcheck
@@ -92,7 +84,6 @@ jobs:
     outputs:
       digest: ${{ steps.push.outputs.digest }}
       image: ${{ steps.name.outputs.image }}
-      asset: ${{ steps.content.outputs.asset }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -101,14 +92,6 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
-      - name: Generate lessons at the pinned commit
-        id: content
-        run: |
-          go run ./cmd/ingest
-          go run ./cmd/ingest -verify -audio=false
-          echo "asset=$(ls public-content/assets | head -n 1)" >> "$GITHUB_OUTPUT"
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
       - uses: google-github-actions/auth@v3
         with:
           workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
@@ -180,7 +163,6 @@ jobs:
         id: deploy
         env:
           IMAGE: ${{ needs.build.outputs.image }}@${{ needs.build.outputs.digest }}
-          ASSET: ${{ needs.build.outputs.asset }}
           RELEASE: ${{ github.ref_name }}
           GCP_SERVICE: ${{ vars.GCP_SERVICE }}
           GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
@@ -193,7 +175,7 @@ jobs:
           url="$(echo "$status" | jq -r --arg t "$tag" '.status.traffic[] | select(.tag == $t) | .url')"
           revision="$(echo "$status" | jq -r --arg t "$tag" '.status.traffic[] | select(.tag == $t) | .revisionName')"
           echo "revision=$revision" >> "$GITHUB_OUTPUT"
-          ./deploy/scripts/smoke.sh "$url" "$RELEASE" "$ASSET"
+          ./deploy/scripts/smoke.sh "$url" "$RELEASE"
 
   # The reviewer sits on this environment only, so a rollback never waits for approval.
   promote:
@@ -214,7 +196,6 @@ jobs:
         env:
           REVISION: ${{ needs.candidate.outputs.revision }}
           IMAGE: ${{ needs.build.outputs.image }}@${{ needs.build.outputs.digest }}
-          ASSET: ${{ needs.build.outputs.asset }}
           RELEASE: ${{ github.ref_name }}
           GCP_SERVICE: ${{ vars.GCP_SERVICE }}
           GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
@@ -225,7 +206,7 @@ jobs:
           previous="$(echo "$status" | jq -r '[.status.traffic[] | select(.percent == 100)][0].revisionName // ""')"
           url="$(echo "$status" | jq -r '.status.url')"
           gcloud run services update-traffic "$GCP_SERVICE" "${args[@]}" --to-revisions "$REVISION=100" --quiet
-          if ! ./deploy/scripts/smoke.sh "$url" "$RELEASE" "$ASSET"; then
+          if ! ./deploy/scripts/smoke.sh "$url" "$RELEASE"; then
             if [ -n "$previous" ]; then
               gcloud run services update-traffic "$GCP_SERVICE" "${args[@]}" --to-revisions "$previous=100" --quiet
               echo "Rolled back to $previous" >&2

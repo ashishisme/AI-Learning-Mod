@@ -10,8 +10,7 @@ const SESSION = {
   expiringSoon: false,
 }
 const LESSONS = {
-  commitSha: '1234567890123456789012345678901234567890',
-  lessons: [{ id: 'lesson-1', module: 'Introduction', title: 'Secret Lesson Title', order: 0, path: 'a.md', commitSha: '1234567890123456789012345678901234567890' }],
+  lessons: [{ id: 'lesson-1', module: 'Introduction', title: 'Secret Lesson Title', order: 0 }],
 }
 const PASSWORD = 'maple-tiger-river-cloud-482'
 

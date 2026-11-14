@@ -17,8 +17,8 @@ func hindiTutorContent(t *testing.T, status string) string {
 	t.Helper()
 	dir := setupTestContent(t)
 	for rel, body := range map[string]string{
-		"languages.json":                `{"languages":[{"code":"hi","name":"हिन्दी","speechLang":"hi-IN","status":"` + status + `"}]}`,
-		"lang/hi/lessons/lesson-1.json": `{"id":"lesson-1","title":"पाठ 1 शीर्षक","blocks":[{"type":"markdown","content":"# परिचय\n\nएआई उदाहरणों से सीखता है।"}]}`,
+		"languages.json":                         `{"languages":[{"code":"hi","name":"हिन्दी","speechLang":"hi-IN","status":"` + status + `"}]}`,
+		"lang/hi/lessons/lesson-1.detailed.json": `{"lessonId":"lesson-1","mode":"detailed","title":"पाठ 1 शीर्षक","sections":[{"heading":"परिचय","bodyMarkdown":"एआई उदाहरणों से सीखता है।"}]}`,
 	} {
 		p := filepath.Join(dir, rel)
 		_ = os.MkdirAll(filepath.Dir(p), 0o755)

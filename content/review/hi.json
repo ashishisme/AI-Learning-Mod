@@ -11,15 +11,6 @@
       "date": "2026-11-14"
     },
     {
-      "path": "public-content/lang/hi/lessons/1-intro.json",
-      "kind": "base",
-      "sourceHash": "607132fd6fb64c229060dee60ad25c7ecec300a08dcae86f0d355d7dcea34042",
-      "translationHash": "93a0129be58b517599ff8e7d12f522c454cf0c538352235f9a05fe82c534d290",
-      "status": "approved",
-      "reviewer": "owner (beta)",
-      "date": "2026-11-03"
-    },
-    {
       "path": "public-content/lang/hi/lessons/1-intro.junior.json",
       "kind": "adaptive",
       "sourceHash": "c6433ce60bf83b829c4564ed0efe58c5f5722bfe216b9ad4bf6c7a3437c5476b",
@@ -45,15 +36,6 @@
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-14"
-    },
-    {
-      "path": "public-content/lang/hi/lessons/2-symbolic.json",
-      "kind": "base",
-      "sourceHash": "0b01a7473fc709eae59a0171a89066a393074c3c008c4e8ebba677963874173c",
-      "translationHash": "63f8689b78ed7532db560a2a9d3fc80ac5c6ceb49c9387f447714c40e7efa2e1",
-      "status": "approved",
-      "reviewer": "owner (beta)",
-      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/2-symbolic.junior.json",
@@ -83,15 +65,6 @@
       "date": "2026-11-14"
     },
     {
-      "path": "public-content/lang/hi/lessons/3-neuralnetworks.json",
-      "kind": "base",
-      "sourceHash": "144685b1d8d7f647b7114b53361ae85cae4eef74c368d77548cfb7486d51b6e5",
-      "translationHash": "e871e06c521bfb2eeeaf6fb7c4da6477389a2655df67088d04e35d0f5622044a",
-      "status": "approved",
-      "reviewer": "owner (beta)",
-      "date": "2026-11-03"
-    },
-    {
       "path": "public-content/lang/hi/lessons/3-neuralnetworks.junior.json",
       "kind": "adaptive",
       "sourceHash": "d8e164e6ba2664cb2dc97289bb211c32887cf5be2a8cc54b9b737538f9d3a383",
@@ -117,15 +90,6 @@
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-14"
-    },
-    {
-      "path": "public-content/lang/hi/lessons/4-computervision.json",
-      "kind": "base",
-      "sourceHash": "abce615b0d5a25861843338c5197b3b4623e6c52a4f205fc68cda9a034d69f9a",
-      "translationHash": "b5e5f707c3033ff99a4e8c4f0d5cd016a1a9576a2c265aaec5899a7c2b26f48f",
-      "status": "approved",
-      "reviewer": "owner (beta)",
-      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/4-computervision.junior.json",
@@ -155,15 +119,6 @@
       "date": "2026-11-14"
     },
     {
-      "path": "public-content/lang/hi/lessons/5-nlp.json",
-      "kind": "base",
-      "sourceHash": "79e84c4c22d018b8fe4c8e67c4f7440540d6d4ad2950f6d4284cc4a61d7939e1",
-      "translationHash": "259990f6f51640cd7f4ae1a065037951b261601cc6065f69ff84498dac5872b5",
-      "status": "approved",
-      "reviewer": "owner (beta)",
-      "date": "2026-11-03"
-    },
-    {
       "path": "public-content/lang/hi/lessons/5-nlp.junior.json",
       "kind": "adaptive",
       "sourceHash": "19225b56ee0c7b2a8e9e822d5a776e22e273c90265073c5d740e6fbd61bf4322",
@@ -189,15 +144,6 @@
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-14"
-    },
-    {
-      "path": "public-content/lang/hi/lessons/7-ethics.json",
-      "kind": "base",
-      "sourceHash": "8be976b3d21888bc78b3d95a01712240cbfa7db00f901c2f6e9a721ebd21c286",
-      "translationHash": "2b3c6fa933909a2752833a90b369a9fc884c86a4dcefb501b47cf8d172d010a9",
-      "status": "approved",
-      "reviewer": "owner (beta)",
-      "date": "2026-11-03"
     },
     {
       "path": "public-content/lang/hi/lessons/7-ethics.junior.json",
@@ -229,8 +175,8 @@
     {
       "path": "web/src/i18n/hi.json",
       "kind": "ui",
-      "sourceHash": "d96b1ddf5c9285586c41def92a601ca4ea28cc08fbb12446002073da363f280f",
-      "translationHash": "e62023b793a56889c1e09894332196c391e84e416870e71d4d5e4725501c58ee",
+      "sourceHash": "2b657b53ca04d06f0b6ad7410b94cc6a31d499229be069ec29ce63afa332af5e",
+      "translationHash": "8eae90a2df2c7d6b7d196364cb968d0d3b86600b5cfa0541614b3c97c1902aca",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-14"

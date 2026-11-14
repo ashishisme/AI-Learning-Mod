@@ -24,8 +24,8 @@ func langContent(t *testing.T, status string) string {
 		}
 	}
 	write("languages.json", `{"languages":[{"code":"hi","name":"हिन्दी","speechLang":"hi-IN","status":"`+status+`"}]}`)
-	write("lang/hi/index.json", `{"commitSha":"abc","lessons":[{"id":"lesson-1","title":"पाठ 1"}]}`)
-	write("lang/hi/lessons/lesson-1.json", `{"id":"lesson-1","title":"पाठ 1","blocks":[]}`)
+	write("lang/hi/index.json", `{"lessons":[{"id":"lesson-1","title":"पाठ 1"}]}`)
+	write("lang/hi/lessons/lesson-1.detailed.json", `{"lessonId":"lesson-1","mode":"detailed","title":"पाठ 1","sections":[]}`)
 	write("lang/hi/lessons/lesson-1.junior.json", `{"lessonId":"lesson-1","mode":"junior","title":"बच्चों के लिए पाठ 1"}`)
 	write("lessons/lesson-1.junior.json", `{"lessonId":"lesson-1","mode":"junior","title":"Kids lesson 1"}`)
 	write("secret.json", `{"title":"must never be served"}`)
@@ -48,8 +48,8 @@ func TestLessonsServeApprovedLanguageWithEnglishFallback(t *testing.T) {
 		{"/api/lessons", "en", "Lesson 1 Title"},
 		{"/api/lessons/lesson-1?lang=hi", "hi", "पाठ 1"},
 		{"/api/lessons/lesson-1?lang=hi&mode=junior", "hi", "बच्चों के लिए"},
-		// No Hindi plain-english file: fall back to English, per file (FR-009).
-		{"/api/lessons/lesson-1?lang=hi&mode=plain-english", "en", "Lesson 1 Title"},
+		// No plain-english file in either language: fall back to the Detailed lesson, Hindi first (SPEC-013).
+		{"/api/lessons/lesson-1?lang=hi&mode=plain-english", "hi", "पाठ 1"},
 		// No Hindi lesson-2 at all.
 		{"/api/lessons/lesson-2?lang=hi", "en", "lesson-2"},
 		{"/api/lessons/lesson-1?mode=junior", "en", "Kids lesson 1"},

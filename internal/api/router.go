@@ -6,15 +6,12 @@ import (
 	"io/fs"
 	"log/slog"
 	"net/http"
-	"os"
-	"path/filepath"
 	"strings"
 
 	"ai-foundations-coach/internal/auth"
 	"ai-foundations-coach/internal/cost"
 	"ai-foundations-coach/internal/feedback"
 	"ai-foundations-coach/internal/i18n"
-	"ai-foundations-coach/internal/ingest"
 	"ai-foundations-coach/internal/spend"
 	"ai-foundations-coach/internal/usage"
 )
@@ -122,23 +119,6 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	mux.HandleFunc("GET /api/lessons", lessonsHandler.GetIndex)
 	mux.HandleFunc("GET /api/lessons/{id}", lessonsHandler.GetLesson)
 	mux.HandleFunc("GET "+AudioURLPrefix+"{lang}/{path...}", audioHandler(lessonsHandler.contentDir, langs))
-
-	// Lesson images ship with the release (FR-033). Outside /api, so the session gate does not apply:
-	// like the SPA itself, they hold no lesson text. Names are content hashes, so caching is safe.
-	mux.HandleFunc("GET "+ingest.AssetURLPrefix+"{name}", func(w http.ResponseWriter, r *http.Request) {
-		name := r.PathValue("name")
-		file := filepath.Join(cfg.ContentDir, ingest.AssetDir, name)
-		if !ingest.AssetNameRe.MatchString(name) {
-			http.NotFound(w, r)
-			return
-		}
-		if _, err := os.Stat(file); err != nil {
-			http.NotFound(w, r)
-			return
-		}
-		w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
-		http.ServeFile(w, r, file)
-	})
 
 	// Health handler
 	mux.HandleFunc("GET /api/health", HealthHandler)

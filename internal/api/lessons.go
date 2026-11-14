@@ -106,30 +106,31 @@ func (h *LessonsHandler) GetLesson(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// SPEC-009 FR-009: try the chosen language first, then English, one file at a time.
+	// SPEC-013: every lesson is ours; the Standard journey's lesson is the Detailed version, which is
+	// also the fallback for a journey with no file for this lesson.
 	mode := r.URL.Query().Get("mode")
-	if mode != "junior" && mode != "plain-english" && mode != "detailed" { // SPEC-013: detailed
-		mode = ""
+	if mode != "junior" && mode != "plain-english" && mode != "detailed" {
+		mode = "detailed"
+	}
+	langs := []string{i18n.English.Code}
+	if lang := h.langs.Resolve(r.URL.Query().Get("lang")); lang != i18n.English.Code {
+		langs = []string{lang, i18n.English.Code}
+	}
+	modes := []string{mode}
+	if mode != "detailed" {
+		modes = append(modes, "detailed")
 	}
 	served := i18n.English.Code
 	lessonsDir := filepath.Join(h.contentDir, "lessons")
-	targetFile := id + ".json"
-	type candidate struct{ lang, file string }
-	var tries []candidate
-	if lang := h.langs.Resolve(r.URL.Query().Get("lang")); lang != i18n.English.Code {
-		if mode != "" {
-			tries = append(tries, candidate{lang, id + "." + mode + ".json"})
-		} else {
-			tries = append(tries, candidate{lang, id + ".json"})
-		}
-	}
-	if mode != "" {
-		tries = append(tries, candidate{i18n.English.Code, id + "." + mode + ".json"})
-	}
-	for _, c := range tries {
-		dir := filepath.Join(h.langRoot(c.lang), "lessons")
-		if _, err := os.Stat(filepath.Join(dir, c.file)); err == nil {
-			served, lessonsDir, targetFile = c.lang, dir, c.file
-			break
+	targetFile := id + "." + mode + ".json"
+find:
+	for _, m := range modes {
+		for _, lang := range langs {
+			dir := filepath.Join(h.langRoot(lang), "lessons")
+			if _, err := os.Stat(filepath.Join(dir, id+"."+m+".json")); err == nil {
+				served, lessonsDir, targetFile = lang, dir, id+"."+m+".json"
+				break find
+			}
 		}
 	}
 
@@ -180,11 +181,8 @@ func (h *LessonsHandler) GetLesson(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Language", served)
-	// One count per page view: the lesson page always fetches the standard lesson once, and an
-	// adaptive request carries ?mode= on top of that (FR-040).
-	if mode == "" {
-		h.usage.IncLesson(id)
-	}
+	// One count per lesson shown: the lesson page fetches one version per view or journey switch (FR-040).
+	h.usage.IncLesson(id)
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write(data)
 }

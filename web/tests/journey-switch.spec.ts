@@ -64,7 +64,7 @@ test.describe('Journey Switcher (SPEC-011 User Story 2)', () => {
     // Switch to Detailed using keyboard Enter
     await page.keyboard.press('Enter')
     await expect(standardTab).toHaveAttribute('aria-selected', 'true')
-    await expect(page.locator('h1[data-testid="lesson-title"]')).toHaveText('Introduction to AI')
+    await expect(page.locator('h1[data-testid="lesson-title"]')).toHaveText(/^Artificial Intelligence: Ideas, Approaches and History/)
 
     // Navigate to Plain English with Tab and press Space
     const plainTab = page.getByRole('tab', { name: /Plain English|आसान/i })
@@ -72,7 +72,7 @@ test.describe('Journey Switcher (SPEC-011 User Story 2)', () => {
     await expect(plainTab).toBeFocused()
     await page.keyboard.press('Space')
     await expect(plainTab).toHaveAttribute('aria-selected', 'true')
-    await expect(page.getByRole('heading', { level: 1 }).first()).toHaveText(/Everyday English|AI in Plain English|Introduction/i)
+    await expect(page.getByRole('heading', { level: 1 }).first()).toHaveText(/^What AI Really Is, in Plain English/)
   })
 
   test('switching keeps the route and progress', async ({ page }) => {
@@ -119,7 +119,7 @@ test.describe('Journey Switcher (SPEC-011 User Story 2)', () => {
       r.fulfill({ json: { hosted: true, authRequired: true, tutorEnabled: false, feedbackEnabled: true } })
     )
     await page.route('**/api/auth/session', (r) => r.fulfill({ json: SESSION }))
-    await page.route('**/api/lessons', (r) => r.fulfill({ json: { commitSha: '', lessons: [] } }))
+    await page.route('**/api/lessons', (r) => r.fulfill({ json: { lessons: [] } }))
 
     let postedMode = ''
     await page.route('**/api/feedback', async (route) => {

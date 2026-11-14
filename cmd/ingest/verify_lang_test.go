@@ -20,17 +20,19 @@ func langRepo(t *testing.T, status string) (root, contentDir string) {
 	root = t.TempDir()
 	contentDir = filepath.Join(root, "public-content")
 	files := map[string]string{
-		"public-content/index.json":                          `{"commitSha":"x","lessons":[{"id":"1-intro"}]}`,
-		"public-content/lessons/1-intro.json":                `{"id":"1-intro","blocks":[{"type":"markdown","content":"# Intro"}]}`,
-		"public-content/lessons/1-intro.junior.json":         `{"lessonId":"1-intro","mode":"junior","title":"T"}`,
-		"public-content/lang/hi/index.json":                  `{"commitSha":"x","lessons":[{"id":"1-intro"}]}`,
-		"public-content/lang/hi/lessons/1-intro.json":        `{"id":"1-intro","sourceHash":"h","blocks":[{"type":"markdown","content":"# परिचय"}]}`,
-		"public-content/lang/hi/lessons/1-intro.junior.json": `{"lessonId":"1-intro","mode":"junior","title":"शी"}`,
-		"web/src/i18n/en.json":                               `{"a.hello":"Hello","adaptive.chipGreeting":"Hi there!"}`,
-		"web/src/i18n/hi.json":                               `{"a.hello":"नमस्ते","adaptive.chipGreeting":"नमस्ते दोस्तों!"}`,
-		"web/src/data/quizzes/en.json":                       `{}`,
-		"web/src/data/quizzes/hi.json":                       `{}`,
-		"content/voices/hi.json":                             `{"personas":{"chip":{"voice":"v-a"},"nova":{"voice":"v-b"},"alan":{"voice":"v-c"}}}`,
+		"public-content/index.json":                                 `{"lessons":[{"id":"1-intro","module":"intro","title":"T","order":0}]}`,
+		"public-content/lessons/1-intro.junior.json":                `{"lessonId":"1-intro","mode":"junior","origin":"own","title":"T"}`,
+		"public-content/lessons/1-intro.plain-english.json":         `{"lessonId":"1-intro","mode":"plain-english","origin":"own","title":"T"}`,
+		"public-content/lessons/1-intro.detailed.json":              `{"lessonId":"1-intro","mode":"detailed","origin":"own","title":"T"}`,
+		"public-content/lang/hi/index.json":                         `{"lessons":[{"id":"1-intro","module":"intro","title":"शी","order":0}]}`,
+		"public-content/lang/hi/lessons/1-intro.junior.json":        `{"lessonId":"1-intro","mode":"junior","origin":"own","title":"शी"}`,
+		"public-content/lang/hi/lessons/1-intro.plain-english.json": `{"lessonId":"1-intro","mode":"plain-english","origin":"own","title":"शी"}`,
+		"public-content/lang/hi/lessons/1-intro.detailed.json":      `{"lessonId":"1-intro","mode":"detailed","origin":"own","title":"शी"}`,
+		"web/src/i18n/en.json":                                      `{"a.hello":"Hello","adaptive.chipGreeting":"Hi there!"}`,
+		"web/src/i18n/hi.json":                                      `{"a.hello":"नमस्ते","adaptive.chipGreeting":"नमस्ते दोस्तों!"}`,
+		"web/src/data/quizzes/en.json":                              `{}`,
+		"web/src/data/quizzes/hi.json":                              `{}`,
+		"content/voices/hi.json":                                    `{"personas":{"chip":{"voice":"v-a"},"nova":{"voice":"v-b"},"alan":{"voice":"v-c"}}}`,
 	}
 	if status != "" {
 		files["public-content/languages.json"] = `{"languages":[{"code":"hi","name":"हिन्दी","speechLang":"hi-IN","status":"` + status + `"}]}`
@@ -53,6 +55,20 @@ func langRepo(t *testing.T, status string) (root, contentDir string) {
 			Status: i18n.ReviewApproved, Reviewer: "reviewer-1", Date: "2026-11-03"})
 	}
 	if err := l.Save(root); err != nil {
+		t.Fatal(err)
+	}
+	// SPEC-013 FR-008: every lesson is ours, so the owner has approved each English file.
+	english, err := i18n.EnglishTargets(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	en := &i18n.Ledger{Language: "en"}
+	for _, tg := range english {
+		h, _ := i18n.HashFile(filepath.Join(root, filepath.FromSlash(tg.Path)))
+		en.Entries = append(en.Entries, i18n.Entry{Path: tg.Path, Kind: tg.Kind, SourceHash: h,
+			Status: i18n.ReviewApproved, Reviewer: "owner", Date: "2026-11-13"})
+	}
+	if err := en.Save(root); err != nil {
 		t.Fatal(err)
 	}
 	recordAll(t, root)
@@ -159,7 +175,7 @@ func TestVerifyWithoutLanguagesIsEnglishOnly(t *testing.T) {
 		t.Errorf("exit %d\n%s", code, out)
 	}
 	// ...and the English checks still fail as before.
-	if err := os.Remove(filepath.Join(dir, "lessons", "1-intro.json")); err != nil {
+	if err := os.Remove(filepath.Join(dir, "lessons", "1-intro.detailed.json")); err != nil {
 		t.Fatal(err)
 	}
 	if code, _ := runVerify(dir); code != 1 {
@@ -207,21 +223,20 @@ func TestVerifyBetaLanguageMayLaunchOnDeviceVoices(t *testing.T) {
 // SPEC-013 FR-008: an own English lesson fails the gate until the owner approves its current text.
 func TestVerifyEnglishOwnerApproval(t *testing.T) {
 	root, dir := langRepo(t, "")
-	lesson := filepath.Join(root, "public-content/lessons/1-intro.junior.json")
-	writeFile(t, lesson, `{"lessonId":"1-intro","mode":"junior","title":"T","origin":"own"}`)
-	if code, out := runVerify(dir); code != 1 || !strings.Contains(out, "en public-content/lessons/1-intro.junior.json: pending") {
+	const path = "public-content/lessons/1-intro.junior.json"
+	if code, out := runVerify(dir); code != 0 {
+		t.Fatalf("approved: exit %d\n%s", code, out)
+	}
+	l, _ := i18n.LoadLedger(root, "en")
+	approved := *l.Find(path)
+	l.Find(path).Status = i18n.ReviewDraft
+	_ = l.Save(root)
+	if code, out := runVerify(dir); code != 1 || !strings.Contains(out, "en "+path+": pending") {
 		t.Fatalf("want pending, exit %d\n%s", code, out)
 	}
-	h, _ := i18n.HashFile(lesson)
-	l := &i18n.Ledger{Language: "en", Entries: []i18n.Entry{{Path: "public-content/lessons/1-intro.junior.json", Kind: i18n.KindAdaptive,
-		SourceHash: h, Status: i18n.ReviewApproved, Reviewer: "owner", Date: "2026-11-13"}}}
-	if err := l.Save(root); err != nil {
-		t.Fatal(err)
-	}
-	if code, out := runVerify(dir); code != 0 {
-		t.Fatalf("want pass, exit %d\n%s", code, out)
-	}
-	writeFile(t, lesson, `{"lessonId":"1-intro","mode":"junior","title":"T2","origin":"own"}`)
+	*l.Find(path) = approved
+	_ = l.Save(root)
+	writeFile(t, filepath.Join(root, path), `{"lessonId":"1-intro","mode":"junior","origin":"own","title":"T2"}`)
 	if code, out := runVerify(dir); code != 1 || !strings.Contains(out, "stale: the text changed after approval") {
 		t.Fatalf("want stale, exit %d\n%s", code, out)
 	}

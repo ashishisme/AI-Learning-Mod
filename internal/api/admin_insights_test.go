@@ -58,7 +58,7 @@ func TestUsageIsCountedThroughRealRequests(t *testing.T) {
 		resp.Body.Close()
 		return resp.StatusCode
 	}
-	if get(learner, "/api/lessons/lesson-1") != 200 || get(learner, "/api/lessons/lesson-1?mode=junior") != 200 {
+	if get(learner, "/api/lessons/lesson-1?mode=detailed") != 200 || get(learner, "/api/lessons/lesson-1?mode=junior") != 200 {
 		t.Fatal("setup: lessons should load")
 	}
 	if resp, err := learner.Post(e.app.URL+"/api/usage/event", "application/json", strings.NewReader(`{"event":"quiz_open"}`)); err != nil || resp.StatusCode != 204 {
@@ -92,8 +92,8 @@ func TestUsageIsCountedThroughRealRequests(t *testing.T) {
 		t.Errorf("requests: %v", today["requests"])
 	}
 	lessons := m["lessons"].([]any)
-	if len(lessons) != 1 || lessons[0].(map[string]any)["lessonId"] != "lesson-1" || lessons[0].(map[string]any)["views"].(float64) != 1 {
-		t.Errorf("a page view counts once, adaptive fetch or not: %v", lessons)
+	if len(lessons) != 1 || lessons[0].(map[string]any)["lessonId"] != "lesson-1" || lessons[0].(map[string]any)["views"].(float64) != 2 {
+		t.Errorf("each version shown (a view, then a journey switch) counts once: %v", lessons)
 	}
 	totals := m["totals"].(map[string]any)
 	if totals["last7d"].(map[string]any)["dau"].(float64) != 1 {
