@@ -1,4 +1,4 @@
-# Traceability Matrix — SPEC-001 v2.15.0
+# Traceability Matrix — SPEC-001 v2.16.0
 
 | AC | Requirement(s) | Test file | Status | Notes |
 |---|---|---|---|---|
@@ -9,11 +9,11 @@
 | AC-05 | FR-CNT-03, FR-CNT-04 | `internal/api/lessons_test.go::TestAC05_PathTraversal` | PASS | Path traversal attempts return 400 or 404, no leak |
 | AC-06 | FR-CNT-06 | `internal/api/lessons_test.go::TestAC06_CorruptedLesson` | PASS | Corrupted lesson yields 500 on that ID, 200 on others |
 | AC-07 | FR-CNT-07, NFR-REL-01 | `internal/api/lessons_test.go::TestAC07_EmptyContentDir` | PASS | Empty content dir returns 503 on /api/lessons, /api/health still 200 |
-| AC-08 | FR-TUT-01, FR-TUT-05, FR-TUT-06 | `internal/api/tutor_test.go::TestAC08_CitationFiltering` | PASS | Cited text passes; uncited text replaced with fallback |
-| AC-09 | FR-TUT-07, NFR-SEC-02 | `internal/api/tutor_test.go::TestAC09_InputValidation` | PASS | Empty or >500 char question -> 400; >8KiB body -> 413; unknown field -> 400 |
-| AC-10 | FR-TUT-08, NFR-REL-01 | `internal/api/tutor_test.go::TestAC10_MissingAPIKey` | PASS | Without OPENAI_API_KEY, /api/tutor -> 503; other routes still 200 |
-| AC-11 | FR-TUT-09 | `internal/api/tutor_test.go::TestAC11_TutorTimeout` | PASS | Slow stub (>60s) produces 504 tutor timeout |
-| AC-12 | NFR-AI-01, NFR-AI-03 | `internal/api/tutor_test.go::TestAC12_PromptInjectionDefense` | PASS | Injection question produces answer without system prompt text |
+| AC-08 | FR-TUT-01, FR-TUT-05, FR-TUT-06 | `internal/api/tutor_mode_test.go::TestAC08_CitationFiltering` | PASS | Cited text passes; uncited text replaced with fallback |
+| AC-09 | FR-TUT-07, NFR-SEC-02 | `internal/api/tutor_mode_test.go::TestAC09_InputValidation` | PASS | Empty or >500 char question -> 400; >8KiB body -> 413; unknown field -> 400 |
+| AC-10 | FR-TUT-08, NFR-REL-01 | `internal/api/tutor_mode_test.go::TestAC10_MissingAPIKey` | PASS | Without OPENAI_API_KEY, /api/tutor -> 503; other routes still 200 |
+| AC-11 | FR-TUT-09 | `internal/api/tutor_mode_test.go::TestAC11_TutorTimeout` | PASS | Slow stub (>60s) produces 504 tutor timeout |
+| AC-12 | NFR-AI-01, NFR-AI-03 | `internal/api/tutor_mode_test.go::TestAC12_PromptInjectionDefense` | PASS | Injection question produces answer without system prompt text |
 | AC-13 | NFR-SEC-03 | `internal/api/middleware_test.go::TestAC13_SecurityHeaders` | PASS | Every response carries the 5 required security headers |
 | AC-14 | NFR-SEC-06 | `internal/api/ratelimit_test.go::TestAC14_RateLimiting` | PASS | 11th /api/tutor request within a minute from one host -> 429 with Retry-After: 60 |
 | AC-15 | NFR-SEC-08 | `internal/api/middleware_test.go::TestAC15_PanicRecovery` | PASS | Injected panic returns 500 without leaking request body |
@@ -34,12 +34,12 @@
 | AC-30 | NFR-LIC-03, NFR-SEC-01 | Git check: `! git ls-files \| grep -E '^(\.env\|public-content\|web/dist\|web/node_modules\|bin/)' \| grep -vE '^(\.env\.example\|public-content/languages\.json\|public-content/(lang/[a-z-]+/)?index\.json\|public-content/(lang/[a-z-]+/)?lessons/[^/]+\.(junior\|plain-english\|detailed)\.json)$'` | PASS (2026-11-14) | No secrets or build artifacts in git. The lessons, the lesson lists, `languages.json` and `.env.example` are source and exempt (O6, T123, SPEC 2.8.1; lists added 2.15.0) |
 | AC-31 | NFR-OPS-01 | Docker check: `docker run --rm ai-foundations-coach id -u` | PASS | Dockerfile configured with non-root UID 10001 (host docker CLI not installed) |
 | AC-32 | DC-02 | Build check: `go vet ./... && go build ./... && cd web && npx tsc --noEmit && npm run build` | PASS | Backend and frontend compile cleanly without errors |
-| AC-33 | FR-TUT-11, FR-UI-12 | `internal/api/tutor_test.go::TestAC33_StreamingTutor` | PASS | POST /api/tutor with Accept: text/event-stream returns chunked SSE tokens and [DONE] |
+| AC-33 | FR-TUT-11, FR-UI-12 | `internal/api/tutor_mode_test.go::TestAC33_StreamingTutor` | PASS | POST /api/tutor with Accept: text/event-stream returns chunked SSE tokens and [DONE] |
 | AC-34 | FR-SET-01..04, FR-UI-14 | `internal/api/config_test.go::TestAC34_ConfigTest`, `web/tests/settings.spec.ts::AC-34` | PASS | Settings drawer opens globally, configures AI/model/tokens, tests connection, overrides tutor |
 | AC-35 | FR-QZ-01..04, FR-UI-13 | `web/tests/quiz.spec.ts::AC-35`, `web/tests/home.spec.ts::AC-35` | PASS | Interactive quiz engine with immediate rationale, AI hint, scored recap; / search filtering |
 | AC-36 | FR-UI-15 | `web/tests/theme.spec.ts::AC-36` | PASS | Dark/Light theme toggle updates document class and persists in localStorage |
 | AC-37 | FR-ING-09, FR-SET-05 | `internal/api/spa_fallback_test.go::TestUnknownAPIPathIsJSON404NotIndexHTML`, `web/tests/cloud-hardening.spec.ts` | PASS | Sync removed 2026-11-02: the route returns a JSON 404 and Settings has no sync or GitHub token controls |
-| AC-38 | FR-TUT-13 | `internal/api/tutor_test.go::TestAC38_CustomProviderAutoCitation` | PASS | Custom-provider uncited long streamed answers get an appended citation; short ones get the FR-TUT-06 fallback |
+| AC-38 | FR-TUT-13 | `internal/api/tutor_mode_test.go::TestAC38_CustomProviderAutoCitation` | PASS | Custom-provider uncited long streamed answers get an appended citation; short ones get the FR-TUT-06 fallback |
 | AC-39 | FR-001..FR-006 | `internal/api/auth_handlers_test.go`, `web/tests/auth.spec.ts` | PASS | Signed-out gate, activation and sign-in |
 | AC-40 | FR-003, FR-004 | `internal/auth/service_activate_test.go`, `web/tests/auth.spec.ts` | PASS | One-use invite and one-time credential display |
 | AC-41 | FR-035..FR-038 | `internal/api/abuse_test.go`, `internal/auth/service_login_test.go` | PASS | Lockout and session validation |
@@ -77,3 +77,6 @@
 | AC-73 | FR-TUT-14 | `internal/api/tutor_mode_test.go` | PASS (automated) | SPEC-013: the tutor grounds on the version on screen, else on Detailed |
 | AC-74 | FR-CNT-12 | `internal/ingest/verify_test.go`, `internal/api/lessons_test.go` | PASS (automated) | SPEC-013: every lesson is ours, three versions each; Detailed is the fallback |
 | AC-75 | FR-CNT-12, NFR-LIC-01 | `cmd/ingest/own_course_test.go` | PASS (automated) | SPEC-013 SC-003: the shipped text names no other course |
+| AC-76 | FR-UI-28 | `web/tests/clips.spec.ts` | pending | SPEC-014: clip player controls, reduced motion, description |
+| AC-77 | FR-CNT-13 | `internal/ingest/clips_test.go`, `internal/narration/text_test.go`, `internal/api/tutor_mode_test.go` | pending | SPEC-014: clip data, release check, narration tracks, tutor text |
+| AC-78 | FR-UI-28 | `web/tests/clips.spec.ts` | pending | SPEC-014: clip voice, one sound at a time, mute |

@@ -1,7 +1,7 @@
 // SPEC: FR-UI-03, FR-UI-07, FR-UI-12, NFR-SEC-05, AC-24, SPEC-005 (Audio & Speech Tutor)
 import React, { useState, useEffect, useRef } from 'react'
 import { askTutorStream, ApiError } from '../api'
-import { useAudienceModeStore, useSettingsStore } from '../store'
+import { useAudienceModeStore, useSettingsStore, useAudioStore } from '../store'
 import { speechService } from '../services/speechService'
 import { useLanguage, useT } from '../i18n'
 
@@ -122,14 +122,28 @@ export const TutorPanel: React.FC<TutorPanelProps> = ({ lessonId, needsSetup = f
     setShowMicConsent(false)
   }
 
+  // SPEC FR-UI-28 (SPEC-014 FR-009): the tutor's voice claims the shared audio state, so a clip or Read
+  // section knows it started, and it knows when one of them takes over.
+  const TUTOR_TRACK = 'tutor-answer'
+  const activeTrackId = useAudioStore((st) => st.activeTrackId)
+  useEffect(() => {
+    if (isReadingAnswer && activeTrackId !== TUTOR_TRACK) setIsReadingAnswer(false)
+  }, [activeTrackId, isReadingAnswer])
+
   const toggleReadAnswer = () => {
     if (!answer) return
+    const audio = useAudioStore.getState()
+    const done = () => {
+      setIsReadingAnswer(false)
+      if (useAudioStore.getState().activeTrackId === TUTOR_TRACK) useAudioStore.getState().stopAudio()
+    }
     if (isReadingAnswer) {
       speechService.stop()
-      setIsReadingAnswer(false)
+      done()
     } else {
+      audio.setActiveTrack(TUTOR_TRACK, true)
       setIsReadingAnswer(true)
-      speechService.speak(answer, { speechLang: language.speechLang, onEnd: () => setIsReadingAnswer(false), onError: () => setIsReadingAnswer(false) })
+      speechService.speak(answer, { speechLang: language.speechLang, onEnd: done, onError: done })
     }
   }
 

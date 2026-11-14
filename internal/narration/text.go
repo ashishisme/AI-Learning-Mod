@@ -67,6 +67,10 @@ type adaptive struct {
 			Add  string `json:"add"`
 			Body string `json:"body"`
 		} `json:"teen"`
+		Diagram struct {
+			Type  string   `json:"type"`
+			Steps []string `json:"steps"`
+		} `json:"diagram"`
 	} `json:"sections"`
 }
 
@@ -113,6 +117,12 @@ func Tracks(root, code string) ([]Track, error) {
 					teen = s.Teen.Add
 				}
 				add(prefix+"section-"+id+"-teen", teen)
+				// SPEC FR-CNT-13 (SPEC-014): each step of a clip is read on its own while the clip plays.
+				if s.Diagram.Type == "clip" {
+					for n, step := range s.Diagram.Steps {
+						add(fmt.Sprintf("%ssection-%s-clip-%d", prefix, id, n+1), step)
+					}
+				}
 			}
 		}
 	}

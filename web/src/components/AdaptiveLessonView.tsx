@@ -18,6 +18,7 @@ import { coreBody, sectionNarration } from '../services/narrationText'
 import { speechService } from '../services/speechService'
 import { useAudienceModeStore, useAudioStore, useProgressStore } from '../store'
 import { StepperDiagram } from './StepperDiagram'
+import { ClipPlayer } from './ClipPlayer'
 import { WidgetFrame } from './WidgetFrame'
 import { ChoiceCard } from './ChoiceCard'
 import { WordCard } from './WordCard'
@@ -179,7 +180,17 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                   steps={section.diagram.steps}
                 />
               )}
-              {section.diagram && section.diagram.type !== 'stepper' && section.diagram.content && (
+              {section.diagram && section.diagram.type === 'clip' && section.diagram.clip && section.diagram.steps && (
+                <ClipPlayer
+                  clip={section.diagram.clip}
+                  caption={section.diagram.caption}
+                  alt={section.diagram.alt}
+                  steps={section.diagram.steps}
+                  trackPrefix={`${trackPrefix}${sectionTrackId}-clip-`}
+                  speechLang={contentSpeechLang}
+                />
+              )}
+              {section.diagram && section.diagram.type !== 'stepper' && section.diagram.type !== 'clip' && section.diagram.content && (
                 <MermaidRenderer
                   chart={section.diagram.content}
                   caption={section.diagram.caption}

@@ -137,3 +137,33 @@ func TestCheckNeedsChosenVoices(t *testing.T) {
 		t.Errorf("%v", ps)
 	}
 }
+
+// SPEC: AC-77 (FR-CNT-13). Each clip step is its own track, keyed by the section and the step number.
+func TestTracksIncludeClipSteps(t *testing.T) {
+	root := repo(t)
+	lesson := `{"lessonId":"3-neuralnetworks","mode":"detailed","sections":[{"id":"learn","heading":"सीखना","bodyMarkdown":"पाठ।",` +
+		`"diagram":{"type":"clip","clip":"line-learns","caption":"देखो","alt":"रेखा","steps":["पहला **कदम**।","दूसरा कदम।","तीसरा कदम।"]}}]}`
+	f := filepath.Join(root, "public-content", "lang", "hi", "lessons", "3-neuralnetworks.detailed.json")
+	if err := os.WriteFile(f, []byte(lesson), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	tracks, err := Tracks(root, "hi")
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := map[string]string{}
+	for _, tr := range tracks {
+		got[tr.Key] = tr.Text
+	}
+	for k, v := range map[string]string{
+		"3-neuralnetworks/detailed/section-learn-clip-1": "पहला कदम।",
+		"3-neuralnetworks/detailed/section-learn-clip-3": "तीसरा कदम।",
+	} {
+		if got[k] != v {
+			t.Errorf("%s: got %q, want %q", k, got[k], v)
+		}
+	}
+	if _, ok := got["3-neuralnetworks/detailed/section-learn-clip-4"]; ok {
+		t.Error("a track past the last step")
+	}
+}

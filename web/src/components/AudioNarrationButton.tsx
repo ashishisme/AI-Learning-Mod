@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAudioStore, useAudienceModeStore, VoicePersonaId } from '../store';
-import { speechService, VOICE_PERSONAS } from '../services/speechService';
+import { speechService } from '../services/speechService';
 import { useLanguage, useT } from '../i18n';
-import { recordingFor } from '../services/narration';
+import { speakTrack } from '../services/narration';
 
 interface AudioNarrationButtonProps {
   id: string;
@@ -66,8 +66,6 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
       else effectivePersona = 'alan';
     }
 
-    const personaConfig = VOICE_PERSONAS[effectivePersona] || VOICE_PERSONAS.chip;
-
     if (effectivePersona === 'chip') {
       speechService.playChime('robot');
     } else {
@@ -76,50 +74,21 @@ export const AudioNarrationButton: React.FC<AudioNarrationButtonProps> = ({
 
     setActiveTrack(id, true);
 
-    const lang = speechLang ?? language.speechLang;
-    const speakOnDevice = () => speechService.speak(textToRead, {
-      personaId: effectivePersona,
-      speechLang: lang,
+    speakTrack({
+      text: textToRead,
+      trackKey,
+      speechLang: speechLang ?? language.speechLang,
+      persona: effectivePersona,
+      rate: speechRate,
+      isCurrent: () => useAudioStore.getState().activeTrackId === id, // stopped or replaced meanwhile
       onUnavailable: () => {
         stopAudio();
         setUnavailable(true);
       },
-      pitch: personaConfig.pitch,
-      rate: speechRate * personaConfig.rate,
-      onSentenceStart: (sentence) => {
-        setCurrentSentence(sentence);
-      },
-      onStart: () => {
-        setActiveTrack(id, true);
-      },
-      onEnd: () => {
-        stopAudio();
-      },
-      onError: () => {
-        stopAudio();
-      },
-    });
-
-    // A recording in the persona's voice when the language has one; the device voice otherwise.
-    const code = lang.toLowerCase().split('-')[0];
-    if (!trackKey || code === 'en') {
-      speakOnDevice();
-      return;
-    }
-    void recordingFor(code, trackKey, effectivePersona).then((url) => {
-      if (useAudioStore.getState().activeTrackId !== id) return; // stopped or replaced meanwhile
-      if (!url) {
-        speakOnDevice();
-        return;
-      }
-      speechService.playRecording(url, {
-        rate: speechRate,
-        text: textToRead,
-        onSentenceStart: (sentence) => setCurrentSentence(sentence),
-        onStart: () => setActiveTrack(id, true),
-        onEnd: () => stopAudio(),
-        onError: () => speakOnDevice(), // a file that will not play falls back to the device
-      });
+      onSentenceStart: (sentence) => setCurrentSentence(sentence),
+      onStart: () => setActiveTrack(id, true),
+      onEnd: () => stopAudio(),
+      onError: () => stopAudio(),
     });
   };
 

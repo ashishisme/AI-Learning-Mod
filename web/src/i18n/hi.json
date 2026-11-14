@@ -619,5 +619,7 @@
   "narration.readTeen": "12+ वाला हिस्सा सुनें",
   "widget.stepPlay": "▶ चलाएँ",
   "widget.stepPause": "⏸ रोकें",
+  "clip.prev": "← पिछला चरण",
+  "clip.mute": "🔇 क्लिप की आवाज़ बंद करें",
   "ageBand.back": "← वापस"
 }

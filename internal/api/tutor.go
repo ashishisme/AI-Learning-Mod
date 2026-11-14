@@ -623,10 +623,15 @@ type tutorLesson struct {
 			Title        string `json:"title"`
 			BodyMarkdown string `json:"bodyMarkdown"`
 		} `json:"more"`
+		Diagram *struct {
+			Type  string   `json:"type"`
+			Steps []string `json:"steps"`
+		} `json:"diagram"`
 	} `json:"sections"`
 }
 
-// sectionsMarkdown renders sections as "## heading" plus their text, including a banded lesson's 12+ layer.
+// sectionsMarkdown renders sections as "## heading" plus their text, including a banded lesson's 12+ layer
+// and a clip's step captions.
 func (l tutorLesson) sectionsMarkdown() string {
 	var sb strings.Builder
 	if l.Intro != "" {
@@ -644,6 +649,10 @@ func (l tutorLesson) sectionsMarkdown() string {
 		}
 		if s.More != nil && s.More.BodyMarkdown != "" {
 			sb.WriteString(s.More.BodyMarkdown + "\n\n")
+		}
+		// FR-CNT-13 (SPEC-014 FR-015): a clip's step captions are lesson text the tutor grounds on.
+		if s.Diagram != nil && s.Diagram.Type == "clip" && len(s.Diagram.Steps) > 0 {
+			sb.WriteString(strings.Join(s.Diagram.Steps, "\n") + "\n\n")
 		}
 	}
 	return sb.String()

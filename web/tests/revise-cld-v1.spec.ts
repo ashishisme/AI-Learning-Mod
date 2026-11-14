@@ -38,6 +38,8 @@ test.describe('SPEC-006 revise-cld-v1', () => {
         await page.goto(`/lesson/${lesson}`)
         await tab(page)
         await expect(page.locator('article').first()).toBeVisible()
+        // The Detailed version (with its clips) stays on screen until the chosen journey has loaded.
+        await expect(page.getByTestId('clip')).toHaveCount(0)
         const figures = page.locator('article figure')
         const n = await figures.count()
         expect(n, `${lesson} should have diagrams`).toBeGreaterThan(0)

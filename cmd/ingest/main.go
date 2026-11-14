@@ -2,6 +2,7 @@
 // SPEC-009: FR-017..FR-019 (the language release gate)
 // SPEC-012: FR-CNT-08 (the Kids reading check)
 // SPEC-013: FR-008, FR-012 (every lesson is ours and owner-approved; nothing is fetched)
+// SPEC-014: FR-CNT-13 (the clip check)
 //
 // The command keeps its name from when it imported the lessons. It now only checks them.
 package main
@@ -34,7 +35,25 @@ func main() {
 	if kidsCheck(filepath.Dir(filepath.Clean(contentDir)), contentDir, os.Stderr) != 0 {
 		code = 1
 	}
+	if clipCheck(contentDir, filepath.Join(filepath.Dir(filepath.Clean(contentDir)), "web", "public", "brand"), os.Stderr) != 0 {
+		code = 1
+	}
 	os.Exit(code)
+}
+
+// clipCheck prints one line per clip and fails on any clip that breaks FR-CNT-13.
+func clipCheck(contentDir, brandDir string, out io.Writer) int {
+	reports, err := ingest.CheckClips(contentDir, brandDir)
+	for _, r := range reports {
+		fmt.Fprintf(out, "clip-check: %s %s %s clip=%s steps=%d seconds=%.1f bytes=%d\n", r.Lang, r.Lesson, r.Section, r.Clip, r.Steps, r.Seconds, r.Bytes)
+	}
+	if err != nil {
+		for _, line := range strings.Split(err.Error(), "\n") {
+			fmt.Fprintf(out, "clip-check failed: %s\n", line)
+		}
+		return 1
+	}
+	return 0
 }
 
 // verify is the release gate. The English content checks come first (FR-033). Then each listed

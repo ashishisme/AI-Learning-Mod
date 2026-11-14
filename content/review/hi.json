@@ -58,8 +58,8 @@
     {
       "path": "public-content/lang/hi/lessons/3-neuralnetworks.detailed.json",
       "kind": "adaptive",
-      "sourceHash": "a5158cace2ab2c1336579148b6d4d671b91d531e346cc5e0c045b2d62cc43ed1",
-      "translationHash": "7cb6599450dff9180a4e80176d8298f3a4bf0e50c93faeafe96e1069a475ece8",
+      "sourceHash": "bc5be4ce14fef68624dcab46b8f7819209c42b4bfeb7647feb3ec6e673f369b4",
+      "translationHash": "17e7fa72e3f17640de611a252e7b9ec189d939bc3ede40609b2759077fa48458",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-14"
@@ -175,8 +175,8 @@
     {
       "path": "web/src/i18n/hi.json",
       "kind": "ui",
-      "sourceHash": "2b657b53ca04d06f0b6ad7410b94cc6a31d499229be069ec29ce63afa332af5e",
-      "translationHash": "8eae90a2df2c7d6b7d196364cb968d0d3b86600b5cfa0541614b3c97c1902aca",
+      "sourceHash": "99d91b97ce1f4607fb3c20df16aa91253154c7cf53970f76e1174441e4cdf498",
+      "translationHash": "7f8d28b43e18a6dba61523e8689bb24cf41f4f28c27fe5d22898b06445e8b21f",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-14"

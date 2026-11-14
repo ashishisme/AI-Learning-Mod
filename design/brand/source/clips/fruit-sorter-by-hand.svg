@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img">
+  <style>
+    .s { display: none }
+    .s:target { display: inline }
+    .card { fill: #FFFFFF; stroke: #475569; stroke-width: 1.5 }
+    .hot { fill: #DBEAFE; stroke: #1D4ED8; stroke-width: 2.5 }
+    .val { font: 700 17px system-ui, sans-serif; fill: #0F172A; text-anchor: middle }
+    .score { font: 700 13px system-ui, sans-serif; fill: #0F172A; text-anchor: middle }
+    .err { font: 700 15px system-ui, sans-serif; fill: #B91C1C; text-anchor: middle }
+    .ring { fill: none; stroke: #B91C1C; stroke-width: 3; transform-box: fill-box; transform-origin: center }
+    .s:target .in { animation: show 0.8s ease-out 1 both }
+    .s:target .ring { animation: ring 0.8s ease-out 0.2s 1 both }
+    .s:target .err { animation: show 0.6s ease-out 0.5s 1 both }
+    .s:target .hot { animation: flash 1.2s ease-out 1 both }
+    .s:target .slideL { animation: slideL 1.6s ease-in-out 1 both }
+    .s:target .slideA { animation: slideA 1.6s ease-in-out 0.3s 1 both }
+    @keyframes show { from { opacity: 0 } to { opacity: 1 } }
+    @keyframes ring { 0% { transform: scale(0.4); opacity: 0 } 60% { transform: scale(1.15); opacity: 1 } 100% { transform: scale(1); opacity: 1 } }
+    @keyframes flash { from { fill: #93C5FD } to { fill: #DBEAFE } }
+    @keyframes slideL { from { transform: translateX(92px) } to { transform: none } }
+    @keyframes slideA { from { transform: translateX(137px) } to { transform: none } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important } }
+  </style>
+  <defs>
+    <g id="apple"><circle r="8" fill="#B91C1C"/><path d="M0 -8 q1 -4 4 -5" stroke="#14532D" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+    <g id="lemon"><ellipse rx="9" ry="6.5" fill="#FACC15" stroke="#713F12" stroke-width="2"/></g>
+    <g id="mystery"><circle r="9" fill="#E2E8F0" stroke="#334155" stroke-width="2"/><text y="5" class="score">?</text></g>
+    <!-- icons for the three settings: sweetness (drop), roundness (circle), bias (slider) -->
+    <g id="icons">
+      <path d="M44 20 q6 8 6 12 a6 6 0 0 1 -12 0 q0 -4 6 -12z" fill="#1D4ED8"/>
+      <circle cx="141" cy="29" r="7" fill="none" stroke="#1D4ED8" stroke-width="3"/>
+      <path d="M228 29 h20" stroke="#1D4ED8" stroke-width="3" stroke-linecap="round"/><circle cx="234" cy="29" r="4.5" fill="#1D4ED8"/>
+    </g>
+    <!-- the score line: lemons left of 0, apples right of 0; −8 to 8 drawn from x 40 to 290 -->
+    <g id="line">
+      <rect x="40" y="118" width="125" height="16" fill="#FEF9C3"/>
+      <rect x="165" y="118" width="125" height="16" fill="#FEE2E2"/>
+      <path d="M40 126 H290 M165 114 V138" stroke="#334155" stroke-width="2" stroke-linecap="round"/>
+      <text x="165" y="154" class="score">0</text>
+    </g>
+  </defs>
+  <rect width="320" height="180" rx="16" fill="#FFFBEB"/>
+
+  <!-- 1: start with w1 = 1.2, w2 = 0.8, b = −10 -->
+  <g id="s1" class="s">
+    <g class="in">
+      <rect class="card" x="20" y="14" width="96" height="52" rx="10"/>
+      <rect class="card" x="124" y="14" width="76" height="52" rx="10"/>
+      <rect class="card" x="208" y="14" width="92" height="52" rx="10"/>
+      <use href="#icons"/>
+      <text x="68" y="57" class="val">1.2</text><text x="162" y="57" class="val">0.8</text><text x="254" y="57" class="val">−10</text>
+    </g>
+    <use href="#line"/>
+    <use href="#apple" x="277" y="104"/><text x="277" y="83" class="score">7.2</text>
+    <use href="#lemon" x="96" y="104"/><text x="96" y="83" class="score">−4.4</text>
+  </g>
+
+  <!-- 2: the mystery fruit scores 0.8, so it is called an apple -->
+  <g id="s2" class="s">
+    <rect class="card" x="20" y="14" width="96" height="52" rx="10"/><rect class="card" x="124" y="14" width="76" height="52" rx="10"/><rect class="card" x="208" y="14" width="92" height="52" rx="10"/>
+    <use href="#icons"/>
+    <text x="68" y="57" class="val">1.2</text><text x="162" y="57" class="val">0.8</text><text x="254" y="57" class="val">−10</text>
+    <use href="#line"/>
+    <g class="in"><use href="#mystery" x="178" y="104"/><text x="178" y="83" class="score">0.8</text></g>
+  </g>
+
+  <!-- 3: it is really a lemon: error −1 -->
+  <g id="s3" class="s">
+    <rect class="card" x="20" y="14" width="96" height="52" rx="10"/><rect class="card" x="124" y="14" width="76" height="52" rx="10"/><rect class="card" x="208" y="14" width="92" height="52" rx="10"/>
+    <use href="#icons"/>
+    <text x="68" y="57" class="val">1.2</text><text x="162" y="57" class="val">0.8</text><text x="254" y="57" class="val">−10</text>
+    <use href="#line"/>
+    <use href="#lemon" x="178" y="104"/><text x="178" y="83" class="score">0.8</text>
+    <circle class="ring" cx="178" cy="104" r="13"/>
+    <text x="210" y="100" class="err">−1</text>
+  </g>
+
+  <!-- 4: with rate 0.1, both weights become 0.5 and b becomes −10.1 -->
+  <g id="s4" class="s">
+    <rect class="hot" x="20" y="14" width="96" height="52" rx="10"/><rect class="hot" x="124" y="14" width="76" height="52" rx="10"/><rect class="hot" x="208" y="14" width="92" height="52" rx="10"/>
+    <use href="#icons"/>
+    <text x="68" y="57" class="val">0.5</text><text x="162" y="57" class="val">0.5</text><text x="254" y="57" class="val">−10.1</text>
+    <use href="#line"/>
+    <use href="#lemon" x="178" y="104"/>
+  </g>
+
+  <!-- 5: now it scores −5.1, but the apple drops to −1.6 -->
+  <g id="s5" class="s">
+    <rect class="card" x="20" y="14" width="96" height="52" rx="10"/><rect class="card" x="124" y="14" width="76" height="52" rx="10"/><rect class="card" x="208" y="14" width="92" height="52" rx="10"/>
+    <use href="#icons"/>
+    <text x="68" y="57" class="val">0.5</text><text x="162" y="57" class="val">0.5</text><text x="254" y="57" class="val">−10.1</text>
+    <use href="#line"/>
+    <g class="slideL"><use href="#lemon" x="86" y="104"/><text x="86" y="83" class="score">−5.1</text></g>
+    <g class="slideA"><use href="#apple" x="140" y="104"/><text x="140" y="83" class="score">−1.6</text></g>
+    <circle class="ring" cx="140" cy="104" r="13"/>
+  </g>
+</svg>

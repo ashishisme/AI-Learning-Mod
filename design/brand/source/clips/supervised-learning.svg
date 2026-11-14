@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img">
+  <style>
+    .s { display: none }
+    .s:target { display: inline }
+    .card { fill: #FFFFFF; stroke: #475569; stroke-width: 1.5 }
+    .test { fill: #FFFFFF; stroke: #475569; stroke-width: 1.5; stroke-dasharray: 4 3 }
+    .bar { fill: #1D4ED8 }
+    .box { fill: #DBEAFE; stroke: #1D4ED8; stroke-width: 2 }
+    .arrow { stroke: #334155; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round }
+    .knob { transform-box: fill-box; transform-origin: center }
+    .grow { transform-box: fill-box; transform-origin: left center }
+    .s:target .in { animation: show 0.8s ease-out 1 both }
+    .s:target .in2 { animation: show 0.8s ease-out 0.4s 1 both }
+    .s:target .turn { animation: turn 1.6s ease-in-out 1 both }
+    .s:target .shrink { animation: shrink 1.6s ease-out 0.2s 1 both }
+    .s:target .pop { animation: pop 0.6s ease-out 0.9s 1 both }
+    @keyframes show { from { opacity: 0; transform: translateX(-8px) } to { opacity: 1; transform: none } }
+    @keyframes turn { 0% { transform: rotate(-90deg) } 50% { transform: rotate(40deg) } 100% { transform: rotate(0deg) } }
+    @keyframes shrink { from { transform: scaleX(1) } to { transform: scaleX(0.25) } }
+    @keyframes pop { 0% { transform: scale(0.4); opacity: 0 } 70% { transform: scale(1.15); opacity: 1 } 100% { transform: scale(1); opacity: 1 } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important } }
+  </style>
+  <defs>
+    <g id="apple"><circle r="8" fill="#B91C1C"/><path d="M0 -8 q1 -4 4 -5" stroke="#14532D" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+    <g id="lemon"><ellipse rx="9" ry="6.5" fill="#FACC15" stroke="#713F12" stroke-width="2"/></g>
+    <!-- an example card: fruit, two feature bars, and its label tag -->
+    <g id="cards">
+      <rect class="card" x="14" y="22" width="104" height="34" rx="8"/>
+      <use href="#apple" x="32" y="40"/>
+      <rect class="bar" x="48" y="31" width="40" height="6" rx="3"/><rect class="bar" x="48" y="42" width="34" height="6" rx="3"/>
+      <rect x="96" y="31" width="14" height="16" rx="3" fill="#B91C1C"/>
+      <rect class="card" x="14" y="66" width="104" height="34" rx="8"/>
+      <use href="#lemon" x="32" y="83"/>
+      <rect class="bar" x="48" y="75" width="10" height="6" rx="3"/><rect class="bar" x="48" y="86" width="18" height="6" rx="3"/>
+      <rect x="96" y="75" width="14" height="16" rx="3" fill="#FACC15" stroke="#713F12" stroke-width="1.5"/>
+      <rect class="card" x="14" y="110" width="104" height="34" rx="8"/>
+      <use href="#apple" x="32" y="128"/>
+      <rect class="bar" x="48" y="119" width="36" height="6" rx="3"/><rect class="bar" x="48" y="130" width="38" height="6" rx="3"/>
+      <rect x="96" y="119" width="14" height="16" rx="3" fill="#B91C1C"/>
+    </g>
+    <!-- the model: a box with two dials -->
+    <g id="model">
+      <rect class="box" x="170" y="50" width="92" height="66" rx="12"/>
+      <circle cx="195" cy="83" r="13" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2"/>
+      <circle cx="237" cy="83" r="13" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2"/>
+    </g>
+  </defs>
+  <rect width="320" height="180" rx="16" fill="#FFFBEB"/>
+
+  <!-- 1: examples with features and a label -->
+  <g id="s1" class="s">
+    <g class="in"><use href="#cards"/></g>
+  </g>
+
+  <!-- 2: training turns the model's dials -->
+  <g id="s2" class="s">
+    <use href="#cards"/>
+    <path class="arrow" d="M126 83 H160 M152 76 l8 7 l-8 7"/>
+    <use href="#model"/>
+    <g class="knob turn"><path d="M195 83 V72" stroke="#1D4ED8" stroke-width="3" stroke-linecap="round"/><circle cx="195" cy="83" r="13" fill="none"/></g>
+    <g class="knob turn"><path d="M237 83 L245 77" stroke="#1D4ED8" stroke-width="3" stroke-linecap="round"/><circle cx="237" cy="83" r="13" fill="none"/></g>
+  </g>
+
+  <!-- 3: the loss bar shrinks -->
+  <g id="s3" class="s">
+    <use href="#cards"/>
+    <path class="arrow" d="M126 83 H160 M152 76 l8 7 l-8 7"/>
+    <use href="#model"/>
+    <path d="M195 83 V72 M237 83 L245 77" stroke="#1D4ED8" stroke-width="3" stroke-linecap="round"/>
+    <rect x="170" y="134" width="120" height="14" rx="7" fill="#E2E8F0"/>
+    <rect class="grow shrink" x="170" y="134" width="120" height="14" rx="7" fill="#B91C1C"/>
+    <g class="pop"><circle cx="300" cy="141" r="9" fill="#047857"/><path d="M296 141 l3 3 l5 -6" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+  </g>
+
+  <!-- 4: test data kept aside checks new fruit -->
+  <g id="s4" class="s">
+    <use href="#model"/>
+    <path d="M195 83 V72 M237 83 L245 77" stroke="#1D4ED8" stroke-width="3" stroke-linecap="round"/>
+    <g class="in">
+      <rect class="test" x="14" y="44" width="104" height="34" rx="8"/>
+      <use href="#lemon" x="32" y="61"/>
+      <rect class="bar" x="48" y="53" width="14" height="6" rx="3"/><rect class="bar" x="48" y="64" width="22" height="6" rx="3"/>
+      <rect class="test" x="14" y="90" width="104" height="34" rx="8"/>
+      <use href="#apple" x="32" y="108"/>
+      <rect class="bar" x="48" y="99" width="38" height="6" rx="3"/><rect class="bar" x="48" y="110" width="32" height="6" rx="3"/>
+    </g>
+    <path class="arrow in2" d="M126 83 H160 M152 76 l8 7 l-8 7"/>
+    <g class="pop">
+      <circle cx="285" cy="61" r="10" fill="#047857"/><path d="M280 61 l4 4 l6 -7" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="285" cy="107" r="10" fill="#047857"/><path d="M280 107 l4 4 l6 -7" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+</svg>

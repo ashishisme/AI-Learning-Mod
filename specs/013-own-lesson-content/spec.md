@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-13
 
-**Status**: Draft
+**Status**: Done. Released in v0.10.0 and closed 2026-11-14.
 
 **Input**: User description: "Own lessons instead of Microsoft AI-For-Beginners content. Replace all Microsoft-derived lesson text, images, topic dependency, tutor prompt wording and attribution with our own original content, following docs/own-content-plan.md and the owner decisions of 2026-11-13." Source plan: [docs/own-content-plan.md](../../docs/own-content-plan.md).
 
@@ -21,6 +21,10 @@
 - Q: Notebooks (FR-016)? → A: **Write our own.** Each Detailed lesson ships with our own hands-on notebook, and its "Open in Colab" button opens ours instead of Microsoft's.
 - Q: Journey name (FR-017)? → A: **"Detailed".** The interface renames "Standard" to "Detailed". The stored journey value does not change, so learners stay in it.
 - Q: Recreate per age, or add our content to the existing lessons? → A: **Recreate.** Kids, Plain English and a new Detailed track are each written fresh. Nothing is appended to Microsoft's text, because anything built on it would still be a derived work.
+
+### Session 2026-11-14
+
+- Q: How should the owner's check that no lesson copies or closely paraphrases Microsoft's original be recorded, so SPEC-013 can be closed? (SC-006) → A: The owner confirms the check is done; it is recorded here as met (owner check 2026-11-14), with no separate checklist.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -67,7 +71,7 @@ A learner who wants the full lesson, today's Standard journey, opens a lesson an
 **Acceptance Scenarios**:
 
 1. **Given** a lesson with a Detailed version, **When** a learner in the Standard journey opens it, **Then** they see the Detailed version, with a Read section button on every section.
-2. **Given** a lesson without a Detailed version yet, **When** a learner in the Standard journey opens it, **Then** they see the existing text, as today.
+2. **Given** a lesson without a Detailed version yet, **When** a learner in the Standard journey opens it, **Then** they see the existing text, as today. (Transition only: since v0.10.0 every lesson has a Detailed version, and Detailed is the fallback, SPEC FR-CNT-12.)
 3. **Given** a Detailed lesson, **When** a learner reaches its activity, **Then** it is the same activity as in Kids and Plain English, showing more of the numbers behind it.
 4. **Given** a Detailed lesson, **When** the tutor answers a question about it, **Then** the answer is grounded in and cites the Detailed lesson's sections.
 
@@ -93,7 +97,7 @@ Once all lessons in all three tracks are ours, nothing from Microsoft's course s
 ### Edge Cases
 
 - **A learner partway through a lesson when it is replaced.** Lesson ids stay the same, so saved progress (completed lessons, quiz results) is kept. Section-level positions are not saved today, so nothing is lost.
-- **Mixed tracks during the transition.** Some lessons are ours and some are still derived. The attribution footer and licence text stay until no derived text, image or quiz ships anywhere (FR-012).
+- **Mixed tracks during the transition.** Some lessons are ours and some are still derived. The attribution footer and licence text stay until no derived text, image or quiz ships anywhere (FR-012). Ended with v0.10.0: nothing derived ships, and the footer and notice are gone.
 - **Hindi lags English.** A rewritten English lesson whose Hindi is not approved yet is shown in English to Hindi learners with the existing "not translated yet" notice. Hindi learners never see the old Hindi text for a replaced lesson.
 - **The tutor during the transition.** Its grounding uses whichever version of the lesson is shown, so its citations always match the page.
 - **Search engines and shared links.** Lesson URLs do not change.
@@ -150,7 +154,7 @@ Once all lessons in all three tracks are ours, nothing from Microsoft's course s
 - **SC-003**: After the final phase, a text search of the shipped product and its build finds zero references to Microsoft's course or repository, and zero Microsoft images.
 - **SC-004**: A release can be built with no access to Microsoft's repository.
 - **SC-005**: No learner loses saved progress or quiz results when a lesson is replaced, measured by the existing progress tests passing after each release.
-- **SC-006**: In an owner check of each released lesson against Microsoft's original, no sentence is copied or closely paraphrased.
+- **SC-006**: In an owner check of each released lesson against Microsoft's original, no sentence is copied or closely paraphrased. Met: owner check recorded 2026-11-14.
 - **SC-007**: Each lesson's release, from draft to live, needs no change to any other lesson.
 
 ## Assumptions

@@ -359,11 +359,12 @@ export interface AdaptiveSection {
   }
   bodyMarkdown: string
   diagram?: {
-    type: string // "mermaid" | "stepper" | "svg" | "scene-card"
+    type: string // "mermaid" | "stepper" | "svg" | "scene-card" | "clip"
     caption: string
-    content: string
+    content?: string
     alt?: string // SPEC-006 FR-REV-03: required in content, describes what the picture teaches
-    steps?: string[] // for type "stepper"
+    steps?: string[] // for type "stepper"; for type "clip", one caption per step (SPEC FR-CNT-13)
+    clip?: string // for type "clip": the drawing web/public/brand/clips/<clip>.svg
   }
   realWorld?: string // SPEC-006 FR-REV-14: "Where you'll see this" (plain-english)
   interactiveWidget?: {

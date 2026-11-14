@@ -5,10 +5,10 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.15.0 |
+| Version | 2.16.0 |
 | Status | Active implementation |
 | Owner | (your name) |
-| Lessons | Written for this course and committed in `public-content/` (FR-CNT-12, NFR-LIC-03) |
+| Lessons | Written for this course and committed in `public-content/` (FR-CNT-12, NFR-LIC-03; SPEC-013 closed 2026-11-14, v0.10.0) |
 | Supersedes | 1.3.0 |
 
 **Rule.** Any behavioral change requires a spec amendment (§12) before
@@ -159,6 +159,21 @@ mode it serves the Detailed version. A language may carry its own lesson list at
 
 No file under `public-content/` (recorded audio aside), `web/src/`, `web/public/` or `internal/` shall name or
 link to another publisher's course (SPEC-013 SC-003).
+
+**FR-CNT-13.** Added 2.16.0 (SPEC-014 FR-001..FR-004, FR-011, FR-013). A Detailed section's `diagram` may be a
+clip: `type: "clip"`, `clip` (the name of `web/public/brand/clips/<clip>.svg`), `caption`, `alt` (what it teaches)
+and `steps` (one caption per step). Captions are lesson text: approved in the review ledgers with the lesson,
+translated in each language, read by the tutor, and recorded as narration track
+`<lessonId>/detailed/section-<sectionId>-clip-<n>` (n from 1). A translated file keeps the same `clip` and the same
+number of steps. The release check fails for a clip when:
+- it has fewer than 3 or more than 8 steps, a caption has fewer than 4 or more than 35 words, or its estimated
+  length, the sum over its steps of (words ÷ 2.5 + 1) seconds, is under 10 or over 30 seconds;
+- its `alt` is empty;
+- its drawing is missing, larger than 100 KB, or lacks a group `s1`…`sN` for each step;
+- its drawing has a `<text>` element containing a letter, a `<script>`, an `on…=` attribute, or a link outside
+  the file.
+
+Every clip drawing needs an approved entry in the brand register (`cmd/assetcheck`).
 
 ### 4.3 Tutor — `FR-TUT-*`
 
@@ -350,6 +365,17 @@ mute (FR-UI-19) and only one section plays at a time (AC-AUD-02.4).
 picture. When `scenePlays` is true it shall offer a Play button (at least 44x44 px) that plays its animation once,
 for 5 seconds or less, and can play it again. Under reduced motion no Play button is shown and the picture stays
 still. Scene pictures are decorative: the card text tells the same story.
+
+**FR-UI-28.** Added 2.16.0 (SPEC-014 FR-005..FR-010, FR-012). A clip (FR-CNT-13) shows as a still picture of its
+first step with its caption, a "Step k of N" counter and its description for screen readers, and makes no move or
+sound until Play. It offers Play/Pause, Previous, Next, Play again and Mute, each at least 44x44 px, usable by
+keyboard and labelled in the learner's language. While playing, each step's caption is read aloud, by the
+learner's recording for that step where one exists and otherwise by the device voice, and the next step starts
+600 ms after it ends (or after the step's muted hold of words ÷ 2.5 + 1 seconds). Only one sound plays at a time:
+starting a clip stops Read section, the tutor's voice and any other clip, and starting any of them pauses the
+clip. Muting keeps every clip muted until unmuted or the page is reloaded; a muted clip still moves. A clip pauses
+when it leaves the screen. Under reduced motion it never animates and has no Play: Previous and Next show each step,
+reading it once unless muted. If the drawing fails to load, its captions and description are shown as text.
 
 ### 4.5 Settings & AI Configuration — `FR-SET-*`
 
@@ -1089,6 +1115,20 @@ unknown `mode` or no file for the mode, the API serves the Detailed version (`in
 **AC-75 (FR-CNT-12, NFR-LIC-01; SPEC-013 SC-003).** A search of the shipped text (`public-content/` without
 `audio/`, `web/src/`, `web/public/`, `internal/`) finds no reference to another publisher's course or repository
 (`cmd/ingest/own_course_test.go`).
+
+**AC-76 (FR-UI-28).** A clip shows step 1 still with no sound before Play; Play, Pause, Next, Previous and Play
+again move between steps with matching captions; under reduced motion there is no Play and Next reaches every
+caption; every control is at least 44x44 px and keyboard-reachable; the figure is described by its `alt`; a failed
+drawing shows the captions (`web/tests/clips.spec.ts`).
+
+**AC-77 (FR-CNT-13).** The release check passes a valid clip and refuses each rule in FR-CNT-13, including a
+translated file naming another clip or a different number of steps (`internal/ingest/clips_test.go`); each step is
+a narration track (`internal/narration/text_test.go`); the tutor's lesson text includes clip captions
+(`internal/api/tutor_mode_test.go`).
+
+**AC-78 (FR-UI-28).** Play reads each caption before the next step; Read section, the tutor's voice or another clip
+pauses a playing clip; Mute keeps the next clip muted while it still moves; with no speech available the clip still
+plays; a Hindi clip asks for its step recording (`web/tests/clips.spec.ts`).
 
 ---
 

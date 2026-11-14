@@ -231,7 +231,7 @@ Each `notebooks/<id>.ipynb` runs the worked example step by step, using only Col
 
 - [X] T055 [P] Update `docs/own-content-plan.md` and memory `spec-013-own-lessons.md` after each phase.
 - [X] T056 Run `web/tests/progress.spec.ts` after each release to confirm no saved progress is lost (SC-005). It is part of the full Playwright run.
-- [ ] T057 Close SPEC-013 in `spec/SPEC.md` and the spec status once SC-001..007 are met.
+- [X] T057 Close SPEC-013 in `spec/SPEC.md` and the spec status once SC-001..007 are met.
 
 ---
 

@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img">
+  <style>
+    .s { display: none }
+    .s:target { display: inline }
+    .axis { stroke: #475569; stroke-width: 2; fill: none; stroke-linecap: round }
+    .line { stroke: #1D4ED8; stroke-width: 3.5; fill: none; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 0 }
+    .ghost { stroke: #1D4ED8; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-dasharray: 6 6; opacity: 0.35 }
+    .ring { fill: none; stroke: #B91C1C; stroke-width: 3; transform-box: fill-box; transform-origin: center }
+    .num { font: 700 16px system-ui, sans-serif; fill: #B91C1C }
+    .tick { transform-box: fill-box; transform-origin: center }
+    .s:target .line { animation: draw 1.4s ease-out 1 both }
+    .s:target .line.late { animation-delay: 0.5s }
+    .s:target .ghost { animation: fade 0.8s ease-out 1 both }
+    .s:target .ring { animation: ring 0.8s ease-out 0.2s 1 both }
+    .s:target .num { animation: show 0.6s ease-out 0.4s 1 both }
+    .s:target .tick { animation: ring 0.8s ease-out 0.3s 1 both }
+    @keyframes draw { from { stroke-dashoffset: 100 } to { stroke-dashoffset: 0 } }
+    @keyframes fade { from { opacity: 1 } to { opacity: 0.35 } }
+    @keyframes ring { 0% { transform: scale(0.4); opacity: 0 } 60% { transform: scale(1.15); opacity: 1 } 100% { transform: scale(1); opacity: 1 } }
+    @keyframes show { from { opacity: 0 } to { opacity: 1 } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important } }
+  </style>
+  <defs>
+    <g id="apple">
+      <circle r="9" fill="#B91C1C"/>
+      <path d="M0 -9 q1 -5 4 -6" stroke="#14532D" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </g>
+    <g id="lemon">
+      <ellipse rx="10" ry="7" fill="#FACC15" stroke="#713F12" stroke-width="2"/>
+    </g>
+    <g id="fruit">
+      <use href="#apple" x="200" y="80"/>
+      <use href="#apple" x="220" y="40"/>
+      <use href="#apple" x="250" y="60"/>
+      <use href="#apple" x="270" y="45"/>
+      <use href="#lemon" x="50" y="150"/>
+      <use href="#lemon" x="80" y="160"/>
+      <use href="#lemon" x="110" y="150"/>
+      <use href="#lemon" x="135" y="164"/>
+      <use href="#lemon" x="160" y="104"/>
+    </g>
+    <g id="axes">
+      <path class="axis" d="M24 10 V172 H308"/>
+    </g>
+  </defs>
+  <rect width="320" height="180" rx="16" fill="#FFFBEB"/>
+
+  <!-- 1: a first guess draws a line -->
+  <g id="s1" class="s">
+    <use href="#axes"/><use href="#fruit"/>
+    <path class="line" pathLength="100" d="M20 135 L300 100"/>
+  </g>
+
+  <!-- 2: one lemon is on the apple side -->
+  <g id="s2" class="s">
+    <use href="#axes"/><use href="#fruit"/>
+    <path class="line" pathLength="100" d="M20 135 L300 100" style="animation: none"/>
+    <circle class="ring" cx="160" cy="104" r="16"/>
+  </g>
+
+  <!-- 3: error −1, the weights shrink, the line tilts -->
+  <g id="s3" class="s">
+    <use href="#axes"/><use href="#fruit"/>
+    <path class="ghost" d="M20 135 L300 100"/>
+    <path class="line late" pathLength="100" d="M130 15 L300 100"/>
+    <text class="num" x="122" y="100">−1</text>
+  </g>
+
+  <!-- 4: an apple is now wrong, error +1, the weights grow -->
+  <g id="s4" class="s">
+    <use href="#axes"/><use href="#fruit"/>
+    <path class="ghost" d="M130 15 L300 100"/>
+    <circle class="ring" cx="200" cy="80" r="16"/>
+    <text class="num" x="222" y="106">+1</text>
+    <path class="line late" pathLength="100" d="M60 15 L290 170"/>
+  </g>
+
+  <!-- 5: every fruit on its own side -->
+  <g id="s5" class="s">
+    <use href="#axes"/><use href="#fruit"/>
+    <path class="line" pathLength="100" d="M60 15 L290 170" style="animation: none"/>
+    <g class="tick">
+      <circle cx="292" cy="24" r="13" fill="#047857"/>
+      <path d="M285 24 l5 5 l9 -10" stroke="#FFFFFF" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+</svg>

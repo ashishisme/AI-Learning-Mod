@@ -1,4 +1,4 @@
-// SPEC: SPEC-013 research R4 (the tutor grounds on the version on screen)
+// SPEC: SPEC-013 research R4 (the tutor grounds on the version on screen); AC-77 (clip captions)
 package api
 
 import (
@@ -14,7 +14,7 @@ func TestTutorGroundsOnTheShownVersion(t *testing.T) {
 	dir := hindiTutorContent(t, "approved")
 	for rel, body := range map[string]string{
 		"lessons/lesson-1.junior.json":         `{"title":"Kids One","intro":"Hi!","sections":[{"heading":"Robots learn","bigIdea":"Robots learn from examples.","bodyMarkdown":"Lots of them.","teen":{"body":"Teen layer text."}}]}`,
-		"lessons/lesson-1.detailed.json":       `{"title":"Detailed One","origin":"own","sections":[{"heading":"What it is","bodyMarkdown":"A precise definition."},{"heading":"Worked example","bodyMarkdown":"Step by step."}]}`,
+		"lessons/lesson-1.detailed.json":       `{"title":"Detailed One","origin":"own","sections":[{"heading":"What it is","bodyMarkdown":"A precise definition."},{"heading":"Worked example","bodyMarkdown":"Step by step.","diagram":{"type":"clip","clip":"x","steps":["The weight moves from 0.5 to 0.7."]}}]}`,
 		"lang/hi/lessons/lesson-1.junior.json": `{"title":"बच्चों का पाठ","sections":[{"heading":"रोबोट सीखते हैं","bodyMarkdown":"उदाहरणों से।"}]}`,
 	} {
 		p := filepath.Join(dir, rel)
@@ -39,7 +39,9 @@ func TestTutorGroundsOnTheShownVersion(t *testing.T) {
 		t.Errorf("kids: citation %q, prompt %q", kids.Citation, kids.Messages[1].Content)
 	}
 	detailed := ask(`{"lessonId":"lesson-1","question":"What is it?","mode":"detailed"}`)
-	if detailed.Citation != "[Detailed One § What it is]" || !strings.Contains(detailed.Messages[1].Content, "## Worked example") {
+	// AC-77 (FR-CNT-13): a clip's captions are part of the text the tutor grounds on.
+	if detailed.Citation != "[Detailed One § What it is]" || !strings.Contains(detailed.Messages[1].Content, "## Worked example") ||
+		!strings.Contains(detailed.Messages[1].Content, "The weight moves from 0.5 to 0.7.") {
 		t.Errorf("detailed: citation %q, prompt %q", detailed.Citation, detailed.Messages[1].Content)
 	}
 	hindi := ask(`{"lessonId":"lesson-1","question":"रोबोट कैसे सीखते हैं?","mode":"junior","lang":"hi"}`)

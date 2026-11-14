@@ -29,7 +29,19 @@
           "simpleExplanation": "Fitting the training examples so closely that the model does badly on new ones."
         }
       ],
-      "realWorld": "House price estimates are regression. Sorting support tickets by topic is classification."
+      "realWorld": "House price estimates are regression. Sorting support tickets by topic is classification.",
+      "diagram": {
+        "type": "clip",
+        "clip": "supervised-learning",
+        "caption": "How supervised learning works",
+        "alt": "Labelled fruit examples, each with two feature bars and a label tag, go into a model with two dials. The dials turn, a loss bar shrinks, and kept-aside test fruit come out sorted correctly.",
+        "steps": [
+          "Each example has features, like sweetness and roundness, and a label.",
+          "Training adjusts the model's parameters to match the labels.",
+          "The loss counts how badly it misses, and training shrinks it.",
+          "Kept-aside test data checks how well it works on new fruit."
+        ]
+      }
     },
     {
       "id": "neuron-model",
@@ -76,15 +88,16 @@
         }
       ],
       "diagram": {
-        "type": "stepper",
-        "caption": "The perceptron training loop",
-        "content": "",
-        "alt": "Four steps repeated for every example: compute the score and prediction; compare with the label; if wrong, move each weight by learning rate times error times input and adjust the bias; repeat epochs until every example is correct.",
+        "type": "clip",
+        "clip": "perceptron-learning",
+        "caption": "Watch the line learn",
+        "alt": "Apples and lemons on a grid with a dividing line. A lemon starts on the apple side; the learning rule tilts the line. Then an apple is on the wrong side, and the line tilts again, until every fruit is on its own side.",
         "steps": [
-          "Compute the score z and the prediction for one example.",
-          "Compare the prediction with the label: the error is y minus the prediction.",
-          "If wrong, change each weight by learning rate × error × its input, and the bias by learning rate × error.",
-          "Move to the next example. Repeat whole epochs until every example is classified correctly."
+          "A first guess draws a line between apples and lemons.",
+          "One lemon lands on the apple side: a mistake.",
+          "The error is −1, so the weights shrink and the line tilts.",
+          "Now an apple is wrong, the error is +1, and the weights grow.",
+          "Every fruit is on its own side, so training stops."
         ]
       },
       "realWorld": "Simple online classifiers that update a little every time a user corrects them work on the same principle as the perceptron rule."
@@ -125,7 +138,20 @@
           "simpleExplanation": "The label minus the prediction: 0 when right, +1 or −1 when a step neuron is wrong."
         }
       ],
-      "realWorld": "Every large model is trained by this same cycle of predict, compare and adjust, repeated billions of times with gradient descent."
+      "realWorld": "Every large model is trained by this same cycle of predict, compare and adjust, repeated billions of times with gradient descent.",
+      "diagram": {
+        "type": "clip",
+        "clip": "fruit-sorter-by-hand",
+        "caption": "One learning step, by hand",
+        "alt": "Three cards show the sweetness weight, roundness weight and bias. A number line splits lemon scores below 0 from apple scores above 0. The mystery fruit scores 0.8 and is called an apple, but it is a lemon. After one learning step the cards read 0.5, 0.5 and −10.1, the mystery fruit moves to −5.1 and the apple drops to −1.6.",
+        "steps": [
+          "Start with w₁ = 1.2, w₂ = 0.8 and b = −10.",
+          "The mystery fruit scores 0.8, so it is called an apple.",
+          "It is really a lemon: the error is −1.",
+          "With rate 0.1, both weights become 0.5 and b becomes −10.1.",
+          "Now it scores −5.1, but the apple drops to −1.6."
+        ]
+      }
     },
     {
       "id": "perceptron-activity",

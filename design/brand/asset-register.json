@@ -852,6 +852,108 @@
         "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
         "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
       }
+    },
+    {
+      "id": "clip-perceptron-learning",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/perceptron-learning.svg",
+          "sha256": "1ee6ca6b8d66fea353eda580ce44b6cb58e49cdeeb180510808225d8a3ded6b8"
+        }
+      ],
+      "purpose": "lesson 3 concept clip: a dividing line tilts as the perceptron learning rule corrects mistakes",
+      "sourceMaster": "design/brand/source/clips/perceptron-learning.svg",
+      "sourceSha256": "1ee6ca6b8d66fea353eda580ce44b6cb58e49cdeeb180510808225d8a3ded6b8",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-supervised-learning",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/supervised-learning.svg",
+          "sha256": "614fd6e278efccfbcc07783946e62b255c592941c54fcd00ccc9be2c94f896bf"
+        }
+      ],
+      "purpose": "lesson 3 section clip: labelled examples train a model, the loss shrinks, test data checks it",
+      "sourceMaster": "design/brand/source/clips/supervised-learning.svg",
+      "sourceSha256": "614fd6e278efccfbcc07783946e62b255c592941c54fcd00ccc9be2c94f896bf",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-fruit-sorter-by-hand",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/fruit-sorter-by-hand.svg",
+          "sha256": "39e3039d49d3184da6025aedd68a909869e392a6ae2b0bcd43b8f159100198c1"
+        }
+      ],
+      "purpose": "lesson 3 worked-example clip: one perceptron learning step with the lesson's numbers",
+      "sourceMaster": "design/brand/source/clips/fruit-sorter-by-hand.svg",
+      "sourceSha256": "39e3039d49d3184da6025aedd68a909869e392a6ae2b0bcd43b8f159100198c1",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
     }
   ]
 }
