@@ -154,4 +154,28 @@ test.describe('Tutor Panel Acceptance', () => {
     await expect(answer).toBeVisible()
     await expect(answer).toContainText('Recovered successfully')
   })
+
+  // SPEC-013 US3 scenario 4 (T046): on our Detailed lesson the tutor is asked about the Detailed version,
+  // and its answer cites a Detailed section heading.
+  test('a Detailed lesson asks the tutor to ground on the Detailed version', async ({ page }) => {
+    let sent: { mode?: string; lessonId?: string } = {}
+    await page.route('**/api/tutor', async (route) => {
+      sent = route.request().postDataJSON()
+      await route.fulfill({
+        status: 200,
+        headers: { 'Content-Type': 'text/event-stream' },
+        body: 'data: {"token":"[Artificial Intelligence § Testing for Intelligence: The Imitation Game] A judge chats with both."}\n\ndata: {"done":true,"cited":true}\n\ndata: [DONE]\n\n',
+      })
+    })
+
+    await page.goto('/lesson/1-intro')
+    await expect(page.locator('[data-testid="lesson-title"]')).toContainText('Artificial Intelligence: Ideas, Approaches and History')
+
+    await page.locator('[data-testid="tutor-input"]').fill('What does the Turing test measure?')
+    await page.locator('[data-testid="tutor-submit"]').click()
+
+    await expect(page.locator('[data-testid="tutor-answer"]')).toContainText('§ Testing for Intelligence: The Imitation Game')
+    expect(sent.lessonId).toBe('1-intro')
+    expect(sent.mode).toBe('detailed')
+  })
 })

@@ -57,11 +57,11 @@ test.describe('Journey Switcher (SPEC-011 User Story 2)', () => {
     await seedJourney(page, 'junior')
     await page.goto('/lesson/1-intro')
 
-    const standardTab = page.getByRole('tab', { name: /Standard|मानक/i })
+    const standardTab = page.getByRole('tab', { name: /Detailed|विस्तृत/i })
     await standardTab.focus()
     await expect(standardTab).toBeFocused()
 
-    // Switch to Standard using keyboard Enter
+    // Switch to Detailed using keyboard Enter
     await page.keyboard.press('Enter')
     await expect(standardTab).toHaveAttribute('aria-selected', 'true')
     await expect(page.locator('h1[data-testid="lesson-title"]')).toHaveText('Introduction to AI')
@@ -84,8 +84,8 @@ test.describe('Journey Switcher (SPEC-011 User Story 2)', () => {
     await page.getByRole('tab', { name: /Plain English|आसान/i }).click()
     expect(page.url()).toContain('/lesson/1-intro')
 
-    // Switch to Standard
-    await page.getByRole('tab', { name: /Standard|मानक/i }).click()
+    // Switch to Detailed
+    await page.getByRole('tab', { name: /Detailed|विस्तृत/i }).click()
     expect(page.url()).toContain('/lesson/1-intro')
 
     // Check progress is preserved in localStorage
@@ -107,7 +107,7 @@ test.describe('Journey Switcher (SPEC-011 User Story 2)', () => {
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(100)
 
     // Switch mode
-    await page.getByRole('tab', { name: /Standard|मानक/i }).click()
+    await page.getByRole('tab', { name: /Detailed|विस्तृत/i }).click()
 
     // Scroll must reset to top (0, 0)
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThanOrEqual(5)

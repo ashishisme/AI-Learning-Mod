@@ -1,0 +1,231 @@
+{
+  "lessonId": "3-neuralnetworks",
+  "mode": "detailed",
+  "origin": "own",
+  "title": "Neural Networks: From One Neuron to Deep Learning 🧠",
+  "readingTimeMinutes": 17,
+  "intro": "Neural networks power most of today's AI. This lesson sets out the basics of machine learning, builds an artificial neuron from its parts, shows the rule a perceptron uses to learn, and explains why stacking neurons into layers changed the field. The worked example trains a neuron by hand.",
+  "colabUrl": "https://colab.research.google.com/github/ashishisme/AI-Learning-Mod/blob/cloud-beta/notebooks/3-neuralnetworks.ipynb",
+  "sections": [
+    {
+      "id": "machine-learning-basics",
+      "heading": "1. Machine Learning in Brief",
+      "bodyMarkdown": "In **supervised learning**, the most common kind of machine learning, we have examples whose correct answers are known. Each example is described by **features**, measurable properties such as a fruit's sweetness and roundness, and comes with a **label**, the answer we want, such as \"apple\" or \"lemon\".\n\nA **model** is a function with adjustable **parameters**. Training means choosing parameter values that make the model's outputs match the labels as closely as possible. How badly it misses is measured by a **loss**, a number that training tries to make small.\n\nTwo kinds of task cover most uses. **Classification** predicts a category (spam or not, apple or lemon). **Regression** predicts a number (tomorrow's temperature, a house price).\n\nA model that matches its training data perfectly can still fail on new cases, a problem called **overfitting**. So some labelled examples are always kept aside as **test data** and used only to measure how well the trained model generalises.",
+      "jargonBuster": [
+        {
+          "term": "Feature",
+          "simpleExplanation": "A measurable property used as input, such as sweetness or the number of rooms in a house."
+        },
+        {
+          "term": "Label",
+          "simpleExplanation": "The correct answer attached to a training example."
+        },
+        {
+          "term": "Parameter",
+          "simpleExplanation": "A number inside a model that is adjusted during training."
+        },
+        {
+          "term": "Overfitting",
+          "simpleExplanation": "Fitting the training examples so closely that the model does badly on new ones."
+        }
+      ],
+      "realWorld": "House price estimates are regression. Sorting support tickets by topic is classification."
+    },
+    {
+      "id": "neuron-model",
+      "heading": "2. A Model of a Neuron",
+      "bodyMarkdown": "Biological neurons receive signals from other cells and fire when the combined input is strong enough. An **artificial neuron** keeps only that outline.\n\nFor two inputs x₁ and x₂ it computes a score:\n\n**z = w₁ × x₁ + w₂ × x₂ + b**\n\nEach **weight** (w₁, w₂) says how much its input counts, and its sign says in which direction. The **bias** b shifts the score up or down regardless of the inputs, so it sets how easily the neuron fires.\n\nAn **activation function** then turns the score into an output. The original **perceptron**, introduced by Frank Rosenblatt in 1958, used a step: output 1 if z is at least 0, otherwise 0. Modern networks use smooth functions such as the sigmoid, which squashes any score into the range 0 to 1, or ReLU, which outputs z when it is positive and 0 otherwise. Smooth functions matter because they let training work out how a small change in any weight would change the result.\n\nGeometrically, a single neuron with a step draws one straight line through the feature space and puts everything on one side into one class.",
+      "jargonBuster": [
+        {
+          "term": "Weight",
+          "simpleExplanation": "A number that sets how much one input counts in a neuron's score, and in which direction."
+        },
+        {
+          "term": "Bias",
+          "simpleExplanation": "A number added to the score that makes the neuron fire more or less easily."
+        },
+        {
+          "term": "Activation function",
+          "simpleExplanation": "The function that turns a neuron's score into its output, such as a step, a sigmoid or ReLU."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Inside an artificial neuron",
+        "content": "graph LR\n    X1[\"Input x1\"] -->|times w1| S[\"Sum plus bias b\"]\n    X2[\"Input x2\"] -->|times w2| S\n    S -->|score z| F{\"Activation function\"}\n    F --> O[\"Output\"]",
+        "alt": "Input x1 is multiplied by weight w1 and input x2 by weight w2. They are added together with the bias b to give a score z, which an activation function turns into the output."
+      },
+      "realWorld": "Credit scores and many simple risk scores are weighted sums of inputs, the same calculation a single neuron makes."
+    },
+    {
+      "id": "perceptron-learning",
+      "heading": "3. How a Perceptron Learns",
+      "bodyMarkdown": "A perceptron starts with arbitrary weights and improves them one example at a time using the **perceptron learning rule**. For each training example with correct label y and prediction ŷ:\n\n**new weight = old weight + η × (y − ŷ) × input**\n\nand the bias changes by η × (y − ŷ). The **learning rate** η is a small number, such as 0.1, that controls the size of each step.\n\nIf the prediction is right, y − ŷ is 0 and nothing changes. If the neuron said 0 when the answer was 1, each weight grows in proportion to its input, which raises the score for that example next time. If it said 1 when the answer was 0, the weights shrink instead.\n\nOne pass through all the training examples is an **epoch**. When the classes can be separated by a straight line, the rule is guaranteed to find such a line after enough epochs. When they cannot, it never settles. In 1969 Marvin Minsky and Seymour Papert showed that a single perceptron cannot even learn XOR (true when exactly one of two inputs is true), a result that dampened interest in neural networks for over a decade.",
+      "jargonBuster": [
+        {
+          "term": "Learning rate",
+          "simpleExplanation": "A small number that sets how big each adjustment to the weights is."
+        },
+        {
+          "term": "Epoch",
+          "simpleExplanation": "One full pass through all of the training examples."
+        },
+        {
+          "term": "Linearly separable",
+          "simpleExplanation": "Two classes that a single straight line (or flat surface) can split."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "The perceptron training loop",
+        "content": "",
+        "alt": "Four steps repeated for every example: compute the score and prediction; compare with the label; if wrong, move each weight by learning rate times error times input and adjust the bias; repeat epochs until every example is correct.",
+        "steps": [
+          "Compute the score z and the prediction for one example.",
+          "Compare the prediction with the label: the error is y minus the prediction.",
+          "If wrong, change each weight by learning rate × error × its input, and the bias by learning rate × error.",
+          "Move to the next example. Repeat whole epochs until every example is classified correctly."
+        ]
+      },
+      "realWorld": "Simple online classifiers that update a little every time a user corrects them work on the same principle as the perceptron rule."
+    },
+    {
+      "id": "deep-networks",
+      "heading": "4. From Perceptrons to Deep Networks",
+      "bodyMarkdown": "The way past the single-line limit is to stack neurons in **layers**. Inputs feed a **hidden layer** of neurons, whose outputs feed further layers, and a final layer gives the answer. With non-linear activation functions, each layer can bend and combine the boundaries drawn by the layer before, so a network with enough hidden neurons can approximate almost any decision boundary, XOR included.\n\nTraining many layers needs a way to share out the blame for an error. **Backpropagation**, popularised in 1986, computes how much each weight contributed to the loss by working backwards from the output. **Gradient descent** then nudges every weight a little in the direction that reduces the loss. Repeated over millions of examples, this is how all modern networks learn.\n\nNetworks with many layers are called **deep learning**. Their growth after 2010 came from three things together: large labelled datasets, graphics processors that do the required arithmetic in parallel, and practical improvements such as the ReLU activation. Today's large models have billions of parameters, which makes them powerful but also expensive to train and hard to explain.",
+      "jargonBuster": [
+        {
+          "term": "Hidden layer",
+          "simpleExplanation": "A layer of neurons between the inputs and the output layer."
+        },
+        {
+          "term": "Backpropagation",
+          "simpleExplanation": "A method that works backwards from the error to find how much each weight contributed to it."
+        },
+        {
+          "term": "Gradient descent",
+          "simpleExplanation": "Repeatedly nudging every weight in the direction that makes the loss smaller."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "A small network with one hidden layer",
+        "content": "graph LR\n    I1[\"Input 1\"] --> H1[\"Hidden neuron 1\"]\n    I1 --> H2[\"Hidden neuron 2\"]\n    I2[\"Input 2\"] --> H1\n    I2 --> H2\n    H1 --> O[\"Output neuron\"]\n    H2 --> O\n    O -.->|error sent backwards| H1",
+        "alt": "Two inputs each connect to two hidden neurons, which both connect to one output neuron. A dotted arrow shows the error being sent backwards from the output during training."
+      },
+      "realWorld": "Voice assistants, photo search and machine translation all run on deep networks with many hidden layers."
+    },
+    {
+      "id": "worked-example",
+      "heading": "5. Worked Example: Training a Fruit Sorter by Hand",
+      "bodyMarkdown": "Take the neuron from the activity below. Its features are sweetness x₁ and roundness x₂, each scored from 0 to 10, and it says \"apple\" (1) when the score is at least 0 and \"lemon\" (0) otherwise. It starts with w₁ = 1.2, w₂ = 0.8 and b = −10.\n\n**Scoring three fruits.**\n\n- Apple, sweetness 9, roundness 8: z = 1.2 × 9 + 0.8 × 8 − 10 = 10.8 + 6.4 − 10 = 7.2, so \"apple\". Correct.\n- Lemon, sweetness 2, roundness 4: z = 2.4 + 3.2 − 10 = −4.4, so \"lemon\". Correct.\n- Mystery fruit, sweetness 7, roundness 3: z = 8.4 + 2.4 − 10 = 0.8, so \"apple\".\n\n**One learning step.** Suppose we find out the mystery fruit is sour and belongs with the lemons, so y = 0 but ŷ = 1. With learning rate 0.1 the error is 0 − 1 = −1:\n\n- w₁ becomes 1.2 + 0.1 × (−1) × 7 = 0.5\n- w₂ becomes 0.8 + 0.1 × (−1) × 3 = 0.5\n- b becomes −10 + 0.1 × (−1) = −10.1\n\nThe mystery fruit now scores 3.5 + 1.5 − 10.1 = −5.1, so it goes to the lemons. But check the apple: 4.5 + 4.0 − 10.1 = −1.6. Fixing one mistake has caused another.\n\nThat is normal. Training keeps cycling through all the examples, and because these three fruits can be split by a straight line, the corrections settle after a few epochs on weights that sort all three correctly. The notebook runs the full loop and prints every update.",
+      "jargonBuster": [
+        {
+          "term": "Error",
+          "simpleExplanation": "The label minus the prediction: 0 when right, +1 or −1 when a step neuron is wrong."
+        }
+      ],
+      "realWorld": "Every large model is trained by this same cycle of predict, compare and adjust, repeated billions of times with gradient descent."
+    },
+    {
+      "id": "perceptron-activity",
+      "heading": "6. Activity: The Single-Neuron Fruit Sorter",
+      "bodyMarkdown": "The sorter shows the inputs, the two weights, the bias, the score z and the decision, so you can check every number from the worked example.\n\nFirst confirm the starting scores: 7.2 for the apple, −4.4 for the lemon and 0.8 for the mystery fruit. Then act as the learning rule. Find weights and a bias that send the mystery fruit to the lemons while keeping the apple in the apple basket. Notice that raising the bias moves the boundary without tilting it, while changing one weight tilts it.",
+      "interactiveWidget": {
+        "type": "perceptron-sim",
+        "title": "⚡ Try It: The Single-Neuron Fruit Sorter",
+        "instruction": "Pick a fruit, then adjust w₁, w₂ and b. Watch the score z and the decision change.",
+        "goal": "Find weights and a bias that sort the apple as an apple and both the lemon and the mystery fruit as lemons.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you adjust anything: which change would lower the mystery fruit's score more than the apple's?",
+        "hints": [
+          "The mystery fruit is sweet but not round, so roundness separates it from the apple.",
+          "Try lowering w₁ and raising w₂, then fix the bias."
+        ],
+        "successMessage": "You found a separating line by hand. Training finds one the same way, through many small corrections.",
+        "allowFreePlay": true
+      },
+      "realWorld": "Engineers still sanity-check models by working through a few examples by hand, just as you did here."
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "In the neuron score z = w₁ × x₁ + w₂ × x₂ + b, what does the bias b do?",
+      "options": [
+        "Shifts the score so the neuron fires more or less easily",
+        "Stores the label",
+        "Counts the number of inputs"
+      ],
+      "correctIndex": 0,
+      "praise": "Right. It moves the boundary without tilting it.",
+      "explanation": "The bias is added to the weighted sum regardless of the inputs, which sets how easily the neuron fires."
+    },
+    {
+      "question": "In the worked example, what happened to the apple after the first learning step?",
+      "options": [
+        "Its score fell to −1.6, so it was wrongly sorted as a lemon",
+        "Its score did not change",
+        "It was removed from the training data"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes. Fixing one mistake caused another.",
+      "explanation": "The update lowered both weights, which also lowered the apple's score to −1.6. Further epochs correct this."
+    },
+    {
+      "question": "Why can a single perceptron not learn XOR?",
+      "options": [
+        "XOR's classes cannot be split by one straight line",
+        "XOR needs more than two inputs",
+        "The learning rate is always too small"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly. That needs hidden layers.",
+      "explanation": "A single step neuron draws one straight line. XOR's true and false cases cannot be separated by any single line."
+    }
+  ],
+  "teachBack": {
+    "prompt": "How would you explain how a neural network learns to a colleague?",
+    "options": [
+      "It makes a prediction, measures the error, and nudges every weight to reduce it, over and over across many examples.",
+      "Its weights are typed in by experts and never change.",
+      "It stores every training example and looks up the closest one."
+    ],
+    "correctIndex": 0,
+    "explanation": "That's it. Predict, compare, adjust, repeated many times."
+  },
+  "recall": [
+    {
+      "fromLesson": "2-symbolic",
+      "question": "What does the working memory of an expert system hold?",
+      "options": [
+        "The facts about the current case",
+        "The rules collected from experts",
+        "The program's source code"
+      ],
+      "correctIndex": 0,
+      "explanation": "Working memory holds the facts about the case being solved; the rules live in the knowledge base."
+    }
+  ],
+  "goFurther": [
+    {
+      "title": "Neural networks, by 3Blue1Brown",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "note": "Visual lessons on how networks learn, including backpropagation."
+    },
+    {
+      "title": "TensorFlow Playground",
+      "url": "https://playground.tensorflow.org/",
+      "note": "Train a small network in your browser and watch its boundary change."
+    },
+    {
+      "title": "Perceptron",
+      "url": "https://en.wikipedia.org/wiki/Perceptron",
+      "note": "The history of the perceptron and the maths of its learning rule."
+    },
+    {
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "note": "Free modules on loss, gradient descent and neural networks."
+    }
+  ]
+}

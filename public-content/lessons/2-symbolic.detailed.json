@@ -1,0 +1,227 @@
+{
+  "lessonId": "2-symbolic",
+  "mode": "detailed",
+  "origin": "own",
+  "title": "Knowledge Representation and Expert Systems 📜",
+  "readingTimeMinutes": 16,
+  "intro": "Symbolic AI stores knowledge in a form people can read and lets a program reason with it. This lesson covers how knowledge is represented, how an expert system is built, the two directions of reasoning, and ontologies, then traces a diagnosis step by step.",
+  "colabUrl": "https://colab.research.google.com/github/ashishisme/AI-Learning-Mod/blob/cloud-beta/notebooks/2-symbolic.ipynb",
+  "sections": [
+    {
+      "id": "knowledge-representation",
+      "heading": "1. Representing Knowledge",
+      "bodyMarkdown": "A program can only reason about what it can store. **Knowledge representation** is the choice of how to write knowledge down so a computer can use it.\n\nIt helps to separate three levels. **Data** is raw values, such as a temperature reading of 39.2. **Information** is data with meaning attached: the patient's temperature is 39.2 °C. **Knowledge** is how to use information: a temperature above 38 °C indicates a fever.\n\nCommon ways to represent knowledge include:\n\n- **Production rules** of the form IF conditions THEN conclusion.\n- **Logic**, where facts and rules are statements that can be combined by proof.\n- **Semantic networks**, which draw concepts as nodes and relationships as labelled links.\n- **Frames**, which describe a typical object as a set of slots, such as a hotel booking with slots for guest, dates and room type.\n\nEach representation trades expressiveness against simplicity. The richer it is, the more it can say, and the harder it becomes to reason with efficiently.",
+      "jargonBuster": [
+        {
+          "term": "Knowledge representation",
+          "simpleExplanation": "The way knowledge is written down so a computer can store it and reason with it."
+        },
+        {
+          "term": "Production rule",
+          "simpleExplanation": "A rule of the form IF conditions THEN conclusion."
+        },
+        {
+          "term": "Semantic network",
+          "simpleExplanation": "A diagram of concepts joined by labelled relationships, such as \"is a\" or \"has part\"."
+        }
+      ],
+      "realWorld": "Insurance quote forms, benefit eligibility checkers and building-regulation tools encode their policies as rules."
+    },
+    {
+      "id": "expert-system-parts",
+      "heading": "2. Inside an Expert System",
+      "bodyMarkdown": "An **expert system** gives specialist advice by applying knowledge collected from human experts. It has three core parts:\n\n- The **knowledge base** holds the rules, written once and reused for every case.\n- The **working memory** holds the facts about the current case, such as the symptoms of one patient.\n- The **inference engine** repeatedly matches rules against the facts in working memory, applies the ones whose conditions hold, and adds their conclusions as new facts.\n\nMost systems also have an **explanation facility** that reports which rules led to a conclusion, so users can check the reasoning.\n\nA well-known early example, MYCIN, was developed at Stanford in the 1970s to suggest treatments for blood infections using several hundred rules. In tests its advice compared well with specialists', although it was never used in routine care. The main obstacle for systems like it was the **knowledge acquisition bottleneck**: interviewing experts and turning their judgement into consistent rules was slow, and the rules needed constant maintenance.",
+      "jargonBuster": [
+        {
+          "term": "Knowledge base",
+          "simpleExplanation": "The collection of rules an expert system uses for every case."
+        },
+        {
+          "term": "Working memory",
+          "simpleExplanation": "The facts about the case currently being solved."
+        },
+        {
+          "term": "Inference engine",
+          "simpleExplanation": "The part that matches rules to facts, applies them and records new conclusions."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "The parts of an expert system",
+        "content": "graph LR\n    U[\"User\"] -->|facts about the case| WM[\"Working memory\"]\n    KB[\"Knowledge base: rules\"] --> IE[\"Inference engine\"]\n    WM --> IE\n    IE -->|new facts| WM\n    IE --> EX[\"Advice and explanation\"]\n    EX --> U",
+        "alt": "The user puts facts about the case into working memory. The inference engine reads rules from the knowledge base and facts from working memory, writes new facts back to working memory, and gives the user advice with an explanation."
+      },
+      "realWorld": "Configuration tools that check whether chosen options for a car or a server are compatible are modern descendants of expert systems."
+    },
+    {
+      "id": "chaining",
+      "heading": "3. Forward and Backward Chaining",
+      "bodyMarkdown": "An inference engine can reason in two directions.\n\n**Forward chaining** is data-driven. It starts from the known facts, fires every rule whose conditions are all true, adds the conclusions, and repeats until nothing new can be concluded. It suits monitoring, where facts arrive continuously and you want to know everything that follows from them.\n\n**Backward chaining** is goal-driven. It starts from a conclusion it wants to confirm, finds the rules that could produce it, and treats their conditions as new sub-goals. When a sub-goal cannot be proved from rules, it asks the user. It suits diagnosis, because it only asks questions relevant to the hypothesis being tested.\n\nBoth directions use the same rules. What changes is the order of work: forward chaining may derive many facts nobody needs, while backward chaining may test a hypothesis that turns out to be wrong and then has to try another.",
+      "jargonBuster": [
+        {
+          "term": "Forward chaining",
+          "simpleExplanation": "Reasoning from known facts towards whatever conclusions follow."
+        },
+        {
+          "term": "Backward chaining",
+          "simpleExplanation": "Reasoning from a goal back to the facts needed to prove it."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "One rule base, two directions",
+        "content": "",
+        "alt": "Four steps: forward chaining starts from facts and fires matching rules; it repeats until nothing new is concluded; backward chaining starts from a goal and finds rules that conclude it; it turns their conditions into sub-goals and asks the user when needed.",
+        "steps": [
+          "Forward: start from the facts and fire every rule whose conditions all hold.",
+          "Forward: add the conclusions as new facts and repeat until nothing new appears.",
+          "Backward: start from a goal and find the rules that would conclude it.",
+          "Backward: turn those rules' conditions into sub-goals, asking the user when a fact is unknown."
+        ]
+      },
+      "realWorld": "Alarm and monitoring systems typically chain forward from sensor readings. Troubleshooting guides that ask you targeted questions typically chain backward."
+    },
+    {
+      "id": "ontologies",
+      "heading": "4. Ontologies and Knowledge Graphs",
+      "bodyMarkdown": "An **ontology** defines the vocabulary of a subject: the classes of things that exist, how they relate, and what properties they have. Two relationships do most of the work. \"Is a\" builds a hierarchy (a sparrow is a bird, a bird is an animal). \"Has part\" describes composition (a bird has wings).\n\nHierarchies give **inheritance**: whatever is true of a class is true of its members unless stated otherwise. If animals breathe, then sparrows breathe, without anyone writing that down. Exceptions need care: birds fly, but penguins are birds that do not.\n\nAt web scale, knowledge is often stored as **triples** of subject, predicate and object, such as (Paris, capital of, France). Millions of linked triples form a **knowledge graph**. Wikidata, a free knowledge graph anyone can edit, holds well over a hundred million items. Search engines use knowledge graphs to answer factual questions directly.\n\nThe limits of symbolic AI show up here too. Common-sense knowledge is vast, full of exceptions and hard to write down, which is why modern systems often pair knowledge graphs with machine learning.",
+      "jargonBuster": [
+        {
+          "term": "Ontology",
+          "simpleExplanation": "A formal description of the kinds of things in a subject and how they relate."
+        },
+        {
+          "term": "Inheritance",
+          "simpleExplanation": "Members of a class automatically get the properties of that class."
+        },
+        {
+          "term": "Triple",
+          "simpleExplanation": "One fact stored as subject, predicate and object, such as (Paris, capital of, France)."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "A small ontology with inheritance and an exception",
+        "content": "graph TD\n    A[\"Animal: breathes\"] -->|is a| B[\"Bird: has wings, flies\"]\n    B -->|is a| S[\"Sparrow\"]\n    B -->|is a| P[\"Penguin: does not fly\"]\n    S -.->|inherits| F[\"Sparrow breathes and flies\"]",
+        "alt": "Animal, which breathes, has the subclass Bird, which has wings and flies. Bird has two subclasses: Sparrow, and Penguin, which does not fly. By inheritance, a sparrow breathes and flies."
+      },
+      "realWorld": "Medical coding systems, library catalogues and online shop category trees are ontologies, and search engine info panels draw on knowledge graphs."
+    },
+    {
+      "id": "worked-example",
+      "heading": "5. Worked Example: Diagnosing the Rover by Hand",
+      "bodyMarkdown": "Here is the rule base used by the rover in the activity below:\n\n1. IF the solar panels are dusty AND it is daytime THEN power is degraded.\n2. IF power is degraded AND the battery is low THEN enter safe mode.\n3. IF the antenna dish is misaligned THEN communication is lost.\n4. IF in safe mode AND communication is lost THEN emergency halt.\n5. IF the battery is low AND it is night THEN hibernate.\n6. IF the battery is low AND it is daytime AND the panels are clean THEN recharge.\n\n**Forward chaining.** The sensors report: panels dusty, daytime, battery low, dish misaligned.\n\n- Pass 1: rule 1 fires, giving \"power degraded\". Rule 3 fires, giving \"communication lost\".\n- Pass 2: rule 2 now has both conditions, giving \"safe mode\".\n- Pass 3: rule 4 now has both conditions, giving \"emergency halt\".\n- Pass 4: no rule adds anything new, so the engine stops. Rules 5 and 6 never fire, because it is daytime and the panels are dusty.\n\n**Backward chaining.** Now ask: should the rover halt? Rule 4 needs \"safe mode\" and \"communication lost\". \"Safe mode\" comes from rule 2, which needs \"power degraded\" and \"battery low\". \"Power degraded\" comes from rule 1, which needs \"dusty\" and \"daytime\". The engine asks for those facts only, never about night-time hibernation, because no rule on this path depends on it.\n\nThe notebook implements both procedures in a few lines of Python and prints each step.",
+      "jargonBuster": [
+        {
+          "term": "Rule firing",
+          "simpleExplanation": "Applying a rule because all of its conditions are true, which adds its conclusion as a fact."
+        },
+        {
+          "term": "Sub-goal",
+          "simpleExplanation": "A fact that backward chaining must establish on the way to its main goal."
+        }
+      ],
+      "realWorld": "Spacecraft and industrial plants use rule-based fault protection like this, because every action can be traced to a specific rule."
+    },
+    {
+      "id": "rover-activity",
+      "heading": "6. Activity: The Mars Rover Expert System",
+      "bodyMarkdown": "The simulation shows working memory (the sensor facts), the knowledge base (the six rules above) and the conclusion the inference engine reaches.\n\nRecreate the worked example: set the panels to dusty, daytime, the battery low and the dish misaligned, and confirm that rules 1, 2, 3 and 4 fire. Then change one fact at a time. Try making it night: rule 1 stops firing, so safe mode and the emergency disappear, while rule 5 starts. Every change can be explained by pointing at a rule.",
+      "interactiveWidget": {
+        "type": "expert-system-sim",
+        "title": "🚀 Try It: The Mars Rover Expert System",
+        "instruction": "Change the sensor facts and watch which rules fire, in which order, and what the rover concludes.",
+        "goal": "Reproduce the worked example's chain of four rules, then find the single change that stops the emergency.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you start: which rules do you expect to fire for dusty panels, daytime, low battery and a misaligned dish?",
+        "hints": [
+          "A rule fires only when every condition is true.",
+          "Rule 4 depends on the conclusions of rules 2 and 3."
+        ],
+        "successMessage": "You have traced a forward chain: facts in, rules fired in order, and a conclusion you can justify.",
+        "allowFreePlay": true
+      },
+      "realWorld": "Engineers test rule-based systems this way, changing one input at a time to check that every rule behaves as intended."
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What does the working memory of an expert system hold?",
+      "options": [
+        "The facts about the current case",
+        "The rules collected from experts",
+        "The program's source code"
+      ],
+      "correctIndex": 0,
+      "praise": "Right. The rules live in the knowledge base.",
+      "explanation": "Working memory holds facts about the case being solved; the knowledge base holds the rules used for every case."
+    },
+    {
+      "question": "Which kind of reasoning starts from a goal and works back to the facts needed?",
+      "options": [
+        "Backward chaining",
+        "Forward chaining",
+        "Inheritance"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes. It is goal-driven.",
+      "explanation": "Backward chaining begins with a conclusion to confirm and turns the conditions of matching rules into sub-goals."
+    },
+    {
+      "question": "In the worked example, why does rule 2 fire only on the second pass?",
+      "options": [
+        "It needs \"power degraded\", which rule 1 produces on the first pass",
+        "Rules always fire in number order",
+        "The battery was not low at first"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly. One rule's conclusion becomes another rule's condition.",
+      "explanation": "\"Power degraded\" is not a sensor fact. It appears only after rule 1 fires, and then rule 2's conditions are complete."
+    }
+  ],
+  "teachBack": {
+    "prompt": "How would you explain an expert system to a colleague?",
+    "options": [
+      "Rules from experts in a knowledge base, facts about one case in working memory, and an inference engine that applies the rules and can show its reasoning.",
+      "A large neural network trained on expert decisions.",
+      "A database that stores the answers to every possible question."
+    ],
+    "correctIndex": 0,
+    "explanation": "That's it. Knowledge base, working memory and inference engine, with reasoning you can trace."
+  },
+  "recall": [
+    {
+      "fromLesson": "1-intro",
+      "question": "What does the Turing test measure?",
+      "options": [
+        "Whether a judge can tell a machine from a person in typed conversation",
+        "How fast a computer can calculate",
+        "Whether a program's code copies the brain"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Turing test is a test of behaviour: can a judge tell the hidden machine from the hidden person?"
+    }
+  ],
+  "goFurther": [
+    {
+      "title": "Expert system",
+      "url": "https://en.wikipedia.org/wiki/Expert_system",
+      "note": "Their history, architecture and limits, with well-known examples."
+    },
+    {
+      "title": "Forward chaining",
+      "url": "https://en.wikipedia.org/wiki/Forward_chaining",
+      "note": "A short explanation with a worked example. The companion article covers backward chaining."
+    },
+    {
+      "title": "Wikidata",
+      "url": "https://www.wikidata.org/",
+      "note": "Browse a large free knowledge graph and see facts stored as linked statements."
+    },
+    {
+      "title": "Protégé",
+      "url": "https://protege.stanford.edu/",
+      "note": "A free tool from Stanford University for building your own ontologies."
+    }
+  ]
+}

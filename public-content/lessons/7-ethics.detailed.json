@@ -1,0 +1,226 @@
+{
+  "lessonId": "7-ethics",
+  "mode": "detailed",
+  "origin": "own",
+  "title": "Responsible AI: Principles, Fairness and Accountability 🧭",
+  "readingTimeMinutes": 17,
+  "intro": "AI systems now help decide who gets a job interview, a loan or medical attention. This lesson sets out the principles of responsible AI, where harmful bias comes from, how fairness is measured, and how transparency and oversight work in practice. The worked example audits a hiring model with real numbers.",
+  "colabUrl": "https://colab.research.google.com/github/ashishisme/AI-Learning-Mod/blob/cloud-beta/notebooks/7-ethics.ipynb",
+  "sections": [
+    {
+      "id": "principles",
+      "heading": "1. What Responsible AI Means",
+      "bodyMarkdown": "**Responsible AI** means designing, building and using AI so that it is beneficial, fair and safe, and so that someone answers for it. Governments, standards bodies and companies have published many frameworks, and they overlap heavily. The OECD AI Principles (2019), adopted by dozens of countries, and the US National Institute of Standards and Technology's AI Risk Management Framework (2023) are two widely used examples.\n\nAcross frameworks, the recurring themes are:\n\n- **Fairness**: avoiding unjustified differences in how groups of people are treated.\n- **Reliability and safety**: working as intended, including in unusual conditions, and failing safely.\n- **Privacy and security**: protecting personal data and resisting misuse and attack.\n- **Transparency and explainability**: being open about when AI is used and why it reached a decision.\n- **Accountability**: clear human responsibility for outcomes, with ways to challenge and correct them.\n\nPrinciples alone change nothing. The rest of this lesson is about the practices that turn them into checks a team can actually carry out.",
+      "jargonBuster": [
+        {
+          "term": "Responsible AI",
+          "simpleExplanation": "Developing and using AI so that it is beneficial, fair and safe, with clear human responsibility."
+        },
+        {
+          "term": "Accountability",
+          "simpleExplanation": "Clear responsibility for what an AI system does, with ways to challenge and correct its decisions."
+        }
+      ],
+      "realWorld": "Public bodies in many countries now publish registers of the algorithms they use, with a named person responsible for each."
+    },
+    {
+      "id": "sources-of-bias",
+      "heading": "2. Where Harmful Bias Comes From",
+      "bodyMarkdown": "Bias rarely comes from a decision to discriminate. It enters at several points in building a system:\n\n- **Historical bias**: the training data records past decisions that were themselves unfair, such as hiring patterns.\n- **Representation bias**: some groups are under-represented in the data, so the model is less accurate for them. The 2018 Gender Shades study found commercial face analysis systems misclassified the gender of darker-skinned women up to about a third of the time, against under 1% for lighter-skinned men.\n- **Measurement bias**: the label is a poor stand-in for what we care about. Using past healthcare spending to estimate health needs, for instance, under-estimates the needs of groups who had less access to care.\n- **Proxy variables**: removing a sensitive attribute such as ethnicity does not remove its influence if other features, such as postcode, correlate with it.\n- **Feedback loops**: a system's decisions shape the next round of data. Sending more patrols where a model predicts crime records more crime there, which confirms the prediction.",
+      "jargonBuster": [
+        {
+          "term": "Historical bias",
+          "simpleExplanation": "Unfairness already present in past decisions that a model learns from."
+        },
+        {
+          "term": "Representation bias",
+          "simpleExplanation": "Some groups being under-represented in training data, which makes the model less accurate for them."
+        },
+        {
+          "term": "Proxy variable",
+          "simpleExplanation": "A feature that indirectly carries a sensitive attribute, such as postcode standing in for ethnicity."
+        },
+        {
+          "term": "Feedback loop",
+          "simpleExplanation": "When a model's outputs influence the data it is later trained on, reinforcing its own patterns."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "Points where bias enters an AI system",
+        "content": "",
+        "alt": "Four steps: the data reflects past unfair decisions; some groups are under-represented and labels are imperfect stand-ins; the model learns these patterns, including through proxy variables; its decisions feed back into future data.",
+        "steps": [
+          "Collecting data: past decisions may already be unfair.",
+          "Labelling and sampling: some groups are under-represented, and labels may be poor stand-ins.",
+          "Training: the model learns the patterns, including through proxy variables.",
+          "Deployment: its decisions shape future data, which can reinforce the bias."
+        ]
+      },
+      "realWorld": "Published cases include a recruiting tool that downgraded CVs mentioning women's organisations and a healthcare algorithm that under-estimated the needs of Black patients."
+    },
+    {
+      "id": "measuring-fairness",
+      "heading": "3. Measuring Fairness",
+      "bodyMarkdown": "Fairness has to be measured to be managed, and there are several measures.\n\n- **Selection rate** is the share of a group that receives the positive decision. **Demographic parity** asks for similar selection rates across groups. The **four-fifths rule**, from US employment guidelines published in 1978, flags possible adverse impact when one group's selection rate is below 80% of the highest group's rate. The ratio of the lower rate to the higher one is often called the **disparate impact ratio**.\n- **Equal opportunity** asks that people who truly qualify are selected at similar rates in every group, that is, similar **true positive rates**.\n- **Calibration** asks that a given score means the same risk whatever the group.\n\nThese measures can conflict. Research published in 2016 and 2017 showed that when the true rates of an outcome differ between groups, a model cannot in general satisfy calibration and equal error rates at the same time. Choosing which measure matters is therefore a value judgement about the decision at hand, made with the people affected, not a purely technical step.\n\nMitigations include collecting more representative data, removing or reducing proxies, re-weighting training examples, adjusting decision thresholds, and, always, re-measuring after the change.",
+      "jargonBuster": [
+        {
+          "term": "Selection rate",
+          "simpleExplanation": "The share of a group that receives the positive decision, such as an interview."
+        },
+        {
+          "term": "Disparate impact ratio",
+          "simpleExplanation": "The lower group's selection rate divided by the higher group's. Below 0.8 fails the four-fifths rule."
+        },
+        {
+          "term": "True positive rate",
+          "simpleExplanation": "Among people who truly qualify, the share the system selects."
+        }
+      ],
+      "realWorld": "Some jurisdictions, including New York City since 2023, require independent bias audits of automated hiring tools."
+    },
+    {
+      "id": "transparency-oversight",
+      "heading": "4. Transparency, Explainability and Oversight",
+      "bodyMarkdown": "**Documentation** makes systems inspectable. A **model card** records what a model is for, how it was evaluated, how it performs for different groups, and where it should not be used. **Datasheets for datasets** do the same for training data: who collected it, how, and with what gaps.\n\n**Explainability** methods show why a particular decision came out as it did. **Feature importance** ranks the inputs that most influenced it. A **counterfactual explanation** states the smallest change that would have changed the outcome, such as \"with £2,000 less existing debt, the application would have been approved\", which gives the person something they can act on.\n\n**Human oversight** means a qualified person can review, override or stop the system, and has the time and information to do so meaningfully rather than approving everything. Good practice adds **red-teaming** (deliberately trying to make the system fail before launch), monitoring after launch, and a process for reporting and fixing incidents.\n\nRegulation is turning these practices into obligations. The European Union's AI Act, which entered into force in 2024, sorts uses by risk: a few are banned, high-risk uses such as hiring and credit scoring must meet requirements on data, documentation and human oversight, and some systems, such as chatbots, must disclose that they are AI.",
+      "jargonBuster": [
+        {
+          "term": "Model card",
+          "simpleExplanation": "A short document describing a model's purpose, evaluation, performance by group and limits."
+        },
+        {
+          "term": "Counterfactual explanation",
+          "simpleExplanation": "The smallest change to the inputs that would have changed the decision."
+        },
+        {
+          "term": "Red-teaming",
+          "simpleExplanation": "Deliberately trying to make a system fail or misbehave before it is released."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Oversight around a high-stakes AI decision",
+        "content": "graph LR\n    D[\"Application data\"] --> M[\"Model\"]\n    M --> R[\"Recommendation and explanation\"]\n    R --> H{\"Qualified person reviews\"}\n    H -->|agrees| O[\"Decision\"]\n    H -->|overrides| O\n    O --> MON[\"Monitoring and audits\"]\n    MON -.->|fixes| M",
+        "alt": "Application data goes into a model, which gives a recommendation with an explanation. A qualified person reviews it and either agrees or overrides it to reach the decision. Decisions are monitored and audited, and problems found lead to fixes in the model."
+      },
+      "realWorld": "Lenders in many countries must tell applicants the main reasons a credit application was refused."
+    },
+    {
+      "id": "worked-example",
+      "heading": "5. Worked Example: Auditing a Hiring Model",
+      "bodyMarkdown": "A company uses a model to shortlist job applicants. An audit compares two groups.\n\n**Step 1: selection rates.**\n\n- Group A: 200 applicants, 60 shortlisted, so the selection rate is 60 ÷ 200 = 30%.\n- Group B: 150 applicants, 27 shortlisted, so the selection rate is 27 ÷ 150 = 18%.\n\n**Step 2: the four-fifths rule.** The disparate impact ratio is 18% ÷ 30% = 0.60. That is below 0.80, so the result is flagged.\n\n**Step 3: equal opportunity.** A later structured assessment found 80 applicants in Group A and 60 in Group B were qualified for the role. Of those, the model shortlisted 52 from Group A and 24 from Group B. The true positive rates are 52 ÷ 80 = 65% and 24 ÷ 60 = 40%. Qualified people in Group B were much less likely to be shortlisted, so the gap is not explained by qualifications.\n\n**Step 4: investigate and fix.** The team finds that one feature, years since leaving full-time education, acts as a proxy that penalises career breaks, which are more common in Group B. They remove it and retrain.\n\n**Step 5: measure again.** The new model shortlists 58 of 200 from Group A (29%) and 36 of 150 from Group B (24%). The ratio is 24% ÷ 29% ≈ 0.83, which passes the four-fifths rule. The team records the audit in the model card and schedules the next one, because new data can bring the gap back.\n\nThe notebook reproduces these calculations and lets you change the numbers.",
+      "jargonBuster": [
+        {
+          "term": "Audit",
+          "simpleExplanation": "A structured check of a system's outcomes, here comparing groups with fairness measures."
+        }
+      ],
+      "realWorld": "Independent auditors of hiring tools publish selection rates and impact ratios by group in much this format."
+    },
+    {
+      "id": "bias-activity",
+      "heading": "6. Activity: The Fairness Audit",
+      "bodyMarkdown": "The simulation shows ten applicants, five from each group, with their qualifications, and computes each group's selection rate and the disparate impact ratio, the lower rate divided by the higher.\n\nStart with the original model. It shortlists all five applicants from Group A and none from Group B, so the rates are 100% and 0%, and the ratio is 0. Look at the qualifications: several Group B applicants are as strong as those selected. Switch to the audited model and recompute the rates yourself before reading the panel: it selects four applicants from each group, so both rates are 80% and the ratio is 1.00.",
+      "interactiveWidget": {
+        "type": "bias-detective-sim",
+        "title": "🔎 Try It: The Fairness Audit",
+        "instruction": "Switch between the original and the audited model. Compare each group's selection rate and the disparate impact ratio.",
+        "goal": "Calculate both groups' selection rates and the ratio for each model, then check them against the panel.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you switch models: what ratio do you expect for the original model, given who it selects?",
+        "hints": [
+          "Selection rate is the number selected divided by the group's size.",
+          "The ratio is the lower rate divided by the higher one; below 0.8 fails."
+        ],
+        "successMessage": "You ran an audit: measured by group, found the gap, and confirmed the fix with the same measure.",
+        "allowFreePlay": true
+      },
+      "realWorld": "Fairness toolkits used in industry produce exactly these per-group tables before a model is approved for use."
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What is a proxy variable?",
+      "options": [
+        "A feature that indirectly carries a sensitive attribute, such as postcode standing in for ethnicity",
+        "A backup copy of the training data",
+        "A person who approves AI decisions"
+      ],
+      "correctIndex": 0,
+      "praise": "Right. Removing the sensitive field is not enough.",
+      "explanation": "Features that correlate with a sensitive attribute let a model treat groups differently even when the attribute itself is removed."
+    },
+    {
+      "question": "In the worked example, what was Group B's true positive rate before the fix?",
+      "options": [
+        "40%: 24 of the 60 qualified applicants were shortlisted",
+        "18%: 27 of 150 applicants",
+        "65%: 52 of 80 applicants"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes. Qualified people in Group B were often missed.",
+      "explanation": "The true positive rate counts only qualified applicants: 24 of 60 in Group B is 40%, against 65% in Group A."
+    },
+    {
+      "question": "Why can a model not always satisfy every fairness measure at once?",
+      "options": [
+        "When outcome rates differ between groups, some measures mathematically conflict",
+        "Fairness measures are too slow to calculate",
+        "Only one fairness measure exists"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly. Choosing a measure is a value judgement.",
+      "explanation": "Research has shown that calibration and equal error rates cannot generally both hold when base rates differ, so teams must decide which matters most."
+    }
+  ],
+  "teachBack": {
+    "prompt": "How would you explain a fairness audit to a colleague?",
+    "options": [
+      "Measure outcomes such as selection and true positive rates by group, find and fix the cause of any gap, then measure again and document it.",
+      "Check that the model's code has no bugs.",
+      "Remove the sensitive attributes and assume the model is then fair."
+    ],
+    "correctIndex": 0,
+    "explanation": "That's it. Measure by group, fix the cause, re-measure, and record it."
+  },
+  "recall": [
+    {
+      "fromLesson": "5-nlp",
+      "question": "What does self-attention let a transformer do?",
+      "options": [
+        "Build each token's representation from the other tokens most relevant to it",
+        "Read text strictly one word at a time",
+        "Check every statement against a database of facts"
+      ],
+      "correctIndex": 0,
+      "explanation": "Self-attention weighs how relevant every other token is, which lets the model use context from far away."
+    }
+  ],
+  "goFurther": [
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "note": "NIST's free framework for managing the risks of AI systems."
+    },
+    {
+      "title": "OECD AI Principles",
+      "url": "https://oecd.ai/en/ai-principles",
+      "note": "The intergovernmental principles adopted by dozens of countries."
+    },
+    {
+      "title": "Fairness and Machine Learning",
+      "url": "https://fairmlbook.org/",
+      "note": "A free textbook on fairness measures and their limits."
+    },
+    {
+      "title": "AI Explorables",
+      "url": "https://pair.withgoogle.com/explorables/",
+      "note": "Short interactive essays on fairness, bias and how models behave."
+    },
+    {
+      "title": "UNESCO Recommendation on the Ethics of AI",
+      "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics",
+      "note": "The first global standard on AI ethics, adopted in 2021."
+    }
+  ]
+}

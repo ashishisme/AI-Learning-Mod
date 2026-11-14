@@ -5,6 +5,8 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -84,5 +86,29 @@ func TestVerifyFailsWhenEnglishKidsLessonChangesAlone(t *testing.T) {
 	code, out := runVerify(dir)
 	if code != 1 || !strings.Contains(out, "hi public-content/lang/hi/lessons/1-intro.junior.json") {
 		t.Errorf("exit %d\n%s", code, out)
+	}
+}
+
+// SPEC-013 FR-001, FR-002 (T032): every shipped Kids lesson is ours and uses the banded format.
+func TestEveryShippedKidsLessonIsOursAndBanded(t *testing.T) {
+	files, err := filepath.Glob(filepath.Join("..", "..", "public-content", "lessons", "*.junior.json"))
+	if err != nil || len(files) == 0 {
+		t.Fatalf("no Kids lessons found: %v", err)
+	}
+	for _, f := range files {
+		raw, err := os.ReadFile(f)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var l struct {
+			Origin string `json:"origin"`
+			Bands  bool   `json:"bands"`
+		}
+		if err := json.Unmarshal(raw, &l); err != nil {
+			t.Fatalf("%s: %v", f, err)
+		}
+		if l.Origin != "own" || !l.Bands {
+			t.Errorf("%s: origin %q, bands %v; want origin \"own\" and bands true", filepath.Base(f), l.Origin, l.Bands)
+		}
 	}
 }

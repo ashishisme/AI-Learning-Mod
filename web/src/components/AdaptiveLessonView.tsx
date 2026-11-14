@@ -156,7 +156,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
             </span>
           )}
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+        <h1 data-testid="lesson-title" className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
           {payload.title}
         </h1>
       </div>

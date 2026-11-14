@@ -1,355 +1,361 @@
 {
   "1-intro": {
     "lessonId": "1-intro",
-    "title": "Introduction to AI Quiz",
-    "description": "Test your understanding of core AI definitions, Strong vs. Weak AI, and the Turing Test.",
+    "origin": "own",
+    "title": "What AI Is: Quiz",
+    "description": "Check your understanding of narrow and general AI, the Turing test, the two ways to build AI and how the field developed.",
     "questions": [
       {
         "id": "q1",
-        "prompt": "What distinguishes \"Weak AI\" (Narrow AI) from \"Strong AI\" (AGI)?",
+        "prompt": "Which kind of AI exists today?",
         "options": [
-          "Weak AI runs on CPUs, while Strong AI strictly runs on quantum computers.",
-          "Weak AI is specialized for specific predefined tasks, while Strong AI possesses general human-level cognitive adaptability.",
-          "Weak AI cannot use neural networks, only symbolic logic.",
-          "Weak AI only processes text, whereas Strong AI processes video."
+          "General AI that matches people at almost any task",
+          "Narrow AI built for particular kinds of task",
+          "Narrow and general AI, in roughly equal numbers",
+          "Neither: AI is still only a research idea"
         ],
         "correctIndex": 1,
-        "rationale": "According to [Lesson § Weak AI vs. Strong AI], Weak AI excels in narrow, predefined domains (like Siri or chess), whereas Strong AI represents generalized human-level reasoning across any domain.",
-        "hintKeyword": "Weak AI vs Strong AI"
+        "rationale": "According to [Lesson § What Counts as Artificial Intelligence], every AI system in use today is narrow AI. General AI does not exist yet.",
+        "hintKeyword": "narrow vs general AI"
       },
       {
         "id": "q2",
-        "prompt": "How did Alan Turing define machine intelligence in the Turing Test?",
+        "prompt": "In the Turing test, what does the judge try to do?",
         "options": [
-          "By measuring whether the algorithm achieves 100% accuracy on a math dataset.",
-          "By testing if a human interrogator in a text dialogue cannot distinguish the machine from a human.",
-          "By inspecting the source code for biological neuron simulation.",
-          "By calculating the number of parameters in the knowledge base."
+          "Read the machine's source code",
+          "Tell the hidden machine from the hidden person through typed conversation",
+          "Time how fast the machine answers maths questions",
+          "Count how many facts the machine knows"
         ],
         "correctIndex": 1,
-        "rationale": "According to [Lesson § The Definition of Intelligence and the Turing Test], if a human interrogator cannot tell whether answers in text dialogue come from a machine or human, the machine exhibits intelligent behavior.",
-        "hintKeyword": "Turing Test definition"
+        "rationale": "According to [Lesson § Testing for Intelligence: The Imitation Game], the judge chats with a hidden person and a hidden machine and tries to tell them apart.",
+        "hintKeyword": "Turing test judge"
       },
       {
         "id": "q3",
-        "prompt": "What is the fundamental difference between the top-down and bottom-up approaches to AI?",
+        "prompt": "What is the main difference between the top-down and bottom-up approaches to AI?",
         "options": [
-          "Top-down models human reasoning with symbolic knowledge rules; bottom-up models biological neurons and learns from data.",
-          "Top-down is used only for computer vision, whereas bottom-up is used for chess.",
-          "Top-down requires GPU acceleration, while bottom-up uses rule-based databases.",
-          "Top-down was invented after 2012, while bottom-up was invented by Babbage."
+          "Top-down applies rules that people write; bottom-up learns from labelled examples",
+          "Top-down is used only for images; bottom-up only for text",
+          "Top-down needs far more data than bottom-up",
+          "Bottom-up was invented before computers existed"
         ],
         "correctIndex": 0,
-        "rationale": "According to [Lesson § Different Approaches to AI], top-down symbolic reasoning formalizes expert rules, while bottom-up neural approaches simulate interconnected artificial neurons trained on data.",
-        "hintKeyword": "top-down vs bottom-up approaches"
+        "rationale": "According to [Lesson § Two Ways to Build AI: Rules or Learning], the top-down approach applies facts and rules written by people, while the bottom-up approach adjusts a model to fit labelled examples.",
+        "hintKeyword": "rules vs learning"
       },
       {
         "id": "q4",
-        "prompt": "Which historic 1956 event is widely recognized as the birth of Artificial Intelligence as an academic discipline?",
+        "prompt": "What is an \"AI winter\"?",
         "options": [
-          "The Dartmouth Summer Research Project on Artificial Intelligence, organized by John McCarthy, Marvin Minsky, and colleagues.",
-          "The release of the first iPhone in Cupertino.",
-          "The publication of Charles Babbage’s Analytical Engine notes.",
-          "The victory of Deep Blue over Garry Kasparov in New York."
+          "A period when interest and funding for AI fell after promises were not met",
+          "A season when AI systems run more slowly",
+          "The name of the first AI program",
+          "A test of AI in cold conditions"
         ],
         "correctIndex": 0,
-        "rationale": "The term \"Artificial Intelligence\" was coined at the Dartmouth Summer Research Project in 1956, officially launching AI as a distinct field of scientific inquiry.",
-        "hintKeyword": "Dartmouth conference 1956 McCarthy"
+        "rationale": "According to [Lesson § How the Field Developed], funding fell sharply in the mid-1970s and again in the late 1980s, periods now called AI winters.",
+        "hintKeyword": "AI winters"
       }
     ]
   },
   "2-symbolic": {
     "lessonId": "2-symbolic",
-    "title": "Symbolic AI & Knowledge Representation Quiz",
-    "description": "Test your mastery of expert systems, ontologies, and production rules.",
+    "origin": "own",
+    "title": "Rule-Based AI and Expert Systems: Quiz",
+    "description": "Check your understanding of expert systems, forward and backward chaining, and ontologies.",
     "questions": [
       {
         "id": "q1",
-        "prompt": "What was the primary bottleneck that contributed to the historic \"AI Winter\" in expert systems?",
+        "prompt": "Which part of an expert system decides which rules apply to the current facts?",
         "options": [
-          "Computers completely ran out of disk storage for text files.",
-          "Extracting tacit knowledge from human experts and maintaining accurate rule bases became too complex and costly.",
-          "Symbolic systems could not compute floating-point multiplications.",
-          "Neural networks were outlawed by academic research councils."
+          "The knowledge base",
+          "The user interface",
+          "The inference engine",
+          "The screen"
         ],
-        "correctIndex": 1,
-        "rationale": "According to [Lesson § A Brief History of AI], the knowledge acquisition bottleneck and difficulty of maintaining massive rule-bases made symbolic expert systems impractical to scale.",
-        "hintKeyword": "AI winter expert systems bottleneck"
+        "correctIndex": 2,
+        "rationale": "According to [Lesson § Inside an Expert System], the inference engine matches rules against the facts, applies the ones whose conditions hold and records their conclusions.",
+        "hintKeyword": "inference engine"
       },
       {
         "id": "q2",
-        "prompt": "In a production rule system, how are decisions formulated?",
+        "prompt": "Which kind of reasoning starts from a possible answer and asks only the questions needed to confirm it?",
         "options": [
-          "Through gradient descent backpropagation.",
-          "Using IF-THEN conditional assertions matched against working memory.",
-          "Via random walks through Markov decision processes.",
-          "By pixel clustering in Euclidean space."
+          "Forward chaining",
+          "Backward chaining",
+          "Machine learning",
+          "Tokenisation"
         ],
         "correctIndex": 1,
-        "rationale": "Production rule systems represent knowledge as IF <condition> THEN <action> rules executed against current facts.",
-        "hintKeyword": "production rules IF THEN"
+        "rationale": "According to [Lesson § Forward and Backward Chaining], backward chaining starts from a goal and turns the conditions of matching rules into sub-goals.",
+        "hintKeyword": "backward chaining"
       },
       {
         "id": "q3",
-        "prompt": "What is the distinction between forward chaining and backward chaining in inference engines?",
+        "prompt": "Why are rule-based systems favoured where safety matters?",
         "options": [
-          "Forward chaining is data-driven starting from known facts to reach conclusions; backward chaining is goal-driven starting from a hypothesis to find supporting facts.",
-          "Forward chaining operates on text, while backward chaining operates on images.",
-          "Forward chaining requires GPUs, whereas backward chaining requires quantum chips.",
-          "Forward chaining was developed in 2020, while backward chaining is from the 19th century."
+          "Every decision can be traced to a written rule",
+          "They never need updating",
+          "They learn faster than neural networks",
+          "They need no experts to build"
         ],
         "correctIndex": 0,
-        "rationale": "Forward chaining starts with known data and applies rules to deduce new facts. Backward chaining starts with a goal hypothesis and works backward to see if known facts support it.",
-        "hintKeyword": "forward chaining data-driven backward chaining goal-driven"
+        "rationale": "According to [Lesson § Worked Example: Diagnosing the Rover by Hand], every action of a rule-based system can be traced to a specific rule, which is why spacecraft and industrial plants use them.",
+        "hintKeyword": "traceable rules"
       },
       {
         "id": "q4",
-        "prompt": "What is the primary role of an ontology in knowledge representation?",
+        "prompt": "In an ontology, what does inheritance mean?",
         "options": [
-          "To compress video files into smaller zip archives.",
-          "To define a formal, explicit specification of shared domain concepts, relationships, and categories.",
-          "To randomly initialize weights in deep learning layers.",
-          "To benchmark GPU memory bandwidth during training."
+          "Rules are copied from one expert to another",
+          "Members of a class get that class's properties automatically",
+          "Old facts are deleted when new ones arrive",
+          "A program inherits code from earlier versions"
         ],
         "correctIndex": 1,
-        "rationale": "An ontology formally defines domain entities, properties, taxonomies, and relationships so machines can reason about structured knowledge unambiguously.",
-        "hintKeyword": "ontology conceptual formalization"
+        "rationale": "According to [Lesson § Ontologies and Knowledge Graphs], whatever is true of a class is true of its members unless stated otherwise.",
+        "hintKeyword": "ontology inheritance"
       }
     ]
   },
   "3-neuralnetworks": {
     "lessonId": "3-neuralnetworks",
-    "title": "Neural Networks Foundations Quiz",
-    "description": "Evaluate your grasp of artificial neurons, activation functions, and training.",
+    "origin": "own",
+    "title": "Neural Networks: Quiz",
+    "description": "Check your understanding of artificial neurons, weights and bias, training, and layers.",
     "questions": [
       {
         "id": "q1",
-        "prompt": "Why are non-linear activation functions (e.g. ReLU, Sigmoid) necessary in multi-layer perceptrons?",
+        "prompt": "What does a weight do in an artificial neuron?",
         "options": [
-          "Without non-linear activations, multi-layer networks collapse mathematically into a single linear transformation.",
-          "They prevent the computer from overheating during matrix multiplication.",
-          "They reduce the weight count to zero.",
-          "They convert continuous numbers into integers for faster storage."
+          "Stores the final answer",
+          "Sets how much one input counts in the decision",
+          "Counts how many neurons there are",
+          "Measures how fast the neuron runs"
         ],
-        "correctIndex": 0,
-        "rationale": "The composition of consecutive linear transformations is strictly linear. Non-linear activation functions allow neural networks to approximate arbitrary non-linear functions.",
-        "hintKeyword": "non-linear activation functions"
+        "correctIndex": 1,
+        "rationale": "According to [Lesson § A Model of a Neuron], each weight says how much its input counts, and its sign says in which direction.",
+        "hintKeyword": "neuron weights"
       },
       {
         "id": "q2",
-        "prompt": "What is the role of backpropagation during neural network optimization?",
+        "prompt": "How does a neuron learn during training?",
         "options": [
-          "It deletes unused neurons from computer RAM.",
-          "It computes the gradient of the loss function with respect to each weight using the calculus chain rule.",
-          "It scrambles input labels to verify memorization.",
-          "It converts floating-point weights into binary integers."
+          "Its weights are nudged a little after each mistake",
+          "An expert types in the correct weights",
+          "It memorises every example",
+          "It deletes the inputs it gets wrong"
         ],
-        "correctIndex": 1,
-        "rationale": "Backpropagation applies the chain rule in reverse from the output layer to compute parameter gradients for gradient descent.",
-        "hintKeyword": "backpropagation chain rule gradients"
+        "correctIndex": 0,
+        "rationale": "According to [Lesson § How a Perceptron Learns], after each wrong prediction every weight moves by the learning rate times the error times its input.",
+        "hintKeyword": "perceptron learning rule"
       },
       {
         "id": "q3",
-        "prompt": "How does the Dropout regularization technique help prevent overfitting in deep neural networks?",
+        "prompt": "Why are neurons connected in layers?",
         "options": [
-          "By randomly dropping entire layers from the network permanently during inference.",
-          "By randomly deactivating a subset of neurons during training to prevent co-adaptation of features.",
-          "By increasing the training dataset size by duplicating identical images.",
-          "By setting all weights to zero at the start of every epoch."
+          "Layers make a network easier to explain",
+          "Layers use less electricity",
+          "One neuron draws only a single straight boundary; layers combine simple patterns into complex ones",
+          "Layers stop the network from learning"
         ],
-        "correctIndex": 1,
-        "rationale": "Dropout randomly temporarily zeroes activations of neurons during training batches, forcing neurons to learn robust, generalized representations rather than memorizing co-dependent patterns.",
-        "hintKeyword": "dropout regularization co-adaptation"
+        "correctIndex": 2,
+        "rationale": "According to [Lesson § From Perceptrons to Deep Networks], each layer can bend and combine the boundaries drawn by the layer before, so layered networks learn patterns a single neuron cannot, such as XOR.",
+        "hintKeyword": "why layers"
       },
       {
         "id": "q4",
-        "prompt": "What happens if the learning rate in gradient descent is chosen to be excessively large?",
+        "prompt": "What does the bias in a neuron do?",
         "options": [
-          "The optimization may overshoot the minimum, oscillate wildly, or diverge entirely.",
-          "The training will instantly halt and delete the model weights.",
-          "The network will automatically achieve 100% accuracy on all validation datasets.",
-          "The weights will freeze and never change."
+          "Records unfair decisions",
+          "Stores the training labels",
+          "Sets the learning rate",
+          "Shifts how easily the neuron fires, whatever the inputs"
         ],
-        "correctIndex": 0,
-        "rationale": "An excessively large learning rate causes updates to step past optimal loss minima, causing numerical instability, loss explosion, and divergence.",
-        "hintKeyword": "learning rate divergence oscillation"
+        "correctIndex": 3,
+        "rationale": "According to [Lesson § A Model of a Neuron], the bias shifts the score up or down regardless of the inputs, so it sets how easily the neuron fires.",
+        "hintKeyword": "neuron bias"
       }
     ]
   },
   "4-computervision": {
     "lessonId": "4-computervision",
-    "title": "Computer Vision & CNNs Quiz",
-    "description": "Verify your knowledge of image filters, pooling, and convolutional architectures.",
+    "origin": "own",
+    "title": "Computer Vision: Quiz",
+    "description": "Check your understanding of pixels, convolution filters, convolutional networks and the limits of vision AI.",
     "questions": [
       {
         "id": "q1",
-        "prompt": "What advantage do Convolutional Neural Networks (CNNs) have over fully-connected networks for image processing?",
+        "prompt": "How does a computer store a colour photo?",
         "options": [
-          "CNNs require no training data whatsoever.",
-          "CNNs exploit spatial locality and translation invariance through shared filter weights.",
-          "CNNs only process grayscale 8x8 images.",
-          "CNNs avoid using matrix multiplications."
+          "As a written description of the scene",
+          "As a grid of pixels, each stored as numbers for red, green and blue",
+          "As a single number for the whole image",
+          "As a list of the objects in it"
         ],
         "correctIndex": 1,
-        "rationale": "Convolutions slide small weight kernels across the image, recognizing features regardless of their exact spatial location with vastly fewer parameters.",
-        "hintKeyword": "convolutional weight sharing spatial locality"
+        "rationale": "According to [Lesson § Images as Arrays of Numbers], each pixel of a colour image has three numbers, one each for red, green and blue.",
+        "hintKeyword": "pixels and channels"
       },
       {
         "id": "q2",
-        "prompt": "What is the primary function of a Max Pooling layer in a Convolutional Neural Network?",
+        "prompt": "What does a convolution filter do as it slides across an image?",
         "options": [
-          "To double the spatial resolution of feature maps.",
-          "To downsample feature map dimensions, reduce computational complexity, and provide slight translation invariance.",
-          "To compute backward gradients using symbolic logic.",
-          "To convert color channels into text strings."
+          "Deletes the background",
+          "Adds colour to grey areas",
+          "Records how strongly each patch matches its pattern, such as an edge",
+          "Counts the objects in the image"
         ],
-        "correctIndex": 1,
-        "rationale": "Max pooling selects the maximum activation within local patches (e.g. 2x2), halving spatial dimensions while preserving the most salient feature activations.",
-        "hintKeyword": "max pooling downsampling translation invariance"
+        "correctIndex": 2,
+        "rationale": "According to [Lesson § Convolution and Filters], at each position the filter multiplies the pixels by its weights and adds them up, giving a feature map of where its pattern appears.",
+        "hintKeyword": "convolution filter"
       },
       {
         "id": "q3",
-        "prompt": "Why is Transfer Learning widely utilized in computer vision applications?",
+        "prompt": "What do the early layers of a convolutional neural network usually learn to detect?",
         "options": [
-          "Because training deep vision backbones (like ResNet) from scratch requires massive datasets and compute; fine-tuning pre-trained weights works effectively with small datasets.",
-          "Because pre-trained vision models cannot be altered once trained.",
-          "Because transfer learning eliminates the need for testing or validation.",
-          "Because transfer learning only works on sound files."
+          "Simple edges and colour patches",
+          "Whole objects such as cats",
+          "The file name of the image",
+          "The camera that took the photo"
         ],
         "correctIndex": 0,
-        "rationale": "Features learned in early layers of deep models on huge datasets (like ImageNet) capture universal visual features (edges, textures, shapes) that transfer effectively to specialized custom tasks.",
-        "hintKeyword": "transfer learning pre-trained fine-tuning"
+        "rationale": "According to [Lesson § Convolutional Neural Networks], early layers learn edges and colour blobs, middle layers learn parts, and late layers respond to whole objects.",
+        "hintKeyword": "CNN layer hierarchy"
       },
       {
         "id": "q4",
-        "prompt": "What distinguishes Object Detection from standard Image Classification?",
+        "prompt": "Why might a vision system work less well for some people or conditions?",
         "options": [
-          "Image classification outputs a single class label for the whole image; object detection localizes and classifies multiple objects with bounding boxes.",
-          "Image classification predicts 3D coordinates, whereas object detection predicts colors.",
-          "Object detection only works on text documents, not images.",
-          "Image classification requires video cameras, while object detection uses text files."
+          "Cameras cannot record faces",
+          "Vision systems never use training data",
+          "Pixels change colour at night",
+          "Its training data did not cover them well"
         ],
-        "correctIndex": 0,
-        "rationale": "Classification categorizes what is in the image, whereas object detection identifies what objects are present and where they are located via bounding box coordinates.",
-        "hintKeyword": "object detection bounding box localization"
+        "correctIndex": 3,
+        "rationale": "According to [Lesson § Convolutional Neural Networks], vision models can fail when conditions differ from their training data and inherit the gaps in that data.",
+        "hintKeyword": "training data gaps"
       }
     ]
   },
   "5-nlp": {
     "lessonId": "5-nlp",
-    "title": "Natural Language Processing Quiz",
-    "description": "Test your understanding of embeddings, language models, and transformers.",
+    "origin": "own",
+    "title": "Language AI: Quiz",
+    "description": "Check your understanding of tokens, embeddings, attention and how chat assistants write.",
     "questions": [
       {
         "id": "q1",
-        "prompt": "What key innovation enabled the Transformer architecture to surpass traditional RNNs and LSTMs in NLP?",
+        "prompt": "What is a token?",
         "options": [
-          "Removing all attention mechanisms in favor of larger character tables.",
-          "Self-attention mechanisms that process entire token sequences in parallel without recurrent recurrence bottlenecks.",
-          "Eliminating tokenization and training directly on raw audio waveforms.",
-          "Using fixed dictionary lookups instead of matrix multiplications."
+          "A password for a chat service",
+          "A small piece of text, such as a word or part of a word",
+          "A type of computer chip",
+          "A whole sentence turned into one number"
         ],
         "correctIndex": 1,
-        "rationale": "Self-attention allows direct modeling of relationships between all tokens in parallel, avoiding the sequential computation bottleneck of RNNs.",
-        "hintKeyword": "transformer self-attention parallel computation"
+        "rationale": "According to [Lesson § From Text to Numbers: Tokens], text is split into tokens, which are whole words or pieces of words, each with an ID number.",
+        "hintKeyword": "tokens"
       },
       {
         "id": "q2",
-        "prompt": "How do dense Word Embeddings (e.g. Word2Vec, GloVe) represent word meaning mathematically?",
+        "prompt": "What does an embedding capture?",
         "options": [
-          "As one-hot vectors where every word is orthogonal and equidistant from every other word.",
-          "As continuous low-dimensional vectors where semantically similar words are positioned close together in vector space.",
-          "As random alphanumeric strings generated per sentence.",
-          "As ASCII character codes summed together."
+          "A word's meaning, as a position where similar words sit close together",
+          "How a word is spelt",
+          "How long a word is",
+          "Which language a word comes from"
         ],
-        "correctIndex": 1,
-        "rationale": "Dense embeddings map words into geometric vector spaces where semantic similarity corresponds to cosine distance, enabling analogies like king - man + woman = queen.",
-        "hintKeyword": "word embeddings dense vector space semantic similarity"
+        "correctIndex": 0,
+        "rationale": "According to [Lesson § Embeddings and Similarity], embeddings are learned so that words used in similar contexts get similar vectors.",
+        "hintKeyword": "word embeddings"
       },
       {
         "id": "q3",
-        "prompt": "What problem in classic Recurrent Neural Networks (RNNs) do LSTMs and GRUs specifically address?",
+        "prompt": "What does attention let a language model do?",
         "options": [
-          "The inability to run on CPU processors.",
-          "Vanishing and exploding gradients across long time steps, resolved through gating mechanisms that regulate information flow.",
-          "The complete absence of matrix multiplication operations.",
-          "Lack of support for Unicode text characters."
+          "Read text one letter at a time",
+          "Check facts against a database",
+          "Ignore the earlier words",
+          "Weigh which other words matter most for understanding each word"
         ],
-        "correctIndex": 1,
-        "rationale": "Gated cells (like LSTM forget, input, and output gates) create uninterrupted gradient highways, allowing recurrent models to retain dependencies over long sequences.",
-        "hintKeyword": "vanishing gradients LSTM gating mechanisms"
+        "correctIndex": 3,
+        "rationale": "According to [Lesson § Language Models, Attention and Transformers], self-attention scores how relevant every other token is for each token, so the model can use context.",
+        "hintKeyword": "attention"
       },
       {
         "id": "q4",
-        "prompt": "What is the fundamental architectural difference between Encoder-only models (e.g. BERT) and Decoder-only models (e.g. GPT)?",
+        "prompt": "Why should you check important facts from a chat assistant?",
         "options": [
-          "Encoder-only models use bidirectional attention for deep representation understanding; Decoder-only models use causal masking for autoregressive generative prediction.",
-          "Encoder-only models are used for speech synthesis; Decoder-only models are used for robotics.",
-          "Encoder-only models cannot be trained with gradient descent.",
-          "Decoder-only models only process single characters."
+          "It always uses out-of-date information",
+          "It never uses real words",
+          "It predicts likely text, which is not always true",
+          "It cannot answer questions"
         ],
-        "correctIndex": 0,
-        "rationale": "BERT attends to left and right context simultaneously for classification/extraction, while GPT masks future tokens to predict the next token in sequence.",
-        "hintKeyword": "encoder bidirectional decoder causal autoregressive"
+        "correctIndex": 2,
+        "rationale": "According to [Lesson § Language Models, Attention and Transformers], language models produce plausible text rather than checking facts, so they can state false things fluently.",
+        "hintKeyword": "hallucination"
       }
     ]
   },
   "7-ethics": {
     "lessonId": "7-ethics",
-    "title": "Ethical and Responsible AI Quiz",
-    "description": "Assess your understanding of AI bias, transparency, environmental impact, and accountability.",
+    "origin": "own",
+    "title": "Responsible AI: Quiz",
+    "description": "Check your understanding of algorithmic bias, fairness audits, the four-fifths rule and human oversight.",
     "questions": [
       {
         "id": "q1",
-        "prompt": "How does algorithmic bias typically enter modern machine learning systems?",
+        "prompt": "How does algorithmic bias usually get into an AI system?",
         "options": [
-          "Through hardware defects in computer memory modules.",
-          "When models are trained on historical datasets that reflect societal prejudices, historical inequities, or skewed demographic sampling.",
-          "By using too many layers in deep neural network architectures.",
-          "Only when programmers explicitly code discriminatory rules."
+          "The AI decides to be unfair",
+          "It learns unfair patterns from its training data",
+          "It runs out of memory",
+          "Its screen settings are wrong"
         ],
         "correctIndex": 1,
-        "rationale": "Machine learning models inherit and amplify prejudices and sampling gaps present in historical training datasets unless actively audited and mitigated.",
-        "hintKeyword": "algorithmic bias dataset representation"
+        "rationale": "According to [Lesson § Where Harmful Bias Comes From], bias rarely comes from a decision to discriminate; it enters through data that records past unfair decisions or under-represents some groups.",
+        "hintKeyword": "sources of bias"
       },
       {
         "id": "q2",
-        "prompt": "Why is Explainability and Interpretability critical for deploying AI in high-stakes domains (like healthcare and law)?",
+        "prompt": "What does a fairness audit compare?",
         "options": [
-          "To ensure the software compiles with zero warnings.",
-          "So human practitioners can understand, audit, and validate the reasoning behind model recommendations before acting on them.",
-          "To prevent models from using floating-point numbers.",
-          "To make neural networks run faster on mobile devices."
+          "How fast the system runs",
+          "The cost of the system",
+          "The number of programmers",
+          "Outcomes, such as selection rates, across groups of people"
         ],
-        "correctIndex": 1,
-        "rationale": "In high-stakes settings, opaque \"black-box\" decisions can cause catastrophic harm; explainability enables domain experts to detect errors, spurious correlations, and biases.",
-        "hintKeyword": "explainability interpretability high-stakes decisions"
+        "correctIndex": 3,
+        "rationale": "According to [Lesson § Measuring Fairness], an audit compares measures such as selection rates and true positive rates between groups.",
+        "hintKeyword": "fairness audit"
       },
       {
         "id": "q3",
-        "prompt": "What environmental concern is increasingly scrutinized with the scaling of frontier foundation models?",
+        "prompt": "Under the four-fifths rule, when is a result flagged?",
         "options": [
-          "The immense electricity consumption and carbon footprint required to power massive GPU clusters during training and inference.",
-          "The physical weight of hard drives bending computer racks.",
-          "Depletion of magnetic disk storage on earth.",
-          "Sound pollution from computer cooling fans."
+          "When one group's selection rate is below 80% of the highest group's",
+          "When fewer than four-fifths of applicants are selected",
+          "When the model is only 80% accurate",
+          "When four people out of five complain"
         ],
         "correctIndex": 0,
-        "rationale": "Training massive modern AI models requires millions of kilowatt-hours of electrical power and substantial water cooling, raising urgent sustainability concerns.",
-        "hintKeyword": "environmental impact energy consumption carbon footprint"
+        "rationale": "According to [Lesson § Measuring Fairness], the four-fifths rule flags possible adverse impact when one group's selection rate is below 80% of the highest group's rate.",
+        "hintKeyword": "four-fifths rule"
       },
       {
         "id": "q4",
-        "prompt": "What does the \"Human-in-the-Loop\" (HITL) principle mandate in responsible AI deployment?",
+        "prompt": "What does \"human in the loop\" mean?",
         "options": [
-          "Humans must manually calculate all backpropagation gradients by hand.",
-          "Crucial decision-making authority must remain with accountable human operators who review and oversee autonomous AI outputs.",
-          "Users must click a button every five seconds to keep models active.",
-          "Every AI model must simulate a human brain structure exactly."
+          "The AI copies a person's voice",
+          "A person types every answer",
+          "A person reviews and can override the AI's decisions, and is accountable",
+          "People are removed from the process"
         ],
-        "correctIndex": 1,
-        "rationale": "Responsible AI frameworks require meaningful human oversight and accountability rather than fully unmonitored automated decision delegation.",
-        "hintKeyword": "human in the loop accountability oversight"
+        "correctIndex": 2,
+        "rationale": "According to [Lesson § Transparency, Explainability and Oversight], human oversight means a qualified person can review, override or stop the system and answers for the outcome.",
+        "hintKeyword": "human in the loop"
       }
     ]
   }

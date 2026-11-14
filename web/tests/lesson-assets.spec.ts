@@ -18,6 +18,13 @@ test('every lesson renders all its images with third-party code hosts blocked', 
   page.on('console', (msg) => {
     if (msg.text().includes('Content Security Policy')) violations.push(msg.text())
   })
+  // SPEC-013: every lesson now has our Detailed version. These checks cover the Markdown view, which
+  // the page shows when the server answers ?mode=detailed with the standard lesson (no Detailed file).
+  await page.route(/\/api\/lessons\/[^/?]+\?mode=detailed/, (route) => {
+    const url = new URL(route.request().url())
+    url.searchParams.delete('mode')
+    return route.continue({ url: url.toString() })
+  })
   const responses = new Map<string, Response>()
   page.on('response', (r) => {
     const path = new URL(r.url()).pathname

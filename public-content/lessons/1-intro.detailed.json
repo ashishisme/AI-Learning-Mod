@@ -1,0 +1,221 @@
+{
+  "lessonId": "1-intro",
+  "mode": "detailed",
+  "origin": "own",
+  "title": "Artificial Intelligence: Ideas, Approaches and History 💡",
+  "readingTimeMinutes": 16,
+  "intro": "This lesson defines artificial intelligence carefully, looks at how we might test for it, traces how the field developed, and compares the two main ways of building it. It ends with a worked example you can run yourself in a notebook.",
+  "colabUrl": "https://colab.research.google.com/github/ashishisme/AI-Learning-Mod/blob/cloud-beta/notebooks/1-intro.ipynb",
+  "sections": [
+    {
+      "id": "defining-ai",
+      "heading": "1. What Counts as Artificial Intelligence",
+      "bodyMarkdown": "There is no single agreed definition of **artificial intelligence (AI)**. A practical one is: software that performs tasks which, if a person did them, we would say required intelligence, such as recognising speech, judging whether a transaction looks fraudulent, or planning a route.\n\nThat definition describes behaviour, not inner workings, and it shifts over time. Once a task becomes routine, people often stop calling it AI. Optical character recognition and spelling correction were research problems once; now they are just features.\n\nIt helps to separate two ambitions:\n\n- **Narrow AI** is built for one kind of task: translating text, recommending films, spotting tumours on scans. Every AI system in use today is narrow, however impressive it looks.\n- **General AI**, often called AGI, would match people across almost any intellectual task, transferring what it learns from one area to another. It does not exist yet, and researchers disagree about how far away it is.\n\nMost modern narrow AI is built with **machine learning**: instead of a programmer writing every rule, the system adjusts itself to fit a large set of examples.",
+      "jargonBuster": [
+        {
+          "term": "Artificial intelligence (AI)",
+          "simpleExplanation": "Software that performs tasks we would normally say need human intelligence."
+        },
+        {
+          "term": "Narrow AI",
+          "simpleExplanation": "AI built for one kind of task. All AI in use today is narrow."
+        },
+        {
+          "term": "General AI (AGI)",
+          "simpleExplanation": "Hypothetical AI that could handle almost any intellectual task a person can."
+        },
+        {
+          "term": "Machine learning",
+          "simpleExplanation": "Building software that improves at a task by fitting itself to examples, rather than following only hand-written rules."
+        }
+      ],
+      "realWorld": "Fraud alerts from your bank, the route your maps app suggests and the subtitles on a video call all come from narrow AI systems."
+    },
+    {
+      "id": "turing-test",
+      "heading": "2. Testing for Intelligence: The Imitation Game",
+      "bodyMarkdown": "In 1950 the mathematician Alan Turing sidestepped the question \"can machines think?\", which he considered too vague, and proposed a test of behaviour instead. He called it the **imitation game**; today it is known as the **Turing test**.\n\nA judge holds typed conversations with two hidden participants, one a person and one a machine. If, after questioning both, the judge cannot reliably say which is which, the machine has passed.\n\nThe test is useful because it is concrete, but it has well-known weaknesses:\n\n- It rewards imitation. A program can seem human by copying human habits, including typing errors and changing the subject, without understanding anything.\n- It says nothing about abilities that do not show up in chat, such as seeing, planning or acting in the world.\n- The philosopher John Searle's \"Chinese room\" argument (1980) claims that following rules to produce convincing answers is not the same as understanding them.\n\nModern chat assistants can hold fluent conversations, so researchers now rely more on **benchmarks**: large, fixed sets of tasks with known answers, used to compare systems on specific skills such as reading comprehension or maths.",
+      "jargonBuster": [
+        {
+          "term": "Turing test",
+          "simpleExplanation": "A test in which a judge chats with a hidden person and a hidden machine and tries to tell them apart."
+        },
+        {
+          "term": "Benchmark",
+          "simpleExplanation": "A fixed set of tasks with known answers, used to measure and compare AI systems on one skill."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "The set-up of the imitation game",
+        "content": "graph LR\n    J[\"Judge\"] -->|typed questions| A[\"Hidden participant A\"]\n    J -->|typed questions| B[\"Hidden participant B\"]\n    A -->|typed answers| J\n    B -->|typed answers| J\n    J --> D{\"Which one is the machine?\"}",
+        "alt": "A judge sends typed questions to two hidden participants, A and B, reads their typed answers, and decides which one is the machine."
+      },
+      "realWorld": "Website chat windows often leave you unsure whether a person or a program is replying. That uncertainty is a small, everyday imitation game."
+    },
+    {
+      "id": "short-history",
+      "heading": "3. How the Field Developed",
+      "bodyMarkdown": "The name \"artificial intelligence\" was coined for a 1956 summer workshop at Dartmouth College in the United States. Its organisers expected rapid progress, and early programs did prove simple theorems and play draughts.\n\nProgress then proved much harder than promised. Funding fell sharply in the mid-1970s and again in the late 1980s, periods now called **AI winters**. In between, **expert systems** that captured specialists' rules found real commercial use, but they were expensive to build and maintain.\n\nFrom the 1990s, learning from data gradually took over. In 1997 IBM's Deep Blue beat the world chess champion, mostly through fast search. In 2012 a deep neural network won an image recognition competition by a wide margin, helped by large labelled datasets and graphics processors. In 2017 the **transformer** design for language models appeared, and from around 2020 very large language models made fluent chat assistants practical.\n\nThe pattern across seventy years: bold predictions, periods of disappointment, and steady progress driven by more data, more computing power and better learning methods.",
+      "jargonBuster": [
+        {
+          "term": "AI winter",
+          "simpleExplanation": "A period when interest and funding for AI research fell after promises were not met."
+        },
+        {
+          "term": "Expert system",
+          "simpleExplanation": "A program that gives specialist advice by applying rules collected from human experts."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Milestones in the history of AI",
+        "content": "graph LR\n    A[\"1950: Turing's imitation game\"] --> B[\"1956: Dartmouth workshop names the field\"]\n    B --> C[\"1970s and 1980s: expert systems and two AI winters\"]\n    C --> D[\"1997: Deep Blue wins at chess\"]\n    D --> E[\"2012: deep learning wins at image recognition\"]\n    E --> F[\"2017 onward: transformers and large language models\"]",
+        "alt": "A timeline: 1950, Turing's imitation game; 1956, the Dartmouth workshop names the field; the 1970s and 1980s, expert systems and two AI winters; 1997, Deep Blue wins at chess; 2012, deep learning wins at image recognition; 2017 onward, transformers and large language models."
+      },
+      "realWorld": "Many tools you use, from spam filters to photo search, became reliable only in the last two decades, once enough data and computing power were available."
+    },
+    {
+      "id": "rules-vs-learning",
+      "heading": "4. Two Ways to Build AI: Rules or Learning",
+      "bodyMarkdown": "There are two broad strategies for building an intelligent system.\n\nThe **top-down** or **symbolic** approach starts from how people reason. Experts describe their knowledge as facts and rules, and the program applies them with logic. Its strengths are transparency, since every conclusion can be traced to a rule, and needing no training data. Its weakness is brittleness: the world has more exceptions than anyone can write down, and tasks such as recognising a face resist being put into rules at all.\n\nThe **bottom-up** approach starts from examples. A model with many adjustable settings, often a neural network loosely inspired by the brain, is shown labelled data and tunes its settings until its outputs match. It handles messy inputs like images, sound and free text well. Its weaknesses are that it needs a lot of data and that its reasoning is spread across millions of numbers, which makes individual decisions hard to explain.\n\nMany real products combine both: a learned model makes a prediction, and hand-written rules check it against hard limits, such as legal or safety requirements.",
+      "jargonBuster": [
+        {
+          "term": "Symbolic AI (top-down)",
+          "simpleExplanation": "Building AI from facts and rules that people write, applied with logic."
+        },
+        {
+          "term": "Neural network (bottom-up)",
+          "simpleExplanation": "A model made of many simple connected units whose settings are learned from examples."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "How each approach turns a problem into a working system",
+        "content": "",
+        "alt": "Four steps comparing the approaches: in the top-down approach experts write rules and the program applies them; in the bottom-up approach people collect labelled examples and a model learns from them; both are then tested; real products often combine the two.",
+        "steps": [
+          "Top-down: experts write facts and rules, and the program applies them with logic.",
+          "Bottom-up: people collect labelled examples, and a model adjusts its settings to fit them.",
+          "Both: the system is tested on cases it has not seen before.",
+          "In practice: a learned model often makes the prediction, and rules check it against hard limits."
+        ]
+      },
+      "realWorld": "A tax calculator is rule-based. A voice assistant's speech recognition is learned. A bank's loan system may use a learned risk score plus fixed rules required by regulators."
+    },
+    {
+      "id": "worked-example",
+      "heading": "5. Worked Example: A Written Rule Versus a Learned One",
+      "bodyMarkdown": "Suppose we want to flag spam emails using one clue: the number of suspicious phrases in each message, such as \"claim your prize\" or \"act now\".\n\n**The rule-based way.** A programmer guesses a rule: flag an email if it has 2 or more suspicious phrases.\n\n**The learning way.** We collect ten emails that people have already labelled:\n\n- Spam: 3, 4, 5, 6 and 3 suspicious phrases.\n- Not spam: 0, 1, 1, 2 and 0 suspicious phrases.\n\nWe then try every possible cut-off and count the mistakes on these ten emails:\n\n- Flag at 2 or more: one mistake (the genuine email with 2 phrases is flagged).\n- Flag at 3 or more: no mistakes.\n- Flag at 4 or more: two mistakes (both spam emails with 3 phrases get through).\n\nSo the learned rule is \"flag at 3 or more\". It was chosen by the data, not by a guess, and if spammers change their habits we can relabel some new emails and learn again instead of rewriting code.\n\n**Checking on new data.** Four new emails arrive: spam with 3 phrases, spam with 2, genuine with 2, and genuine with 0. The learned rule gets three of the four right, an accuracy of 75%: it misses the spam email with only 2 phrases. Lowering the cut-off to 2 would catch that one but flag the genuine email with 2 instead. When spam and genuine emails can share the same count, no cut-off on one clue can be perfect. Real spam filters learn from thousands of clues at once, which is exactly what machine learning is good at.\n\nThe notebook for this lesson runs both rules on the same emails, step by step.",
+      "jargonBuster": [
+        {
+          "term": "Labelled data",
+          "simpleExplanation": "Examples that come with the correct answer, such as emails already marked spam or not spam."
+        },
+        {
+          "term": "Accuracy",
+          "simpleExplanation": "The share of cases a model gets right. Three right out of four is 75%."
+        },
+        {
+          "term": "Test data",
+          "simpleExplanation": "Examples kept aside during learning and used only to check how well the model works on cases it has not seen."
+        }
+      ],
+      "realWorld": "Email providers retrain their spam filters continuously as people mark messages as spam or not spam."
+    },
+    {
+      "id": "imitation-activity",
+      "heading": "6. Activity: Spot the Machine",
+      "bodyMarkdown": "Now play the judge. You will see a question and two replies, one from a person and one from a program. Read them closely before you vote.\n\nLook for the signals that give programs away: answers that ignore details in the question, replies that could fit almost any question, and a tone that never changes. Then notice how hard it can be when the program is good. That difficulty is why researchers moved from a single pass-or-fail test to many specific benchmarks.",
+      "interactiveWidget": {
+        "type": "turing-guess-game",
+        "title": "🔍 Try It: Spot the Machine",
+        "instruction": "Read the question and both replies. Vote for the reply you think came from a program.",
+        "goal": "Identify the program and say which clue gave it away.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you vote: what would a person mention that a program might miss?",
+        "hints": [
+          "Check whether each reply uses the details in the question.",
+          "A reply that could answer almost any question is a warning sign."
+        ],
+        "successMessage": "Good judging. You looked for evidence, which is what the imitation game asks of every judge.",
+        "allowFreePlay": true,
+        "scenario": {
+          "userPrompt": "I start a new job on Monday and the trains are on strike. It's a 40-minute drive but I don't have a car. Any ideas?",
+          "terminalA": "Congratulations on the new job! Public transport disruptions can affect travel plans. Consider checking official sources for updates and planning your journey in advance.",
+          "terminalB": "Congratulations! Could you message your new manager today and ask if anyone drives in from your area? Otherwise a bus plus a short taxi might work, and it's worth checking whether you can start an hour later on strike days.",
+          "correctAnswer": "Terminal A",
+          "explanation": "Terminal A gives advice that would fit any travel question and ignores the details: a first day, a strike and no car. Terminal B uses those details and suggests concrete next steps."
+        }
+      },
+      "realWorld": "Recruiters, teachers and moderators increasingly have to judge whether a piece of writing came from a person or a program."
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "Which statement about today's AI systems is accurate?",
+      "options": [
+        "They are all narrow AI, built for particular kinds of task",
+        "Some of them are general AI",
+        "They all follow only hand-written rules"
+      ],
+      "correctIndex": 0,
+      "praise": "Right. Every AI system in use today is narrow.",
+      "explanation": "Narrow AI handles one kind of task. General AI, which would match people across almost any task, does not exist yet."
+    },
+    {
+      "question": "What does the Turing test measure?",
+      "options": [
+        "Whether a judge can tell a machine from a person in typed conversation",
+        "How fast a computer can calculate",
+        "Whether a program's code copies the brain"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes. It is a test of behaviour in conversation.",
+      "explanation": "A judge chats with a hidden person and a hidden machine; if the judge cannot reliably tell them apart, the machine passes."
+    },
+    {
+      "question": "In the worked example, why can no cut-off get every new email right?",
+      "options": [
+        "A spam email and a genuine email both have 2 suspicious phrases",
+        "The cut-off was chosen at random",
+        "The emails had no labels"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly. One clue cannot separate them.",
+      "explanation": "When spam and genuine emails share the same count, any single cut-off gets one of them wrong. More clues are needed."
+    }
+  ],
+  "teachBack": {
+    "prompt": "How would you explain the difference between the top-down and bottom-up approaches to a colleague?",
+    "options": [
+      "Top-down applies rules that people write; bottom-up learns its settings from labelled examples.",
+      "Top-down is newer and always more accurate than bottom-up.",
+      "Bottom-up means the computer is built from biological neurons."
+    ],
+    "correctIndex": 0,
+    "explanation": "That's it. Written rules versus learning from examples, and real products often combine them."
+  },
+  "goFurther": [
+    {
+      "title": "Elements of AI",
+      "url": "https://www.elementsofai.com/",
+      "note": "A free online course for beginners from the University of Helsinki."
+    },
+    {
+      "title": "The Turing Test",
+      "url": "https://plato.stanford.edu/entries/turing-test/",
+      "note": "The Stanford Encyclopedia of Philosophy on Turing's test and the arguments about it."
+    },
+    {
+      "title": "History of artificial intelligence",
+      "url": "https://en.wikipedia.org/wiki/History_of_artificial_intelligence",
+      "note": "A detailed history, including both AI winters."
+    },
+    {
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "note": "A free practical introduction to machine learning with exercises."
+    }
+  ]
+}

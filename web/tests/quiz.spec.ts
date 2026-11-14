@@ -185,20 +185,20 @@ test.describe('AC-35 Interactive Quiz Engine', () => {
     // 1. Verify 4-computervision has multi-question quiz
     await page.goto('/quiz/4-computervision')
     await expect(page.locator('text=Question 1 of 4')).toBeVisible()
-    await expect(page.locator('[data-testid="question-prompt"]')).toContainText('Convolutional Neural Networks')
+    await expect(page.locator('[data-testid="question-prompt"]')).toContainText('colour photo')
     await page.locator('[data-testid="option-1"]').click()
     await page.locator('[data-testid="next-question-btn"]').click()
     await expect(page.locator('text=Question 2 of 4')).toBeVisible()
-    await expect(page.locator('[data-testid="question-prompt"]')).toContainText('Max Pooling')
+    await expect(page.locator('[data-testid="question-prompt"]')).toContainText('convolution filter')
 
     // 2. Verify 5-nlp has multi-question quiz
     await page.goto('/quiz/5-nlp')
     await expect(page.locator('text=Question 1 of 4')).toBeVisible()
-    await expect(page.locator('[data-testid="question-prompt"]')).toContainText('Transformer')
+    await expect(page.locator('[data-testid="question-prompt"]')).toContainText('token')
     await page.locator('[data-testid="option-1"]').click()
     await page.locator('[data-testid="next-question-btn"]').click()
     await expect(page.locator('text=Question 2 of 4')).toBeVisible()
-    await expect(page.locator('[data-testid="question-prompt"]')).toContainText('Word Embeddings')
+    await expect(page.locator('[data-testid="question-prompt"]')).toContainText('embedding')
 
     // 3. Verify 7-ethics has dedicated multi-question quiz
     await page.goto('/quiz/7-ethics')
@@ -208,6 +208,6 @@ test.describe('AC-35 Interactive Quiz Engine', () => {
     await expect(page.locator('[data-testid="answer-rationale"]')).toContainText('Correct')
     await page.locator('[data-testid="next-question-btn"]').click()
     await expect(page.locator('text=Question 2 of 4')).toBeVisible()
-    await expect(page.locator('[data-testid="question-prompt"]')).toContainText('Explainability')
+    await expect(page.locator('[data-testid="question-prompt"]')).toContainText('fairness audit')
   })
 })

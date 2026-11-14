@@ -19,7 +19,7 @@ const APPLICANTS: Candidate[] = [
   { id: 2, name: 'Taylor', avatar: '👩‍🚀', background: 'Mars Colony (Group B)', shortGroup: 'Group B', gpa: 3.9, experienceYears: 3, selectedRaw: false, selectedFair: true },
   { id: 3, name: 'Jordan', avatar: '🧑‍🚀', background: 'Earth Base (Group A)', shortGroup: 'Group A', gpa: 3.5, experienceYears: 5, selectedRaw: true, selectedFair: true },
   { id: 4, name: 'Morgan', avatar: '👩‍🔬', background: 'Mars Colony (Group B)', shortGroup: 'Group B', gpa: 3.7, experienceYears: 4, selectedRaw: false, selectedFair: true },
-  { id: 5, name: 'Casey', avatar: '👨‍💻', background: 'Earth Base (Group A)', shortGroup: 'Group A', gpa: 3.4, experienceYears: 2, selectedRaw: true, selectedFair: false },
+  { id: 5, name: 'Casey', avatar: '👨‍💻', background: 'Earth Base (Group A)', shortGroup: 'Group A', gpa: 3.4, experienceYears: 2, selectedRaw: true, selectedFair: true },
   { id: 6, name: 'Riley', avatar: '👩‍💻', background: 'Mars Colony (Group B)', shortGroup: 'Group B', gpa: 3.6, experienceYears: 3, selectedRaw: false, selectedFair: true },
   { id: 7, name: 'Sam', avatar: '👨‍🔬', background: 'Earth Base (Group A)', shortGroup: 'Group A', gpa: 3.9, experienceYears: 5, selectedRaw: true, selectedFair: true },
   { id: 8, name: 'Avery', avatar: '👩‍🏫', background: 'Mars Colony (Group B)', shortGroup: 'Group B', gpa: 3.8, experienceYears: 4, selectedRaw: false, selectedFair: true },
@@ -50,8 +50,9 @@ export const BiasDetectiveWidget: React.FC = () => {
   const rateA = groupACount > 0 ? (groupASelected / groupACount) * 100 : 0;
   const rateB = groupBCount > 0 ? (groupBSelected / groupBCount) * 100 : 0;
 
-  // Disparate Impact Ratio
-  const disparateImpactRatio = rateA > 0 ? (rateB / rateA).toFixed(2) : '1.00';
+  // Disparate impact ratio (four-fifths rule): the lower selection rate divided by the higher one
+  const higherRate = Math.max(rateA, rateB);
+  const disparateImpactRatio = higherRate > 0 ? (Math.min(rateA, rateB) / higherRate).toFixed(2) : '1.00';
   const isCompliant = parseFloat(disparateImpactRatio) >= 0.8;
 
   // See-saw tilt angle

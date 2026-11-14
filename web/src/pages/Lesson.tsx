@@ -134,7 +134,7 @@ export const Lesson: React.FC = () => {
             target="_blank"
             rel="noreferrer"
             data-testid="colab-button"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-amber-700 hover:bg-amber-800 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
           >
             <span>⚡</span>
             <span>{t('lesson.colab')}</span>

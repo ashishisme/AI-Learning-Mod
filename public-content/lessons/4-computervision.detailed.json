@@ -1,0 +1,220 @@
+{
+  "lessonId": "4-computervision",
+  "mode": "detailed",
+  "origin": "own",
+  "title": "Computer Vision: Pixels, Filters and Convolutional Networks 👁️",
+  "readingTimeMinutes": 16,
+  "intro": "Computer vision turns pixels into useful answers. This lesson covers the main vision tasks, how images are stored as numbers, how convolution finds patterns, and how convolutional networks learn their own filters. The worked example computes a filter's output by hand.",
+  "colabUrl": "https://colab.research.google.com/github/ashishisme/AI-Learning-Mod/blob/cloud-beta/notebooks/4-computervision.ipynb",
+  "sections": [
+    {
+      "id": "vision-tasks",
+      "heading": "1. What Computer Vision Does",
+      "bodyMarkdown": "**Computer vision** is the part of AI that extracts information from images and video. Most applications are built from a handful of standard tasks:\n\n- **Image classification** gives one label for the whole image: \"this X-ray shows pneumonia\".\n- **Object detection** finds each object and draws a box around it: three cars and a cyclist, with their positions.\n- **Segmentation** labels every pixel: which pixels are road, which are pavement, which are people.\n- **Optical character recognition (OCR)** reads printed or handwritten text.\n- **Pose estimation** finds the positions of a person's joints.\n\nThe difficulty is that the same object can look completely different depending on lighting, angle, distance, background and partial blocking, while two different objects can look alike. People handle this effortlessly; for a computer it took decades of research and, eventually, learning from millions of labelled images.",
+      "jargonBuster": [
+        {
+          "term": "Image classification",
+          "simpleExplanation": "Giving one label to a whole image."
+        },
+        {
+          "term": "Object detection",
+          "simpleExplanation": "Finding each object in an image and marking where it is with a box."
+        },
+        {
+          "term": "Segmentation",
+          "simpleExplanation": "Labelling every pixel of an image with the class it belongs to."
+        }
+      ],
+      "realWorld": "Phone cameras use detection to find faces for focus, car parks use OCR to read number plates, and video calls use segmentation to blur your background."
+    },
+    {
+      "id": "images-as-numbers",
+      "heading": "2. Images as Arrays of Numbers",
+      "bodyMarkdown": "A digital image is a grid of **pixels**. In a greyscale image each pixel is one number for its brightness, usually from 0 (black) to 255 (white). In a colour image each pixel has three numbers, one per **channel**: red, green and blue.\n\nSo a colour photo 4,000 pixels wide and 3,000 high is an array of 4,000 × 3,000 × 3 = 36 million numbers. A vision system receives nothing else: no outlines, no objects, just that array.\n\nTwo facts about this array shape the methods that work. Nearby pixels are strongly related, because objects are continuous. And the same pattern, such as an eye or a wheel, can appear anywhere in the image. A method that looks at small neighbourhoods and reuses the same detector everywhere fits both facts. That method is convolution.",
+      "jargonBuster": [
+        {
+          "term": "Pixel",
+          "simpleExplanation": "One cell of an image's grid, stored as one number (greyscale) or three numbers (colour)."
+        },
+        {
+          "term": "Channel",
+          "simpleExplanation": "One layer of an image's numbers, such as the red values of every pixel."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "From a photo to an array",
+        "content": "",
+        "alt": "Three steps: a photo; the photo as a grid of pixels; each pixel stored as three numbers for red, green and blue, giving a three-layer array.",
+        "steps": [
+          "A photo, as a person sees it.",
+          "The same photo as a grid of pixels, for example 4,000 wide by 3,000 high.",
+          "Each pixel stored as three numbers from 0 to 255, so the image is a 4,000 × 3,000 × 3 array."
+        ]
+      },
+      "realWorld": "Image files such as JPEG and PNG are compressed ways of storing exactly these arrays."
+    },
+    {
+      "id": "convolution",
+      "heading": "3. Convolution and Filters",
+      "bodyMarkdown": "A **filter**, also called a kernel, is a small grid of weights, typically 3 × 3. **Convolution** slides the filter across the image. At each position it multiplies each of the nine pixel values under it by the matching weight and adds the nine products. That sum becomes one pixel of the output, called a **feature map**.\n\nThe weights decide what the filter responds to:\n\n- A vertical-edge filter has negative weights on its left column and positive weights on its right, so it gives a large value where the image changes from dark to bright going left to right, and about 0 on flat areas.\n- A blur filter has nine equal weights and divides by 9, which averages each neighbourhood.\n- A sharpen filter has a large positive centre and negative neighbours, which exaggerates differences.\n\nWithout padding, an n × n image and a k × k filter give an output of (n − k + 1) × (n − k + 1): a 6 × 6 image and a 3 × 3 filter give a 4 × 4 feature map. Moving the filter two pixels at a time instead of one, a **stride** of 2, roughly halves the output size.",
+      "jargonBuster": [
+        {
+          "term": "Filter (kernel)",
+          "simpleExplanation": "A small grid of weights that slides over an image to detect one pattern."
+        },
+        {
+          "term": "Convolution",
+          "simpleExplanation": "Sliding a filter over an image and, at each position, adding up the products of weights and pixel values."
+        },
+        {
+          "term": "Feature map",
+          "simpleExplanation": "The output grid of a convolution, showing where the filter's pattern appears."
+        },
+        {
+          "term": "Stride",
+          "simpleExplanation": "How many pixels the filter moves between positions."
+        }
+      ],
+      "realWorld": "Photo editors' sharpen, blur and edge-detect effects are convolutions with fixed filters."
+    },
+    {
+      "id": "cnns",
+      "heading": "4. Convolutional Neural Networks",
+      "bodyMarkdown": "A **convolutional neural network (CNN)** stacks many convolution layers, but its filter weights are not chosen by hand. They are parameters, learned by backpropagation from labelled images.\n\nAfter each convolution, an activation such as ReLU keeps only positive responses. **Pooling** layers then shrink the feature maps, for example by keeping the largest value in each 2 × 2 block, which makes the network less sensitive to exactly where a pattern appears. Early layers learn edges and colour blobs, middle layers learn textures and parts, and late layers respond to whole objects. A final classification layer turns the last features into a probability for each class.\n\nIn 2012 a CNN trained on the ImageNet dataset of over a million labelled photos cut the error rate of the leading image recognition competition dramatically, and deep learning took over the field. Since then, architectures based on transformers have joined CNNs.\n\nVision models have well-documented weaknesses: they can fail when conditions differ from their training data, they inherit gaps in that data, and specially crafted small changes to an image, called **adversarial examples**, can change their answer.",
+      "jargonBuster": [
+        {
+          "term": "Convolutional neural network (CNN)",
+          "simpleExplanation": "A neural network whose layers apply learned filters, used mainly for images."
+        },
+        {
+          "term": "Pooling",
+          "simpleExplanation": "Shrinking a feature map by summarising each small block, for example keeping its largest value."
+        },
+        {
+          "term": "Adversarial example",
+          "simpleExplanation": "An input altered slightly on purpose so that a model gives a wrong answer."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "The stages of a convolutional network",
+        "content": "graph LR\n    I[\"Image array\"] --> C1[\"Convolution and ReLU: edges\"]\n    C1 --> P1[\"Pooling: smaller map\"]\n    P1 --> C2[\"Convolution and ReLU: parts\"]\n    C2 --> P2[\"Pooling\"]\n    P2 --> F[\"Classification layer\"]\n    F --> O[\"Probabilities: cat 0.94, dog 0.05\"]",
+        "alt": "An image array passes through convolution and ReLU that find edges, pooling to a smaller map, a second convolution and ReLU that find parts, more pooling, and a classification layer that outputs probabilities such as cat 0.94 and dog 0.05."
+      },
+      "realWorld": "Medical image screening, crop disease apps and factory quality inspection rely on CNNs trained on domain-specific images."
+    },
+    {
+      "id": "worked-example",
+      "heading": "5. Worked Example: Finding an Edge by Hand",
+      "bodyMarkdown": "Take a tiny greyscale image, 4 rows by 5 columns, where every row is the same: **0, 0, 0, 9, 9**. The left three columns are dark and the right two are bright, so there is a vertical edge between columns 3 and 4.\n\nUse the vertical-edge filter, row by row: **−1, 0, 1** / **−2, 0, 2** / **−1, 0, 1**.\n\nThe output will be (4 − 3 + 1) by (5 − 3 + 1), which is 2 × 3.\n\n- Filter over columns 1 to 3, where each row reads 0, 0, 0: every product is 0, so the output is **0**.\n- Filter over columns 2 to 4, where each row reads 0, 0, 9: the top row gives −1 × 0 + 0 × 0 + 1 × 9 = 9, the middle row gives 2 × 9 = 18, the bottom row gives 9. The total is **36**.\n- Filter over columns 3 to 5, where each row reads 0, 9, 9: the middle column has weight 0, so again 9 + 18 + 9 = **36**.\n\nBoth output rows read 0, 36, 36. The filter is silent over the flat dark area and responds strongly wherever its window spans the edge.\n\nNow try the horizontal-edge filter, which is the same weights turned on their side. Every column of this image is constant from top to bottom, so every output is 0: there is no horizontal edge to find.\n\nA 2 × 2 max pooling over the first two columns of the output would keep only 36, recording that an edge exists in that region without its exact position. The notebook repeats these calculations with NumPy and draws the image and its feature maps.",
+      "jargonBuster": [
+        {
+          "term": "Max pooling",
+          "simpleExplanation": "Keeping only the largest value in each small block of a feature map."
+        }
+      ],
+      "realWorld": "Document scanning apps find the edges of a page this way before straightening it."
+    },
+    {
+      "id": "convolution-activity",
+      "heading": "6. Activity: The Filter Lab",
+      "bodyMarkdown": "The lab shows a 6 × 6 image, the 3 × 3 filter weights and the resulting 4 × 4 feature map, which matches the (n − k + 1) rule. Select any output square to see the nine multiplications and the sum behind it.\n\nStart with the vertical-edge filter and check that flat areas give 0. Compare it with the horizontal-edge filter on the same drawing. Then try the blur filter and confirm that its sum is divided by 9. Draw your own pixels to test a prediction before you look.",
+      "interactiveWidget": {
+        "type": "convolution-sim",
+        "title": "🔍 Try It: The Filter Lab",
+        "instruction": "Choose a drawing and a filter. Select output squares to see the multiplication and sum behind each one.",
+        "goal": "Predict the value of one output square, then check it against the lab's live calculation.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you select a square: what should the vertical-edge filter give over a flat area?",
+        "hints": [
+          "Flat areas make the positive and negative weights cancel out.",
+          "Look for the squares where the window crosses from dark to bright."
+        ],
+        "successMessage": "You computed a convolution by hand. A CNN does exactly this, with weights it has learned.",
+        "allowFreePlay": true
+      },
+      "realWorld": "Engineers inspect a trained network's first-layer filters this way, and most turn out to be edge and colour detectors."
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "How many numbers describe a colour photo 4,000 pixels wide and 3,000 high?",
+      "options": [
+        "36 million: three channels for each of 12 million pixels",
+        "12 million: one per pixel",
+        "7,000: the width plus the height"
+      ],
+      "correctIndex": 0,
+      "praise": "Right. Three numbers per pixel.",
+      "explanation": "4,000 × 3,000 = 12 million pixels, each with red, green and blue values, gives 36 million numbers."
+    },
+    {
+      "question": "In the worked example, why does the vertical-edge filter output 0 over columns 1 to 3?",
+      "options": [
+        "All nine pixels are equal, so the positive and negative weights cancel",
+        "The filter skips the first columns",
+        "Dark pixels are ignored"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes. Flat areas give no response.",
+      "explanation": "Every pixel in that window is 0, so every product is 0. More generally, equal pixels make the left and right weights cancel."
+    },
+    {
+      "question": "Where do a CNN's filter weights come from?",
+      "options": [
+        "They are learned from labelled images by backpropagation",
+        "Engineers type them in",
+        "They are copied from the image"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly. They are parameters, like any other weight.",
+      "explanation": "A CNN treats filter weights as parameters and learns them during training, starting from random values."
+    }
+  ],
+  "teachBack": {
+    "prompt": "How would you explain a convolutional network to a colleague?",
+    "options": [
+      "It slides learned filters over the image's numbers, pools the results, and builds up from edges to parts to whole objects.",
+      "It compares each photo with a database of labelled photos.",
+      "It reads the file name and metadata of each image."
+    ],
+    "correctIndex": 0,
+    "explanation": "That's it. Learned filters, pooling, and a hierarchy from edges to objects."
+  },
+  "recall": [
+    {
+      "fromLesson": "3-neuralnetworks",
+      "question": "In the neuron score z = w₁ × x₁ + w₂ × x₂ + b, what does the bias b do?",
+      "options": [
+        "Shifts the score so the neuron fires more or less easily",
+        "Stores the label",
+        "Counts the number of inputs"
+      ],
+      "correctIndex": 0,
+      "explanation": "The bias is added regardless of the inputs, which sets how easily the neuron fires."
+    }
+  ],
+  "goFurther": [
+    {
+      "title": "Image kernels explained visually",
+      "url": "https://setosa.io/ev/image-kernels/",
+      "note": "Apply filters to a photo interactively and see each calculation."
+    },
+    {
+      "title": "CNN Explainer",
+      "url": "https://poloclub.github.io/cnn-explainer/",
+      "note": "An interactive view inside a small convolutional network."
+    },
+    {
+      "title": "Convolutional networks, CS231n notes",
+      "url": "https://cs231n.github.io/convolutional-networks/",
+      "note": "Stanford course notes covering convolution, pooling and output sizes in depth."
+    },
+    {
+      "title": "Feature visualisation",
+      "url": "https://distill.pub/2017/feature-visualization/",
+      "note": "What the layers of a trained vision network respond to."
+    }
+  ]
+}

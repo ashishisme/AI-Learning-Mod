@@ -2,6 +2,15 @@
   "language": "hi",
   "entries": [
     {
+      "path": "public-content/lang/hi/lessons/1-intro.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "cd0747374117b311b10c14a7c59ee4f36887297f57de910ac1d1b07f3f297001",
+      "translationHash": "fb8d3028d940eb8b627864c00a68fbb38bdfc4a23bb1e8653d993ea9c3d24b9a",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-14"
+    },
+    {
       "path": "public-content/lang/hi/lessons/1-intro.json",
       "kind": "base",
       "sourceHash": "607132fd6fb64c229060dee60ad25c7ecec300a08dcae86f0d355d7dcea34042",
@@ -24,6 +33,15 @@
       "kind": "adaptive",
       "sourceHash": "e84b1793a3e99d29c1420a1be28c0a074572cb932527b1f87bf1abf068e5b43a",
       "translationHash": "66ae750b917d654c441141e102409cd39c724d1d56c166c0f7ff018f097c9d18",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-14"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/2-symbolic.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "1b10379d0db3d09f36bc73b37ce9dd0af582a2110d1f90c90e2cac24d735951a",
+      "translationHash": "bafa5b5feb69e1e2a0de2ecb46f706502bf04d32fc20847eb184d52f0e270fb0",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-14"
@@ -56,6 +74,15 @@
       "date": "2026-11-14"
     },
     {
+      "path": "public-content/lang/hi/lessons/3-neuralnetworks.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "a5158cace2ab2c1336579148b6d4d671b91d531e346cc5e0c045b2d62cc43ed1",
+      "translationHash": "7cb6599450dff9180a4e80176d8298f3a4bf0e50c93faeafe96e1069a475ece8",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-14"
+    },
+    {
       "path": "public-content/lang/hi/lessons/3-neuralnetworks.json",
       "kind": "base",
       "sourceHash": "144685b1d8d7f647b7114b53361ae85cae4eef74c368d77548cfb7486d51b6e5",
@@ -78,6 +105,15 @@
       "kind": "adaptive",
       "sourceHash": "406cfdfe0aa9be5edb5d221a91160452c07839aa9b9e66886fc3c8e4ebff82e5",
       "translationHash": "1f50b1f904931d89d7ff0ccf0b90cac49a15f0319aaa443e6119a2afc5d55e3f",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-14"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/4-computervision.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "6fcf4314ad676fc186d02e3bc3cd69d690c4efcd3b2026e17daa51920aae901f",
+      "translationHash": "95b4257a2015942ba107f5cd3704269e6b9fc6dd7e7296eb54dfad6c3fc41c0b",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-14"
@@ -110,6 +146,15 @@
       "date": "2026-11-14"
     },
     {
+      "path": "public-content/lang/hi/lessons/5-nlp.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "be144d99e94aa46f5efcf09a1944d0f7033706b418b3828051e98723b17648ac",
+      "translationHash": "41226ede8501e7c05f7de225f10fcaa33b4e25b5d6b1c350e3294b0443b75a4f",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-14"
+    },
+    {
       "path": "public-content/lang/hi/lessons/5-nlp.json",
       "kind": "base",
       "sourceHash": "79e84c4c22d018b8fe4c8e67c4f7440540d6d4ad2950f6d4284cc4a61d7939e1",
@@ -132,6 +177,15 @@
       "kind": "adaptive",
       "sourceHash": "fd1205f46dc63191f68a78dec1ea3face936e74e3d4447858aee97b2642ae4ff",
       "translationHash": "29965a55fc4038bcc3e642c29d396268afee7b14402ed6cbd0ed319f9f83f141",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-14"
+    },
+    {
+      "path": "public-content/lang/hi/lessons/7-ethics.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "26cda0031c424f335ffcc4f6082771bc78424d9b4521fcbe46cb2964063537b7",
+      "translationHash": "dfa38b2113081a7c3007215fdde4dc97f0118ab526fbf47a04c7917cd43a366e",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-14"
@@ -166,20 +220,20 @@
     {
       "path": "web/src/data/quizzes/hi.json",
       "kind": "quiz",
-      "sourceHash": "4f04bb83cd618fb8a1d40f7a8657329b66f1ed68b0825632d513db23b567a82a",
-      "translationHash": "9d2ba2fd03940b5bd6dbfe920a4a879b37db52bc77259c37bf07f17274323472",
+      "sourceHash": "0e7e43243c91363b91dfdec6f603ceeb993d2a17395a44c5d24f7e303c8aeffa",
+      "translationHash": "7559bba9f1f9ae0a910667ebf5bd225909f6d714f9f381d1a9fce357a820248b",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-04"
+      "date": "2026-11-14"
     },
     {
       "path": "web/src/i18n/hi.json",
       "kind": "ui",
-      "sourceHash": "4160ecce3c913831580b0436335da38e6ece105f1203e2be8af245599c13ca01",
-      "translationHash": "767eb427f4819daaa7f538d1b3d13b66ee848ddd7a7609bb4a704d661261c502",
+      "sourceHash": "d96b1ddf5c9285586c41def92a601ca4ea28cc08fbb12446002073da363f280f",
+      "translationHash": "e62023b793a56889c1e09894332196c391e84e416870e71d4d5e4725501c58ee",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-13"
+      "date": "2026-11-14"
     }
   ]
 }

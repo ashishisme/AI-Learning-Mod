@@ -80,7 +80,7 @@ These are the quickstart steps. "Release" in a task means all of them:
   - otherwise keep the Markdown view.
   Colab rule (FR-016): use `colabUrl` only when it starts with `https://colab.research.google.com/github/ashishisme/AI-Learning-Mod/`; otherwise keep today's link for derived lessons only. No `colabUrl` on a Detailed lesson means no Colab button.
 - [X] T014 In `web/src/components/AdaptiveLessonView.tsx`, render `goFurther`, when present, after the last section as a list headed `t('adaptive.goFurther')`. Links open in a new tab with `rel="noreferrer"`. Meet DC-11 contrast and the 44 px targets.
-- [ ] T015 [P] Add `adaptive.goFurther` ("Go further" / "और जानें") to `web/src/i18n/en.json` and `hi.json` (done). **(owner)** Approve `web/src/i18n/hi.json` with `go run ./cmd/review -lang hi -reviewer "owner (beta)" -approve web/src/i18n/hi.json`. The journey rename to "Detailed" moved to T040a, because FR-017 shows it only once the first Detailed lesson ships.
+- [X] T015 [P] Add `adaptive.goFurther` ("Go further" / "और जानें") to `web/src/i18n/en.json` and `hi.json` (done). **(owner)** Approve `web/src/i18n/hi.json` with `go run ./cmd/review -lang hi -reviewer "owner (beta)" -approve web/src/i18n/hi.json`. The journey rename to "Detailed" moved to T040a, because FR-017 shows it only once the first Detailed lesson ships.
 - [X] T016 Add `web/tests/detailed-lesson.spec.ts`. Route-mock `/api/lessons/1-intro?mode=detailed` with a small sections payload that has `goFurther` and an own `colabUrl`. Assert:
   - the Standard journey shows sections and `standard-read-section` buttons;
   - "Go further" links are there;
@@ -103,7 +103,7 @@ These are the quickstart steps. "Release" in a task means all of them:
 
 ### Release Phase A
 
-- [ ] T020 Run the gates: `go test ./...`, `go run ./cmd/ingest -verify`, `go run ./cmd/review -lang en` (no targets yet), and Playwright on 3001/8081. Commit, merge to `cloud-beta`, tag `v0.7.0`. **(owner)** The owner approves `staging-promote`.
+- [X] T020 Run the gates: `go test ./...`, `go run ./cmd/ingest -verify`, `go run ./cmd/review -lang en` (no targets yet), and Playwright on 3001/8081. Commit, merge to `cloud-beta`, tag `v0.7.0`. **(owner)** The owner approves `staging-promote`.
 
 **Checkpoint**: lessons can now be marked `own` and are gated; Detailed lessons render when present.
 
@@ -133,7 +133,7 @@ Rules for every Kids file:
 - [X] T029 [US1] Rewrite `public-content/lessons/5-nlp.junior.json` with Word vector maths. Release it, and keep `web/tests/lesson-5-nlp.spec.ts` passing.
 - [X] T030 [P] [US1] (Skipped: diagrams on every card meet FR-CNT-09; new drawings optional, owner 2026-11-13.) Draw lesson 7 pictures, as in T022.
 - [X] T031 [US1] Rewrite `public-content/lessons/7-ethics.junior.json` with the Bias detective. Release it, and keep `web/tests/lesson-7-ethics.spec.ts` passing.
-- [ ] T032 [US1] Add a Go test in `cmd/ingest/kids_check_test.go`: every `*.junior.json` has `"origin": "own"` and `bands: true`. Enable it after T031.
+- [X] T032 [US1] Add a Go test in `cmd/ingest/kids_check_test.go`: every `*.junior.json` has `"origin": "own"` and `bands: true`. Enable it after T031.
 
 **Checkpoint**: the whole Kids journey is ours (SC-002).
 
@@ -174,18 +174,18 @@ Each `public-content/lessons/<id>.detailed.json` has:
 
 Each `notebooks/<id>.ipynb` runs the worked example step by step, using only Colab's default libraries. Each rewritten quiz entry in `web/src/data/quizzes/en.json` gets `"origin": "own"`, every correct answer appears in that lesson's text, and it has a Hindi entry in `hi.json`.
 
-- [ ] T039 [US3] Add a Go test in `internal/i18n/` or `cmd/ingest/` that checks every `*.detailed.json`:
+- [X] T039 [US3] Add a Go test in `internal/i18n/` or `cmd/ingest/` that checks every `*.detailed.json`:
   - `goFurther` has 3–5 items with https urls and no `microsoft/AI-For-Beginners`;
   - `colabUrl` matches the own-repo pattern;
   - `notebooks/<id>.ipynb` exists.
-- [ ] T040 [US3] Lesson 1: write `public-content/lessons/1-intro.detailed.json`, `notebooks/1-intro.ipynb` and the `1-intro` quiz in `web/src/data/quizzes/en.json` (and `hi.json`). Release it, approving all three in the en ledger. **(owner)** Run the notebook in Colab.
-- [ ] T040a [US3] With T040, rename the journey in `web/src/i18n/en.json` and `hi.json`: `journey.standard.name` and `adaptive.modeStandard` become "Detailed" / "विस्तृत", and update `journey.standard.desc`, `adaptive.modeStandardDesc` and `help.modesBody` to match. The stored value stays `standard` (`web/src/store.ts` line 139). Add an assertion to `web/tests/detailed-lesson.spec.ts` that the chooser says "Detailed". **(owner)** Approve the Hindi.
-- [ ] T041 [US3] Lesson 2: `2-symbolic.detailed.json`, `notebooks/2-symbolic.ipynb` and its quiz. Release it.
-- [ ] T042 [US3] Lesson 3: `3-neuralnetworks.detailed.json`, `notebooks/3-neuralnetworks.ipynb` and its quiz. Release it.
-- [ ] T043 [US3] Lesson 4: `4-computervision.detailed.json`, `notebooks/4-computervision.ipynb` and its quiz. Release it.
-- [ ] T044 [US3] Lesson 5: `5-nlp.detailed.json`, `notebooks/5-nlp.ipynb` and its quiz. Release it.
-- [ ] T045 [US3] Lesson 7: `7-ethics.detailed.json`, `notebooks/7-ethics.ipynb` and its quiz. Release it.
-- [ ] T046 [US3] Update `web/tests/quiz.spec.ts` and `web/tests/tutor.spec.ts` for the new quiz wording and Detailed citations (spec US3 scenario 4).
+- [X] T040 [US3] Lesson 1: write `public-content/lessons/1-intro.detailed.json`, `notebooks/1-intro.ipynb` and the `1-intro` quiz in `web/src/data/quizzes/en.json` (and `hi.json`). Release it, approving all three in the en ledger. **(owner)** Run the notebook in Colab.
+- [X] T040a [US3] With T040, rename the journey in `web/src/i18n/en.json` and `hi.json`: `journey.standard.name` and `adaptive.modeStandard` become "Detailed" / "विस्तृत", and update `journey.standard.desc`, `adaptive.modeStandardDesc` and `help.modesBody` to match. The stored value stays `standard` (`web/src/store.ts` line 139). Add an assertion to `web/tests/detailed-lesson.spec.ts` that the chooser says "Detailed". **(owner)** Approve the Hindi.
+- [X] T041 [US3] Lesson 2: `2-symbolic.detailed.json`, `notebooks/2-symbolic.ipynb` and its quiz. Release it.
+- [X] T042 [US3] Lesson 3: `3-neuralnetworks.detailed.json`, `notebooks/3-neuralnetworks.ipynb` and its quiz. Release it.
+- [X] T043 [US3] Lesson 4: `4-computervision.detailed.json`, `notebooks/4-computervision.ipynb` and its quiz. Release it.
+- [X] T044 [US3] Lesson 5: `5-nlp.detailed.json`, `notebooks/5-nlp.ipynb` and its quiz. Release it.
+- [X] T045 [US3] Lesson 7: `7-ethics.detailed.json`, `notebooks/7-ethics.ipynb` and its quiz. Release it.
+- [X] T046 [US3] Update `web/tests/quiz.spec.ts` and `web/tests/tutor.spec.ts` for the new quiz wording and Detailed citations (spec US3 scenario 4).
 
 **Checkpoint**: all 18 track versions, 6 quizzes and 6 notebooks are ours (SC-001).
 

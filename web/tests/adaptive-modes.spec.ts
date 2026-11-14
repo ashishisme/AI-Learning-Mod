@@ -8,14 +8,14 @@ test.describe('Adaptive Audience Modes (Kids 8-14 & Plain English)', () => {
     await page.evaluate(() => localStorage.clear())
   })
 
-  test('AC-ADAPT-01: Audience Mode Selector renders with 3 tabs and defaults to Standard', async ({ page }) => {
+  test('AC-ADAPT-01: Audience Mode Selector renders with 3 tabs and defaults to Detailed', async ({ page }) => {
     await page.goto('/lesson/1-intro')
 
     // Mode selector tablist
     const tablist = page.locator('[role="tablist"]')
     await expect(tablist).toBeVisible()
 
-    const standardTab = page.locator('button[role="tab"]', { hasText: 'Standard' })
+    const standardTab = page.locator('button[role="tab"]', { hasText: 'Detailed' })
     const juniorTab = page.locator('button[role="tab"]', { hasText: 'Kids (8–14)' })
     const plainTab = page.locator('button[role="tab"]', { hasText: 'Plain English' })
 
@@ -23,12 +23,12 @@ test.describe('Adaptive Audience Modes (Kids 8-14 & Plain English)', () => {
     await expect(juniorTab).toBeVisible()
     await expect(plainTab).toBeVisible()
 
-    // Standard is selected by default
+    // Detailed (stored as standard) is selected by default
     await expect(standardTab).toHaveAttribute('aria-selected', 'true')
     await expect(juniorTab).toHaveAttribute('aria-selected', 'false')
 
-    // Canonical content title
-    await expect(page.locator('h1[data-testid="lesson-title"]')).toHaveText('Introduction to AI')
+    // Our Detailed lesson title (SPEC-013)
+    await expect(page.locator('h1[data-testid="lesson-title"]')).toContainText('Artificial Intelligence: Ideas, Approaches and History')
   })
 
   test('AC-ADAPT-02: Switching to Kids Mode renders Chip the Robot and interactive Turing Widget', async ({ page }) => {

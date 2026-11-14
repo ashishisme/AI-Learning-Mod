@@ -1,0 +1,234 @@
+{
+  "lessonId": "5-nlp",
+  "mode": "detailed",
+  "origin": "own",
+  "title": "Natural Language Processing: Tokens, Embeddings and Language Models 💬",
+  "readingTimeMinutes": 18,
+  "intro": "Natural language processing lets computers work with human language. This lesson covers the main tasks, how text becomes numbers, how embeddings capture meaning, and how attention-based language models generate text. The worked example calculates similarity and next-word probabilities by hand.",
+  "colabUrl": "https://colab.research.google.com/github/ashishisme/AI-Learning-Mod/blob/cloud-beta/notebooks/5-nlp.ipynb",
+  "sections": [
+    {
+      "id": "nlp-tasks",
+      "heading": "1. What Natural Language Processing Covers",
+      "bodyMarkdown": "**Natural language processing (NLP)** is the part of AI that deals with human language in text or speech. Its standard tasks include:\n\n- **Text classification**: spam filtering, routing support tickets, **sentiment analysis** (is this review positive or negative?).\n- **Named entity recognition**: finding the people, places, organisations and dates in a text.\n- **Machine translation** between languages.\n- **Question answering** and **summarisation**.\n- **Speech recognition** and **speech synthesis**, which convert between audio and text.\n\nLanguage is hard for computers because it is ambiguous at every level. A word can have several meanings, a sentence can be parsed in several ways (\"I saw the man with the telescope\"), and meaning often depends on context, tone and shared knowledge. Rule-based approaches struggled with this variety; since the 2010s, learned models have taken over almost every task.",
+      "jargonBuster": [
+        {
+          "term": "Natural language processing (NLP)",
+          "simpleExplanation": "The part of AI that works with human language, written or spoken."
+        },
+        {
+          "term": "Sentiment analysis",
+          "simpleExplanation": "Judging whether a piece of text expresses a positive, negative or neutral opinion."
+        },
+        {
+          "term": "Named entity recognition",
+          "simpleExplanation": "Finding and labelling names of people, places, organisations and dates in text."
+        }
+      ],
+      "realWorld": "Review sites summarise customer opinions with sentiment analysis, and email apps pick out dates and places to suggest calendar events."
+    },
+    {
+      "id": "tokens",
+      "heading": "2. From Text to Numbers: Tokens",
+      "bodyMarkdown": "Models work with numbers, so text is first split into **tokens**. Early systems used whole words, but any fixed list of words misses names, typing errors and new coinages. Modern systems use **subword tokenisation**: frequent words stay whole, and rarer words are split into frequent pieces, so \"unbelievably\" might become \"un\", \"believ\" and \"ably\". The list of all possible tokens is the **vocabulary**, typically tens of thousands to a few hundred thousand entries, and each token has an ID number.\n\nThe simplest way to turn a document into numbers is a **bag of words**: count how often each vocabulary item appears. It works surprisingly well for tasks like spam filtering, but it throws away word order, so \"dog bites man\" and \"man bites dog\" look identical. It also treats every pair of different words as equally unrelated, with no notion that \"film\" and \"movie\" mean nearly the same thing.",
+      "jargonBuster": [
+        {
+          "term": "Token",
+          "simpleExplanation": "A unit of text, a word or a piece of one, that a model works with."
+        },
+        {
+          "term": "Vocabulary",
+          "simpleExplanation": "The fixed list of all tokens a model knows, each with an ID number."
+        },
+        {
+          "term": "Bag of words",
+          "simpleExplanation": "Representing a document by counting its words, ignoring their order."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "Turning a sentence into token IDs",
+        "content": "",
+        "alt": "Three steps: a sentence; the sentence split into subword tokens; each token replaced by its vocabulary ID.",
+        "steps": [
+          "Text: \"The results were unbelievably good\"",
+          "Tokens: The | results | were | un | believ | ably | good",
+          "IDs: 464 | 2482 | 547 | 403 | 6667 | 1346 | 922"
+        ]
+      },
+      "realWorld": "Chat services measure message length and pricing in tokens, not words."
+    },
+    {
+      "id": "embeddings",
+      "heading": "3. Embeddings and Similarity",
+      "bodyMarkdown": "An **embedding** represents each token as a list of numbers, a **vector**, usually with hundreds of dimensions. The vectors are learned so that words used in similar contexts get similar vectors. This follows the **distributional hypothesis**: a word's meaning is reflected in the company it keeps. The word2vec method, published in 2013, made such embeddings cheap to train on large text collections.\n\nSimilarity between two vectors is usually measured with **cosine similarity**: the cosine of the angle between them. It is 1 when they point the same way, 0 when they are at right angles, and −1 when they point in opposite directions. It is calculated as the dot product divided by the product of the lengths.\n\nDirections in embedding space can carry relationships. Subtracting \"man\" from \"king\" and adding \"woman\" lands near \"queen\". These analogies work only approximately in real models, and embeddings also absorb biases in their training text, for example associating some occupations more with one gender.",
+      "jargonBuster": [
+        {
+          "term": "Embedding",
+          "simpleExplanation": "A learned vector of numbers representing a token, placed so similar meanings are close."
+        },
+        {
+          "term": "Vector",
+          "simpleExplanation": "An ordered list of numbers, which can be pictured as a point or an arrow in space."
+        },
+        {
+          "term": "Cosine similarity",
+          "simpleExplanation": "A measure of how closely two vectors point the same way, from −1 to 1."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "An analogy as vector arithmetic",
+        "content": "graph LR\n    K[\"king\"] -->|minus man| R[\"royalty\"]\n    R -->|plus woman| Q[\"queen\"]",
+        "alt": "Starting from king, subtracting man leaves something like royalty, and adding woman lands near queen."
+      },
+      "realWorld": "Search engines and recommendation systems use embeddings to match a query with documents that mean the same thing in different words."
+    },
+    {
+      "id": "language-models",
+      "heading": "4. Language Models, Attention and Transformers",
+      "bodyMarkdown": "A **language model** assigns probabilities to the next token given the tokens so far. The simplest kind, an **n-gram model**, counts how often each word follows the previous one or two words in a large text. It cannot look further back than that window.\n\nRecurrent neural networks read text one token at a time while carrying a memory forward, but they struggle to connect words far apart. The **transformer**, introduced in 2017, solved this with **self-attention**. For every token, the model scores how relevant each other token in the passage is, then builds that token's new representation mostly from the most relevant ones. In \"The trophy did not fit in the suitcase because it was too big\", attention can link \"it\" to \"trophy\". Because attention processes all positions at once, transformers train efficiently on very large datasets.\n\n**Large language models** are transformers with billions of parameters, **pre-trained** to predict the next token on vast text collections and then fine-tuned to follow instructions. They generate text one token at a time, each time choosing from the predicted probabilities. They can only take in a limited amount of text at once, called the **context window**, and because they produce plausible text rather than checking facts, they can **hallucinate**: state false things fluently.",
+      "jargonBuster": [
+        {
+          "term": "Language model",
+          "simpleExplanation": "A model that predicts how likely each possible next token is."
+        },
+        {
+          "term": "Self-attention",
+          "simpleExplanation": "A method that lets each token draw information from the other tokens most relevant to it."
+        },
+        {
+          "term": "Context window",
+          "simpleExplanation": "The maximum amount of text a model can take into account at once."
+        },
+        {
+          "term": "Hallucination",
+          "simpleExplanation": "When a language model states something false as if it were true."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "How a transformer language model writes",
+        "content": "graph LR\n    T[\"Tokens so far\"] --> E[\"Embeddings\"]\n    E --> A[\"Attention layers\"]\n    A --> P[\"Probabilities for the next token\"]\n    P --> C[\"Choose a token\"]\n    C -->|append and repeat| T",
+        "alt": "The tokens so far become embeddings, pass through attention layers, and produce probabilities for the next token. One token is chosen, appended, and the loop repeats."
+      },
+      "realWorld": "Chat assistants, code completion tools and modern translation services are all built on transformer language models."
+    },
+    {
+      "id": "worked-example",
+      "heading": "5. Worked Example: Similarity and Next-Word Probabilities",
+      "bodyMarkdown": "**Analogy with two-dimensional vectors.** The activity below uses a small map where king = (8.5, 8.5), man = (5.0, 8.5) and woman = (5.0, 6.5).\n\n- king − man = (8.5 − 5.0, 8.5 − 8.5) = (3.5, 0)\n- adding woman gives (3.5 + 5.0, 0 + 6.5) = (8.5, 6.5)\n\nThat is exactly where queen sits on the map. Real embeddings have hundreds of dimensions and the result lands only near the answer, so the model picks the closest word.\n\n**Cosine similarity.** Take a = (3, 4) and b = (4, 3). The dot product is 3 × 4 + 4 × 3 = 24. Each vector has length 5, because 3² + 4² = 25. So the cosine similarity is 24 ÷ (5 × 5) = 0.96: very similar. For a = (3, 4) and c = (4, −3), the dot product is 12 − 12 = 0, so they are unrelated.\n\n**A bigram language model.** Train on three sentences: \"the cat sat\", \"the cat ran\", \"the dog sat\".\n\n- After \"the\": \"cat\" appears twice and \"dog\" once, so P(cat | the) = 2/3 and P(dog | the) = 1/3.\n- After \"cat\": \"sat\" once and \"ran\" once, so each has probability 1/2.\n- The sentence \"the cat sat\" gets probability 2/3 × 1/2 = 1/3.\n\nNow score \"the dog ran\", which never appeared: P(dog | the) × P(ran | dog) = 1/3 × 0 = 0, because \"ran\" never followed \"dog\" in training. Real models avoid such zeros by smoothing counts or, like transformers, by learning from similarity between words. The notebook builds this bigram model and the cosine calculations in Python.",
+      "jargonBuster": [
+        {
+          "term": "Bigram",
+          "simpleExplanation": "A pair of consecutive words. A bigram model predicts each word from the one before it."
+        },
+        {
+          "term": "Dot product",
+          "simpleExplanation": "Multiply matching entries of two vectors and add the results."
+        }
+      ],
+      "realWorld": "Phone keyboards once suggested the next word with n-gram counts like these; most now use small neural language models."
+    },
+    {
+      "id": "vector-activity",
+      "heading": "6. Activity: Word Constellations",
+      "bodyMarkdown": "The map places twelve words at fixed coordinates, which are shown when you select a word. Pick an analogy and watch the arithmetic step by step.\n\nCheck the worked example: king minus man plus woman should land on queen at (8.5, 6.5). Then predict the capital-city analogy before you run it: Paris minus France plus Japan. Paris is at (8.0, 4.5), France at (8.0, 2.5) and Japan at (3.5, 2.5), so the result should be (3.5, 4.5). Run it and see which word sits there.",
+      "interactiveWidget": {
+        "type": "vector-math-sim",
+        "title": "🗺️ Try It: Word Constellations",
+        "instruction": "Choose an analogy and follow the subtraction and addition on the map. Select words to see their coordinates.",
+        "goal": "Calculate each analogy's result from the coordinates before you run it, then check your answer on the map.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you run the capital-city analogy: which coordinates do you expect, and which word is there?",
+        "hints": [
+          "Subtract coordinate by coordinate, then add.",
+          "The same arrow between pairs, such as country to capital, means the same relationship."
+        ],
+        "successMessage": "Your arithmetic matched the map. That is how embeddings let search and translation work with meaning.",
+        "allowFreePlay": true
+      },
+      "realWorld": "Researchers test new embedding models on analogy sets like these, and also check them for unwanted associations."
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "Why do modern systems split rare words into subword tokens?",
+      "options": [
+        "So that any word, even an unseen one, can be built from known pieces",
+        "To make the text shorter to read",
+        "Because rare words carry no meaning"
+      ],
+      "correctIndex": 0,
+      "praise": "Right. Known pieces can cover unseen words.",
+      "explanation": "Subword tokenisation keeps frequent words whole and splits rare ones into frequent pieces, so the vocabulary stays fixed but covers any text."
+    },
+    {
+      "question": "In the worked example, what is the cosine similarity of (3, 4) and (4, 3)?",
+      "options": [
+        "0.96",
+        "0",
+        "24"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes. 24 divided by 25.",
+      "explanation": "The dot product is 24 and each vector has length 5, so the cosine similarity is 24 ÷ 25 = 0.96."
+    },
+    {
+      "question": "What does self-attention let a transformer do?",
+      "options": [
+        "Build each token's representation from the other tokens most relevant to it",
+        "Read text strictly one word at a time",
+        "Check every statement against a database of facts"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly. That is how it uses context.",
+      "explanation": "Self-attention scores the relevance of every other token for each token, which lets the model link words that are far apart."
+    }
+  ],
+  "teachBack": {
+    "prompt": "How would you explain how a large language model produces an answer to a colleague?",
+    "options": [
+      "It turns text into token embeddings, uses attention to weigh the context, and predicts the next token, one at a time.",
+      "It finds the answer in a stored copy of the internet.",
+      "It translates the question into rules and applies them."
+    ],
+    "correctIndex": 0,
+    "explanation": "That's it. Tokens, embeddings, attention, and one predicted token at a time."
+  },
+  "recall": [
+    {
+      "fromLesson": "4-computervision",
+      "question": "Where do a CNN's filter weights come from?",
+      "options": [
+        "They are learned from labelled images by backpropagation",
+        "Engineers type them in",
+        "They are copied from the image"
+      ],
+      "correctIndex": 0,
+      "explanation": "A CNN's filter weights are parameters, learned during training like any other weight."
+    }
+  ],
+  "goFurther": [
+    {
+      "title": "The Illustrated Word2vec",
+      "url": "https://jalammar.github.io/illustrated-word2vec/",
+      "note": "A visual explanation of how word embeddings are trained."
+    },
+    {
+      "title": "The Illustrated Transformer",
+      "url": "https://jalammar.github.io/illustrated-transformer/",
+      "note": "Attention and the transformer architecture, step by step."
+    },
+    {
+      "title": "Transformer Explainer",
+      "url": "https://poloclub.github.io/transformer-explainer/",
+      "note": "Run a small language model in your browser and look inside it."
+    },
+    {
+      "title": "Large language model",
+      "url": "https://en.wikipedia.org/wiki/Large_language_model",
+      "note": "An overview of how large language models are built, used and evaluated."
+    }
+  ]
+}

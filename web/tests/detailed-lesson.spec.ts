@@ -40,6 +40,9 @@ test.describe('Detailed lessons (SPEC-013)', () => {
 
     const colab = page.getByTestId('colab-button')
     await expect(colab).toHaveAttribute('href', detailed.colabUrl)
+
+    // SPEC-013 FR-017 (T040a): the journey chooser calls the Standard journey "Detailed"
+    await expect(page.getByRole('tab', { name: /Detailed/ })).toHaveAttribute('aria-selected', 'true')
   })
 
   test('an own Detailed lesson never links to a notebook outside our repository', async ({ page }) => {
@@ -52,6 +55,10 @@ test.describe('Detailed lessons (SPEC-013)', () => {
   })
 
   test('a lesson without a Detailed version still shows the standard text', async ({ page }) => {
+    // The server answers ?mode=detailed with the standard lesson when no Detailed file exists.
+    await page.route('**/api/lessons/2-symbolic?mode=detailed*', (r) =>
+      r.fulfill({ json: { id: '2-symbolic', module: 'general', title: 'Standard text', order: 2, path: 'x/README.md', commitSha: 'abc', blocks: [{ type: 'markdown', content: 'Standard lesson body.' }] } })
+    )
     await page.goto('/lesson/2-symbolic')
     await expect(page.getByTestId('lesson-content')).toBeVisible()
     await expect(page.getByTestId('go-further')).toHaveCount(0)

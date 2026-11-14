@@ -7,6 +7,13 @@ test.describe('Standard lessons can be listened to (AC-69)', () => {
       r.fulfill({ json: { hosted: false, authRequired: false, tutorEnabled: false, feedbackEnabled: false } })
     )
     await page.route('**/api/auth/session', (r) => r.fulfill({ json: { authenticated: false } }))
+    // SPEC-013: every lesson now has our Detailed version. These checks cover the Markdown view, which
+    // the page shows when the server answers ?mode=detailed with the standard lesson (no Detailed file).
+    await page.route(/\/api\/lessons\/[^/?]+\?mode=detailed/, (route) => {
+      const url = new URL(route.request().url())
+      url.searchParams.delete('mode')
+      return route.continue({ url: url.toString() })
+    })
     // A speech engine that records what it is asked to say and how often it is stopped.
     await page.addInitScript(() => {
       const w = window as any
