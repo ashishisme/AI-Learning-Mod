@@ -31,7 +31,7 @@
 ### IV. Quality & Accessibility Floor (DC-11)
 - WCAG contrast ratio must be ≥ 4.5:1 across both light and dark themes.
 - Accessible touch and click targets (minimum 44x44px or padded equivalent).
-- Markdown output rendered by AI must be sanitized using AST pipelines (`rehype-sanitize` with restrictive schema disallowing scripts, iframes, and `on*` event handlers).
+- Lesson and AI text is never interpreted as HTML: lesson Markdown is rendered without raw HTML and tutor answers are shown as plain text, so no script, iframe or `on*` handler can run (NFR-SEC-05; amended 2.5.0, 2026-11-14, SPEC-013: replaces the `rehype-sanitize` pipeline, removed with the imported course).
 
 ### V. Git Discipline & Safety
 - **Rule 10 Mandatory**: Never use `git add .` or `git add -A`. All staged files must be specified by explicit file paths.
@@ -50,4 +50,4 @@ Every new phase, PR, or implementation task MUST pass the three-tier verificatio
 - This Constitution supersedes informal prompt requests. If an implementation plan conflicts with this Constitution, the Constitution takes precedence.
 - Proposed amendments to architecture constraints (DC-*) require updating `spec/SPEC.md §8` and this document simultaneously.
 
-**Version**: 2.4.1 | **Ratified**: 2026-10-26 | **Last Amended**: 2026-11-13 (DC-02: Go 1.27.4 for GO-2026-6859, ratified by the owner, 2.4.1; Principle II fallback may be the approved translation in the learner's language, ratified by the owner, 2.4.0; DC-09 hosted store cost wording, 2.3.0; DC-02 was Go 1.27.3 in 2.2.1; DC-09 access records and feedback remain as ratified in 2.1.0 and 2.2.0) | **Governing Baseline**: `spec/SPEC.md`
+**Version**: 2.5.0 | **Ratified**: 2026-10-26 | **Last Amended**: 2026-11-14 (Principle IV: lesson and AI text is never interpreted as HTML, replacing the `rehype-sanitize` rule, ratified by the owner, 2.5.0; DC-02: Go 1.27.4 for GO-2026-6859, ratified by the owner, 2.4.1; Principle II fallback may be the approved translation in the learner's language, ratified by the owner, 2.4.0; DC-09 hosted store cost wording, 2.3.0; DC-02 was Go 1.27.3 in 2.2.1; DC-09 access records and feedback remain as ratified in 2.1.0 and 2.2.0) | **Governing Baseline**: `spec/SPEC.md`
