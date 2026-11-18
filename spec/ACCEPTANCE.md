@@ -1,4 +1,4 @@
-# Traceability Matrix — SPEC-001 v2.17.0
+# Traceability Matrix — SPEC-001 v2.18.0
 
 | AC | Requirement(s) | Test file | Status | Notes |
 |---|---|---|---|---|
@@ -83,3 +83,6 @@
 | AC-79 | FR-CNT-13 | `internal/ingest/clips_test.go` | PASS (automated) | SPEC-014 2026-11-15: video clip files, 900 KB, cue count |
 | AC-80 | FR-UI-28 | `web/tests/video-clips.spec.ts` | PASS (automated) | SPEC-014 2026-11-15: video player hold-for-voice, reduced motion, no preload |
 | AC-81 | FR-CNT-08, FR-CNT-13 | `internal/readability/kids_test.go` | PASS (automated) | SPEC-014 2026-11-15: Kids clip captions pass the reading check |
+| AC-82 | FR-I18N-05 | `internal/api/safety_lang_test.go`, `internal/feedback/check_lang_test.go` | PASS (automated) | SPEC-015: Kannada and Tamil safety and personal-details rules |
+| AC-83 | FR-UI-17 | `web/tests/i18n-foundation.spec.ts` | PASS (automated) | SPEC-015: script fonts only when the script is on screen |
+| AC-84 | SPEC-015 | `web/tests/languages-kn-ta.spec.ts` | pending | SPEC-015: a Kannada / Tamil learner, beta, fonts, 390 px |

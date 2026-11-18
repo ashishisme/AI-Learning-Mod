@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.17.0 |
+| Version | 2.18.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Lessons | Written for this course and committed in `public-content/` (FR-CNT-12, NFR-LIC-03; SPEC-013 closed 2026-11-14, v0.10.0) |
@@ -324,7 +324,7 @@ in feedback, or logged.
 its own visual layer under `[data-journey="junior"]`:
 - clay-style cards (20 px corners, 3 px borders, a soft double shadow);
 - a blue, amber and pink palette meeting FR-UI-15's contrast in both themes;
-- self-hosted Baloo 2 and Comic Neue for Latin text, with Noto Sans Devanagari for Hindi;
+- self-hosted Baloo 2 and Comic Neue for Latin text, with Noto Sans Devanagari for Hindi (amended 2.18.0, SPEC-015 FR-009: Baloo Tamma 2 and Baloo Thambi 2 for Kannada and Tamil Kids text, Noto Sans Kannada and Noto Sans Tamil elsewhere; each script's font is fetched only when that script is on screen);
 - celebratory feedback that never relies on colour or motion alone.
 
 **FR-UI-18.** Added 2.9.0 (SPEC-011). In the Kids journey the home page shall be "Chip's Trail":
@@ -498,6 +498,12 @@ as in English, with Devanagari digits and spelling variants (nukta, chandrabindu
 explicit word boundaries rather than ASCII-only `\b`. `POST /api/feedback` accepts an optional
 `lang`, used only to choose the language of the rejection message and never stored; a language
 that is not approved gets English. No reply ever repeats the learner's text.
+
+Amended 2.18.0 (SPEC-015 FR-011, FR-012). The same categories are caught in every listed language's script and its
+common romanised form: Hindi (Devanagari, Hinglish), Kannada (Kannada script, Kanglish) and Tamil (Tamil script,
+Tanglish). Before matching, the digits of every Indian script are folded to ASCII, and the zero-width joiner and
+non-joiner (U+200D, U+200C) are dropped. Each language has its own feedback rejection, safety replies and
+"couldn't find that" reply.
 
 **FR-I18N-06.** Added 2.5.0 (SPEC-009, build B3). When more than one language is approved, the
 header and Settings shall offer a language switcher listing each language by its own name, with a
@@ -1001,7 +1007,7 @@ fallback. Covered by `TestAC38_CustomProviderAutoCitation`.
 **AC-47 (FR-I18N-01, FR-I18N-02, FR-I18N-03).** With only English approved, the visible English
 text of every learner page, dialog and adaptive lesson matches the baseline recorded before the
 strings moved into the catalogue, every literal key used in the source exists in English, and
-English pages never request another catalogue or the Devanagari font. `?lang=` serves an
+English pages never request another catalogue or any Indian-script font (amended 2.18.0). `?lang=` serves an
 approved language with per-file English fallback and `Content-Language`, and treats hidden,
 unknown and unsafe values as English. `/api/runtime` lists only approved languages.
 Covered by `internal/api/lessons_lang_test.go`, `internal/i18n/languages_test.go`,
@@ -1169,6 +1175,17 @@ another clip or media (`internal/ingest/clips_test.go`).
 
 **AC-81 (FR-CNT-08, FR-CNT-13).** The Kids reading check fails a Kids lesson whose clip caption is above reading
 grade 3.5 or has a sentence over 18 words (`internal/readability/kids_test.go`).
+
+**AC-82 (FR-I18N-05, amended 2.18.0).** For Hindi, Kannada and Tamil, every blocked case in the language's test set is
+refused, in script, native digits and romanised form, and every clean case passes
+(`internal/api/safety_lang_test.go`, `internal/feedback/check_lang_test.go`).
+
+**AC-83 (FR-UI-17 fonts, amended 2.18.0).** English pages request no Indian-script font or other catalogue; Kannada
+text requests the Kannada font and not the Tamil one (`web/tests/i18n-foundation.spec.ts`).
+
+**AC-84 (SPEC-015).** A Kannada (then Tamil) learner sees the language listed as beta, reads every journey in it with
+its font and without the not-translated notice, and every page fits a 390 px screen
+(`web/tests/languages-kn-ta.spec.ts`).
 
 ---
 

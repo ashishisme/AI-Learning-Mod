@@ -30,7 +30,7 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 
 ## Phase 1: Setup
 
-- [ ] T001 Amend `spec/SPEC.md` to 2.18.0 in a `docs(spec):` commit:
+- [X] T001 Amend `spec/SPEC.md` to 2.18.0 in a `docs(spec):` commit:
   - **FR-I18N-05:** the feedback check and safety screen catch the same categories in every listed script (Devanagari, Kannada, Tamil) and its romanised form; every Indian script's digits are folded; zero-width joiner and non-joiner (U+200C/U+200D) are dropped before matching.
   - **Fonts (R12):** each script's font is served by the product and fetched only when that script is on screen; the Kids journey has a Kids font per script.
   - **New ACs:**
@@ -38,21 +38,21 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
     - AC-83 (fonts: `web/tests/i18n-foundation.spec.ts`);
     - AC-84 (a Kannada/Tamil learner: `web/tests/languages-kn-ta.spec.ts`).
   - **ACCEPTANCE:** add rows with status "pending".
-- [ ] T002 [P] Add `kn` and `ta` to `public-content/languages.json` as `{ "code": "kn", "name": "ಕನ್ನಡ", "speechLang": "kn-IN", "status": "hidden", "beta": true }` and `{ "code": "ta", "name": "தமிழ்", "speechLang": "ta-IN", "status": "hidden", "beta": true }`. Run `go run ./cmd/ingest -verify -audio=false`: a hidden language's problems are warnings only, so it must still exit 0.
+- [X] T002 [P] Add `kn` and `ta` to `public-content/languages.json` as `{ "code": "kn", "name": "ಕನ್ನಡ", "speechLang": "kn-IN", "status": "hidden", "beta": true }` and `{ "code": "ta", "name": "தமிழ்", "speechLang": "ta-IN", "status": "hidden", "beta": true }`. Run `go run ./cmd/ingest -verify -audio=false`: a hidden language's problems are warnings only, so it must still exit 0.
 
 ---
 
 ## Phase 2: Foundational (code for both scripts; both languages stay hidden)
 
-- [ ] T003 [P] In `internal/i18n/fold.go`, add `FoldScripts(r rune) rune`:
+- [X] T003 [P] In `internal/i18n/fold.go`, add `FoldScripts(r rune) rune`:
   - Devanagari folding as today (`FoldDevanagari`);
   - drop U+200C and U+200D;
   - map the digits of every Indian script to ASCII, using the zero code points now in `internal/feedback/check.go` `digitZeros` (move that list here and reuse it there).
 
   Add tests to `internal/i18n/fold_test.go`: Kannada "೯೮೭" → "987", Tamil "௯௮௭" → "987", ZWJ/ZWNJ dropped, Hindi cases unchanged.
 - [X] T003a [P] (analysis G1, SC-001) Add `i18n.Untranslated` in `internal/i18n/untranslated.go`. It reports a translatable text still identical to English when it has two or more words with letters; single terms ("AI", "ReLU"), placeholders and numbers are allowed. Run it in `i18n.Check`, so an approved language fails and a hidden one warns. Test: `internal/i18n/untranslated_test.go`. Hindi passes it unchanged.
-- [ ] T004 Use `i18n.FoldScripts` in `internal/api/safety.go` `normalizeForScreening`, in place of the Devanagari-only fold and the U+0966 digit case, and in `internal/feedback/check.go`. Extend `digitTokenRe` to `[a-z]+|\d+|\p{Devanagari}+|\p{Kannada}+|\p{Tamil}+`. Confirm `go test ./internal/api/ ./internal/feedback/` still passes for English and Hindi.
-- [ ] T005 [P] Add `kn` and `ta` entries to every map in `internal/i18n/messages.go`:
+- [X] T004 Use `i18n.FoldScripts` in `internal/api/safety.go` `normalizeForScreening`, in place of the Devanagari-only fold and the U+0966 digit case, and in `internal/feedback/check.go`. Extend `digitTokenRe` to `[a-z]+|\d+|\p{Devanagari}+|\p{Kannada}+|\p{Tamil}+`. Confirm `go test ./internal/api/ ./internal/feedback/` still passes for English and Hindi.
+- [X] T005 [P] Add `kn` and `ta` entries to every map in `internal/i18n/messages.go`:
   - feedback rejection kinds and text (the `%s` placeholder kept);
   - safety replies per category;
   - `UncitedFallback`.
@@ -68,7 +68,7 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
   - add `@font-face` rules to `web/src/index.css` with `unicode-range` U+0C80–0CFF (Kannada) and U+0B80–0BFF (Tamil), the script block only (no U+200C/D or U+25CC: emoji sequences on English pages use them);
   - name the Kids fonts only under `[data-journey="junior"]`, as the Latin Kids fonts are;
   - add the script fonts to the body font stacks after Noto Sans Devanagari.
-- [ ] T007 [P] In `web/src/services/speechService.ts` persona `preferredKeywords`, add the common Kannada and Tamil device voice names ("Google ಕನ್ನಡ", "Google தமிழ்", and Windows "Valluvar" for Tamil). These are only a fallback; lessons use recordings.
+- [X] T007 [P] In `web/src/services/speechService.ts` persona `preferredKeywords`, add the common Kannada and Tamil device voice names ("Google ಕನ್ನಡ", "Google தமிழ்", and Windows "Valluvar" for Tamil). These are only a fallback; lessons use recordings.
 - [X] T008 [P] Widen `web/tests/i18n-foundation.spec.ts` "English pages never fetch another language or the Devanagari font" (AC-83): no request matching `/\/(hi|kn|ta)\.json|NotoSans(Devanagari|Kannada|Tamil)|Baloo(Tamma|Thambi)/` on English pages. Add one test that a page showing Kannada text requests NotoSansKannada and not NotoSansTamil.
 
 **Checkpoint**:
@@ -86,15 +86,15 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 
 ### Tests for User Story 3
 
-- [ ] T009 [P] [US3] Write `internal/api/testdata/kn_safety.json` and `internal/api/testdata/ta_safety.json` in the shape of `hi_safety.json` (`{ "blocked": [{text, category}...], "clean": [...] }`):
+- [X] T009 [P] [US3] Write `internal/api/testdata/kn_safety.json` and `internal/api/testdata/ta_safety.json` in the shape of `hi_safety.json` (`{ "blocked": [{text, category}...], "clean": [...] }`):
   - at least one blocked case per safety category, in script and in romanised form (Kanglish, Tanglish);
   - at least 15 clean lesson questions per language, including words close to the rules (e.g. "kill" in a computing sense, as the English set has).
-- [ ] T010 [P] [US3] Write `internal/feedback/testdata/{kn,ta}_personal_details.json` (`[{text, kind}]`) and `{kn,ta}_clean.json`. For each language:
+- [X] T010 [P] [US3] Write `internal/feedback/testdata/{kn,ta}_personal_details.json` (`[{text, kind}]`) and `{kn,ta}_clean.json`. For each language:
   - every kind (email, phone, address, id_number, dob, link) in script, in native digits (Kannada ೦–೯, Tamil ௦–௯) and in romanised form;
   - street words: ರಸ್ತೆ, ಬಡಾವಣೆ, ನಗರ, ಕ್ರಾಸ್, ಮುಖ್ಯ ರಸ್ತೆ for Kannada; தெரு, சாலை, நகர், வீதி for Tamil;
   - date-of-birth phrases: ಹುಟ್ಟಿದ ದಿನ / ಜನ್ಮದಿನ for Kannada; பிறந்த நாள் / பிறந்தநாள் for Tamil;
   - at least 15 clean feedback sentences each.
-- [ ] T011 [US3] Generalise the Hindi-only tests:
+- [X] T011 [US3] Generalise the Hindi-only tests:
   - `internal/api/safety_hi_test.go` → `internal/api/safety_lang_test.go`;
   - `internal/feedback/check_hi_test.go` → `internal/feedback/check_lang_test.go`;
   - each loads every `testdata/<code>_safety.json` / `<code>_personal_details.json` / `<code>_clean.json` it finds and runs the same assertions per language (AC-82).
@@ -103,8 +103,8 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 
 ### Implementation for User Story 3
 
-- [ ] T012 [US3] In `internal/api/safety.go`, add Kannada and Tamil rules beside the Hindi ones, one per category in `safetyRules`. Use the same `(?:^| )` start (`hiRule`, renamed `scriptRule`) on folded text, and add the romanised forms to the English-letter rules. Make `go test ./internal/api/` pass for kn and ta.
-- [ ] T013 [US3] In `internal/feedback/check.go`, add the Kannada and Tamil rule families mirroring the `hi*` ones:
+- [X] T012 [US3] In `internal/api/safety.go`, add Kannada and Tamil rules beside the Hindi ones, one per category in `safetyRules`. Use the same `(?:^| )` start (`hiRule`, renamed `scriptRule`) on folded text, and add the romanised forms to the English-letter rules. Make `go test ./internal/api/` pass for kn and ta.
+- [X] T013 [US3] In `internal/feedback/check.go`, add the Kannada and Tamil rule families mirroring the `hi*` ones:
   - email "at/dot" words (ಡಾಟ್/டாட், ಅಟ್/அட்);
   - apps;
   - premises (ಮನೆ ನಂ, ಫ್ಲಾಟ್ / வீடு எண், பிளாட்);
@@ -137,7 +137,7 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 
 ### Implementation for User Story 1
 
-- [ ] T015 [US1] Draft `content/glossary/kn.json` in `hi.json`'s shape (the same English terms). The owner confirms the terms before T016.
+- [X] T015 [US1] Draft `content/glossary/kn.json` in `hi.json`'s shape (the same English terms). The owner confirms the terms before T016.
 - [ ] T016 [US1] Draft `web/src/i18n/kn.json`: every key of `en.json`, with the placeholders `{n}`, `{total}`, `%s` etc. kept. Then run `go run ./cmd/ingest -verify -audio=false` (it prints warnings only while hidden) and `go test ./internal/i18n/`.
 - [ ] T017 [US1] Listening test. For each candidate `kn-IN` voice in the speech service's list, run `TTS_ACCESS_TOKEN="$(gcloud auth print-access-token)" TTS_PROJECT=ai-learning-513415 go run ./cmd/narrate -lang kn -sample <voice>` and give the owner the sample files. The owner picks one voice each for chip, nova and alan. Write `content/voices/kn.json` with a note naming the owner and the date.
   - Candidates (checked against the speech service on 2026-11-14):
