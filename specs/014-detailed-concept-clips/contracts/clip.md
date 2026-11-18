@@ -56,11 +56,43 @@ The clip is a `<figure data-testid="clip">`. The `figcaption` holds the caption 
 
 | Control | Test id | Label (reused key, en) |
 |---|---|---|
-| Play / Pause | `clip-play` (`aria-pressed`) | `widget.stepPlay` "▶ Play" / `widget.stepPause` "⏸ Pause" |
-| Previous | `clip-prev` | `clip.prev` "← Previous step" |
-| Next | `clip-next` | `widget.stepNext` "Next step ➜" |
+| Play / Pause | `clip-play` (the label says the state; no `aria-pressed`) | `widget.stepPlay` "▶ Play" / `widget.stepPause` "⏸ Pause" |
+| Previous | `clip-prev` (`aria-disabled` on step 1, stays focusable) | `clip.prev` "← Previous step" |
+| Next | `clip-next` (`aria-disabled` on the last step, stays focusable) | `widget.stepNext` "Next step ➜" |
 | Play again | `clip-replay` (when ended) | `widget.stepRestart` "↺ Start again" |
 | Mute | `clip-mute` (`aria-pressed`, label unchanged) | `clip.mute` "🔇 Mute clips" |
+
+## 5. Fluid 60fps Micro-Video Architecture (`VideoClipPlayer`)
+
+For concept clips, the player upgrades to `VideoClipPlayer` (`web/src/components/VideoClipPlayer.tsx`), providing continuous 60fps vector animations with chapter cue navigation and decoupled multilingual audio across all 3 journey modes.
+
+### Journey Mode Catalog (18 Bespoke Videos)
+
+| Mode | Theme & Visual Language | Modules & Video Clip IDs |
+|---|---|---|
+| **Detailed** | Engineering telemetry, neural topologies, matrix transformations | `turing-test` (M1), `forward-chaining` (M2), `perceptron-learning` (M3), `convolution-scan` (M4), `vector-attention` (M5), `fairness-calibration` (M7) |
+| **Junior (Kids)** | Playful cartoon physics featuring mascot **Chip the Robot** | `chip-dog-learning` (M1), `chip-rule-robot` (M2), `chip-fruit-sorter` (M3), `chip-magnifying-glass` (M4), `chip-word-blocks` (M5), `chip-playground-scale` (M7) |
+| **Plain English** | Minimalist editorial dark-mode executive & business infographics | `plain-rules-vs-learning` (M1), `plain-decision-tree` (M2), `plain-linear-classifier` (M3), `plain-image-feature-scan` (M4), `plain-transformer-context` (M5), `plain-disparate-impact-audit` (M7) |
+
+### Asset Structure
+- WebM (VP9, ~380–450 kbps): `web/public/brand/videos/<clip>.webm` (Strictly $\le 750\text{ KB}$)
+- MP4 (H.264/avc1, ~450–550 kbps): `web/public/brand/videos/<clip>.mp4` (Strictly $\le 750\text{ KB}$)
+- Poster (JPEG, ~20 KB): `web/public/brand/videos/<clip>-poster.jpg`
+- Asset Register: `design/brand/asset-register.json` entry per clip with SHA-256 validation.
+
+### Video UI Controls & Test IDs
+The video clip container is `<figure data-testid="video-clip">`.
+- **Top 5-Segment Progress Bar**: Clickable cue segments with smooth progress fills.
+- **Center Overlay Play**: Large floating 64×64 button over canvas when paused.
+- **Controls Toolbar**:
+  - Play/Pause: `data-testid="video-play"`
+  - Previous Step: `data-testid="video-prev"`
+  - Next Step: `data-testid="video-next"`
+  - Playback Speed: `data-testid="video-speed"` (Cycles 0.75×, 1.0×, 1.25×)
+  - Mute Toggle: `data-testid="video-mute"`
+- **Live Typographic Caption**: `data-testid="video-caption"` (`aria-live="polite"`).
+- **Reduced Motion Fallback**: Respects `prefers-reduced-motion` and pauses auto-play.
+
 
 - Every control is at least 44 by 44 px.
 - A step counter (`widget.stepOf`, "Step k of N") is shown.

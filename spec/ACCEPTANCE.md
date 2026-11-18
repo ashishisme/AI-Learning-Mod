@@ -1,4 +1,4 @@
-# Traceability Matrix — SPEC-001 v2.16.0
+# Traceability Matrix — SPEC-001 v2.17.0
 
 | AC | Requirement(s) | Test file | Status | Notes |
 |---|---|---|---|---|
@@ -80,3 +80,6 @@
 | AC-76 | FR-UI-28 | `web/tests/clips.spec.ts` | PASS (automated) | SPEC-014: clip player controls, reduced motion, description |
 | AC-77 | FR-CNT-13 | `internal/ingest/clips_test.go`, `internal/narration/text_test.go`, `internal/api/tutor_mode_test.go` | PASS (automated) | SPEC-014: clip data, release check, narration tracks, tutor text |
 | AC-78 | FR-UI-28 | `web/tests/clips.spec.ts` | PASS (automated) | SPEC-014: clip voice, one sound at a time, mute |
+| AC-79 | FR-CNT-13 | `internal/ingest/clips_test.go` | PASS (automated) | SPEC-014 2026-11-15: video clip files, 900 KB, cue count |
+| AC-80 | FR-UI-28 | `web/tests/video-clips.spec.ts` | PASS (automated) | SPEC-014 2026-11-15: video player hold-for-voice, reduced motion, no preload |
+| AC-81 | FR-CNT-08, FR-CNT-13 | `internal/readability/kids_test.go` | PASS (automated) | SPEC-014 2026-11-15: Kids clip captions pass the reading check |

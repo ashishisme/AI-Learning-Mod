@@ -1,18 +1,51 @@
-# Data Model: Concept Clips
+# Data Model: Concept Clips & Multi-Mode 60fps Micro-Videos
 
-## Clip (in a Detailed lesson section)
+## Clip Diagram in Adaptive Lessons
 
-A section's `diagram` with `type: "clip"`. English: `public-content/lessons/<id>.detailed.json`. Hindi: `public-content/lang/hi/lessons/<id>.detailed.json`.
+A section's `diagram` with `type: "clip"`. Supported in:
+- Detailed: `public-content/lessons/<id>.detailed.json` (& `public-content/lang/hi/lessons/<id>.detailed.json`)
+- Junior (Kids): `public-content/lessons/<id>.junior.json` (& `public-content/lang/hi/lessons/<id>.junior.json`)
+- Plain English: `public-content/lessons/<id>.plain-english.json` (& `public-content/lang/hi/lessons/<id>.plain-english.json`)
 
 | Field | Type | Rule | Translatable |
 |---|---|---|---|
 | `type` | `"clip"` | fixed | no |
-| `clip` | string | kebab-case name; file `web/public/brand/clips/<clip>.svg` exists | no (Hindi must equal English) |
-| `caption` | string | the clip's title line, shown under the picture | yes |
+| `clip` | string | kebab-case name; matches `<clip>.webm`, `<clip>.mp4`, and `<clip>-poster.jpg` in `web/public/brand/videos/` (or `<clip>.svg` in `web/public/brand/clips/`) | no (Hindi must equal English) |
+| `caption` | string | the clip's title line, shown under the picture/video | yes |
 | `alt` | string | required, non-empty; says what the clip teaches (FR-012) | yes |
-| `steps` | string[] | 3–8 captions, each 4–35 words; Σ(words/2.5 + 1) between 10 and 30 seconds | yes, same count |
+| `steps` | string[] | 3–8 captions, each 4–35 words; Σ(words/2.5 + 1) between 10 and 30 seconds; Junior mode strictly $\le 18$ words, grade $\le 3.5$ | yes, same count |
 
-Each word and number in a caption that the picture shows must match the lesson text (FR-013). The owner checks this in review; the release check verifies only counts and lengths.
+## Multi-Mode 60fps Video Catalog
+
+| Journey Mode | Clip ID | Module | Theme / Visual Mechanism |
+|---|---|---|---|
+| **Junior (Kids)** | `chip-dog-learning` | 1-intro | Chip giving dog treat rewards during pattern training |
+| **Junior (Kids)** | `chip-rule-robot` | 2-symbolic | Chip operating if-then logic control switches |
+| **Junior (Kids)** | `chip-fruit-sorter` | 3-neuralnetworks | Chip weighing fruits on a pan scale with boundary pointer |
+| **Junior (Kids)** | `chip-magnifying-glass` | 4-computervision | Chip examining giant pixel mosaic with magnifying glass |
+| **Junior (Kids)** | `chip-word-blocks` | 5-nlp | Chip connecting magnetic word blocks into sentences |
+| **Junior (Kids)** | `chip-playground-scale` | 7-ethics | Chip balancing playground see-saw so all teams get fair turns |
+| **Plain English** | `plain-rules-vs-learning` | 1-intro | Hand-coded rules vs machine learning from historical data |
+| **Plain English** | `plain-decision-tree` | 2-symbolic | Loan qualification branching decision tree |
+| **Plain English** | `plain-linear-classifier` | 3-neuralnetworks | Customer churn risk boundary iteration on scatter plot |
+| **Plain English** | `plain-image-feature-scan` | 4-computervision | Industrial quality camera scanning with 3x3 filter |
+| **Plain English** | `plain-transformer-context` | 5-nlp | Legal contract clause contextual attention routing |
+| **Plain English** | `plain-disparate-impact-audit` | 7-ethics | Corporate hiring equity audit dashboard with four-fifths rule |
+| **Detailed** | `turing-test` | 1-intro | Interrogator terminal measuring imitation vs human delays |
+| **Detailed** | `forward-chaining` | 2-symbolic | Deduction cascade firing rules through active memory graph |
+| **Detailed** | `perceptron-learning` | 3-neuralnetworks | Dynamic weights shifting decision boundary upon error updates |
+| **Detailed** | `convolution-scan` | 4-computervision | 3x3 sliding filter, ReLU activation, 2x2 max pooling |
+| **Detailed** | `vector-attention` | 5-nlp | Vector math ($\vec{King} - \vec{Man} + \vec{Woman} \approx \vec{Queen}$) & self-attention arcs |
+| **Detailed** | `fairness-calibration` | 7-ethics | Group-calibrated threshold sliders & disparate impact balance |
+
+## Video Asset Package (`web/public/brand/videos/<name>.*`)
+
+| Derivative | Specification | Budget Ceiling |
+|---|---|---|
+| WebM | VP9 codec, $800 \times 450$ resolution @ 60fps, variable bitrate (~380–450 kbps) | $\le 750\text{ KB}$ ($\le 850\text{ KB}$ for convolution) |
+| MP4 | H.264 / AVC1 codec, $800 \times 450$ resolution @ 60fps, profile baseline (~450–550 kbps) | $\le 750\text{ KB}$ |
+| Poster | JPEG image, $800 \times 450$ resolution, quality 85% | $\le 25\text{ KB}$ |
+| Register | SHA-256 registered in `design/brand/asset-register.json` | 100% hash match verified by `cmd/assetcheck` |
 
 ## Clip drawing (`web/public/brand/clips/<name>.svg`)
 

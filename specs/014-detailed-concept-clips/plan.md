@@ -6,13 +6,12 @@
 
 ## Summary
 
-This plan adds 19 step-by-step animated clips to the Detailed journey:
-- 6 "watch the idea" clips, one per lesson;
-- 13 clips for sections that have no picture today.
-
-Each clip is a hand-drawn SVG of 3–8 steps, shown as an image. The page moves between steps with `#sK`, as scene pictures already do with `#play`. Captions are lesson text in the section's `diagram.steps`, so the existing English and Hindi ledgers approve them and the Hindi parity check covers them.
-
-On Play, each caption is read aloud: by the device voice in English, and by a recording in Hindi. The clip keeps one sound at a time through the existing speech player and shared audio state. A new `ClipPlayer` component handles controls, reduced motion and mute. A new `clip-check` in the release check enforces steps, length, size and the no-words and safety rules. Lesson 3 is the pilot.
+This plan delivers bespoke concept micro-videos across all 3 journey modes (**Detailed**, **Junior / Kids**, and **Plain English**) for the 6 core curriculum modules (1-intro, 2-symbolic, 3-neuralnetworks, 4-computervision, 5-nlp, 7-ethics):
+- **18 Bespoke 60fps Micro-Videos**: 6 Detailed engineering telemetry videos, 6 Junior cartoon videos featuring mascot Chip the Robot, and 6 Plain English executive dark-mode infographics.
+- **Unified `VideoClipPlayer` Component**: Continuous 60fps playback, top 5-segment cue navigation, large center play overlay, playback speed toggles (0.75×, 1.0×, 1.25×), and WCAG 2.1 AA touch controls ($\ge 44 \times 44\text{ px}$).
+- **Headless Chromium Playwright Rendering Pipeline**: Vector animations rendered directly from Canvas/SVG at 60fps into dual WebM (VP9) and MP4 (H.264) with poster JPEGs.
+- **Multilingual Decoupled Audio & Zero Telemetry**: Zero burned-in text and zero baked-in audio in video sources; synchronized English and Hindi narration via lesson JSON.
+- **Release Verification Gates**: `cmd/assetcheck` (SHA-256 validation), `cmd/ingest` (Junior reading level $\le 3.5$, sentence $\le 18$ words, clip duration 10–30s), and TypeScript compilation.
 
 ## Technical Context
 
@@ -120,3 +119,14 @@ web/tests/clips.spec.ts                   # new
 ## Complexity Tracking
 
 None.
+
+## Technical notes moved from the spec (2026-11-15)
+
+These moved here so the spec stays readable for everyone.
+- **Format:** video clips are rendered at 60 fps in headless Chromium (Playwright, `scripts/render-clips.js`). Each is exported as WebM (VP9) and MP4 (H.264), with a JPEG poster, into `web/public/brand/videos/`.
+- **Lesson data:** a video clip is a `diagram` with `"media": "video"` (FR-CNT-13, SPEC 2.17.0). It shows in `VideoClipPlayer`; a step clip shows in `ClipPlayer`.
+- **Checks:**
+  - the brand register stores a SHA-256 for every file (`go run ./cmd/assetcheck`);
+  - the release check (`go run ./cmd/ingest -verify`) checks files, sizes, cue counts and Kids caption reading level;
+  - the browser tests are `web/tests/clips.spec.ts` and `web/tests/video-clips.spec.ts`.
+

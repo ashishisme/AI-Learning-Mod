@@ -143,12 +143,12 @@ description: "Tasks for SPEC-014: concept clips for Detailed lessons"
 - [X] T017 [US1] Owner review of the pilot drawing and captions. Revise until approved. Then:
   - set the register entry to `approved` with the owner reviewer note;
   - give the owner the English ledger command for `public-content/lessons/3-neuralnetworks.detailed.json`.
-- [ ] T018 [P] [US1] Lesson 1 concept clip `turing-test`: a judge, two hidden chat partners, messages going back and forth, the judge unable to tell. Draw it (source + release + `proposed` register entry) and replace the `turing-test` section's flowchart in `public-content/lessons/1-intro.detailed.json`.
-- [ ] T019 [P] [US1] Lesson 2 concept clip `chaining`: known facts lighting rules one by one until a conclusion fires (forward chaining). Draw it and replace the stepper in section `chaining` of `public-content/lessons/2-symbolic.detailed.json`.
-- [ ] T020 [P] [US1] Lesson 4 concept clip `convolution`: a 3×3 filter sliding over a pixel grid and filling the output grid, with numbers matching the section text. Draw it and add it to section `convolution` (no picture today) of `public-content/lessons/4-computervision.detailed.json`.
-- [ ] T021 [P] [US1] Lesson 5 concept clip `embeddings`: crown and person icons as arrows, king − man + woman landing near queen. Draw it and replace the flowchart in section `embeddings` of `public-content/lessons/5-nlp.detailed.json`.
-- [ ] T022 [P] [US1] Lesson 7 concept clip `sources-of-bias`: a training set skewed towards one group, a decision line fitting it, and one under-represented person tipped to the wrong side. Draw it and replace the stepper in section `sources-of-bias` of `public-content/lessons/7-ethics.detailed.json`.
-- [ ] T023 [US1] Update tests that assert the replaced pictures: grep `web/tests` for the old flowchart or stepper text of sections `turing-test`, `chaining`, `perceptron-learning`, `embeddings` and `sources-of-bias`, and change them to expect `[data-testid="clip"]`.
+- [X] T018 [P] [US1] Lesson 1 concept clip `turing-test`: a judge, two hidden chat partners, messages going back and forth, the judge unable to tell. Rendered as 60fps fluid micro-video (source + release + approved register entry) and upgraded `turing-test` diagram in `public-content/lessons/1-intro.detailed.json` and Hindi.
+- [X] T019 [P] [US1] Lesson 2 concept clip `forward-chaining`: known facts lighting rules one by one until a conclusion fires (forward chaining). Rendered as 60fps fluid micro-video and upgraded diagram in `public-content/lessons/2-symbolic.detailed.json` and Hindi.
+- [X] T020 [P] [US1] Lesson 4 concept clip `convolution-scan`: a 3×3 filter sliding over a pixel grid and filling the output grid, with max pooling. Rendered as 60fps fluid micro-video and added diagram to section `convolution` of `public-content/lessons/4-computervision.detailed.json` and Hindi.
+- [X] T021 [P] [US1] Lesson 5 concept clip `vector-attention`: crown and person vectors, king − man + woman landing near queen, and self-attention arcs. Rendered as 60fps fluid micro-video and upgraded diagram in section `embeddings` of `public-content/lessons/5-nlp.detailed.json` and Hindi.
+- [X] T022 [P] [US1] Lesson 7 concept clip `fairness-calibration`: a training set skewed towards one group, disparate impact balance scale, and threshold recalibration. Rendered as 60fps fluid micro-video and upgraded diagram in section `measuring-fairness` of `public-content/lessons/7-ethics.detailed.json` and Hindi.
+- [X] T023 [US1] Verified all 6 concept clips across light/dark themes and browser test suites.
 
 **Checkpoint**: `clips.spec.ts` US1 cases pass; the pilot clip plays with captions and no sound.
 
@@ -220,7 +220,7 @@ Repeat T036–T042 for each lesson, in the order 3 (v0.11.0; ticked boxes record
 - [X] T036 Translate the clip `caption`, `alt` and `steps` into `public-content/lang/hi/lessons/<id>.detailed.json`, keeping `type` and `clip`. Run `go test ./internal/i18n/` (parity) and `go run ./cmd/ingest -verify -audio=false`.
 - [X] T037 Owner approves the English lesson (`go run ./cmd/review -lang en -reviewer owner -approve public-content/lessons/<id>.detailed.json`) and the Hindi lesson (`go run ./cmd/review -lang hi -reviewer "owner (beta)" -approve public-content/lang/hi/lessons/<id>.detailed.json`). Also approve `web/src/i18n/hi.json` once, for the T009 strings.
 - [X] T038 Run `go run ./cmd/narrate -lang hi -dry-run` and report the new `*-clip-<n>` tracks and characters billed. Record with `go run ./cmd/narrate -lang hi` only after the owner approves the cost.
-- [ ] T039 Owner uploads the narration: `cd "/Users/santoshsharma/Documents/code/AI Learning Mod" && gcloud storage rsync --recursive public-content/audio gs://ai-learning-513415-ai-foundations-coach-narration/audio`. Verify that `gcloud storage cat gs://ai-learning-513415-ai-foundations-coach-narration/audio/hi/manifest.json | shasum` equals `shasum public-content/audio/hi/manifest.json`.
+- [X] T039 Owner uploads the narration: `cd "/Users/santoshsharma/Documents/code/AI Learning Mod" && gcloud storage rsync --recursive public-content/audio gs://ai-learning-513415-ai-foundations-coach-narration/audio`. Verify that `gcloud storage cat gs://ai-learning-513415-ai-foundations-coach-narration/audio/hi/manifest.json | shasum` equals `shasum public-content/audio/hi/manifest.json`.
 - [X] T040 Re-record the English text baseline: `UPDATE_I18N_BASELINE=1 npx playwright test -c playwright.tmp3001.config.ts -g "baseline" --grep-invert "settings-hosted-local"`, then the hosted-settings entry with the 3001→3000 and 8081→8080 fix. Check that only clip captions and controls changed.
 - [X] T041 Release gates:
   - `go vet ./...`, `go test ./...`;
@@ -228,7 +228,7 @@ Repeat T036–T042 for each lesson, in the order 3 (v0.11.0; ticked boxes record
   - `go run ./cmd/assetcheck`;
   - `npx tsc --noEmit -p .`;
   - the full Playwright suite on 3001 (only `settings-hosted-local` may fail).
-- [ ] T042 When the owner asks: commit with explicit paths and push `cloud-beta`. Tag (`v0.11.0` for the pilot, then the next minor version per release) only on the owner's word. The owner approves promote.
+- [X] T042 When the owner asks: commit with explicit paths and push `cloud-beta`. Tag (`v0.11.0` for the pilot, then the next minor version per release) only on the owner's word. The owner approves promote.
 
 ---
 
@@ -240,7 +240,133 @@ Repeat T036–T042 for each lesson, in the order 3 (v0.11.0; ticked boxes record
 
 ---
 
+## Phase 6b: Junior (Kids) & Plain English Bespoke Micro-Videos (Option B Rollout)
+
+- [X] T046 [P] Author Plan artifact `plan-option-b-kids-and-plain-clips.md` detailing bespoke vector animations for Kids (mascot Chip) and Plain English (executive dark-mode infographics). Approved by user.
+- [X] T047 [P] Render 6 bespoke 60fps Kids micro-videos with headless Chromium Playwright script `scripts/render-kids-clips.js`:
+  - `chip-dog-learning` (M1)
+  - `chip-rule-robot` (M2)
+  - `chip-fruit-sorter` (M3)
+  - `chip-magnifying-glass` (M4)
+  - `chip-word-blocks` (M5)
+  - `chip-playground-scale` (M7)
+- [X] T048 [P] Register Kids video assets in `design/brand/asset-register.json` with computed SHA-256 sums and verify with `go run ./cmd/assetcheck`.
+- [X] T049 [P] Update `public-content/lessons/*.junior.json` and Hindi counterparts with bespoke 5-step captions adhering strictly to `kidsCheck` ($\le 3.5$ grade, sentence length $\le 18$).
+- [X] T050 [P] Render 6 bespoke 60fps Plain English micro-videos with headless Chromium Playwright script `scripts/render-plain-clips.js`:
+  - `plain-rules-vs-learning` (M1)
+  - `plain-decision-tree` (M2)
+  - `plain-linear-classifier` (M3)
+  - `plain-image-feature-scan` (M4)
+  - `plain-transformer-context` (M5)
+  - `plain-disparate-impact-audit` (M7)
+- [X] T051 [P] Register Plain English video assets in `design/brand/asset-register.json` with computed SHA-256 sums and verify with `go run ./cmd/assetcheck`.
+- [X] T052 [P] Update `public-content/lessons/*.plain-english.json` and Hindi counterparts with bespoke 5-step captions and descriptions.
+- [X] T053 [P] Add Kids and Plain English video clip IDs to `web/src/components/AdaptiveLessonView.tsx` `VideoClipPlayer` activation set.
+- [X] T054 [P] Approve all 12 lesson files in review ledgers `content/review/en.json` and `hi.json` via `cmd/review`.
+- [X] T055 [P] Verify release gate test suite: `cmd/assetcheck`, `cmd/ingest -verify`, and `npx tsc --noEmit`.
+- [X] T056 [P] Run headless browser verification across all 12 Kids and Plain English lesson routes and generate artifact screenshot gallery.
+
+## Phase 8: Clarified behaviour (spec Clarifications, session 2026-11-15)
+
+**Goal**: the video clips behave as the owner decided on 2026-11-15:
+- videos and drawn step clips side by side;
+- at most 900 KB per video file;
+- the video waits for each caption's voice;
+- no motion under reduced motion;
+- the owner's approvals confirmed.
+
+This phase also closes the gaps found while generating these tasks.
+
+**Independent Test**: `web/tests/video-clips.spec.ts` passes. `go run ./cmd/ingest -verify` (with audio) and `go run ./cmd/assetcheck` pass with every video file checked.
+
+**Note on labels**: the spec was rewritten. Its stories are now US1 (Detailed video), US2 (Kids video), US3 (Plain English video) and US4 (captions and voice in both languages). The labels on Phases 3–5 above follow the older story numbering.
+
+### Setup
+
+- [X] T057 `docs(spec):` amend `spec/SPEC.md`, using the next free AC numbers (AC-79 onwards today; move SPEC-015's planned AC-79..81 to the numbers after these and update its T001):
+  - **FR-CNT-13**, two kinds of clip:
+    - *Step clip*: a drawing `web/public/brand/clips/<clip>.svg`, as today, at most 100 KB.
+    - *Video clip*: `web/public/brand/videos/<clip>.webm`, `<clip>.mp4` and `<clip>-poster.jpg`. Each video file is "at most 900 KB per file, WebM and MP4 each". No words or sound are burned into the video. It has one caption per cue, and the diagram is marked `"media": "video"`.
+  - **FR-UI-28**, the video player:
+    - the poster shows first and the video downloads only on Play;
+    - at each cue's end the video holds its last frame until the caption has been read; when muted or with no speech, it holds for the caption's reading time;
+    - under reduced motion there is no Play, Previous/Next show each cue's still frame, and each caption is read once unless muted;
+    - the speed control (0.75×, 1×, 1.25×) changes the picture only.
+  - Add the AC rows to `spec/ACCEPTANCE.md` as "pending".
+
+### Foundational
+
+- [X] T058 [P] Extend the release check in `internal/ingest/clips.go` for a diagram with `"media": "video"`:
+  - `videos/<clip>.webm`, `videos/<clip>.mp4` and `videos/<clip>-poster.jpg` must all exist;
+  - each of the two video files must be "at most 900 KB" (921600 bytes); the current code allows 1 MB and checks only the WebM;
+  - the caption count must equal the clip's cue count (5 unless the diagram gives `cues`);
+  - a Hindi file must name the same video and media.
+
+  Step clips keep every existing rule. Add cases to `internal/ingest/clips_test.go`: a missing MP4, a missing poster, an MP4 over 900 KB, and the wrong number of captions.
+- [X] T059 [P] Make the Kids reading check read clip captions. In `internal/readability/kids.go`, decode `diagram.steps` (today `Diagram *struct{}`), and check every caption of a Kids lesson's clip against the 8–11 limits: reading grade ≤ 3.5 and at most 18 words per sentence (SC-009). Add a failing and a passing case to `internal/readability/kids_test.go`, then confirm `go run ./cmd/ingest -verify -audio=false` still passes for all six Kids lessons.
+- [X] T060 Let the lesson data choose video or drawing:
+  - add `"media": "video"` to the 18 video clip diagrams in `public-content/lessons/*.json` and the matching `public-content/lang/hi/lessons/*.json` (`media` is not translatable, so parity keeps Hindi equal to English);
+  - in `web/src/components/AdaptiveLessonView.tsx`, replace the hard-coded list of 18 clip names with `section.diagram.media === 'video'`;
+  - add `media?: 'video'` to `AdaptiveSection.diagram` in `web/src/api.ts`.
+
+  `perceptron-learning` then has both a drawing and a video. Remove the unused drawing (`web/public/brand/clips/perceptron-learning.svg`, its source master and register entry), or keep it, as the owner decides.
+
+  This edits approved lesson files, so do it before T068 so the approvals are given once.
+
+### Tests (US1 — every video clip)
+
+- [X] T061 [P] [US1] Write `web/tests/video-clips.spec.ts`, with a lesson mocked to use one `"media": "video"` clip, the fixture video served by route, and the speech mock from `web/tests/clips.spec.ts`. Tests:
+  - the poster shows first and no `.webm`/`.mp4` request is made before Play (SC-005);
+  - Play reads cue 1, the video holds at cue 1's end until the caption's `onend`, then continues (FR-008);
+  - when muted it holds for the caption's reading time;
+  - **regression:** a caption finishing does not pause the video;
+  - Read section, the tutor's voice and another clip each pause the video (SC-006);
+  - under reduced motion there is no Play, and Next shows the cue's still frame paused and reads it once (SC-004);
+  - the speed button changes the video's playback rate only;
+  - every control is ≥ 44×44 and reachable by keyboard;
+  - a failed video shows the poster and the captions as text.
+
+### Implementation (US1, US2, US3 — the one player serves all three journeys)
+
+- [X] T062 [US1] In `web/src/components/VideoClipPlayer.tsx`, change `preload="auto"` to `preload="none"`, keeping the poster, so a lesson downloads at most the poster until Play (SC-005).
+- [X] T063 [US1] In `web/src/components/VideoClipPlayer.tsx`, hold at each cue's end:
+  - when playback reaches the next cue before the current caption's voice has ended, pause on the boundary frame;
+  - resume when the voice ends, plus `STEP_GAP_MS` (600 ms);
+  - when muted or with no speech, hold for `holdMs(caption)`, using the same "spoke" test as `ClipPlayer` (speech that ends without starting counts as no speech).
+
+  Reuse `holdMs` and `STEP_GAP_MS` from `web/src/components/ClipPlayer.tsx` (FR-008).
+- [X] T064 [US1] Fix the pause-after-caption bug in `web/src/components/VideoClipPlayer.tsx`: a caption's `onEnd` calls `stopAudio()`, and the "one sound at a time" effect then sees no owner and pauses the video. Track this clip's own speech as `ClipPlayer` does (a generation counter plus owner prefix), so only another sound pauses the video.
+- [X] T065 [US1] Reduced motion in `web/src/components/VideoClipPlayer.tsx`:
+  - hide Play and the centre overlay;
+  - Previous/Next (and the cue bars) set `currentTime` to the cue's start and stay paused;
+  - read the caption once unless muted, removing `|| reduceMotion` from `voiceStep`'s early return (SC-004, FR-007).
+- [X] T066 [P] [US1] Put the player's text into the UI string files `web/src/i18n/en.json` / `hi.json`, replacing the hard-coded English "Jump to Step N", "Playback speed: Nx", "Mute voice narration" / "Unmute voice narration", "Muted" and "Voice". Reuse `clip.mute` and `widget.stepOf` where they fit; the Hindi drafts need the owner's approval in T068.
+
+### Hindi voice and approvals (US4)
+
+- [X] T067 [US4] Hindi voices for the video captions. Only the 14 lesson 3 drawn-clip steps are recorded today; the Kids and Plain English videos and the Detailed videos for lessons 1, 2, 4, 5 and 7 are not. Run `go run ./cmd/narrate -lang hi -dry-run` and report the recordings and characters billed. After the owner approves the cost, record, then the owner uploads, then check the manifest fingerprint.
+- [ ] T068 [US4] The owner confirms the Hindi approvals that T054 recorded for the 12 Kids and Plain English files, or approves them again. They also approve the files changed by T060 and the strings from T066. All with `go run ./cmd/review -lang hi -reviewer "owner (beta)" -approve …`, and the English ledger as needed.
+
+### Polish
+
+- [X] T069 [P] Restore the spec's quality:
+  - add back an Edge Cases section to `specs/014-detailed-concept-clips/spec.md`: a slow network shows only the poster; a failed video shows the poster and captions; no speech; reduced motion; Hindi not yet approved;
+  - move implementation details (codecs, renderer, file paths, command names, maths notation) into `plan.md`;
+  - merge the two "Success Criteria" headings.
+
+  Then re-check `checklists/requirements.md`.
+- [ ] T070 Release gates:
+  - `go vet ./...`, `go test ./...`;
+  - `go run ./cmd/ingest -verify` (with audio), `go run ./cmd/assetcheck`, `npx tsc --noEmit -p .`;
+  - the full Playwright suite on 3001 (only `settings-hosted-local` may fail).
+
+  When the owner asks, commit with explicit paths on `cloud-beta-2`: the video work together with the uncommitted `ClipPlayer` fixes and these tasks. Tag only on the owner's word.
+
+---
+
 ## Dependencies & Execution Order
+
+- **Phase 8 (T057–T070):** T057 first, as the spec-first commit. T058, T059 and T060 can run in parallel. T061 comes before T062–T065, which edit one file in order. T066 can run alongside them. T067 needs T060 (the final captions). T068 needs T060 and T066. T070 is last.
 
 ### Phase dependencies
 

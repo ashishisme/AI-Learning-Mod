@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.16.0 |
+| Version | 2.17.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Lessons | Written for this course and committed in `public-content/` (FR-CNT-12, NFR-LIC-03; SPEC-013 closed 2026-11-14, v0.10.0) |
@@ -174,6 +174,18 @@ number of steps. The release check fails for a clip when:
   the file.
 
 Every clip drawing needs an approved entry in the brand register (`cmd/assetcheck`).
+
+Amended 2.17.0 (SPEC-014 clarifications 2026-11-15): a clip is either a **step clip** (the drawing above) or a
+**video clip**, marked `"media": "video"`. A video clip may be in any journey (Kids, Plain English, Detailed). Its
+files are `web/public/brand/videos/<clip>.webm`, `<clip>.mp4` and `<clip>-poster.jpg`, with no words or sound in
+them. It has one caption per cue: 5 cues unless the diagram gives `cues` (start times in seconds). The release
+check fails for a video clip when:
+- any of its three files is missing, or either video file is larger than 900 KB (921,600 bytes);
+- the number of captions is not the number of cues, or its `alt` is empty;
+- a translated file names a different clip or media, or has a different number of captions.
+
+A Kids lesson's clip captions pass the Kids reading check for ages 8–11 (FR-CNT-08). Every video file needs an
+approved entry in the brand register. Narration tracks are `<lessonId>/<mode>/section-<sectionId>-clip-<n>`.
 
 ### 4.3 Tutor — `FR-TUT-*`
 
@@ -376,6 +388,18 @@ starting a clip stops Read section, the tutor's voice and any other clip, and st
 clip. Muting keeps every clip muted until unmuted or the page is reloaded; a muted clip still moves. A clip pauses
 when it leaves the screen. Under reduced motion it never animates and has no Play: Previous and Next show each step,
 reading it once unless muted. If the drawing fails to load, its captions and description are shown as text.
+
+Amended 2.17.0 (SPEC-014 clarifications 2026-11-15). A video clip (FR-CNT-13) follows the same rules, plus these:
+- It first shows its poster image. The video downloads only when the learner presses Play.
+- At the end of each cue the video holds its last frame until that cue's caption has been read, then 600 ms
+  later carries on. When muted, or when no speech is available, it holds for the caption's reading time
+  (words ÷ 2.5 + 1 seconds). A caption is never cut off.
+- A speed control (0.75×, 1×, 1.25×) changes the picture only.
+- Each cue can be chosen directly, with a target at least 44x44 px.
+- Under reduced motion there is no Play: Previous, Next and the cue targets show that cue's still frame, and its
+  caption is read once unless muted.
+- If the video cannot play, the poster and the captions are shown as text.
+- Every label is in the learner's language.
 
 ### 4.5 Settings & AI Configuration — `FR-SET-*`
 
@@ -1129,6 +1153,22 @@ a narration track (`internal/narration/text_test.go`); the tutor's lesson text i
 **AC-78 (FR-UI-28).** Play reads each caption before the next step; Read section, the tutor's voice or another clip
 pauses a playing clip; Mute keeps the next clip muted while it still moves; with no speech available the clip still
 plays; a Hindi clip asks for its step recording (`web/tests/clips.spec.ts`).
+
+**AC-79 (FR-CNT-13, amended 2.17.0).** The release check passes a valid video clip and refuses a missing WebM, MP4
+or poster, a video file over 900 KB, a caption count that differs from the cue count, and a translated file naming
+another clip or media (`internal/ingest/clips_test.go`).
+
+**AC-80 (FR-UI-28, amended 2.17.0).** A video clip:
+- shows its poster and downloads no video before Play;
+- holds at each cue's end until the caption has been read, and when muted holds for the reading time;
+- is not paused by its own caption ending, but is paused by Read section, the tutor's voice or another clip;
+- under reduced motion has no Play, and Next shows the cue's still frame and reads it once;
+- changes only the picture's speed with the speed control;
+- has every control at least 44x44 px and keyboard-reachable;
+- falls back to the poster and captions when the video fails (`web/tests/video-clips.spec.ts`).
+
+**AC-81 (FR-CNT-08, FR-CNT-13).** The Kids reading check fails a Kids lesson whose clip caption is above reading
+grade 3.5 or has a sentence over 18 words (`internal/readability/kids_test.go`).
 
 ---
 

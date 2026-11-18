@@ -33,3 +33,4 @@
 
 - FR-008 resolved 2026-11-14: a voice reads each step's caption (owner chose A).
 - "Asset register" and "review ledger" are the product's own approval records, named as concepts, not implementation.
+- 2026-11-15 (T069): Edge Cases restored; implementation details moved to plan.md ("Technical notes moved from the spec"). The 2026-11-14 clarification bullets keep the original wording as a record of the decision.

@@ -30,13 +30,13 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 
 ## Phase 1: Setup
 
-- [ ] T001 Amend `spec/SPEC.md` to 2.17.0 in a `docs(spec):` commit:
+- [ ] T001 Amend `spec/SPEC.md` to 2.18.0 in a `docs(spec):` commit:
   - **FR-I18N-05:** the feedback check and safety screen catch the same categories in every listed script (Devanagari, Kannada, Tamil) and its romanised form; every Indian script's digits are folded; zero-width joiner and non-joiner (U+200C/U+200D) are dropped before matching.
   - **Fonts (R12):** each script's font is served by the product and fetched only when that script is on screen; the Kids journey has a Kids font per script.
   - **New ACs:**
-    - AC-79 (FR-I18N-05: `internal/api/safety_lang_test.go`, `internal/feedback/check_lang_test.go`);
-    - AC-80 (fonts: `web/tests/i18n-foundation.spec.ts`);
-    - AC-81 (a Kannada/Tamil learner: `web/tests/languages-kn-ta.spec.ts`).
+    - AC-82 (FR-I18N-05: `internal/api/safety_lang_test.go`, `internal/feedback/check_lang_test.go`);
+    - AC-83 (fonts: `web/tests/i18n-foundation.spec.ts`);
+    - AC-84 (a Kannada/Tamil learner: `web/tests/languages-kn-ta.spec.ts`).
   - **ACCEPTANCE:** add rows with status "pending".
 - [ ] T002 [P] Add `kn` and `ta` to `public-content/languages.json` as `{ "code": "kn", "name": "ಕನ್ನಡ", "speechLang": "kn-IN", "status": "hidden", "beta": true }` and `{ "code": "ta", "name": "தமிழ்", "speechLang": "ta-IN", "status": "hidden", "beta": true }`. Run `go run ./cmd/ingest -verify -audio=false`: a hidden language's problems are warnings only, so it must still exit 0.
 
@@ -59,17 +59,17 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 
   Claude drafts these, and the owner approves them with the language in T020/T033. Add a case to `internal/i18n/messages_test.go` (or the existing messages test): every language listed in `languages.json` has every message.
 - [X] T005a [P] (analysis G2, FR-013) Add `internal/api/tutor_kn_ta_test.go`. For `kn` and `ta`, the tutor prompt uses that language's lesson, tells the model to answer in it, and cites its heading. The fallback check skips until T005 adds the language's messages; T005 is done when it runs and passes.
-- [ ] T006 [P] Fonts, after the owner approves the downloads. Ask first, naming each file, its source and size:
+- [X] T006 [P] Fonts, after the owner approves the downloads. Ask first, naming each file, its source and size:
   - Noto Sans Kannada and Noto Sans Tamil, variable woff2 (notofonts / Google Fonts);
   - Baloo Tamma 2 and Baloo Thambi 2, SemiBold/Bold woff2 (Google Fonts).
 
   Then:
   - put them in `web/public/fonts/`, with their OFL licence text beside them (`OFL-NotoSansKannada.txt`, …);
-  - add `@font-face` rules to `web/src/index.css` with `unicode-range` U+0C80–0CFF (Kannada) and U+0B80–0BFF (Tamil);
+  - add `@font-face` rules to `web/src/index.css` with `unicode-range` U+0C80–0CFF (Kannada) and U+0B80–0BFF (Tamil), the script block only (no U+200C/D or U+25CC: emoji sequences on English pages use them);
   - name the Kids fonts only under `[data-journey="junior"]`, as the Latin Kids fonts are;
   - add the script fonts to the body font stacks after Noto Sans Devanagari.
 - [ ] T007 [P] In `web/src/services/speechService.ts` persona `preferredKeywords`, add the common Kannada and Tamil device voice names ("Google ಕನ್ನಡ", "Google தமிழ்", and Windows "Valluvar" for Tamil). These are only a fallback; lessons use recordings.
-- [ ] T008 [P] Widen `web/tests/i18n-foundation.spec.ts` "English pages never fetch another language or the Devanagari font" (AC-80): no request matching `/\/(hi|kn|ta)\.json|NotoSans(Devanagari|Kannada|Tamil)|Baloo(Tamma|Thambi)/` on English pages. Add one test that a page showing Kannada text requests NotoSansKannada and not NotoSansTamil.
+- [X] T008 [P] Widen `web/tests/i18n-foundation.spec.ts` "English pages never fetch another language or the Devanagari font" (AC-83): no request matching `/\/(hi|kn|ta)\.json|NotoSans(Devanagari|Kannada|Tamil)|Baloo(Tamma|Thambi)/` on English pages. Add one test that a page showing Kannada text requests NotoSansKannada and not NotoSansTamil.
 
 **Checkpoint**:
 - `go test ./...` and `npx tsc --noEmit -p .` pass;
@@ -97,7 +97,7 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 - [ ] T011 [US3] Generalise the Hindi-only tests:
   - `internal/api/safety_hi_test.go` → `internal/api/safety_lang_test.go`;
   - `internal/feedback/check_hi_test.go` → `internal/feedback/check_lang_test.go`;
-  - each loads every `testdata/<code>_safety.json` / `<code>_personal_details.json` / `<code>_clean.json` it finds and runs the same assertions per language (AC-79).
+  - each loads every `testdata/<code>_safety.json` / `<code>_personal_details.json` / `<code>_clean.json` it finds and runs the same assertions per language (AC-82).
 
   Run it: the new Kannada and Tamil cases fail before T012/T013, and Hindi still passes.
 
@@ -115,7 +115,7 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 
   Keep `hiStart`/`hiEnd` as the general boundaries (rename to `scriptStart`/`scriptEnd`). Make `go test ./internal/feedback/` pass for kn and ta with no clean sentence refused.
 
-**Checkpoint**: SC-003. Every Kannada and Tamil case is caught, with no false refusals; AC-79 passes.
+**Checkpoint**: SC-003. Every Kannada and Tamil case is caught, with no false refusals; AC-82 passes.
 
 ---
 
@@ -127,7 +127,7 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 
 ### Tests for User Story 1
 
-- [ ] T014 [P] [US1] Write `web/tests/languages-kn-ta.spec.ts` (AC-81), with the runtime mocked to offer `kn` (beta). Tests:
+- [ ] T014 [P] [US1] Write `web/tests/languages-kn-ta.spec.ts` (AC-84), with the runtime mocked to offer `kn` (beta). Tests:
   - the menu shows "ಕನ್ನಡ" with the beta label, and choosing it sets `<html lang="kn">` without a reload;
   - a lesson in each journey has no not-translated notice and requests NotoSansKannada;
   - (analysis G3, FR-009) a Kids lesson in Kannada requests the Baloo Tamma 2 font, and a Plain English lesson does not;
@@ -197,7 +197,7 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
   - `FoldScripts`;
   - voice choice notes.
 - [ ] T037 [P] Update the memory file `spec-015-kannada-tamil.md` after each release.
-- [ ] T038 Set `spec/ACCEPTANCE.md` AC-79..AC-81 to "PASS (automated)". Close SPEC-015 in its spec status and `spec/SPEC.md` §0 once SC-001..SC-006 hold for both languages.
+- [ ] T038 Set `spec/ACCEPTANCE.md` AC-82..AC-84 to "PASS (automated)". Close SPEC-015 in its spec status and `spec/SPEC.md` §0 once SC-001..SC-006 hold for both languages.
 
 ---
 
