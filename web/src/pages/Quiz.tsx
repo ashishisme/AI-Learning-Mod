@@ -5,6 +5,7 @@ import { ENGLISH_QUIZZES, loadQuizzes, LessonQuiz } from '../data/quizzes'
 import { useProgressStore, useAudienceModeStore } from '../store'
 import { askTutorStream } from '../api'
 import { useLanguage, useT } from '../i18n'
+import { useShuffledOrder } from '../services/shuffle'
 import { NotTranslatedNotice } from '../components/NotTranslatedNotice'
 import { KidVisual } from '../components/KidVisual'
 
@@ -43,6 +44,7 @@ export const Quiz: React.FC = () => {
   const [hintText, setHintText] = useState('')
   const [hintLoading, setHintLoading] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
+  const orderFor = useShuffledOrder()
 
   // Fallback to placeholder if quiz not in registry (preserves AC-25)
   if (!quiz) {
@@ -279,7 +281,8 @@ export const Quiz: React.FC = () => {
 
           {/* Options */}
           <div className="space-y-3 mb-6" data-testid="question-options">
-            {currentQ.options.map((option, optIdx) => {
+            {orderFor(currentQ.prompt + '\u0000' + currentQ.options.join('\u0000'), currentQ.options.length).map((optIdx) => {
+              const option = currentQ.options[optIdx]
               const isThisSelected = userChoice === optIdx
               const isThisCorrect = optIdx === currentQ.correctIndex
 

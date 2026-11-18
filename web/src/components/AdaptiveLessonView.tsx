@@ -22,6 +22,7 @@ import { ClipPlayer } from './ClipPlayer'
 import { VideoClipPlayer } from './VideoClipPlayer'
 import { WidgetFrame } from './WidgetFrame'
 import { ChoiceCard } from './ChoiceCard'
+import { useShuffledOrder } from '../services/shuffle'
 import { WordCard } from './WordCard'
 import { useLanguage, useT } from '../i18n'
 
@@ -93,6 +94,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
   const [openWord, setOpenWord] = useState<string | null>(null)
   // Band questions always come after the core ones (FR-CNT-09), so core indexes never move.
   const miniQuiz = (payload.miniQuiz ?? []).filter((q) => !q.band || teenOn)
+  const orderFor = useShuffledOrder()
   const completedLessons = useProgressStore((st) => st.completedLessons)
   // SPEC-006 FR-REV-13: warm-up questions about lessons the learner has already completed
   const recallQuestions = (payload.recall ?? []).filter((q) => q.fromLesson && completedLessons[q.fromLesson])
@@ -535,7 +537,8 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                   </p>
 
                   <div className="space-y-2.5">
-                    {q.options.map((opt, optIdx) => {
+                    {orderFor(q.question + '\u0000' + q.options.join('\u0000'), q.options.length).map((optIdx) => {
+                      const opt = q.options[optIdx]
                       const isThisSelected = selectedOpt === optIdx
                       let btnStyle = 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-300'
                       if (hasAnswered) {

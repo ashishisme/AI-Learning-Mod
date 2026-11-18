@@ -127,6 +127,9 @@ test.describe('English foundation (B1)', () => {
 
   for (const [name, open] of pages) {
     test(`English text matches release baseline: ${name}`, async ({ page }) => {
+      // Answer options are shuffled for learners; these tests compare page text, so they pin the order: with
+      // Math.random fixed near 1 the shuffle leaves every option in place.
+      await page.addInitScript(() => { Math.random = () => 0.999999 })
       await open(page)
       const text = await visibleText(page)
       if (process.env.UPDATE_I18N_BASELINE === '1') {

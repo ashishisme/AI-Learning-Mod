@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { ChoiceQuestion } from '../api'
 import { speechService } from '../services/speechService'
 import { useT } from '../i18n'
+import { useShuffledOrder } from '../services/shuffle'
 
 interface Props {
   heading: string
@@ -18,6 +19,7 @@ export const ChoiceCard: React.FC<Props> = ({ heading, emoji, question, testId, 
   const text = question.prompt || question.question || ''
   const answered = picked !== null
   const correct = picked === question.correctIndex
+  const order = useShuffledOrder()(text + '\u0000' + question.options.join('\u0000'), question.options.length)
 
   const pick = (i: number) => {
     if (answered) return
@@ -36,7 +38,8 @@ export const ChoiceCard: React.FC<Props> = ({ heading, emoji, question, testId, 
       </h2>
       <p className="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-100">{text}</p>
       <div className="space-y-2" role="group" aria-label={t('widget.answerChoices')}>
-        {question.options.map((opt, i) => {
+        {order.map((i) => {
+          const opt = question.options[i]
           let style = 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200'
           if (answered && i === question.correctIndex) style = 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-100 font-semibold'
           else if (answered && i === picked) style = 'border-amber-400 bg-amber-50 dark:bg-amber-950/30 text-amber-900 dark:text-amber-100'

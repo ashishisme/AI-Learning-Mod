@@ -120,6 +120,8 @@ test.describe('Kids age bands (AC-62, AC-63)', () => {
 
   test('an unbanded lesson looks the same in both bands', async ({ page }) => {
     const { bands: _b, ...plain } = banded as Record<string, unknown>
+    // Answer options are shuffled for learners; this test compares page text, so it pins the order.
+    await page.addInitScript(() => { Math.random = () => 0.999999 })
     await stubApp(page, plain)
     const texts: string[] = []
     for (const band of ['8-11', '12-14']) {
