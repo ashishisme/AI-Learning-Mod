@@ -14,7 +14,13 @@ Most of the work is content:
 - quizzes and the lesson list;
 - voices and recordings.
 
-Claude drafts it and the owner approves each file as `owner (beta)`.
+Claude drafts it and the owner approves each file as `owner (beta)`. The lessons are drafted by parallel subagents, one per lesson, all following [translation-brief.md](translation-brief.md). A term alignment pass follows before the owner reviews ([research.md](research.md) R4).
+
+**Status (2026-11-18):** stage A is done (60cfa35). For Kannada:
+- interface text, voices and the browser test are done (344ce67);
+- the lessons and quizzes are being drafted.
+
+See the Handoff section in [tasks.md](tasks.md).
 
 The code work is the Hindi-only parts found in [research.md](research.md) R2:
 - **Safety and personal-details rules:** Kannada/Tamil script and romanised (Kanglish/Tanglish) rules, all Indian digits folded, and zero-width joiners dropped.
@@ -73,6 +79,7 @@ No violations.
 ```text
 specs/015-kannada-tamil-languages/
 ├── spec.md  plan.md  research.md  data-model.md  quickstart.md
+├── translation-brief.md        # the brief every drafting subagent follows (reused for Tamil)
 ├── contracts/language-pack.md
 └── checklists/requirements.md
 ```
@@ -112,11 +119,13 @@ docs/adding-a-language.md                        # lessons learned
    Both languages stay hidden, so nothing changes for learners.
 2. **B, Kannada content:**
    - glossary (owner confirms), then interface text, then the listening test (owner picks the voices);
-   - lessons (Kids, Plain English, Detailed), quizzes, lesson list;
+   - lessons (Kids, Plain English, Detailed) and quizzes, drafted in parallel from the brief;
+   - term alignment across lessons and quizzes, added to the glossary;
+   - lesson list;
    - owner approves each file as `owner (beta)`;
    - dry run, cost approval, recording, owner upload;
    - set `approved` + beta, run the checks, release v0.13.0.
-3. **C, Tamil content:** the same as B, with the 390 px overflow check for long words; release in the next version.
+3. **C, Tamil content:** the same as B, using the same brief with `ta` in place of `kn`, with the 390 px overflow check for long words; release in the next version.
 4. **D:** update `docs/adding-a-language.md` with what the pilot taught, then close SPEC-015.
 
 ## Complexity Tracking

@@ -1,0 +1,10 @@
+{
+  "lessons": [
+    { "id": "1-intro", "module": "intro", "title": "ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ", "order": 0 },
+    { "id": "2-symbolic", "module": "symbolic", "title": "ಜ್ಞಾನ ನಿರೂಪಣೆ ಮತ್ತು ತಜ್ಞ ವ್ಯವಸ್ಥೆಗಳು", "order": 1 },
+    { "id": "3-neuralnetworks", "module": "neuralnetworks", "title": "ನ್ಯೂರಲ್ ನೆಟ್‌ವರ್ಕ್‌ಗಳು", "order": 2 },
+    { "id": "4-computervision", "module": "computervision", "title": "ಕಂಪ್ಯೂಟರ್ ದೃಷ್ಟಿ", "order": 3 },
+    { "id": "5-nlp", "module": "nlp", "title": "ನೈಸರ್ಗಿಕ ಭಾಷಾ ಸಂಸ್ಕರಣೆ", "order": 4 },
+    { "id": "7-ethics", "module": "ethics", "title": "ಜವಾಬ್ದಾರಿಯುತ ಎಐ", "order": 5 }
+  ]
+}

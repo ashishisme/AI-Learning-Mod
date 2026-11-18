@@ -4,6 +4,51 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 
 # Tasks: Kannada and Tamil
 
+## Handoff (read first; updated 2026-11-18)
+
+Anyone picking this up (person or agent) should start here. Work is on branch `cloud-beta-2`.
+
+**Done and pushed**
+- 60cfa35: stage 1 (safety, feedback, server messages, fonts, glossary).
+- 344ce67: `web/src/i18n/kn.json`, approved as `owner (beta)` in `content/review/kn.json`; `content/voices/kn.json`; `web/tests/languages-kn-ta.spec.ts` (T014; its lesson tests skip until the lesson files exist).
+- Kannada is still `hidden` in `public-content/languages.json`, so learners see nothing yet.
+
+**Drafted, not committed** (T018–T019 done 2026-11-19; term alignment done the same day: 13 decisions, 61 places, glossary now 72 terms)
+- `public-content/lang/kn/lessons/*.junior.json`: all 6 written.
+- `*.plain-english.json` and `*.detailed.json`: being written by parallel agents, one per lesson. Each lesson needs all three files.
+- `web/src/data/quizzes/kn.json`: done; the check is clean.
+- How to draft or fix a file: follow [translation-brief.md](translation-brief.md). It covers the inputs, the hard rules (only translatable fields change, Markdown, `§` and code are kept, clip step counts match) and style (Kids say ನೀನು, adults ನೀವು; glossary term, then the English in brackets at first use in each section).
+- Check one file:
+  ```bash
+  go run ./cmd/ingest -verify -audio=false 2>&1 | grep "kn <path>" | grep -v "no review entry"
+  ```
+  It must print nothing apart from `clip-check:` info lines.
+
+**Next steps, in order** (steps 1–5 done on 2026-11-19; the next one is T020 approval)
+1. Finish any missing lesson file. Compare against the 18 names in `public-content/lessons/`; a file is missing if `go run ./cmd/review -lang kn` lists it as `missing`. Then make sure every file passes the check above.
+2. Align terms between the quizzes and the lessons; the list collected so far is [kn-terms-to-align.md](kn-terms-to-align.md). The quiz agent chose these terms, which are not in the glossary:
+   - inference engine ತೀರ್ಮಾನ ಎಂಜಿನ್;
+   - inheritance ಬಳುವಳಿ;
+   - forward and backward chaining ಮುಂದಕ್ಕೆ/ಹಿಂದಕ್ಕೆ ಸಾಗುವ ತರ್ಕ;
+   - attention ಗಮನ;
+   - hallucination ಎಐ ಭ್ರಮೆ;
+   - narrow and general AI ಸೀಮಿತ/ಸಾಮಾನ್ಯ ಎಐ.
+
+   Use one term per concept across the lessons and quizzes. Add the agreed terms to `content/glossary/kn.json`; the owner reconfirms the glossary.
+3. Write `public-content/lang/kn/index.json` in the shape of `lang/hi/index.json`. Each title must be the start of its Detailed lesson's `title`.
+4. Run `go test ./internal/i18n/ ./internal/ingest/`, then from `web/` run `npx playwright test tests/languages-kn-ta.spec.ts`. The lesson tests should no longer skip.
+5. Tick T014, T018 and T019, then continue at T020 (owner approval with exact commands, plus a dated note for the server messages).
+6. T021 is the narration dry-run and needs the owner's cost approval before recording. T022: the owner runs the rsync. T023–T024: approve `kn` (keep beta), run the gates, then commit, push and tag v0.13.0 on the owner's word. Promote is always the owner's.
+
+**Rules that carry over**
+- Commit only with explicit paths. Never commit:
+  - tfvars;
+  - the owner's drafts: `concepts_brief.md`, `design_draft.md`, `issues_draft.md`, `docs/admin-development-roadmap-plan.md`, `docs/devcompass-review-and-plan.md`;
+  - `*.tmp3001.*`;
+  - `test-plain.png`.
+- Approvals are recorded only when the owner says so, as `-reviewer "owner (beta)"`.
+- If the owner's app runs on 3000/8080, run the browser tests with `-c playwright.tmp3001.config.ts`. There, `settings-hosted-local` always fails, and that is expected.
+
 **Input**: Design documents from `specs/015-kannada-tamil-languages/` ([plan.md](plan.md), [spec.md](spec.md), [research.md](research.md), [data-model.md](data-model.md), [contracts/language-pack.md](contracts/language-pack.md), [quickstart.md](quickstart.md))
 
 **Tests**: Included. The safety and personal-details rules are a security requirement (US3, SC-003), and the release check and font isolation (SC-004) need automated proof, as for Hindi (AC-48..AC-52).
@@ -127,7 +172,7 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 
 ### Tests for User Story 1
 
-- [ ] T014 [P] [US1] Write `web/tests/languages-kn-ta.spec.ts` (AC-84), with the runtime mocked to offer `kn` (beta). Tests:
+- [X] T014 [P] [US1] Write `web/tests/languages-kn-ta.spec.ts` (AC-84), with the runtime mocked to offer `kn` (beta). Tests:
   - the menu shows "ಕನ್ನಡ" with the beta label, and choosing it sets `<html lang="kn">` without a reload;
   - a lesson in each journey has no not-translated notice and requests NotoSansKannada;
   - (analysis G3, FR-009) a Kids lesson in Kannada requests the Baloo Tamma 2 font, and a Plain English lesson does not;
@@ -146,14 +191,23 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 
     The Standard voices are skipped.
   - Chirp3-HD voices refuse any pitch other than 0 ("This voice does not support pitch parameters"), so `content/voices/kn.json` must set `"pitch": 0` for them; only `speakingRate` may change. Price the chosen mix with `-dry-run` (T021) before recording.
-- [ ] T018 [P] [US1] Draft the six Kannada Kids lessons `public-content/lang/kn/lessons/<id>.junior.json` from the English, using the glossary. Keep the structure, `bands`, check-in answers and scene names. Run `go test ./internal/i18n/` after each.
-- [ ] T019 [P] [US1] Draft the six Kannada Plain English lessons and the six Detailed lessons (with clip captions and descriptions, the same `clip` names and step counts) in `public-content/lang/kn/lessons/`, plus `web/src/data/quizzes/kn.json` (the same correct answers) and `public-content/lang/kn/index.json` (each title is the start of its Detailed title). Run the parity check and the clip check.
-- [ ] T020 [US1] Owner review and approval, all as `owner (beta)`:
+- [X] T018 [P] [US1] Draft the six Kannada Kids lessons `public-content/lang/kn/lessons/<id>.junior.json` from the English, using the glossary. Keep the structure, `bands`, check-in answers and scene names. Run `go test ./internal/i18n/` after each.
+- [X] T019 [P] [US1] Draft the six Kannada Plain English lessons and the six Detailed lessons (with clip captions and descriptions, the same `clip` names and step counts) in `public-content/lang/kn/lessons/`, plus `web/src/data/quizzes/kn.json` (the same correct answers) and `public-content/lang/kn/index.json` (each title is the start of its Detailed title). Run the parity check and the clip check.
+- [X] T020 [US1] Owner review and approval, all as `owner (beta)`:
   - glossary, `web/src/i18n/kn.json`, the 18 lessons, quizzes, lesson list;
   - the Kannada server messages from T005.
 
   Give the owner the exact `go run ./cmd/review -lang kn -reviewer "owner (beta)" -approve …` command(s). Then `go run ./cmd/ingest -verify -audio=false` shows no `kn` problem.
   - (analysis U1) The server messages in `internal/i18n/messages.go` are Go code, so the ledger does not cover them. Record the owner's approval here as "Kannada server messages approved by the owner (beta) on <date>, commit <sha>". Any later change to a `kn` message needs a new note.
+  - **Approval note (2026-11-19):**
+    - Kannada server messages approved by the owner (beta) on 2026-11-19, commit 60cfa35.
+    - Also approved the same day:
+      - the 18 lessons and the quizzes, in `content/review/kn.json`;
+      - the lesson list `public-content/lang/kn/index.json`;
+      - the glossary `content/glossary/kn.json`, including the 40 terms added in the alignment pass.
+    - Left as drafted, by the "approve all" decision:
+      - the 5 differences between the interface and the lesson words in `kn-terms-to-align.md`;
+      - the roller-coaster option in the Kids ethics quiz.
 - [ ] T021 [US1] Run `go run ./cmd/narrate -lang kn -dry-run`, then report the recordings and characters billed. After the owner approves the cost, record with `go run ./cmd/narrate -lang kn` (0 failed).
 - [ ] T022 [US1] Owner uploads: `cd "/Users/santoshsharma/Documents/code/AI Learning Mod" && gcloud storage rsync --recursive public-content/audio gs://ai-learning-513415-ai-foundations-coach-narration/audio`. Check that `gcloud storage cat …/audio/kn/manifest.json | shasum` equals the local `shasum public-content/audio/kn/manifest.json`.
 - [ ] T023 [US1] Set `kn` to `"status": "approved"` (keep `"beta": true`) in `public-content/languages.json`. Run the release gates:

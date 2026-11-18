@@ -36,6 +36,7 @@ The point of SPEC-009 was that a new language should mostly be content. These fi
 - **Decision:** run the listening test with `go run ./cmd/narrate -lang kn -sample <voice>` for each candidate `kn-IN` voice from the speech service's current list, and the same for `ta-IN`. The owner picks one voice per persona: Chip (bright), Nova (warm), Alan (calm, deeper). Record the choice and date in `content/voices/<code>.json`, as Hindi does.
 - **Why:** it's the same process as Hindi (T055 in SPEC-009). `-sample` needs the language's UI greeting, so the interface text is drafted first.
 - **Rejected:** choosing voices without listening, since some voices mispronounce English terms kept in the text.
+- **Outcome for Kannada (2026-11-18):** Chip `kn-IN-Chirp3-HD-Kore`, Nova `kn-IN-Chirp3-HD-Aoede`, Alan `kn-IN-Chirp3-HD-Charon`, all at pitch 0, because Chirp3-HD refuses any other pitch. Claude proposed the set and the owner approved it.
 
 ## R4. Translation drafting
 
@@ -51,6 +52,12 @@ The point of SPEC-009 was that a new language should mostly be content. These fi
   4. quizzes;
   5. lesson list (its titles must start the Detailed titles).
 - **Rejected:** `cmd/translate` with Gemini (owner chose Claude), and doing both languages at once (owner chose Kannada first).
+- **How the drafting runs (learned 2026-11-18):** the lesson text, about 170,000 English characters plus about 10,000 in the quizzes, is too much for one working session. So the drafting runs in parallel:
+  - one subagent per lesson writes its Kids, Plain English and Detailed files, and one more writes the quizzes;
+  - every subagent follows the same brief, [translation-brief.md](translation-brief.md), which sets out the inputs, the hard rules, the style (Kids say ನೀನು, adults ನೀವು), the one-file check and what to report;
+  - after a usage-limit stop, each subagent resumes where it left off, and the files already written are kept.
+- **Term alignment step:** because the subagents work separately, each reports the terms it chose that are not in the glossary. Before the owner reviews, one pass picks one term per concept across all the lessons and quizzes and adds the agreed terms to the glossary, which the owner reconfirms. This happens between drafting and approval: T019, then this pass, then T020.
+- **One-file check:** `go run ./cmd/ingest -verify -audio=false | grep "<code> <path>"`. While a language is hidden, its problems print only as warnings. `no review entry` is expected until approval.
 
 ## R5. Approval
 
@@ -59,7 +66,7 @@ The point of SPEC-009 was that a new language should mostly be content. These fi
 
 ## R6. Size and cost
 
-- **Text:** 18 lesson files (6 of them Detailed, with clips), a quiz file, 623 interface strings and server messages per language. Hindi took the same volume.
+- **Text:** 18 lesson files (6 of them Detailed, with clips), a quiz file, 625 interface strings and server messages per language. The English lesson text is about 170,000 characters: Detailed files are 12–14k each, Plain English 7–10k, Kids 6.5–8k. Hindi took the same volume.
 - **Recordings:** about the Hindi count (435 files, about 132 MB) plus SPEC-014 clip steps, for each language. `narrate -dry-run` prices it before recording, and the owner approves the cost.
 - **Image size:** the release build copies recordings from the bucket, so each language adds about 130 MB to the image. That's within Cloud Run limits; noted for the owner.
 
