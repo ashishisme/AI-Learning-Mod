@@ -138,8 +138,8 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 ### Implementation for User Story 1
 
 - [X] T015 [US1] Draft `content/glossary/kn.json` in `hi.json`'s shape (the same English terms). The owner confirms the terms before T016.
-- [ ] T016 [US1] Draft `web/src/i18n/kn.json`: every key of `en.json`, with the placeholders `{n}`, `{total}`, `%s` etc. kept. Then run `go run ./cmd/ingest -verify -audio=false` (it prints warnings only while hidden) and `go test ./internal/i18n/`.
-- [ ] T017 [US1] Listening test. For each candidate `kn-IN` voice in the speech service's list, run `TTS_ACCESS_TOKEN="$(gcloud auth print-access-token)" TTS_PROJECT=ai-learning-513415 go run ./cmd/narrate -lang kn -sample <voice>` and give the owner the sample files. The owner picks one voice each for chip, nova and alan. Write `content/voices/kn.json` with a note naming the owner and the date.
+- [X] T016 [US1] Draft `web/src/i18n/kn.json`: every key of `en.json`, with the placeholders `{n}`, `{total}`, `%s` etc. kept. Then run `go run ./cmd/ingest -verify -audio=false` (it prints warnings only while hidden) and `go test ./internal/i18n/`.
+- [X] T017 [US1] Listening test. For each candidate `kn-IN` voice in the speech service's list, run `TTS_ACCESS_TOKEN="$(gcloud auth print-access-token)" TTS_PROJECT=ai-learning-513415 go run ./cmd/narrate -lang kn -sample <voice>` and give the owner the sample files. The owner picks one voice each for chip, nova and alan. Write `content/voices/kn.json` with a note naming the owner and the date.
   - Candidates (checked against the speech service on 2026-11-14):
     - `kn-IN-Wavenet-A`/`C` (female) and `B`/`D` (male), the same family as two of the Hindi voices;
     - the 30 `kn-IN-Chirp3-HD-*` voices, which sound the most natural but cost more per character. Suggested shortlist: Kore, Aoede, Leda (female); Charon, Puck, Orus (male).
@@ -161,7 +161,7 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
   - `go vet ./...`, `go test ./...`, `go run ./cmd/assetcheck`, `npx tsc --noEmit -p .`;
   - the full Playwright suite, including T014 un-skipped;
   - an owner check by eye (quickstart step 5).
-- [ ] T024 [US1] When the owner asks, commit with explicit paths and push `cloud-beta`. Tag `v0.12.0` only on the owner's word; the owner approves promote. Check the live site: `/api/runtime` lists `kn` with beta, the switcher shows it, and a lesson plays Kannada narration.
+- [ ] T024 [US1] When the owner asks, commit with explicit paths and push `cloud-beta-2`. Tag `v0.13.0` only on the owner's word; the owner approves promote. Check the live site: `/api/runtime` lists `kn` with beta, the switcher shows it, and a lesson plays Kannada narration.
 
 **Checkpoint**: Kannada is live as beta (SC-001, SC-002, SC-004, SC-006 for `kn`).
 
@@ -227,7 +227,7 @@ After the glossary (T015) and interface text (T016):
 
 ## Implementation Strategy
 
-### MVP (Kannada beta, v0.12.0)
+### MVP (Kannada beta, v0.13.0)
 
 T001–T013 (code and safety for both scripts), then T014–T024. Stop after Kannada ships and gather feedback before Tamil.
 

@@ -1,6 +1,6 @@
 # Implementation Plan: Kannada and Tamil
 
-**Branch**: `cloud-beta` (spec folder `015-kannada-tamil-languages`) | **Date**: 2026-11-14 | **Spec**: [spec.md](spec.md)
+**Branch**: `cloud-beta-2` (was `cloud-beta` until 2026-11-18; spec folder `015-kannada-tamil-languages`) | **Date**: 2026-11-14 | **Spec**: [spec.md](spec.md)
 
 **Input**: Feature specification from `specs/015-kannada-tamil-languages/spec.md`
 
@@ -23,7 +23,7 @@ The code work is the Hindi-only parts found in [research.md](research.md) R2:
 - **Device voice names:** Kannada and Tamil added to the fallback list.
 - **Tests:** the font test widened, and the safety test sets loaded per language.
 
-The code lands once and covers both scripts. Content ships Kannada first (v0.12.0), then Tamil.
+The code lands once and covers both scripts. Content ships Kannada first (v0.13.0), then Tamil (v0.14.0).
 
 ## Technical Context
 
@@ -115,7 +115,7 @@ docs/adding-a-language.md                        # lessons learned
    - lessons (Kids, Plain English, Detailed), quizzes, lesson list;
    - owner approves each file as `owner (beta)`;
    - dry run, cost approval, recording, owner upload;
-   - set `approved` + beta, run the checks, release v0.12.0.
+   - set `approved` + beta, run the checks, release v0.13.0.
 3. **C, Tamil content:** the same as B, with the 390 px overflow check for long words; release in the next version.
 4. **D:** update `docs/adding-a-language.md` with what the pilot taught, then close SPEC-015.
 

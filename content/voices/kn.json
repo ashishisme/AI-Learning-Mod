@@ -1,0 +1,9 @@
+{
+  "language": "kn",
+  "note": "Chosen by the owner on 2026-11-18 from a listening test of kn-IN WaveNet and Chirp3-HD voices (SPEC-015 T017). Chirp3-HD voices accept no pitch other than 0.",
+  "personas": {
+    "chip": { "voice": "kn-IN-Chirp3-HD-Kore", "speakingRate": 1.0, "pitch": 0 },
+    "nova": { "voice": "kn-IN-Chirp3-HD-Aoede", "speakingRate": 1.0, "pitch": 0 },
+    "alan": { "voice": "kn-IN-Chirp3-HD-Charon", "speakingRate": 1.0, "pitch": 0 }
+  }
+}

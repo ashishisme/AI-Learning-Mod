@@ -1,0 +1,14 @@
+{
+  "language": "kn",
+  "entries": [
+    {
+      "path": "web/src/i18n/kn.json",
+      "kind": "ui",
+      "sourceHash": "9c00cd302ca852e074f269de9c1926cb513ed8d1fb92ffe6cba2423c427cecbd",
+      "translationHash": "291ac1fadf89b0275a58c4d202f05757a2c2e2320c2ce9203ddfa68d71bbac64",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-18"
+    }
+  ]
+}

@@ -65,5 +65,5 @@ The point of SPEC-009 was that a new language should mostly be content. These fi
 
 ## R7. Releases
 
-- Kannada: v0.12.0 (or the next minor) once `kn` is approved and recorded. Tamil comes in the release after.
+- Kannada: v0.13.0 once `kn` is approved and recorded (v0.12.0 and v0.12.1 carried the SPEC-014 videos and the quiz-order fix). Tamil comes in the release after (v0.14.0).
 - The concept-clip work for the other lessons (SPEC-014) can run alongside. Each new clip adds captions to translate and record in every approved language, so finishing clips first saves re-recording.

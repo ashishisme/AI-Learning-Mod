@@ -1,6 +1,6 @@
 # Feature Specification: Kannada and Tamil
 
-**Feature Branch**: `cloud-beta` (no feature branch; work continues on `cloud-beta`)
+**Feature Branch**: `cloud-beta-2` (no feature branch; work moved from `cloud-beta` to `cloud-beta-2` on 2026-11-18)
 
 **Created**: 2026-11-14
 
