@@ -155,7 +155,8 @@ test.describe('English foundation (B1)', () => {
     expect(missing).toEqual([])
   })
 
-  test('English pages never fetch another language or the Devanagari font', async ({ page }) => {
+  // AC-80 (SPEC-015 FR-009, SC-004): no other language's catalogue or script font on English pages.
+  test('English pages never fetch another language or an Indian-script font', async ({ page }) => {
     const urls: string[] = []
     page.on('request', (r) => urls.push(r.url()))
     for (const [, open] of pages) {
@@ -163,6 +164,21 @@ test.describe('English foundation (B1)', () => {
       await page.getByRole('heading').first().waitFor()
     }
     await page.waitForTimeout(800)
-    expect(urls.filter((u) => /\/hi\.json|NotoSansDevanagari/.test(u))).toEqual([])
+    expect(urls.filter((u) => /\/(hi|kn|ta)\.json|NotoSans(Devanagari|Kannada|Tamil)|Baloo(Tamma|Thambi)/.test(u))).toEqual([])
+  })
+
+  // AC-80: a script's font is fetched only when that script is on screen, and only that script's font.
+  test('Kannada text fetches the Kannada font and not the Tamil one', async ({ page }) => {
+    const urls: string[] = []
+    page.on('request', (r) => urls.push(r.url()))
+    await page.goto('/')
+    await page.getByRole('heading').first().waitFor()
+    await page.evaluate(() => {
+      const p = document.createElement('p')
+      p.textContent = 'ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ'
+      document.body.appendChild(p)
+    })
+    await expect.poll(() => urls.some((u) => /NotoSansKannada/.test(u))).toBe(true)
+    expect(urls.filter((u) => /NotoSans(Tamil|Devanagari)|Baloo(Tamma|Thambi)/.test(u))).toEqual([])
   })
 })
