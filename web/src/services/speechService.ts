@@ -40,7 +40,9 @@ export const VOICE_PERSONAS: Record<VoicePersonaId, VoicePersona> = {
     rate: 1.02,
     preferredKeywords: ['Google US English', 'Samantha', 'Victoria', 'Karen', 'Zira', 'Natural',
       // Hindi device voices (SPEC-009 FR-013): Windows, macOS, Android
-      'Kalpana', 'Google हिन्दी', 'Lekha'],
+      'Kalpana', 'Google हिन्दी', 'Lekha',
+      // Kannada and Tamil device voices (SPEC-015 T007), a fallback only: lessons use recordings
+      'Google ಕನ್ನಡ', 'Google தமிழ்', 'Valluvar'],
   },
   nova: {
     id: 'nova',

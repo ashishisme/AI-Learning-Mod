@@ -1,0 +1,166 @@
+{
+  "language": "kn",
+  "note": "Draft by Claude, 2026-11-18 (SPEC-015 T015). Confirmed by the owner (beta) on 2026-11-18, as drafted. Show the Kannada term followed by the English in brackets at its first use in each section, as for Hindi.",
+  "terms": [
+    {
+      "en": "artificial intelligence",
+      "target": "ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ",
+      "note": "Abbreviation ಎಐ (AI) is fine after first use."
+    },
+    {
+      "en": "machine learning",
+      "target": "ಯಂತ್ರ ಕಲಿಕೆ",
+      "note": "ಮಷೀನ್ ಲರ್ನಿಂಗ್ is also heard; the lessons use ಯಂತ್ರ ಕಲಿಕೆ."
+    },
+    {
+      "en": "deep learning",
+      "target": "ಆಳವಾದ ಕಲಿಕೆ",
+      "note": ""
+    },
+    {
+      "en": "neural network",
+      "target": "ನ್ಯೂರಲ್ ನೆಟ್‌ವರ್ಕ್",
+      "note": "Transliterated, as commonly used."
+    },
+    {
+      "en": "neuron",
+      "target": "ನ್ಯೂರಾನ್",
+      "note": "Transliterate; ನರಕೋಶ is the biology word."
+    },
+    {
+      "en": "perceptron",
+      "target": "ಪರ್ಸೆಪ್ಟ್ರಾನ್",
+      "note": "Transliterate; no common Kannada word."
+    },
+    {
+      "en": "algorithm",
+      "target": "ಅಲ್ಗಾರಿದಮ್",
+      "note": "ಕ್ರಮಾವಳಿ is the formal word."
+    },
+    {
+      "en": "data",
+      "target": "ದತ್ತಾಂಶ",
+      "note": "ಡೇಟಾ is also understood."
+    },
+    {
+      "en": "dataset",
+      "target": "ದತ್ತಾಂಶ ಸಂಗ್ರಹ",
+      "note": ""
+    },
+    {
+      "en": "training",
+      "target": "ತರಬೇತಿ",
+      "note": "Of a model."
+    },
+    {
+      "en": "model",
+      "target": "ಮಾದರಿ",
+      "note": ""
+    },
+    {
+      "en": "prediction",
+      "target": "ಮುನ್ಸೂಚನೆ",
+      "note": ""
+    },
+    {
+      "en": "weight",
+      "target": "ತೂಕ",
+      "note": "Of a neuron connection."
+    },
+    {
+      "en": "bias",
+      "target": "ಪಕ್ಷಪಾತ",
+      "note": "In the ethics sense. For the neuron term use ಬಯಾಸ್ (bias)."
+    },
+    {
+      "en": "convolution",
+      "target": "ಕನ್ವಲ್ಯೂಷನ್",
+      "note": "Transliterate."
+    },
+    {
+      "en": "filter",
+      "target": "ಫಿಲ್ಟರ್",
+      "note": ""
+    },
+    {
+      "en": "pixel",
+      "target": "ಪಿಕ್ಸೆಲ್",
+      "note": ""
+    },
+    {
+      "en": "computer vision",
+      "target": "ಕಂಪ್ಯೂಟರ್ ದೃಷ್ಟಿ",
+      "note": ""
+    },
+    {
+      "en": "natural language processing",
+      "target": "ನೈಸರ್ಗಿಕ ಭಾಷಾ ಸಂಸ್ಕರಣೆ",
+      "note": "Short form ಎನ್‌ಎಲ್‌ಪಿ (NLP)."
+    },
+    {
+      "en": "token",
+      "target": "ಟೋಕನ್",
+      "note": ""
+    },
+    {
+      "en": "embedding",
+      "target": "ಎಂಬೆಡಿಂಗ್",
+      "note": "Transliterate."
+    },
+    {
+      "en": "vector",
+      "target": "ವೆಕ್ಟರ್",
+      "note": "Owner chose ವೆಕ್ಟರ್ over the school-maths word ಸದಿಶ (2026-11-18)."
+    },
+    {
+      "en": "expert system",
+      "target": "ತಜ್ಞ ವ್ಯವಸ್ಥೆ",
+      "note": ""
+    },
+    {
+      "en": "rule",
+      "target": "ನಿಯಮ",
+      "note": ""
+    },
+    {
+      "en": "knowledge base",
+      "target": "ಜ್ಞಾನ ಭಂಡಾರ",
+      "note": ""
+    },
+    {
+      "en": "symbolic AI",
+      "target": "ಸಾಂಕೇತಿಕ ಎಐ",
+      "note": ""
+    },
+    {
+      "en": "Turing test",
+      "target": "ಟ್ಯೂರಿಂಗ್ ಪರೀಕ್ಷೆ",
+      "note": ""
+    },
+    {
+      "en": "fairness",
+      "target": "ನ್ಯಾಯಸಮ್ಮತತೆ",
+      "note": ""
+    },
+    {
+      "en": "responsible AI",
+      "target": "ಜವಾಬ್ದಾರಿಯುತ ಎಐ",
+      "note": ""
+    },
+    {
+      "en": "quiz",
+      "target": "ರಸಪ್ರಶ್ನೆ",
+      "note": "Owner chose ರಸಪ್ರಶ್ನೆ (2026-11-18)."
+    },
+    {
+      "en": "weighted sum",
+      "target": "ತೂಕದ ಮೊತ್ತ",
+      "note": ""
+    },
+    {
+      "en": "layer",
+      "target": "ಪದರ",
+      "note": "Of a neural network; plural ಪದರಗಳು."
+    }
+  ]
+}

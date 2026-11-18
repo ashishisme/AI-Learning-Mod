@@ -1,0 +1,142 @@
+[
+  {
+    "text": "என் நம்பர் 9876543210",
+    "kind": "phone"
+  },
+  {
+    "text": "என் நம்பர் ௯௮௭௬௫௪௩௨௧௦",
+    "kind": "phone"
+  },
+  {
+    "text": "அழைக்கவும் 98765 43210",
+    "kind": "phone"
+  },
+  {
+    "text": "போன்: ௯௮௭௬௫ ௪௩௨௧௦",
+    "kind": "phone"
+  },
+  {
+    "text": "en number 9876543210 ku call pannunga",
+    "kind": "phone"
+  },
+  {
+    "text": "ஒன்பது எட்டு ஏழு ஆறு ஐந்து நான்கு மூன்று இரண்டு ஒன்று பூஜ்ஜியம்",
+    "kind": "phone"
+  },
+  {
+    "text": "என் மின்னஞ்சல் asha@gmail.com",
+    "kind": "email"
+  },
+  {
+    "text": "asha அட் gmail டாட் காம்",
+    "kind": "email"
+  },
+  {
+    "text": "ஆஷா அட் ஜிமெயில் டாட் காம் க்கு எழுதுங்கள்",
+    "kind": "email"
+  },
+  {
+    "text": "en email asha.k@yahoo.in",
+    "kind": "email"
+  },
+  {
+    "text": "என் முகவரி சென்னை",
+    "kind": "address"
+  },
+  {
+    "text": "எங்கள் வீட்டு முகவரி அண்ணா நகர்",
+    "kind": "address"
+  },
+  {
+    "text": "வீடு எண் 27, காந்தி தெரு",
+    "kind": "address"
+  },
+  {
+    "text": "45 சாந்தி நகர்",
+    "kind": "address"
+  },
+  {
+    "text": "12 மெயின் ரோடு, அடையார்",
+    "kind": "address"
+  },
+  {
+    "text": "பின் கோடு 600001",
+    "kind": "address"
+  },
+  {
+    "text": "பின் கோடு ௬௦௦௦௦௧",
+    "kind": "address"
+  },
+  {
+    "text": "en mugavari anna nagar",
+    "kind": "address"
+  },
+  {
+    "text": "veedu number 15 la irukken",
+    "kind": "address"
+  },
+  {
+    "text": "8 வது தெரு, தி நகர்",
+    "kind": "address"
+  },
+  {
+    "text": "என் ஆதார் 1234 5678 9012",
+    "kind": "id_number"
+  },
+  {
+    "text": "ஆதார் எண் ௧௨௩௪ ௫௬௭௮ ௯௦௧௨",
+    "kind": "id_number"
+  },
+  {
+    "text": "பான் ABCDE1234F",
+    "kind": "id_number"
+  },
+  {
+    "text": "என் பிறந்த நாள் 12 மார்ச் 2014",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "என் பிறந்தநாள் ௫ ஜூன்",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "என் பிறந்த தேதி 12/03/2014",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "நான் 2014 இல் பிறந்தேன்",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "en birthday 5 june 2013",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "en pirandha naal 12 march",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "என் இன்ஸ்டா பாலோ பண்ணுங்க",
+    "kind": "link"
+  },
+  {
+    "text": "வாட்ஸ்அப் இல் மெசேஜ் பண்ணுங்க",
+    "kind": "link"
+  },
+  {
+    "text": "என் யூடியூப் பாருங்க",
+    "kind": "link"
+  },
+  {
+    "text": "en insta follow pannunga",
+    "kind": "link"
+  },
+  {
+    "text": "whatsapp la message pannunga",
+    "kind": "link"
+  },
+  {
+    "text": "www.example.com பாருங்க",
+    "kind": "link"
+  }
+]

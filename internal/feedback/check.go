@@ -45,12 +45,15 @@ var (
 	datePart = `(?:\d{1,2}(?:st|nd|rd|th)?[\s/\-.]+(?:\d{1,2}|` + monthName + `)(?:[\s/\-.,]+\d{2,4})?|` + monthName + `\s+\d{1,2}(?:st|nd|rd|th)?(?:[\s,]+\d{2,4})?|\d{4}[\-/.]\d{1,2}[\-/.]\d{1,2})`
 	dobRe    = regexp.MustCompile(`\b(?:my birthday|my birth\s?date|my date of birth|date of birth|my dob|dob|born on|i was born)\b(?:\s*(?:is|was|:|-|on|in))*\s*(?:` + datePart + `|\d{4}\b)`)
 
-	digitTokenRe = regexp.MustCompile(`[a-z]+|\d+|\p{Devanagari}+`)
+	digitTokenRe = regexp.MustCompile(`[a-z]+|\d+|\p{Devanagari}+|\p{Kannada}+|\p{Tamil}+`)
 
 	numberWords = map[string]int{"zero": 1, "oh": 1, "one": 1, "two": 1, "three": 1, "four": 1, "five": 1, "six": 1, "seven": 1, "eight": 1, "nine": 1,
 		// Hindi and Hinglish. "do" (two) is left out: it is also an English word.
 		"शून्य": 1, "एक": 1, "दो": 1, "तीन": 1, "चार": 1, "पांच": 1, "छह": 1, "छः": 1, "सात": 1, "आठ": 1, "नौ": 1,
-		"shunya": 1, "ek": 1, "teen": 1, "chaar": 1, "char": 1, "paanch": 1, "panch": 1, "chhe": 1, "chhah": 1, "saat": 1, "aath": 1, "nau": 1}
+		"shunya": 1, "ek": 1, "teen": 1, "chaar": 1, "char": 1, "paanch": 1, "panch": 1, "chhe": 1, "chhah": 1, "saat": 1, "aath": 1, "nau": 1,
+		// Kannada and Tamil (SPEC-015 FR-011)
+		"ಸೊನ್ನೆ": 1, "ಒಂದು": 1, "ಎರಡು": 1, "ಮೂರು": 1, "ನಾಲ್ಕು": 1, "ಐದು": 1, "ಆರು": 1, "ಏಳು": 1, "ಎಂಟು": 1, "ಒಂಬತ್ತು": 1,
+		"பூஜ்ஜியம்": 1, "பூஜ்யம்": 1, "சுழியம்": 1, "ஒன்று": 1, "இரண்டு": 1, "மூன்று": 1, "நான்கு": 1, "ஐந்து": 1, "ஆறு": 1, "ஏழு": 1, "எட்டு": 1, "ஒன்பது": 1}
 	repeatWords = map[string]int{"double": 2, "triple": 3}
 )
 
@@ -94,30 +97,60 @@ var (
 		`\bmain\s+(?:` + datePart + `|\d{4})\s+(?:mein|me|main|ko)\s+paida\b`)
 )
 
-// Other scripts' digits an Indian learner may type, by the code point of their zero.
-var digitZeros = []rune{0x0660, 0x06F0, 0x0966, 0x09E6, 0x0A66, 0x0AE6, 0x0B66, 0x0BE6, 0x0C66, 0x0CE6, 0x0D66, 0xFF10}
+// Kannada and Tamil rules (SPEC-015 FR-011), shaped like the Hindi ones: script, native digits (already folded by
+// normalizeForCheck) and the common romanised form. Kannada and Tamil add endings straight onto a word, so most rules
+// match the start of a word and do not need a closing boundary.
+const (
+	knMonth  = `(?:ಜನವರಿ|ಫೆಬ್ರವರಿ|ಮಾರ್ಚ್|ಏಪ್ರಿಲ್|ಮೇ|ಜೂನ್|ಜುಲೈ|ಆಗಸ್ಟ್|ಸೆಪ್ಟೆಂಬರ್|ಅಕ್ಟೋಬರ್|ನವೆಂಬರ್|ಡಿಸೆಂಬರ್)`
+	taMonth  = `(?:ஜனவரி|பிப்ரவரி|மார்ச்|ஏப்ரல்|மே|ஜூன்|ஜூலை|ஆகஸ்ட்|செப்டம்பர்|அக்டோபர்|நவம்பர்|டிசம்பர்)`
+	knTaDate = `(?:\d{1,2}[\s/\-.]+(?:\d{1,2}|` + knMonth + `|` + taMonth + `|` + monthName + `)(?:[\s/\-.,]+\d{2,4})?|(?:` + knMonth + `|` + taMonth + `)\s+\d{1,2}|\d{4}[\-/.]\d{1,2}[\-/.]\d{1,2}|\d{4})`
+	knApps   = `(?:ಇನ್ಸ್ಟಾ(?:ಗ್ರಾಮ್)?|ಸ್ನ್ಯಾಪ್ಚಾಟ್|ಟೆಲಿಗ್ರಾಮ್|ವಾಟ್ಸಾಪ್|ವಾಟ್ಸ್ಆಪ್|ಫೇಸ್ಬುಕ್|ಯೂಟ್ಯೂಬ್)`
+	taApps   = `(?:இன்ஸ்டா(?:கிராம்)?|ஸ்னாப்சாட்|டெலிகிராம்|வாட்ஸ்அப்|வாட்ஸ்ஆப்|ஃபேஸ்புக்|பேஸ்புக்|யூடியூப்)`
+	knTaOwn  = `(?:nanna|namma|en|ennoda|engal)` // "my", "our" in Kanglish and Tanglish
+)
+
+var (
+	// "asha ಅಟ್ gmail ಡಾಟ್ ಕಾಮ್", "asha அட் gmail டாட் காம்"
+	knTaEmailRe = regexp.MustCompile(hiStart + `\S+\s+(?:ಅಟ್|அட்)\s+\S+\s+(?:ಡಾಟ್|டாட்)\s+(?:ಕಾಮ್|ಇನ್|காம்|இன்|com|in|org|net)` + hiEnd)
+
+	// "ನನ್ನ ಇನ್ಸ್ಟಾ", "ವಾಟ್ಸಾಪ್ ನಲ್ಲಿ ಮೆಸೇಜ್", "என் இன்ஸ்டா", "வாட்ஸ்அப் இல் மெசேஜ்", "nanna insta", "whatsapp la message"
+	knTaLinkRe = regexp.MustCompile(hiStart + `(?:(?:ನನ್ನ|ನಮ್ಮ)\s+` + knApps + `|` + knApps + `\s*(?:ನಲ್ಲಿ|ಅಲ್ಲಿ|ಗೆ)\s+(?:ನನ್ನನ್ನು\s+)?(?:ಫಾಲೋ|ಆಡ್|ಮೆಸೇಜ್|ಸೇರಿಸ))|` +
+		hiStart + `(?:(?:என்|என்னுடைய|எங்கள்)\s+` + taApps + `|` + taApps + `\s*(?:இல்|ல|லே|இலே)\s+(?:என்னை\s+)?(?:பாலோ|ஃபாலோ|ஆட்|மெசேஜ்|சேர்))|` +
+		`\b` + knTaOwn + `\s+` + enApps + `\b|\b` + enApps + `\s+(?:nalli|alli|la|le|il)\s+(?:nannannu\s+|ennai\s+)?(?:follow|add|message|msg|dm|text)\b`)
+
+	// "ಮನೆ ನಂ. 27", "வீடு எண் 27", "mane number 15", "veedu number 15"
+	knTaPremisesRe = regexp.MustCompile(hiStart + `(?:(?:ಮನೆ|ಮನೆಯ|ಫ್ಲಾಟ್|ಪ್ಲಾಟ್)\s*(?:ನಂ\.?|ನಂಬರ್|ಸಂಖ್ಯೆ)|(?:வீடு|வீட்டு|கதவு|பிளாட்)\s*(?:எண்|நம்பர்))\s*[:\-]?\s*\d+|` +
+		`\b(?:mane|veedu|kadhavu)\s*(?:no\.?|number|nambar|en)\s*[:\-]?\s*\d+`)
+	knTaPostcodeRe = regexp.MustCompile(hiStart + `(?:ಪಿನ್\s?ಕೋಡ್|பின்\s?கோடு|அஞ்சல்\s+குறியீடு)\s*[:\-]?\s*\d{6}\b`)
+	// "ನನ್ನ ವಿಳಾಸ", "ನಮ್ಮ ಮನೆಯ ವಿಳಾಸ", "என் முகவரி", "எங்கள் வீட்டு முகவரி", "nanna vilasa", "en mugavari"
+	knTaStatedAddr = regexp.MustCompile(hiStart + `(?:(?:ನನ್ನ|ನಮ್ಮ)\s+(?:ಮನೆಯ\s+|ಮನೆ\s+)?ವಿಳಾಸ|(?:என்|என்னுடைய|எங்கள்|எங்க)\s+(?:வீட்டு\s+)?முகவரி)|` +
+		`\b(?:nanna|namma)\s+(?:mane\s+)?(?:vilasa|address)\b|\b(?:en|ennoda|engal)\s+(?:veettu\s+)?(?:mugavari|address)\b`)
+	// "45 ಶಾಂತಿ ನಗರ", "3ನೇ ಕ್ರಾಸ್", "8 வது தெரு": a number (with an ending such as ನೇ or வது), up to two words, then a street word.
+	knTaStreetRe = regexp.MustCompile(`\d+[\p{Kannada}\p{Tamil}a-z]*(?:[\s,/\-]+[\p{Kannada}\p{Tamil}a-z.']+){0,2}[\s,]+(?:ರಸ್ತೆ|ಬಡಾವಣೆ|ನಗರ|ಕ್ರಾಸ್|ಲೇಔಟ್|ಬೀದಿ|ಮುಖ್ಯರಸ್ತೆ|தெரு|சாலை|நகர்|வீதி|காலனி|ரோடு|ரோட்)` + hiEnd)
+
+	// A date after "ನನ್ನ ಹುಟ್ಟಿದ ದಿನ" / "என் பிறந்த நாள்", or "ನಾನು 2014 ರಲ್ಲಿ ಹುಟ್ಟಿದೆ" / "நான் 2014 இல் பிறந்தேன்".
+	// Someone else's birth ("ಟ್ಯೂರಿಂಗ್ 1912 ರಲ್ಲಿ ಹುಟ್ಟಿದರು") passes, as in English and Hindi.
+	knTaDobRe = regexp.MustCompile(hiStart + `ನನ್ನ\s+(?:ಹುಟ್ಟಿದ\s?ದಿನ(?:ಾಂಕ)?|ಜನ್ಮ\s?ದಿನ(?:ಾಂಕ)?|ಹುಟ್ಟುಹಬ್ಬ|ಬರ್ತ್\s?ಡೇ)(?:\s*(?:ಇದೆ|ಆಗಿದೆ|:|-))*\s*` + knTaDate + `|` +
+		hiStart + `ನಾನು\s+` + knTaDate + `\s*(?:ರಲ್ಲಿ|ರಂದು|ನಲ್ಲಿ)?\s+ಹುಟ್ಟಿ|` +
+		hiStart + `(?:என்|என்னுடைய)\s+(?:பிறந்த\s?நாள்|பிறந்த\s?தேதி|பர்த்\s?டே)(?:\s*(?:ஆகும்|:|-))*\s*` + knTaDate + `|` +
+		hiStart + `நான்\s+` + knTaDate + `\s*(?:இல்|ல்|அன்று)?\s+பிறந்த|` +
+		`\b` + knTaOwn + `\s+(?:birthday|bday|dob|huttida\s?dina|huttuhabba|janmadina|pirandha\s?naal|piranda\s?naal|pirandhanaal)\b(?:\s*(?:is|:|-))*\s*(?:` + datePart + `|\d{4}\b)`)
+)
 
 // normalizeForCheck lower-cases, removes invisible characters, turns other digits into ASCII and
 // folds Devanagari spelling variants.
 func normalizeForCheck(s string) string {
 	return strings.ToLower(strings.Map(func(r rune) rune {
-		if f := i18n.FoldDevanagari(r); f != r {
+		if f := i18n.FoldScripts(r); f != r {
 			return f
 		}
 		switch r {
-		case 0x200B, 0x200C, 0x200D, 0x2060, 0xFEFF, 0x00AD:
-			return -1
 		case 0x00A0, 0x202F:
 			return ' '
 		case 0xFF20:
 			return '@'
 		case 0xFF0E:
 			return '.'
-		}
-		for _, z := range digitZeros {
-			if r >= z && r <= z+9 {
-				return '0' + (r - z)
-			}
 		}
 		return r
 	}, s))
@@ -216,14 +249,15 @@ func Check(message string) (kind string, found bool) {
 	s := normalizeForCheck(message)
 	squeezed := strings.Join(strings.Fields(s), "") // "a . b @ g m a i l . c o m"
 	switch {
-	case emailRe.MatchString(s), emailRe.MatchString(squeezed), spokenEmailRe.MatchString(s), hiEmailRe.MatchString(s):
+	case emailRe.MatchString(s), emailRe.MatchString(squeezed), spokenEmailRe.MatchString(s), hiEmailRe.MatchString(s), knTaEmailRe.MatchString(s):
 		return KindEmail, true
-	case dobRe.MatchString(s), hiDobRe.MatchString(s):
+	case dobRe.MatchString(s), hiDobRe.MatchString(s), knTaDobRe.MatchString(s):
 		return KindDateOfBirth, true
-	case linkRe.MatchString(s), handleRe.MatchString(s), hiLinkRe.MatchString(s):
+	case linkRe.MatchString(s), handleRe.MatchString(s), hiLinkRe.MatchString(s), knTaLinkRe.MatchString(s):
 		return KindLink, true
 	case streetRe.MatchString(s), premisesRe.MatchString(s), postcodeRe.MatchString(s), statedAddr.MatchString(s),
-		hiPremisesRe.MatchString(s), hiPostcodeRe.MatchString(s), hiStatedAddr.MatchString(s), hiStreetRe.MatchString(s):
+		hiPremisesRe.MatchString(s), hiPostcodeRe.MatchString(s), hiStatedAddr.MatchString(s), hiStreetRe.MatchString(s),
+		knTaPremisesRe.MatchString(s), knTaPostcodeRe.MatchString(s), knTaStatedAddr.MatchString(s), knTaStreetRe.MatchString(s):
 		return KindAddress, true
 	case panRe.MatchString(s):
 		return KindIDNumber, true

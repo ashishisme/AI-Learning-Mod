@@ -1,14 +1,27 @@
-// SPEC: SPEC-009 FR-023, SC-006; FR-REV-20
+// SPEC: SPEC-009 FR-023, SC-006; FR-REV-20; AC-82 (FR-I18N-05 amended 2.18.0)
 package api
 
 import (
 	"encoding/json"
 	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 )
 
-func TestScreenQuestionHindi(t *testing.T) {
-	data, err := os.ReadFile("testdata/hi_safety.json")
+// Every language with a testdata/<code>_safety.json test set: Hindi, Kannada, Tamil.
+func TestScreenQuestionInEveryLanguage(t *testing.T) {
+	files, _ := filepath.Glob("testdata/*_safety.json")
+	if len(files) < 3 {
+		t.Fatalf("found %d language test sets, want hi, kn and ta", len(files))
+	}
+	for _, f := range files {
+		t.Run(strings.TrimSuffix(filepath.Base(f), "_safety.json"), func(t *testing.T) { screenCorpus(t, f) })
+	}
+}
+
+func screenCorpus(t *testing.T, path string) {
+	data, err := os.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -41,9 +54,12 @@ func TestScreenQuestionHindi(t *testing.T) {
 	}
 }
 
-// Devanagari vowel signs are marks, not letters: normalising must keep them and fold digits.
+// Vowel signs are marks, not letters: normalising must keep them, fold digits and drop zero-width joiners.
 func TestNormalizeForScreeningKeepsDevanagari(t *testing.T) {
 	for in, want := range map[string]string{
+		"ನಂಬರ್ ೯೮೭೬೫":         "ನಂಬರ್ 98765",
+		"ಪಾಸ್\u200cವರ್ಡ್":     "ಪಾಸ್ವರ್ಡ್",
+		"எண் ௯௮௭":             "எண் 987",
 		"मैं मरना चाहता हूँ!": "मैं मरना चाहता हूं",
 		"ख़ुद को":             "खुद को",
 		"नंबर ९८७६५":          "नंबर 98765",
