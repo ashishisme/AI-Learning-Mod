@@ -135,3 +135,22 @@ func TestStructureRules(t *testing.T) {
 		}
 	}
 }
+
+// SPEC: AC-81 (FR-CNT-08, FR-CNT-13 amended 2.17.0). A Kids clip's captions are held to the 8–11 limits.
+func TestKidsClipCaptionsAreChecked(t *testing.T) {
+	withClip := func(steps string) []byte {
+		section := strings.Replace(goodSection, `"teen":`, `"diagram":{"type":"clip","clip":"dog","media":"video","steps":`+steps+`},"teen":`, 1)
+		return lesson(true, section, recap3, quizOK)
+	}
+	_, f := check(t, withClip(`["Chip sees a dog.","Chip sees more dogs.","Chip finds a tail.","A new dog comes.","Chip says dog."]`), true)
+	if r := rules(f); strings.Contains(r, "clip-grade") || strings.Contains(r, "long-sentence") {
+		t.Errorf("plain captions refused: %s", r)
+	}
+	_, f = check(t, withClip(`["Sophisticated computational representations encapsulate multidimensional semantic relationships.",`+
+		`"Characteristically, contextualised embeddings differentiate polysemous terminology.","Chip sees a dog.","Chip sees a cat.",`+
+		`"Eventually the convolutional architecture recognises hierarchical compositional features automatically and consistently and reliably every single time it looks at a brand new picture of a cat."]`), true)
+	r := rules(f)
+	if !strings.Contains(r, "FAIL:8-11:clip-grade") || !strings.Contains(r, "FAIL:8-11:long-sentence") {
+		t.Errorf("hard captions passed: %s", r)
+	}
+}

@@ -854,40 +854,6 @@
       }
     },
     {
-      "id": "clip-perceptron-learning",
-      "status": "approved",
-      "trademarkScreen": "clear",
-      "creator": "hand-authored SVG (Claude, 2026-11-14)",
-      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
-      "releaseFiles": [
-        {
-          "path": "clips/perceptron-learning.svg",
-          "sha256": "1ee6ca6b8d66fea353eda580ce44b6cb58e49cdeeb180510808225d8a3ded6b8"
-        }
-      ],
-      "purpose": "lesson 3 concept clip: a dividing line tilts as the perceptron learning rule corrects mistakes",
-      "sourceMaster": "design/brand/source/clips/perceptron-learning.svg",
-      "sourceSha256": "1ee6ca6b8d66fea353eda580ce44b6cb58e49cdeeb180510808225d8a3ded6b8",
-      "usageLocation": [
-        "web/src/components/ClipPlayer.tsx"
-      ],
-      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
-      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
-      "reviewers": [
-        {
-          "role": "owner",
-          "decision": "approved",
-          "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
-        }
-      ],
-      "decorative": true,
-      "trademarkReview": {
-        "result": "clear",
-        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
-        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
-      }
-    },
-    {
       "id": "clip-supervised-learning",
       "status": "approved",
       "trademarkScreen": "clear",
@@ -953,6 +919,762 @@
         "result": "clear",
         "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
         "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-perceptron-learning-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/perceptron-learning.webm",
+          "sha256": "2f68eea3a35b153aa0a6a04d9907e743231d114a14ddecc861a896011b6ad81c"
+        },
+        {
+          "path": "videos/perceptron-learning.mp4",
+          "sha256": "9d9934120d9976d2c63360b8b493946fa72e2ebcb934aa326dcb2069181efb2f"
+        },
+        {
+          "path": "videos/perceptron-learning-poster.jpg",
+          "sha256": "152557a43d91db2dc68244c1ed604f5dc0b5d3bf3bec94153d1a68473ff3d549"
+        }
+      ],
+      "purpose": "lesson 3 60fps fluid concept clip: dividing line rotates and tilts with shaded half-spaces as perceptron weights learn",
+      "sourceMaster": "design/brand/source/videos/perceptron-learning.webm",
+      "sourceSha256": "2f68eea3a35b153aa0a6a04d9907e743231d114a14ddecc861a896011b6ad81c",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the lesson 3 pilot video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original mathematical geometric animation, no third-party media",
+        "evidence": "Owner approved the lesson 3 pilot video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-turing-test-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/turing-test.webm",
+          "sha256": "f348d64bfe0dabb9600d1d0572d1c61f30eb8492b89e37b4626bc11e1c30ad27"
+        },
+        {
+          "path": "videos/turing-test.mp4",
+          "sha256": "894169c58fce377ae4ce395b2d45921305fa84b526f91a5604e4eed8d8d117f5"
+        },
+        {
+          "path": "videos/turing-test-poster.jpg",
+          "sha256": "fd3bb92642f7e0f649aed3ca17ab85c3450c7eaed21851a35ff3a4811a6b6d80"
+        }
+      ],
+      "purpose": "lesson 1 60fps concept clip: interrogator communicates with human and statistical AI with confidence gauge",
+      "sourceMaster": "design/brand/source/videos/turing-test.webm",
+      "sourceSha256": "f348d64bfe0dabb9600d1d0572d1c61f30eb8492b89e37b4626bc11e1c30ad27",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the lesson 1 video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original mathematical geometric animation, no third-party media",
+        "evidence": "Owner approved the lesson 1 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-forward-chaining-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/forward-chaining.webm",
+          "sha256": "a5fbface3f9883e5944483a2c7baf2858a6354d788855db85cec1d65ead9c063"
+        },
+        {
+          "path": "videos/forward-chaining.mp4",
+          "sha256": "ae763cd55ac27812846d72ec60d96c31010ea351135595243d2dc4408cb4199c"
+        },
+        {
+          "path": "videos/forward-chaining-poster.jpg",
+          "sha256": "d2e22709c7e8425683f37733515bc325b1f96b4736fbb300d5c61842329dc092"
+        }
+      ],
+      "purpose": "lesson 2 60fps concept clip: forward chaining deduction cascade through knowledge graph",
+      "sourceMaster": "design/brand/source/videos/forward-chaining.webm",
+      "sourceSha256": "a5fbface3f9883e5944483a2c7baf2858a6354d788855db85cec1d65ead9c063",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the lesson 2 video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original mathematical geometric animation, no third-party media",
+        "evidence": "Owner approved the lesson 2 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-convolution-scan-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/convolution-scan.webm",
+          "sha256": "9b638b78cdde344f7803efb49c64e8307b7d4f53af2ea10902b9a451b6e12bbf"
+        },
+        {
+          "path": "videos/convolution-scan.mp4",
+          "sha256": "047140ade4a3f612f0e139cfafbc72b95bed839626124a7e331a20602e2a7496"
+        },
+        {
+          "path": "videos/convolution-scan-poster.jpg",
+          "sha256": "e3d0425cc76075f27423e1219902aa54e9f9b4ea1796fcf7f2a72150a75a0c7a"
+        }
+      ],
+      "purpose": "lesson 4 60fps concept clip: 3x3 convolution sliding filter over 8x8 pixel grid with feature map activation and max pooling",
+      "sourceMaster": "design/brand/source/videos/convolution-scan.webm",
+      "sourceSha256": "9b638b78cdde344f7803efb49c64e8307b7d4f53af2ea10902b9a451b6e12bbf",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the lesson 4 video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original mathematical geometric animation, no third-party media",
+        "evidence": "Owner approved the lesson 4 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-vector-attention-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/vector-attention.webm",
+          "sha256": "6b3c81320babf6d388c205144295c6043f00ff1912c754e4890cea9c317df1c0"
+        },
+        {
+          "path": "videos/vector-attention.mp4",
+          "sha256": "4551eb4d6a8ba9eb6d526c94a74364dfeec8bb879523727f822090487691bc32"
+        },
+        {
+          "path": "videos/vector-attention-poster.jpg",
+          "sha256": "5f106df1b2b37234a71777e8f0f0b123149e5b26ca5e8aba9722b433b0a9bcb6"
+        }
+      ],
+      "purpose": "lesson 5 60fps concept clip: vector arithmetic embedding space and transformer self-attention query-key resolution",
+      "sourceMaster": "design/brand/source/videos/vector-attention.webm",
+      "sourceSha256": "6b3c81320babf6d388c205144295c6043f00ff1912c754e4890cea9c317df1c0",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the lesson 5 video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original mathematical geometric animation, no third-party media",
+        "evidence": "Owner approved the lesson 5 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-fairness-calibration-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/fairness-calibration.webm",
+          "sha256": "18943dff981e267350c6b213befa78dd069aa5e47b560bebeb3f3de48e11a82a"
+        },
+        {
+          "path": "videos/fairness-calibration.mp4",
+          "sha256": "3dac462103497cbd404cd8a629f0a14063257d10323cefbfa03e0205160c3c4a"
+        },
+        {
+          "path": "videos/fairness-calibration-poster.jpg",
+          "sha256": "c61609d9ba962bf9f44c07a09a1810ce19fde5787664c2a5156d378e3082c867"
+        }
+      ],
+      "purpose": "lesson 7 60fps concept clip: disparate impact balance scale and group-calibrated decision threshold recalibration",
+      "sourceMaster": "design/brand/source/videos/fairness-calibration.webm",
+      "sourceSha256": "18943dff981e267350c6b213befa78dd069aa5e47b560bebeb3f3de48e11a82a",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the lesson 7 video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original mathematical geometric animation, no third-party media",
+        "evidence": "Owner approved the lesson 7 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-chip-dog-learning-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/chip-dog-learning.webm",
+          "sha256": "ecb2ab99bf7902da127abe8b74ebd97feed4488d5237ce2153aa9b4af6d948a8"
+        },
+        {
+          "path": "videos/chip-dog-learning.mp4",
+          "sha256": "bc1e254c8f830a25f2780ca2b43d5832e14f9cb4067db0067ec09dc9ab17d253"
+        },
+        {
+          "path": "videos/chip-dog-learning-poster.jpg",
+          "sha256": "ab5082cc00e1486fae7b82d2f53ac45f18a0ca8e6e9ff0b5a10de1bd7e64d303"
+        }
+      ],
+      "purpose": "kids lesson 1 60fps concept clip: chip looking at puppy photos finding shared traits",
+      "sourceMaster": "design/brand/source/videos/chip-dog-learning.webm",
+      "sourceSha256": "ecb2ab99bf7902da127abe8b74ebd97feed4488d5237ce2153aa9b4af6d948a8",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the kids lesson 1 video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original cartoon robot animation, no third-party media",
+        "evidence": "Owner approved the kids lesson 1 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-chip-rule-robot-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/chip-rule-robot.webm",
+          "sha256": "7c845f7367b0c49e1a48026728813226d654ad56c7d774d569397f5a78404d3e"
+        },
+        {
+          "path": "videos/chip-rule-robot.mp4",
+          "sha256": "8d7f70a1ba6a810b7a446060036189a8201dea0502660843fcfef6e544e95637"
+        },
+        {
+          "path": "videos/chip-rule-robot-poster.jpg",
+          "sha256": "c12da5a9a72de810a7506e6b14bb56feb18548138381020af3fa9643d4927a4c"
+        }
+      ],
+      "purpose": "kids lesson 2 60fps concept clip: chip checking recipe rulebook clues to deduce bird and duck",
+      "sourceMaster": "design/brand/source/videos/chip-rule-robot.webm",
+      "sourceSha256": "7c845f7367b0c49e1a48026728813226d654ad56c7d774d569397f5a78404d3e",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the kids lesson 2 video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original cartoon robot animation, no third-party media",
+        "evidence": "Owner approved the kids lesson 2 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-chip-fruit-sorter-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/chip-fruit-sorter.webm",
+          "sha256": "a0e03e0bb667f561302977226d6d6749689b00d3dfcc59d21c98d5a2a2cf2d2e"
+        },
+        {
+          "path": "videos/chip-fruit-sorter.mp4",
+          "sha256": "9b8acf053710d0bae2e6214247d653d7faca62cc5ae7a6ce6a6b9ac48eb416d3"
+        },
+        {
+          "path": "videos/chip-fruit-sorter-poster.jpg",
+          "sha256": "924252db30a2e153fa3dfaca8c874c3c0fd5bc947f5b179b892fe6aea6cf3dbc"
+        }
+      ],
+      "purpose": "kids lesson 3 60fps concept clip: conveyor belt apple and lemon sorting with tilting wooden ramp",
+      "sourceMaster": "design/brand/source/videos/chip-fruit-sorter.webm",
+      "sourceSha256": "a0e03e0bb667f561302977226d6d6749689b00d3dfcc59d21c98d5a2a2cf2d2e",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the kids lesson 3 video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original cartoon robot animation, no third-party media",
+        "evidence": "Owner approved the kids lesson 3 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-chip-magnifying-glass-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/chip-magnifying-glass.webm",
+          "sha256": "a2dede18ba470c85509e0f74bb50bbb8edcf83e6364fbb51ff267b1b43cf5ac6"
+        },
+        {
+          "path": "videos/chip-magnifying-glass.mp4",
+          "sha256": "0fdb99e9ba81cbe56419f2d921127803545930010a5683472b5c649483a2c233"
+        },
+        {
+          "path": "videos/chip-magnifying-glass-poster.jpg",
+          "sha256": "1b9bdc956cbe18813e790b7d6c90ab7467267b5c6dac790d6569bfdc502fd1ba"
+        }
+      ],
+      "purpose": "kids lesson 4 60fps concept clip: chip sliding magic magnifying lens over cat photo highlighting ears and whiskers",
+      "sourceMaster": "design/brand/source/videos/chip-magnifying-glass.webm",
+      "sourceSha256": "a2dede18ba470c85509e0f74bb50bbb8edcf83e6364fbb51ff267b1b43cf5ac6",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the kids lesson 4 video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original cartoon robot animation, no third-party media",
+        "evidence": "Owner approved the kids lesson 4 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-chip-word-blocks-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/chip-word-blocks.webm",
+          "sha256": "53980d4c50d53d0812eec28c9d23a62c25d314dddf2389b87196e55ee7641801"
+        },
+        {
+          "path": "videos/chip-word-blocks.mp4",
+          "sha256": "5ea84e37bcfc089b4c854521495c9123c799e88f9079406b33554f494eecb96d"
+        },
+        {
+          "path": "videos/chip-word-blocks-poster.jpg",
+          "sha256": "c57d84891be7a7e6663401184249110b64d946a87deb00e7667ccb3e642cf902"
+        }
+      ],
+      "purpose": "kids lesson 5 60fps concept clip: toy word blocks with chip shining attention flashlight between puppy and it",
+      "sourceMaster": "design/brand/source/videos/chip-word-blocks.webm",
+      "sourceSha256": "53980d4c50d53d0812eec28c9d23a62c25d314dddf2389b87196e55ee7641801",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the kids lesson 5 video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original cartoon robot animation, no third-party media",
+        "evidence": "Owner approved the kids lesson 5 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-chip-playground-scale-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/chip-playground-scale.webm",
+          "sha256": "f2161ff4d670f752dee6e1f4cf716c590668ea6b47c22b914079d2e5ef87eca0"
+        },
+        {
+          "path": "videos/chip-playground-scale.mp4",
+          "sha256": "507cce57dc8701ade422d58de2a03516ac9600003e011bfeebc81ebcad50d489"
+        },
+        {
+          "path": "videos/chip-playground-scale-poster.jpg",
+          "sha256": "c1be49d7d121bf97935a85f3da4deecd357ae7243c44516581ed275a67155cda"
+        }
+      ],
+      "purpose": "kids lesson 7 60fps concept clip: playground see-saw balance scale with chip calibrating fair turns for all teams",
+      "sourceMaster": "design/brand/source/videos/chip-playground-scale.webm",
+      "sourceSha256": "f2161ff4d670f752dee6e1f4cf716c590668ea6b47c22b914079d2e5ef87eca0",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the kids lesson 7 video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original cartoon robot animation, no third-party media",
+        "evidence": "Owner approved the kids lesson 7 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-plain-rules-vs-learning-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/plain-rules-vs-learning.webm",
+          "sha256": "37eaf306e328ba6eb7e0f9a2c826fa16cc44aed853fb364f258cb277785a0c52"
+        },
+        {
+          "path": "videos/plain-rules-vs-learning.mp4",
+          "sha256": "89927c4ac4e1cf547143438b245cf66bb876c963ec69d29d16be6e41629e09d0"
+        },
+        {
+          "path": "videos/plain-rules-vs-learning-poster.jpg",
+          "sha256": "052fb15c7f88b2b37f3d2a670c2692e94b12dae510ec997275fcb2e3ddcc2906"
+        }
+      ],
+      "purpose": "plain english lesson 1 60fps concept clip: explicit rule checklist vs learning from patterns data pipeline",
+      "sourceMaster": "design/brand/source/videos/plain-rules-vs-learning.webm",
+      "sourceSha256": "37eaf306e328ba6eb7e0f9a2c826fa16cc44aed853fb364f258cb277785a0c52",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the plain english concept video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original editorial dark-mode infographic animation, no third-party media",
+        "evidence": "Owner approved the plain english concept video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-plain-decision-tree-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/plain-decision-tree.webm",
+          "sha256": "0015119d26de4946e325e0796d9fd5792fd5b9d630c25d7909b1cd3427daaf6d"
+        },
+        {
+          "path": "videos/plain-decision-tree.mp4",
+          "sha256": "467e24392b779357ffaf0bedfce19c00f9439728f6971678ecffdf72ff055de6"
+        },
+        {
+          "path": "videos/plain-decision-tree-poster.jpg",
+          "sha256": "d3965229ac2f62c763ba2c1c812ff118652147fdce67e76bcceed7eaa174a478"
+        }
+      ],
+      "purpose": "plain english lesson 2 60fps concept clip: branch loan decision tree filtering applications with deterministic rules",
+      "sourceMaster": "design/brand/source/videos/plain-decision-tree.webm",
+      "sourceSha256": "0015119d26de4946e325e0796d9fd5792fd5b9d630c25d7909b1cd3427daaf6d",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the plain english concept video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original editorial dark-mode infographic animation, no third-party media",
+        "evidence": "Owner approved the plain english concept video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-plain-linear-classifier-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/plain-linear-classifier.webm",
+          "sha256": "3a44d83dea8ccedbde0f0d3282a33f43894e5ea88531e501ac8a14da65ddc96d"
+        },
+        {
+          "path": "videos/plain-linear-classifier.mp4",
+          "sha256": "1d6fa633cd268b38960a7a32c34c5d693b2b39501d71cb373b71283877d6b39a"
+        },
+        {
+          "path": "videos/plain-linear-classifier-poster.jpg",
+          "sha256": "7b8230cd6a4a91b6c0e5ee740ad8315a561233b1afb7e7e4a90d0eb0725b0d12"
+        }
+      ],
+      "purpose": "plain english lesson 3 60fps concept clip: customer churn risk boundary learning separating accounts with iterative line fitting",
+      "sourceMaster": "design/brand/source/videos/plain-linear-classifier.webm",
+      "sourceSha256": "3a44d83dea8ccedbde0f0d3282a33f43894e5ea88531e501ac8a14da65ddc96d",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the plain english concept video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original editorial dark-mode infographic animation, no third-party media",
+        "evidence": "Owner approved the plain english concept video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-plain-image-feature-scan-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/plain-image-feature-scan.webm",
+          "sha256": "8cb29c6ba9a01bc28439ce26fcd0de9ebd7cf1d66a7fdcd69657346a9d5bb5f7"
+        },
+        {
+          "path": "videos/plain-image-feature-scan.mp4",
+          "sha256": "ea8742f8c58ac53b8eeebc515471af24d8860c5d220b4dbd33d2c1d273640d22"
+        },
+        {
+          "path": "videos/plain-image-feature-scan-poster.jpg",
+          "sha256": "24b2beeaffc68e14df7587834e8bfe523f96abb0c49404773a2c9e171caaee4e"
+        }
+      ],
+      "purpose": "plain english lesson 4 60fps concept clip: industrial defect inspection scanner scanning pixel grid and finding edge features",
+      "sourceMaster": "design/brand/source/videos/plain-image-feature-scan.webm",
+      "sourceSha256": "8cb29c6ba9a01bc28439ce26fcd0de9ebd7cf1d66a7fdcd69657346a9d5bb5f7",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the plain english concept video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original editorial dark-mode infographic animation, no third-party media",
+        "evidence": "Owner approved the plain english concept video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-plain-transformer-context-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/plain-transformer-context.webm",
+          "sha256": "53d92322c2aef94f58a5e8438e5c77aae37331ef12c2e4a2416cde10af4d7ec4"
+        },
+        {
+          "path": "videos/plain-transformer-context.mp4",
+          "sha256": "73114e67775f322c1d07114195167267c95f7cae51e3c02c2eb5b711f4647d20"
+        },
+        {
+          "path": "videos/plain-transformer-context-poster.jpg",
+          "sha256": "7d2c0eb7fcbda20ed196b3a73fadd857f8bf141c75874848fdd30a77fce2e010"
+        }
+      ],
+      "purpose": "plain english lesson 5 60fps concept clip: contract clause contextual attention routing semantic connections across keywords",
+      "sourceMaster": "design/brand/source/videos/plain-transformer-context.webm",
+      "sourceSha256": "53d92322c2aef94f58a5e8438e5c77aae37331ef12c2e4a2416cde10af4d7ec4",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the plain english concept video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original editorial dark-mode infographic animation, no third-party media",
+        "evidence": "Owner approved the plain english concept video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-plain-disparate-impact-audit-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/plain-disparate-impact-audit.webm",
+          "sha256": "9bf697472cdd1cc102012b1588ecef20bf64f82f36387cf9ab06c74326fa00ac"
+        },
+        {
+          "path": "videos/plain-disparate-impact-audit.mp4",
+          "sha256": "f6546fb19ca9ddeeb544113a705296d908c2da4ef9e1a98d9e6d681418207393"
+        },
+        {
+          "path": "videos/plain-disparate-impact-audit-poster.jpg",
+          "sha256": "848cf1d989b634a24d70a7498e47c3703b0ad7c37edcbd3db233c85982d32048"
+        }
+      ],
+      "purpose": "plain english lesson 7 60fps concept clip: hiring audit dashboard balancing demographic acceptance rates and equal opportunity",
+      "sourceMaster": "design/brand/source/videos/plain-disparate-impact-audit.webm",
+      "sourceSha256": "9bf697472cdd1cc102012b1588ecef20bf64f82f36387cf9ab06c74326fa00ac",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the plain english concept video on 2026-11-14"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original editorial dark-mode infographic animation, no third-party media",
+        "evidence": "Owner approved the plain english concept video on 2026-11-14"
       }
     }
   ]

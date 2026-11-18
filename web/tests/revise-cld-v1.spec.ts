@@ -21,7 +21,8 @@ test.describe('SPEC-006 revise-cld-v1', () => {
 
     const stepper = page.locator('[data-testid="stepper-diagram"]').first()
     await expect(stepper).toBeVisible()
-    await expect(stepper).toHaveAttribute('aria-label', /computer is shown one dog photo/i)
+    // Kids lesson 1's first stepper is now the Turing test one (its dog picture became a video clip, SPEC-014).
+    await expect(stepper).toHaveAttribute('aria-label', /two hidden chat partners/i)
     await expect(stepper.locator('[data-testid="stepper-step"]')).toHaveCount(1)
 
     await stepper.locator('[data-testid="stepper-next"]').focus()
@@ -34,17 +35,23 @@ test.describe('SPEC-006 revise-cld-v1', () => {
 
   test('every rendered diagram exposes alt text (FR-REV-03)', async ({ page }) => {
     for (const lesson of ['1-intro', '2-symbolic', '3-neuralnetworks', '4-computervision', '5-nlp', '7-ethics']) {
-      for (const tab of [kids, plain]) {
+      for (const [tab, mode] of [[kids, 'junior'], [plain, 'plain-english']] as const) {
         await page.goto(`/lesson/${lesson}`)
-        await tab(page)
         await expect(page.locator('article').first()).toBeVisible()
-        // The Detailed version (with its clips) stays on screen until the chosen journey has loaded.
-        await expect(page.getByTestId('clip')).toHaveCount(0)
+        // The Detailed version stays on screen until the chosen journey's lesson has arrived.
+        const loaded = page.waitForResponse((r) => r.url().includes(`/api/lessons/${lesson}?mode=${mode}`))
+        await tab(page)
+        await loaded
+        await page.waitForTimeout(300)
         const figures = page.locator('article figure')
         const n = await figures.count()
         expect(n, `${lesson} should have diagrams`).toBeGreaterThan(0)
         for (let i = 0; i < n; i++) {
-          const label = await figures.nth(i).getAttribute('aria-label')
+          // Alt text is the figure's aria-label, or the text it is described by (clips, SPEC-014 FR-012).
+          const label = await figures.nth(i).evaluate((f) => {
+            const by = f.getAttribute('aria-describedby')
+            return f.getAttribute('aria-label') || (by ? document.getElementById(by)?.textContent : '') || ''
+          })
           expect(label, `${lesson} figure ${i} needs alt text`).toBeTruthy()
         }
       }

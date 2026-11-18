@@ -74,10 +74,18 @@
         }
       ],
       "diagram": {
-        "type": "mermaid",
-        "caption": "Close words sit together",
-        "content": "graph LR\n    subgraph Pets [\"🐾 Pets corner\"]\n        Dog[\"dog\"] --- Puppy[\"puppy\"]\n    end\n    subgraph Fruit [\"🍎 Fruit corner\"]\n        Apple[\"apple\"] --- Banana[\"banana\"]\n    end",
-        "alt": "Two corners of a word map. Dog and puppy sit together in the pets corner. Apple and banana sit together in the fruit corner, far from the pets."
+        "type": "clip",
+        "clip": "chip-word-blocks",
+        "media": "video",
+        "caption": "Watch Chip connect word blocks and attention",
+        "alt": "Chip the robot connects King and Queen toy word blocks, then shines an attention flashlight from it to puppy.",
+        "steps": [
+          "Toy word blocks sit on Chip's mat.",
+          "The blocks slide: king, take away boy, add girl, and you get queen!",
+          "A word train comes: \"The puppy wagged its tail because it was happy.\"",
+          "Chip shines a light from \"it\" to \"puppy\".",
+          "Now \"it\" means the puppy. Chip found it!"
+        ]
       },
       "teen": {
         "add": "Each word's spot is a list of numbers called an **embedding**. You can even do maths with them. King minus man plus woman lands near queen.",

@@ -83,15 +83,17 @@
         }
       ],
       "diagram": {
-        "type": "stepper",
-        "caption": "How an expert system decides",
-        "alt": "Four steps: facts come in, the thinking part looks in the box of rules, it finds a rule that fits, and it does what the rule says.",
-        "content": "",
+        "type": "clip",
+        "clip": "chip-rule-robot",
+        "media": "video",
+        "caption": "How Chip's rulebook decides",
+        "alt": "Chip the robot checks rules one by one: matching feathers and singing to a bird, then swimming to a duck.",
         "steps": [
-          "Facts come in: \"The car won't start.\" 🚗",
-          "The thinking part looks in the box of rules. 📦",
-          "It finds a rule that fits: \"IF it won't start, THEN check the battery.\"",
-          "It gives the advice: \"Check the battery!\" ✅"
+          "Chip opens a recipe rulebook with expert rules.",
+          "A clue arrives: the animal has feathers and sings.",
+          "Rule 1 matches! Chip learns: \"It is a bird!\"",
+          "Next clue: the bird loves swimming in water.",
+          "Rule 2 matches! Chip proves: \"It's a duck!\""
         ]
       },
       "teen": {

@@ -106,7 +106,7 @@ test.describe('Concept clips (SPEC-014)', () => {
     await open(page)
     const c = clip(page)
     await c.getByTestId('clip-play').click()
-    await expect(c.getByTestId('clip-play')).toHaveAttribute('aria-pressed', 'true')
+    await expect(c.getByTestId('clip-play')).toHaveText(/Pause/)
     await expect.poll(() => said(page)).toEqual([first[0]])
     // AC-78: the next step waits until its caption has been read.
     await page.waitForTimeout(2500)
@@ -117,7 +117,7 @@ test.describe('Concept clips (SPEC-014)', () => {
     await expect(c.getByTestId('clip-caption')).toHaveText(first[1])
 
     await c.getByTestId('clip-play').click() // pause
-    await expect(c.getByTestId('clip-play')).toHaveAttribute('aria-pressed', 'false')
+    await expect(c.getByTestId('clip-play')).toHaveText(/Play/)
     await page.evaluate(() => (window as any).__end())
     await page.waitForTimeout(2500)
     await expect(c.getByTestId('clip-step')).toHaveText('Step 2 of 4')
@@ -143,7 +143,7 @@ test.describe('Concept clips (SPEC-014)', () => {
     await expect(c.getByTestId('clip-step')).toHaveText('Step 4 of 4')
     await c.getByTestId('clip-replay').click()
     await expect(c.getByTestId('clip-image')).toHaveAttribute('src', /#s1$/)
-    await expect(c.getByTestId('clip-play')).toHaveAttribute('aria-pressed', 'true')
+    await expect(c.getByTestId('clip-play')).toHaveText(/Pause/)
   })
 
   test('AC-76 (SC-004): under reduced motion there is no Play, and Next reaches every caption', async ({ page }) => {
@@ -169,13 +169,20 @@ test.describe('Concept clips (SPEC-014)', () => {
       expect(box!.height, id).toBeGreaterThanOrEqual(44)
     }
     await c.getByTestId('clip-play').focus()
+    await page.keyboard.press('Tab') // Previous stays focusable on step 1, marked unavailable
+    await expect(c.getByTestId('clip-prev')).toBeFocused()
+    await expect(c.getByTestId('clip-prev')).toHaveAttribute('aria-disabled', 'true')
     await page.keyboard.press('Tab')
-    await page.keyboard.press('Tab') // Previous is disabled on step 1, so Tab moves to Next
-    await expect(c.getByTestId('clip-mute')).toBeFocused()
-    await page.keyboard.press('Shift+Tab')
     await expect(c.getByTestId('clip-next')).toBeFocused()
     await page.keyboard.press('Enter')
     await expect(c.getByTestId('clip-step')).toHaveText('Step 2 of 4')
+    // Back to step 1: focus stays on Previous instead of falling to the page.
+    await page.keyboard.press('Shift+Tab')
+    await page.keyboard.press('Enter')
+    await expect(c.getByTestId('clip-step')).toHaveText('Step 1 of 4')
+    await expect(c.getByTestId('clip-prev')).toBeFocused()
+    await page.keyboard.press('Enter') // unavailable at the start: nothing happens
+    await expect(c.getByTestId('clip-step')).toHaveText('Step 1 of 4')
   })
 
   test('AC-76: when the drawing fails to load, the captions are shown as text', async ({ page }) => {
@@ -189,15 +196,15 @@ test.describe('Concept clips (SPEC-014)', () => {
     await open(page)
     const c = clip(page)
     await c.getByTestId('clip-play').click()
-    await expect(c.getByTestId('clip-play')).toHaveAttribute('aria-pressed', 'true')
+    await expect(c.getByTestId('clip-play')).toHaveText(/Pause/)
     await page.locator('article').nth(1).getByRole('button', { name: 'Read section' }).click()
-    await expect(c.getByTestId('clip-play')).toHaveAttribute('aria-pressed', 'false')
+    await expect(c.getByTestId('clip-play')).toHaveText(/Play/)
 
     await c.getByTestId('clip-play').click()
-    await expect(c.getByTestId('clip-play')).toHaveAttribute('aria-pressed', 'true')
+    await expect(c.getByTestId('clip-play')).toHaveText(/Pause/)
     await clip(page, 1).getByTestId('clip-play').click()
-    await expect(clip(page, 1).getByTestId('clip-play')).toHaveAttribute('aria-pressed', 'true')
-    await expect(c.getByTestId('clip-play')).toHaveAttribute('aria-pressed', 'false')
+    await expect(clip(page, 1).getByTestId('clip-play')).toHaveText(/Pause/)
+    await expect(c.getByTestId('clip-play')).toHaveText(/Play/)
     await expect.poll(async () => (await said(page)).at(-1)).toBe(second[0])
   })
 
@@ -216,9 +223,9 @@ test.describe('Concept clips (SPEC-014)', () => {
     await page.getByTestId('tutor-submit').click()
     await expect(page.getByTestId('tutor-read-answer-btn')).toBeVisible()
     await c.getByTestId('clip-play').click()
-    await expect(c.getByTestId('clip-play')).toHaveAttribute('aria-pressed', 'true')
+    await expect(c.getByTestId('clip-play')).toHaveText(/Pause/)
     await page.getByTestId('tutor-read-answer-btn').click()
-    await expect(c.getByTestId('clip-play')).toHaveAttribute('aria-pressed', 'false')
+    await expect(c.getByTestId('clip-play')).toHaveText(/Play/)
   })
 
   test('AC-78: Mute keeps every clip muted while it still moves', async ({ page }) => {
@@ -238,6 +245,9 @@ test.describe('Concept clips (SPEC-014)', () => {
     await open(page)
     const c = clip(page)
     await c.getByTestId('clip-play').click()
+    // Each step holds for its reading time (4 words: 2.6 s), not just the 2 s entrance.
+    await page.waitForTimeout(2200)
+    await expect(c.getByTestId('clip-step')).toHaveText('Step 1 of 4')
     await expect(c.getByTestId('clip-step')).toHaveText('Step 2 of 4', { timeout: 8000 })
     await expect(page.getByText(/error|unavailable/i)).toHaveCount(0)
   })

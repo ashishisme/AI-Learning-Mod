@@ -55,15 +55,17 @@
         }
       ],
       "diagram": {
-        "type": "stepper",
-        "caption": "How an expert system reaches an answer",
-        "alt": "Four steps: the user gives facts, the inference engine finds rules whose conditions are met, each conclusion is added as a new fact, and the system gives an answer with the rules it used.",
-        "content": "",
+        "type": "clip",
+        "clip": "plain-decision-tree",
+        "media": "video",
+        "caption": "How a decision tree filters applications step by step",
+        "alt": "A deterministic loan decision tree routing applicants through income and employment checks to transparent, audited conclusions.",
         "steps": [
-          "The user supplies the facts: \"The printer is on but nothing prints.\"",
-          "The inference engine finds rules whose conditions are all true.",
-          "Each conclusion is added as a new fact, which may trigger more rules.",
-          "The system gives its answer and lists the rules it used."
+          "The evaluation begins with a primary question: is applicant income above the threshold?",
+          "Lower-income applicants route to a second check evaluating employment stability over time.",
+          "Higher-income applicants route to a debt-to-income ratio check to evaluate repayment capacity.",
+          "Each branch terminates in a deterministic outcome: approve, conditional review, or decline.",
+          "A complete audit trail logs the exact rule sequence that produced the final decision."
         ]
       },
       "realWorld": "Equipment fault-finding guides, airline crew scheduling checks and some medical triage tools use this design."

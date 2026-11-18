@@ -21,21 +21,28 @@ type ClipReport struct {
 }
 
 type clipDiagram struct {
-	Type  string   `json:"type"`
-	Clip  string   `json:"clip"`
-	Alt   string   `json:"alt"`
-	Steps []string `json:"steps"`
+	Type  string    `json:"type"`
+	Clip  string    `json:"clip"`
+	Media string    `json:"media"` // "video" for a video clip; empty for a step clip (a drawing)
+	Cues  []float64 `json:"cues"`  // a video clip's cue start times; 5 cues when absent
+	Alt   string    `json:"alt"`
+	Steps []string  `json:"steps"`
 }
 
 type clipLesson struct {
 	LessonID string `json:"lessonId"`
+	Mode     string `json:"mode"`
 	Sections []struct {
 		ID      string       `json:"id"`
 		Diagram *clipDiagram `json:"diagram"`
 	} `json:"sections"`
 }
 
-const maxClipBytes = 100 * 1024
+const (
+	maxClipBytes     = 100 * 1024 // a step clip's drawing
+	maxVideoBytes    = 900 * 1024 // each video file of a video clip (SPEC-014 clarification 2026-11-15)
+	defaultVideoCues = 5
+)
 
 var (
 	clipName    = regexp.MustCompile(`^[a-z0-9]+(-[a-z0-9]+)*$`)
@@ -77,7 +84,7 @@ func CheckClips(contentDir, brandDir string) ([]ClipReport, error) {
 			return
 		}
 		if lang == "en" {
-			english[l.LessonID] = l
+			english[l.LessonID+"/"+l.Mode] = l // a lesson has one file per journey
 		}
 		for _, s := range l.Sections {
 			d := s.Diagram
@@ -87,16 +94,25 @@ func CheckClips(contentDir, brandDir string) ([]ClipReport, error) {
 			where := fmt.Sprintf("%s %s %s", lang, l.LessonID, s.ID)
 			bad := func(format string, a ...any) { problems = append(problems, where+": "+fmt.Sprintf(format, a...)) }
 			if lang != "en" {
-				if e, ok := english[l.LessonID]; ok {
+				if e, ok := english[l.LessonID+"/"+l.Mode]; ok {
 					if ec := clipOf(e, s.ID); ec == nil {
 						bad("the English lesson has no clip in this section")
-					} else if ec.Clip != d.Clip || len(ec.Steps) != len(d.Steps) {
-						bad("must show clip %q with %d steps, as English does", ec.Clip, len(ec.Steps))
+					} else if ec.Clip != d.Clip || ec.Media != d.Media || len(ec.Steps) != len(d.Steps) {
+						bad("must show clip %q (media %q) with %d steps, as English does", ec.Clip, ec.Media, len(ec.Steps))
 					}
 				}
 			}
 			if !clipName.MatchString(d.Clip) {
 				bad("clip name %q is not a kebab-case file name", d.Clip)
+				continue
+			}
+			switch d.Media {
+			case "video":
+				reports = append(reports, checkVideoClip(lang, l.LessonID, s.ID, d, brandDir, bad))
+				continue
+			case "":
+			default:
+				bad("media %q is not \"video\" or empty", d.Media)
 				continue
 			}
 			if n := len(d.Steps); n < 3 || n > 8 {
@@ -126,14 +142,14 @@ func CheckClips(contentDir, brandDir string) ([]ClipReport, error) {
 		}
 	}
 
-	files, err := filepath.Glob(filepath.Join(contentDir, "lessons", "*.detailed.json"))
+	files, err := filepath.Glob(filepath.Join(contentDir, "lessons", "*.json"))
 	if err != nil {
 		return nil, err
 	}
 	for _, f := range files {
 		check("en", f)
 	}
-	translated, err := filepath.Glob(filepath.Join(contentDir, "lang", "*", "lessons", "*.detailed.json"))
+	translated, err := filepath.Glob(filepath.Join(contentDir, "lang", "*", "lessons", "*.json"))
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +164,7 @@ func CheckClips(contentDir, brandDir string) ([]ClipReport, error) {
 		if json.Unmarshal(raw, &l) != nil {
 			continue
 		}
-		for _, s := range english[l.LessonID].Sections {
+		for _, s := range english[l.LessonID+"/"+l.Mode].Sections {
 			if s.Diagram != nil && s.Diagram.Type == "clip" && clipOf(l, s.ID) == nil {
 				problems = append(problems, fmt.Sprintf("%s %s %s: clip %q is missing from the translation", lang, l.LessonID, s.ID, s.Diagram.Clip))
 			}
@@ -210,4 +226,36 @@ func drawingProblems(svg []byte, steps int) []string {
 		}
 	}
 	return out
+}
+
+// checkVideoClip applies the video clip rules of FR-CNT-13 (amended 2.17.0): the WebM, MP4 and poster exist, each
+// video file is at most 900 KB, there is one caption per cue and a description. Bytes reports the larger video file.
+func checkVideoClip(lang, lesson, section string, d *clipDiagram, brandDir string, bad func(string, ...any)) ClipReport {
+	cues := defaultVideoCues
+	if len(d.Cues) > 0 {
+		cues = len(d.Cues)
+	}
+	if len(d.Steps) != cues {
+		bad("has %d captions for %d cues; a video clip has one caption per cue", len(d.Steps), cues)
+	}
+	if strings.TrimSpace(d.Alt) == "" {
+		bad("has no alt description")
+	}
+	largest := 0
+	for _, name := range []string{d.Clip + ".webm", d.Clip + ".mp4", d.Clip + "-poster.jpg"} {
+		fi, err := os.Stat(filepath.Join(brandDir, "videos", name))
+		if err != nil {
+			bad("video file videos/%s is missing", name)
+			continue
+		}
+		if strings.HasSuffix(name, ".jpg") {
+			continue
+		}
+		if size := int(fi.Size()); size > maxVideoBytes {
+			bad("videos/%s is %d KB; a video file is at most 900 KB", name, size/1024)
+		} else if size > largest {
+			largest = size
+		}
+	}
+	return ClipReport{lang, lesson, section, d.Clip, len(d.Steps), ClipSeconds(d.Steps), largest}
 }

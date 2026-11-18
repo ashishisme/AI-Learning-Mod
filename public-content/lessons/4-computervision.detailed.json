@@ -76,6 +76,20 @@
           "simpleExplanation": "How many pixels the filter moves between positions."
         }
       ],
+      "diagram": {
+        "type": "clip",
+        "clip": "convolution-scan",
+        "media": "video",
+        "caption": "How convolution detects features",
+        "alt": "An 8x8 pixel matrix scanned by a 3x3 filter. The element-wise dot products build a 6x6 feature map highlighting edges, which is then condensed by 2x2 max pooling.",
+        "steps": [
+          "An 8×8 image matrix contains raw pixel brightness values.",
+          "A 3×3 edge filter slides across calculating dot products.",
+          "Vertical edges produce high activations in the 6×6 feature map.",
+          "Max pooling condenses 2×2 blocks to preserve key features.",
+          "Hierarchical layers combine edges into recognizable objects."
+        ]
+      },
       "realWorld": "Photo editors' sharpen, blur and edge-detect effects are convolutions with fixed filters."
     },
     {

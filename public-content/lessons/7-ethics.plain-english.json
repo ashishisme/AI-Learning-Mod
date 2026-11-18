@@ -70,6 +70,20 @@
         ],
         "successMessage": "That is a fairness audit: measure outcomes by group, fix the gap, and measure again.",
         "allowFreePlay": true
+      },
+      "diagram": {
+        "type": "clip",
+        "clip": "plain-disparate-impact-audit",
+        "media": "video",
+        "caption": "Auditing selection rates and balancing demographic parity",
+        "alt": "A corporate hiring dashboard measuring disparate impact between candidate groups and calibrating thresholds to meet fairness regulations.",
+        "steps": [
+          "The compliance dashboard monitors candidate progression across demographic candidate cohorts.",
+          "A significant gap emerges between group selection rates, triggering an equity audit.",
+          "The four-fifths rule reveals a disparate impact ratio below legal compliance benchmarks.",
+          "Teams adjust screening thresholds to eliminate irrelevant proxies while keeping role qualifications.",
+          "The calibrated selection ratio meets regulatory standards, ensuring fair and auditable hiring."
+        ]
       }
     },
     {

@@ -59,11 +59,14 @@ type kidsLesson struct {
 		Analogy   struct {
 			Description string `json:"description"`
 		} `json:"analogy"`
-		BodyMarkdown string    `json:"bodyMarkdown"`
-		Diagram      *struct{} `json:"diagram"`
-		Scene        string    `json:"scene"` // FR-CNT-09 (2.12.0): a card picture, web/public/brand/scenes/<key>.svg
-		Jargon       []jargon  `json:"jargonBuster"`
-		More         *struct {
+		BodyMarkdown string `json:"bodyMarkdown"`
+		Diagram      *struct {
+			Type  string   `json:"type"`
+			Steps []string `json:"steps"`
+		} `json:"diagram"`
+		Scene  string   `json:"scene"` // FR-CNT-09 (2.12.0): a card picture, web/public/brand/scenes/<key>.svg
+		Jargon []jargon `json:"jargonBuster"`
+		More   *struct {
 			Title        string `json:"title"`
 			BodyMarkdown string `json:"bodyMarkdown"`
 		} `json:"more"`
@@ -113,9 +116,19 @@ func CheckKidsLesson(raw []byte, visualOK func(path string) bool) ([]Summary, []
 				}
 				terms = append(append([]jargon{}, terms...), s.Teen.Jargon...)
 			}
-			for _, part := range []string{s.BigIdea, s.ChipQuote, s.Analogy.Description, body} {
+			// FR-CNT-13 (2.17.0): a clip's captions are read by every band, so they count towards the lesson's level.
+			var captions string
+			if s.Diagram != nil && s.Diagram.Type == "clip" {
+				captions = strings.Join(s.Diagram.Steps, "\n\n")
+			}
+			for _, part := range []string{s.BigIdea, s.ChipQuote, s.Analogy.Description, body, captions} {
 				if part != "" {
 					all.WriteString(StripMarkdown(part) + "\n\n")
+				}
+			}
+			if !teen && captions != "" {
+				if g := Measure(StripMarkdown(captions)).Grade; g > MaxGrade811 {
+					add(sev, band, s.ID, "clip-grade", "clip captions at grade %.1f, at most %.1f", g, MaxGrade811)
 				}
 			}
 			seen.WriteString(s.Heading + "\n")
@@ -142,7 +155,7 @@ func CheckKidsLesson(raw []byte, visualOK func(path string) bool) ([]Summary, []
 				}
 			}
 			if !teen {
-				for _, sent := range Sentences(StripMarkdown(s.BigIdea + "\n\n" + s.ChipQuote + "\n\n" + s.Analogy.Description + "\n\n" + s.BodyMarkdown)) {
+				for _, sent := range Sentences(StripMarkdown(s.BigIdea + "\n\n" + s.ChipQuote + "\n\n" + s.Analogy.Description + "\n\n" + s.BodyMarkdown + "\n\n" + captions)) {
 					if n := len(Words(sent)); n > MaxSentenceWords {
 						add(sev, band, s.ID, "long-sentence", "%d words: %q", n, clip(sent))
 					}

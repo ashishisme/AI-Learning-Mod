@@ -25,15 +25,17 @@
         }
       ],
       "diagram": {
-        "type": "stepper",
-        "caption": "Rules written by people vs patterns learned from examples",
-        "alt": "Two routes compared: ordinary software runs the rules a programmer wrote; AI is shown many labelled examples, finds the pattern, and applies it to new cases.",
-        "content": "",
+        "type": "clip",
+        "clip": "plain-rules-vs-learning",
+        "media": "video",
+        "caption": "Handwritten rules compared to learning patterns from data",
+        "alt": "Executive comparison between handwritten if-then rules and machine learning that extracts predictive patterns directly from historical records.",
         "steps": [
-          "Ordinary software: a programmer writes the rules, and the computer follows them exactly.",
-          "AI: people collect many examples with the right answers attached.",
-          "The AI looks for the pattern that links each example to its answer.",
-          "It then applies that pattern to new cases it has never seen."
+          "A programmer writes explicit rules, such as thresholds for income and debt.",
+          "Real-world edge cases pile up, causing rigid rules to fail or require manual review.",
+          "Machine learning instead ingests historical records paired with actual outcomes.",
+          "The statistical model learns optimal risk boundaries automatically from empirical examples.",
+          "New cases receive accurate automated scoring, flagging only true anomalies for human review."
         ]
       },
       "realWorld": "Your bank flagging an unusual card payment, your phone sorting photos by who is in them, and your email filtering out spam."

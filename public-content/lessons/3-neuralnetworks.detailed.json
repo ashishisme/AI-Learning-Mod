@@ -90,6 +90,7 @@
       "diagram": {
         "type": "clip",
         "clip": "perceptron-learning",
+        "media": "video",
         "caption": "Watch the line learn",
         "alt": "Apples and lemons on a grid with a dividing line. A lemon starts on the apple side; the learning rule tilts the line. Then an apple is on the wrong side, and the line tilts again, until every fruit is on its own side.",
         "steps": [

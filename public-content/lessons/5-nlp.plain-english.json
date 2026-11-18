@@ -86,10 +86,18 @@
         }
       ],
       "diagram": {
-        "type": "mermaid",
-        "caption": "Attention picks the useful context",
-        "content": "graph LR\n    W1[\"She\"] --> B[\"bank\"]\n    W2[\"sat on the\"] --> B\n    W3[\"river\"] ==>|strong attention| B\n    B --> M[\"Meaning: the side of a river\"]",
-        "alt": "In the sentence she sat on the river bank, the word bank pays strong attention to river, so its meaning is the side of a river."
+        "type": "clip",
+        "clip": "plain-transformer-context",
+        "media": "video",
+        "caption": "Contextual attention routing across sentence tokens",
+        "alt": "A legal contract clause where attention vectors connect words to their surrounding context to resolve ambiguity.",
+        "steps": [
+          "A contract clause is divided into individual word tokens for computational processing.",
+          "The model searches surrounding text to determine how each word influences neighboring terms.",
+          "Attention connections form weighted links between related keywords across the clause.",
+          "Context resolves ambiguous language, separating operational maintenance from financial obligations.",
+          "Enriched contextual representations enable high-precision contract search and automated analysis."
+        ]
       },
       "realWorld": "Translation apps that get \"bank\" right depending on the sentence are using attention to read context."
     },

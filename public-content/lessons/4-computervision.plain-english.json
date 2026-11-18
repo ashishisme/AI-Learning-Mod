@@ -69,6 +69,20 @@
         ],
         "successMessage": "That outline is the first thing a vision network learns to find.",
         "allowFreePlay": true
+      },
+      "diagram": {
+        "type": "clip",
+        "clip": "plain-image-feature-scan",
+        "media": "video",
+        "caption": "Scanning surface grids with sliding pattern filters",
+        "alt": "An industrial inspection camera sliding a 3x3 convolution window across component pixels to detect surface defects and fractures.",
+        "steps": [
+          "An industrial sensor captures manufactured parts as a grid of pixel intensity values.",
+          "A compact three-by-three filter slides systematically across the image coordinate grid.",
+          "The filter computes local contrast matches, highlighting sharp boundaries where materials change.",
+          "Combined edge detections assemble into structural outlines of cracks and surface fissures.",
+          "The automated pipeline screens thousands of parts per hour, routing anomalies for engineering review."
+        ]
       }
     },
     {

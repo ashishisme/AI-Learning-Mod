@@ -42,7 +42,7 @@ type Register struct {
 	Assets []Asset `json:"assets"`
 }
 
-var allowedExt = map[string]bool{".svg": true, ".webp": true, ".avif": true, ".png": true}
+var allowedExt = map[string]bool{".svg": true, ".webp": true, ".avif": true, ".png": true, ".webm": true, ".mp4": true, ".jpg": true}
 
 func main() {
 	root := flag.String("root", ".", "repository root")

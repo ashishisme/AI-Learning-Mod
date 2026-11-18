@@ -77,10 +77,18 @@
         }
       ],
       "diagram": {
-        "type": "mermaid",
-        "caption": "An analogy as vector arithmetic",
-        "content": "graph LR\n    K[\"king\"] -->|minus man| R[\"royalty\"]\n    R -->|plus woman| Q[\"queen\"]",
-        "alt": "Starting from king, subtracting man leaves something like royalty, and adding woman lands near queen."
+        "type": "clip",
+        "clip": "vector-attention",
+        "media": "video",
+        "caption": "Vector arithmetic and self-attention",
+        "alt": "Words plotted as geometric vectors in embedding space. Subtracting man from king and adding woman points to queen, while self-attention arcs resolve pronoun ambiguity.",
+        "steps": [
+          "Words are embedded as coordinate vectors in a high-dimensional space.",
+          "Vector arithmetic captures relationships: King minus Man plus Woman equals Queen.",
+          "A transformer token sequence enters the context window.",
+          "Self-attention scores compute query-to-key relevance arcs.",
+          "Contextualized embeddings synthesize disambiguated word representations."
+        ]
       },
       "realWorld": "Search engines and recommendation systems use embeddings to match a query with documents that mean the same thing in different words."
     },

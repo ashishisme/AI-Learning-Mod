@@ -37,15 +37,17 @@
         }
       ],
       "diagram": {
-        "type": "stepper",
-        "caption": "How AI learns what a dog is",
-        "alt": "Four steps: the computer is shown one dog photo, then many more dogs, finds what they share, and then names a dog it has never seen.",
-        "content": "",
+        "type": "clip",
+        "clip": "chip-dog-learning",
+        "media": "video",
+        "caption": "Watch Chip learn what a dog is",
+        "alt": "Chip the robot looks at photos of fluffy and spotty dogs, finds shared traits like four legs and a wet nose, and names a new dog photo.",
         "steps": [
-          "We show the computer a photo and say: \"This is a dog.\" 🐶",
-          "We show it lots more dogs. Big, small, spotty, fluffy.",
-          "It finds what they share: four legs, a wet nose, a waggy tail.",
-          "Now it sees a new photo and says: \"Dog!\" ✅"
+          "Chip sees a photo. \"This is a dog!\"",
+          "Chip looks at lots of dogs: big ones, small ones, soft ones.",
+          "Chip finds what they share: four legs, a wet nose, a tail.",
+          "A new photo comes in. Is it a dog?",
+          "Chip says \"Dog!\" It learned from lots of examples."
         ]
       },
       "more": {

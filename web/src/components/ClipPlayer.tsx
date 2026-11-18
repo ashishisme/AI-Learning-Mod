@@ -23,8 +23,9 @@ export const STEP_GAP_MS = 600
 // The muted hold: the time a caption takes to read, at 2.5 words a second, plus a second (FR-CNT-13).
 export const holdMs = (text: string) => (text.split(/\s+/).filter(Boolean).length / 2.5 + 1) * 1000
 
+// Previous and Next stay focusable at the ends (aria-disabled), so keyboard focus is never lost.
 const button =
-  'min-h-[44px] min-w-[44px] px-4 py-2 rounded-xl text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:opacity-40'
+  'min-h-[44px] min-w-[44px] px-4 py-2 rounded-xl text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 aria-disabled:opacity-40 aria-disabled:cursor-not-allowed'
 
 export const ClipPlayer: React.FC<Props> = ({ clip, caption, alt, steps, trackPrefix, speechLang }) => {
   const t = useT()
@@ -79,6 +80,8 @@ export const ClipPlayer: React.FC<Props> = ({ clip, caption, alt, steps, trackPr
       return
     }
     const { persona, speechRate } = useAudioStore.getState()
+    // With no speech engine the service ends without starting: then the step holds as if muted.
+    let spoke = false
     speakTrack({
       text: steps[n],
       trackKey: trackPrefix + (n + 1),
@@ -86,7 +89,10 @@ export const ClipPlayer: React.FC<Props> = ({ clip, caption, alt, steps, trackPr
       persona: persona || 'alan',
       rate: speechRate,
       isCurrent,
-      onEnd: () => after(STEP_GAP_MS),
+      onStart: () => {
+        spoke = true
+      },
+      onEnd: () => (spoke ? after(STEP_GAP_MS) : hold()),
       onError: hold,
       onUnavailable: hold,
     })
@@ -224,7 +230,6 @@ export const ClipPlayer: React.FC<Props> = ({ clip, caption, alt, steps, trackPr
             <button
               type="button"
               data-testid="clip-play"
-              aria-pressed={playing}
               onClick={playing ? pause : play}
               className={`${button} bg-blue-700 hover:bg-blue-800 text-white`}
             >
@@ -234,8 +239,8 @@ export const ClipPlayer: React.FC<Props> = ({ clip, caption, alt, steps, trackPr
         <button
           type="button"
           data-testid="clip-prev"
-          disabled={step === 0}
-          onClick={() => go(step - 1)}
+          aria-disabled={step === 0}
+          onClick={() => step > 0 && go(step - 1)}
           className={`${button} border-2 border-blue-700 text-blue-800 dark:border-sky-400 dark:text-sky-200 hover:bg-blue-50 dark:hover:bg-slate-800`}
         >
           {t('clip.prev')}
@@ -243,8 +248,8 @@ export const ClipPlayer: React.FC<Props> = ({ clip, caption, alt, steps, trackPr
         <button
           type="button"
           data-testid="clip-next"
-          disabled={step === last}
-          onClick={() => go(step + 1)}
+          aria-disabled={step === last}
+          onClick={() => step < last && go(step + 1)}
           className={`${button} border-2 border-blue-700 text-blue-800 dark:border-sky-400 dark:text-sky-200 hover:bg-blue-50 dark:hover:bg-slate-800`}
         >
           {t('widget.stepNext')}

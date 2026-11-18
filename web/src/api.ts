@@ -365,6 +365,8 @@ export interface AdaptiveSection {
     alt?: string // SPEC-006 FR-REV-03: required in content, describes what the picture teaches
     steps?: string[] // for type "stepper"; for type "clip", one caption per step (SPEC FR-CNT-13)
     clip?: string // for type "clip": the drawing web/public/brand/clips/<clip>.svg
+    media?: 'video' // SPEC FR-CNT-13 (2.17.0): a video clip, web/public/brand/videos/<clip>.webm|.mp4|-poster.jpg
+    cues?: number[] // a video clip's cue start times in seconds; 5 default cues when absent
   }
   realWorld?: string // SPEC-006 FR-REV-14: "Where you'll see this" (plain-english)
   interactiveWidget?: {

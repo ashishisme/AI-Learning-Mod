@@ -162,3 +162,77 @@ func TestEveryDetailedSectionHasAPicture(t *testing.T) {
 		}
 	}
 }
+
+// SPEC: AC-79 (FR-CNT-13, amended 2.17.0). A video clip needs its WebM, MP4 and poster, each video at most 900 KB,
+// one caption per cue and a description; a translation keeps the same clip and media.
+func TestVideoClipRules(t *testing.T) {
+	type fixture struct {
+		steps, hiSteps []string
+		hiMedia, alt   string
+		files          map[string]int // file in videos/ -> size in bytes
+	}
+	five := []string{"Chip looks at the dog.", "The dog sits down now.", "Chip gives a small treat.", "The dog sits again soon.", "Now the dog has learned."}
+	good := func() fixture {
+		return fixture{steps: five, hiSteps: five, hiMedia: "video", alt: "Chip teaches a dog with treats.",
+			files: map[string]int{"dog.webm": 600 * 1024, "dog.mp4": 800 * 1024, "dog-poster.jpg": 40 * 1024}}
+	}
+	run := func(t *testing.T, f fixture) ([]ClipReport, error) {
+		root := t.TempDir()
+		content, brand := filepath.Join(root, "public-content"), filepath.Join(root, "brand")
+		lesson := func(media string, steps []string) []byte {
+			raw, _ := json.Marshal(map[string]any{"lessonId": "1-intro", "mode": "junior", "sections": []any{map[string]any{
+				"id": "what", "heading": "What", "bodyMarkdown": "Text.",
+				"diagram": map[string]any{"type": "clip", "clip": "dog", "media": media, "caption": "Watch", "alt": f.alt, "steps": steps},
+			}}})
+			return raw
+		}
+		for p, body := range map[string][]byte{
+			filepath.Join(content, "lessons", "1-intro.junior.json"):               lesson("video", f.steps),
+			filepath.Join(content, "lang", "hi", "lessons", "1-intro.junior.json"): lesson(f.hiMedia, f.hiSteps),
+		} {
+			_ = os.MkdirAll(filepath.Dir(p), 0o755)
+			if err := os.WriteFile(p, body, 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+		_ = os.MkdirAll(filepath.Join(brand, "videos"), 0o755)
+		for name, size := range f.files {
+			if err := os.WriteFile(filepath.Join(brand, "videos", name), make([]byte, size), 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+		return CheckClips(content, brand)
+	}
+
+	t.Run("valid, in a Kids lesson", func(t *testing.T) {
+		reports, err := run(t, good())
+		if err != nil {
+			t.Fatalf("valid video clip refused: %v", err)
+		}
+		if len(reports) != 2 || reports[0].Bytes != 800*1024 {
+			t.Fatalf("reports %+v", reports)
+		}
+	})
+	for name, c := range map[string]struct {
+		change func(*fixture)
+		want   string
+	}{
+		"missing WebM":              {func(f *fixture) { delete(f.files, "dog.webm") }, "videos/dog.webm is missing"},
+		"missing MP4":               {func(f *fixture) { delete(f.files, "dog.mp4") }, "videos/dog.mp4 is missing"},
+		"missing poster":            {func(f *fixture) { delete(f.files, "dog-poster.jpg") }, "videos/dog-poster.jpg is missing"},
+		"MP4 over 900 KB":           {func(f *fixture) { f.files["dog.mp4"] = 900*1024 + 1 }, "videos/dog.mp4 is 900 KB; a video file is at most 900 KB"},
+		"WebM over 900 KB":          {func(f *fixture) { f.files["dog.webm"] = 901 * 1024 }, "videos/dog.webm is 901 KB"},
+		"captions differ from cues": {func(f *fixture) { f.steps, f.hiSteps = five[:4], five[:4] }, "4 captions for 5 cues"},
+		"no description":            {func(f *fixture) { f.alt = "" }, "has no alt description"},
+		"Hindi as a drawing":        {func(f *fixture) { f.hiMedia = "" }, "as English does"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			f := good()
+			c.change(&f)
+			_, err := run(t, f)
+			if err == nil || !strings.Contains(err.Error(), c.want) {
+				t.Fatalf("want an error containing %q, got %v", c.want, err)
+			}
+		})
+	}
+}

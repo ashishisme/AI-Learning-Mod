@@ -68,15 +68,17 @@
         }
       ],
       "diagram": {
-        "type": "stepper",
-        "caption": "One rule base, two directions",
-        "content": "",
-        "alt": "Four steps: forward chaining starts from facts and fires matching rules; it repeats until nothing new is concluded; backward chaining starts from a goal and finds rules that conclude it; it turns their conditions into sub-goals and asks the user when needed.",
+        "type": "clip",
+        "clip": "forward-chaining",
+        "media": "video",
+        "caption": "Forward chaining inference trail",
+        "alt": "Rule base and active fact database. As symptoms activate rules, conclusion arrows connect into a validated proof trail.",
         "steps": [
-          "Forward: start from the facts and fire every rule whose conditions all hold.",
-          "Forward: add the conclusions as new facts and repeat until nothing new appears.",
-          "Backward: start from a goal and find the rules that would conclude it.",
-          "Backward: turn those rules' conditions into sub-goals, asking the user when a fact is unknown."
+          "Initial facts enter the working memory buffer.",
+          "Rule matcher scans conditions across the rule base.",
+          "Rule 1 fires and infers intermediate conclusion Fact 3.",
+          "Newly asserted facts trigger second-order Rule 4.",
+          "Goal state confirmed with fully verifiable explanation trail."
         ]
       },
       "realWorld": "Alarm and monitoring systems typically chain forward from sensor readings. Troubleshooting guides that ask you targeted questions typically chain backward."

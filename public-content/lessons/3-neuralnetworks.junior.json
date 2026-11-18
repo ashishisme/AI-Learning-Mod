@@ -138,6 +138,20 @@
           "visual": "perceptron"
         }
       ],
+      "diagram": {
+        "type": "clip",
+        "clip": "chip-fruit-sorter",
+        "media": "video",
+        "caption": "Watch Chip sort fruit by fixing mistakes",
+        "alt": "Chip the robot tilts a wooden ramp as apples and lemons roll down, fixing the ramp angle after each mistake until every fruit is sorted.",
+        "steps": [
+          "Apples and lemons roll down a sorting ramp.",
+          "A lemon rolls into the apple crate: oops, a mistake!",
+          "Chip nudges the ramp angle to fix the mistake.",
+          "Another fruit goes wrong, so Chip tilts it again.",
+          "Every fruit lands in the right crate! Training complete!"
+        ]
+      },
       "more": {
         "title": "Who built the first one?",
         "bodyMarkdown": "The first perceptron was built in 1957 by a scientist named Frank Rosenblatt. It was a big machine that learned to tell simple shapes apart."

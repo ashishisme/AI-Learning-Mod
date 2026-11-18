@@ -621,5 +621,7 @@
   "widget.stepPause": "⏸ Pause",
   "clip.prev": "← Previous step",
   "clip.mute": "🔇 Mute clips",
+  "clip.cue": "Go to step {n}",
+  "clip.speed": "Speed {rate}×",
   "ageBand.back": "← Back"
 }

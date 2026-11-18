@@ -46,10 +46,18 @@
         }
       ],
       "diagram": {
-        "type": "mermaid",
-        "caption": "The set-up of the imitation game",
-        "content": "graph LR\n    J[\"Judge\"] -->|typed questions| A[\"Hidden participant A\"]\n    J -->|typed questions| B[\"Hidden participant B\"]\n    A -->|typed answers| J\n    B -->|typed answers| J\n    J --> D{\"Which one is the machine?\"}",
-        "alt": "A judge sends typed questions to two hidden participants, A and B, reads their typed answers, and decides which one is the machine."
+        "type": "clip",
+        "clip": "turing-test",
+        "media": "video",
+        "caption": "The imitation game set-up",
+        "alt": "An evaluator terminal communicates via text with two hidden rooms: one human and one machine. The evaluator compares response delays, errors, and reasoning to decide which is the machine.",
+        "steps": [
+          "An evaluator communicates with two hidden entities using typed text.",
+          "One entity is a human who pauses and makes natural typos.",
+          "The other entity is a machine generating quick, fluent responses.",
+          "The machine tries to imitate human conversational quirks.",
+          "If the evaluator cannot reliably tell them apart, the machine passes."
+        ]
       },
       "realWorld": "Website chat windows often leave you unsure whether a person or a program is replying. That uncertainty is a small, everyday imitation game."
     },

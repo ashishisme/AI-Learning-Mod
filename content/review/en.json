@@ -58,56 +58,56 @@
     {
       "path": "public-content/lessons/1-intro.detailed.json",
       "kind": "adaptive",
-      "sourceHash": "cd0747374117b311b10c14a7c59ee4f36887297f57de910ac1d1b07f3f297001",
+      "sourceHash": "26cc0d8d20936b2906d9b61a78d6863ba30ae2e4a0bd9b0263e361b9ba594045",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
+      "reviewer": "Santosh Sharma",
       "date": "2026-11-14"
     },
     {
       "path": "public-content/lessons/1-intro.junior.json",
       "kind": "adaptive",
-      "sourceHash": "c6433ce60bf83b829c4564ed0efe58c5f5722bfe216b9ad4bf6c7a3437c5476b",
+      "sourceHash": "a4effbe58f4dd0ad8c1fef5c62b3d5f4332a1a4ae40a92d05853114e68ba7bb4",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
-      "date": "2026-11-13"
+      "reviewer": "Santosh Sharma",
+      "date": "2026-11-15"
     },
     {
       "path": "public-content/lessons/1-intro.plain-english.json",
       "kind": "adaptive",
-      "sourceHash": "e84b1793a3e99d29c1420a1be28c0a074572cb932527b1f87bf1abf068e5b43a",
+      "sourceHash": "b528121926f799d1d965442c60a556075d57c10b3104028a30b05df7595cea2f",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
-      "date": "2026-11-14"
+      "reviewer": "Santosh Sharma",
+      "date": "2026-11-15"
     },
     {
       "path": "public-content/lessons/2-symbolic.detailed.json",
       "kind": "adaptive",
-      "sourceHash": "1b10379d0db3d09f36bc73b37ce9dd0af582a2110d1f90c90e2cac24d735951a",
+      "sourceHash": "836db2a2f9ea9cf4b09f70835f26ef56e4d23d2bce930089c3c46cea7f7cfcdc",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
+      "reviewer": "Santosh Sharma",
       "date": "2026-11-14"
     },
     {
       "path": "public-content/lessons/2-symbolic.junior.json",
       "kind": "adaptive",
-      "sourceHash": "75db19d15d7e3a08c2c593c3f1eee487a93fb68203a311ccb2bf44a1d73c85c2",
+      "sourceHash": "c146f6a5109a10476b450a96a8527b17994878ef7b9256ec890638aa3748a716",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
-      "date": "2026-11-13"
+      "reviewer": "Santosh Sharma",
+      "date": "2026-11-15"
     },
     {
       "path": "public-content/lessons/2-symbolic.plain-english.json",
       "kind": "adaptive",
-      "sourceHash": "ffcedc0d319030fc474e18d76d5e6db3944dbebb785d88a30156aec60e0d265e",
+      "sourceHash": "dd6ca5527cc4b23209eee7b95b3e59c22dfddb6c9a69b175d9c465434a0e887b",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
-      "date": "2026-11-14"
+      "reviewer": "Santosh Sharma",
+      "date": "2026-11-15"
     },
     {
       "path": "public-content/lessons/3-neuralnetworks.detailed.json",
@@ -121,101 +121,101 @@
     {
       "path": "public-content/lessons/3-neuralnetworks.junior.json",
       "kind": "adaptive",
-      "sourceHash": "d8e164e6ba2664cb2dc97289bb211c32887cf5be2a8cc54b9b737538f9d3a383",
+      "sourceHash": "bda399fa81573b83f30eb7ff068137389514193e3a339dcd75957b015e17e0e0",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
-      "date": "2026-11-13"
+      "reviewer": "Santosh Sharma",
+      "date": "2026-11-15"
     },
     {
       "path": "public-content/lessons/3-neuralnetworks.plain-english.json",
       "kind": "adaptive",
-      "sourceHash": "406cfdfe0aa9be5edb5d221a91160452c07839aa9b9e66886fc3c8e4ebff82e5",
+      "sourceHash": "e28035824be89c091cb34a08d80e60b41b732ae5ba9021269da05243556644ef",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
-      "date": "2026-11-14"
+      "reviewer": "Santosh Sharma",
+      "date": "2026-11-15"
     },
     {
       "path": "public-content/lessons/4-computervision.detailed.json",
       "kind": "adaptive",
-      "sourceHash": "6fcf4314ad676fc186d02e3bc3cd69d690c4efcd3b2026e17daa51920aae901f",
+      "sourceHash": "d87a1e4dd7801415551372c1084bb769141c777d84ffb68916ce0eaaa3281f71",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
+      "reviewer": "Santosh Sharma",
       "date": "2026-11-14"
     },
     {
       "path": "public-content/lessons/4-computervision.junior.json",
       "kind": "adaptive",
-      "sourceHash": "1e1976918795bce4d4b3d96af6d285bd1e06995feddb57382ebdb98dbc1081d4",
+      "sourceHash": "83bab776f1e5da94cd584817683df4c76097d33c8b6eccf2e5613e74d72f5c83",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
-      "date": "2026-11-13"
+      "reviewer": "Santosh Sharma",
+      "date": "2026-11-15"
     },
     {
       "path": "public-content/lessons/4-computervision.plain-english.json",
       "kind": "adaptive",
-      "sourceHash": "db24803c9dcf20e237e5cf343a4cc1707869069583950784bff0d1841b032c5f",
+      "sourceHash": "bd2995a78692613c73e4fff1b72911e06586dbc05b8c7c45250dbff61870684d",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
-      "date": "2026-11-14"
+      "reviewer": "Santosh Sharma",
+      "date": "2026-11-15"
     },
     {
       "path": "public-content/lessons/5-nlp.detailed.json",
       "kind": "adaptive",
-      "sourceHash": "be144d99e94aa46f5efcf09a1944d0f7033706b418b3828051e98723b17648ac",
+      "sourceHash": "5a47dd6ed7c9acef113507c3aa6a140449d257170eafa2ac8394a7c49e5da15e",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
-      "date": "2026-11-14"
+      "reviewer": "Santosh Sharma",
+      "date": "2026-11-15"
     },
     {
       "path": "public-content/lessons/5-nlp.junior.json",
       "kind": "adaptive",
-      "sourceHash": "19225b56ee0c7b2a8e9e822d5a776e22e273c90265073c5d740e6fbd61bf4322",
+      "sourceHash": "72bc24e7348950720be356e931d0125c56999ad59a199712ec9db0e81a2a8cb4",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
-      "date": "2026-11-13"
+      "reviewer": "Santosh Sharma",
+      "date": "2026-11-15"
     },
     {
       "path": "public-content/lessons/5-nlp.plain-english.json",
       "kind": "adaptive",
-      "sourceHash": "fd1205f46dc63191f68a78dec1ea3face936e74e3d4447858aee97b2642ae4ff",
+      "sourceHash": "abb3fd24bcc1103a6778d29b66c007699860b4943653f360d01d55c06eb08472",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
-      "date": "2026-11-14"
+      "reviewer": "Santosh Sharma",
+      "date": "2026-11-15"
     },
     {
       "path": "public-content/lessons/7-ethics.detailed.json",
       "kind": "adaptive",
-      "sourceHash": "26cda0031c424f335ffcc4f6082771bc78424d9b4521fcbe46cb2964063537b7",
+      "sourceHash": "cb49d599dbbc081251bd36c54e3962cbcd8353de7de98d064027a1c681b4e563",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
+      "reviewer": "Santosh Sharma",
       "date": "2026-11-14"
     },
     {
       "path": "public-content/lessons/7-ethics.junior.json",
       "kind": "adaptive",
-      "sourceHash": "edb00e0c7f6b2ba0e236000c391cd7f59d97edc14a00f8c6dc55ea2a4b1276a0",
+      "sourceHash": "9a510c3c3eca0d9fad6b13480abd18d97f08cc137e5984b4be502cb1460485f1",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
-      "date": "2026-11-13"
+      "reviewer": "Santosh Sharma",
+      "date": "2026-11-15"
     },
     {
       "path": "public-content/lessons/7-ethics.plain-english.json",
       "kind": "adaptive",
-      "sourceHash": "be3de26590c3479d4a35ae521b819b1de8f80120d334da8a36f7a5e7bac76ea7",
+      "sourceHash": "d47320f8ca0047ff9f17b53a6bcb5836115bdc7116617d2df1cf9a9070ce6962",
       "translationHash": "",
       "status": "approved",
-      "reviewer": "owner",
-      "date": "2026-11-14"
+      "reviewer": "Santosh Sharma",
+      "date": "2026-11-15"
     },
     {
       "path": "web/src/data/quizzes/en.json",

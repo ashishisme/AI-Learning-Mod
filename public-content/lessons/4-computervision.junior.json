@@ -82,15 +82,17 @@
         }
       ],
       "diagram": {
-        "type": "stepper",
-        "caption": "How the sliding window works",
-        "alt": "Four steps: the window sits on one patch, checks its numbers, lights up if dark meets bright, and then slides one step on.",
-        "content": "",
+        "type": "clip",
+        "clip": "chip-magnifying-glass",
+        "media": "video",
+        "caption": "Watch Chip's magic magnifying glass",
+        "alt": "Chip the robot slides a magnifying glass over a cat photo, finding pointy ears and whiskers to recognize the cat.",
         "steps": [
-          "The window sits on one small patch. 🔍",
-          "It checks the numbers under it.",
-          "Dark next to bright? It lights up! ✨",
-          "It slides one step and checks again. ➡️"
+          "A cat photo sits on Chip's board.",
+          "Chip moves a magic glass over the photo.",
+          "Pointy ears and whiskers light up green.",
+          "Chip steps back. The small shapes make a cat face.",
+          "Chip's screen glows: \"A cat! 99% sure!\""
         ]
       },
       "teen": {

@@ -621,5 +621,7 @@
   "widget.stepPause": "⏸ रोकें",
   "clip.prev": "← पिछला चरण",
   "clip.mute": "🔇 क्लिप की आवाज़ बंद करें",
+  "clip.cue": "चरण {n} पर जाएँ",
+  "clip.speed": "गति {rate}×",
   "ageBand.back": "← वापस"
 }

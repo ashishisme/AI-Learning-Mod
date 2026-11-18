@@ -77,6 +77,20 @@
           "simpleExplanation": "Among people who truly qualify, the share the system selects."
         }
       ],
+      "diagram": {
+        "type": "clip",
+        "clip": "fairness-calibration",
+        "media": "video",
+        "caption": "Calibrating decision thresholds across groups",
+        "alt": "A balance scale weighing selection rates of demographic groups A and B. When uncalibrated cutoffs trigger a disparate impact alert, recalibrating group thresholds restores equilibrium and fairness.",
+        "steps": [
+          "Applicants from demographic groups A and B enter the decision pipeline.",
+          "A uniform cutoff produces a severe disparity in selection rates.",
+          "The disparate impact ratio drops to 0.44, violating the four-fifths rule.",
+          "Group-calibrated decision thresholds are adjusted to balance error rates.",
+          "The balance scale equalizes at a ratio of 0.92 under human-in-the-loop oversight."
+        ]
+      },
       "realWorld": "Some jurisdictions, including New York City since 2023, require independent bias audits of automated hiring tools."
     },
     {

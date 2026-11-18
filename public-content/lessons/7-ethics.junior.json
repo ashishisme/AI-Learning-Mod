@@ -72,15 +72,17 @@
       },
       "bodyMarkdown": "How do we know if an AI is fair? We test it on lots of people, and we count. Does each group get a yes about as often?\n\nIf not, we fix it. We add examples from everyone and test again. In the game below, you check a robot that picks space cadets.",
       "diagram": {
-        "type": "stepper",
-        "caption": "How to check an AI for fairness",
-        "alt": "Four steps: test the AI on many people, count the yeses for each group, look for a big gap, and fix it then test again.",
-        "content": "",
+        "type": "clip",
+        "clip": "chip-playground-scale",
+        "media": "video",
+        "caption": "Watch Chip balance the playground scale",
+        "alt": "Chip the robot checks a playground see-saw balance scale, adjusting the game rules so both teams get a fair turn to play.",
         "steps": [
-          "Test the AI on lots of people. 🧪",
-          "Count the yeses for each group. 🔢",
-          "Is one group getting far fewer? 🔎",
-          "Add examples from everyone, then test again. 🔁"
+          "Two teams come to play on the swings.",
+          "A gate lets only one team in. The scale tips!",
+          "Chip sees the problem: \"That is not fair!\"",
+          "Chip fixes the gate so every kid gets a turn.",
+          "The scale is level. Fair play for all!"
         ]
       },
       "teen": {

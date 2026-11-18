@@ -83,15 +83,17 @@
         }
       ],
       "diagram": {
-        "type": "stepper",
-        "caption": "The training loop",
-        "alt": "Four steps repeated: show an example, the neuron guesses, compare with the right answer, and nudge the weights if it was wrong.",
-        "content": "",
+        "type": "clip",
+        "clip": "plain-linear-classifier",
+        "media": "video",
+        "caption": "Finding the decision boundary through iterative error correction",
+        "alt": "A scatter plot of customer accounts where a linear decision boundary shifts iteratively to separate churn risks from loyal customers.",
         "steps": [
-          "Show the neuron a labelled example.",
-          "It makes a guess.",
-          "Compare the guess with the right answer.",
-          "If wrong, nudge the weights and bias slightly. Repeat thousands of times."
+          "Customer account metrics are plotted on engagement and tenure axes.",
+          "The system draws an initial trial line to divide loyal accounts from churn risks.",
+          "Misclassified accounts generate prediction errors, signaling that the boundary needs adjustment.",
+          "The model iteratively adjusts weights, rotating the line toward the optimal separation boundary.",
+          "The calibrated boundary reliably flags high-risk accounts so teams can intervene proactively."
         ]
       },
       "realWorld": "Every time you mark an email as \"not spam\", you supply a labelled example that can be used to nudge a filter's weights."
