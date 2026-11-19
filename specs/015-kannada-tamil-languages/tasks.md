@@ -30,7 +30,9 @@ Anyone picking this up (person or agent) should start here. Work is on branch `c
 - `public-content/lang/ta/index.json` is written.
 - Gates: `go test ./internal/i18n/ ./internal/ingest/` ok; tsc ok. Playwright: 269 passed, 1 skipped, and 2 failed. One is the expected `settings-hosted-local`. The other, `revise-cld-v1 › teach-it-back gives feedback`, is flaky: an English-only test that passed 2 of 3 on rerun.
 - Left as drafted, to be reviewed live by users: "picky" is கறார் in lessons and கண்டிப்பு in the perceptron widget; sliding window is ஜன்னல்; context window is சூழல் சாளரம்.
-- Step 7 (T033 approval) done 2026-11-19. **Next: step 8, recording**, started the same day.
+- Step 7 (T033 approval) done 2026-11-19 and committed in 7dfd688 (not pushed).
+- **Step 8, recording: done 2026-11-19.** 690 recordings, 83 MB, in `public-content/audio/ta/` (gitignored; served from the bucket). The first run had 316 failures; the cause is unknown because the log was cut, but likely transient. A rerun of only the missing ones made 316 with 0 failures. `go run ./cmd/ingest -verify` exits 0. **Next: step 9, the owner runs the rsync (T034).**
+- Locally, `public-content/languages.json` has `ta` set to `approved` (beta) so the owner can try it. This is the T035 change, left uncommitted until after the upload (T034).
 
 **Next steps for Tamil, in order**
 1. ~~Owner confirms the glossary (T026) and the voices (T028).~~ Done 2026-11-19.
@@ -263,7 +265,7 @@ Anyone picking this up (person or agent) should start here. Work is on branch `c
 - [X] T029 [P] [US2] Draft the six Tamil Kids lessons in `public-content/lang/ta/lessons/<id>.junior.json`.
 - [X] T030 [P] [US2] Draft the six Tamil Plain English and six Tamil Detailed lessons (clips kept exact), `web/src/data/quizzes/ta.json` and `public-content/lang/ta/index.json`.
 - [X] T031 [US2] Fix any phone-width overflow found by T025 in the shared components (`web/src/components/*`), using wrapping (`break-words`, `min-w-0`) rather than smaller text. Re-run the Kannada and Hindi tests to confirm nothing regressed. *(2026-11-19: the journey tabs in `AudienceModeSelector.tsx` overflowed at 390 px ("குழந்தைகளுக்கு (8–14)"); the tab row now wraps (`flex-wrap max-w-full`). Re-run the full suite once all Tamil lessons exist.)*
-- [ ] T032 [US2] Run `go run ./cmd/narrate -lang ta -dry-run`, then report and record once the owner approves the cost.
+- [X] T032 [US2] Run `go run ./cmd/narrate -lang ta -dry-run`, then report and record once the owner approves the cost. *(Done 2026-11-19: 690 recordings, about 437k characters billed over two runs.)*
 - [X] T033 [US2] Owner review and approval as `owner (beta)` of every Tamil file (exact commands given) and the Tamil server messages, recorded as a dated note here, as in T020 (analysis U1). *(2026-11-19: the owner said "ok approved". Ledger `content/review/ta.json`: the quizzes and 18 lessons are approved as `owner (beta)`, and the UI earlier. Recorded here because the ledger does not cover them: the server messages (`messages.go` ta entries, from 60cfa35), `public-content/lang/ta/index.json` and the 130-term glossary, all approved by owner (beta) on 2026-11-19. Users review live.)*
 - [ ] T034 [US2] Owner uploads the recordings, then the manifest check (as T022).
 - [ ] T035 [US2] Set `ta` to approved (beta kept), run the release gates (as T023), then commit, push and tag `v0.14.0` when the owner asks.
