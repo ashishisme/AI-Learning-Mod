@@ -1,7 +1,7 @@
 {
   "languages": [
     { "code": "hi", "name": "हिन्दी", "speechLang": "hi-IN", "status": "approved", "beta": true },
-    { "code": "kn", "name": "ಕನ್ನಡ", "speechLang": "kn-IN", "status": "hidden", "beta": true },
+    { "code": "kn", "name": "ಕನ್ನಡ", "speechLang": "kn-IN", "status": "approved", "beta": true },
     { "code": "ta", "name": "தமிழ்", "speechLang": "ta-IN", "status": "hidden", "beta": true }
   ]
 }

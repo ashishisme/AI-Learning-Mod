@@ -205,3 +205,30 @@ func TestNarrateUsage(t *testing.T) {
 		t.Errorf("no token: exit %d", code)
 	}
 }
+
+// SPEC-015 T021: Chirp3-HD refuses very long sentences, so long ones get a break; short text is untouched.
+func TestShortSentences(t *testing.T) {
+	short := "ಒಂದು ವಾಕ್ಯ. ಇನ್ನೊಂದು ವಾಕ್ಯ!\n- ಪಟ್ಟಿಯ ಸಾಲು\n- ಕೊನೆಯ ಸಾಲು"
+	if got, want := shortSentences(short, 300), "ಒಂದು ವಾಕ್ಯ. ಇನ್ನೊಂದು ವಾಕ್ಯ!\n- ಪಟ್ಟಿಯ ಸಾಲು.\n- ಕೊನೆಯ ಸಾಲು"; got != want {
+		t.Fatalf("got %q, want %q (only the unpunctuated list line gets a full stop)", got, want)
+	}
+	long := strings.Repeat("ಪದ ಪದ ಪದ, ", 30) + "ಕೊನೆ. ಮುಂದಿನ ವಾಕ್ಯ."
+	got := shortSentences(long, 120)
+	for _, s := range strings.Split(got, ". ") {
+		if len(s) > 120 {
+			t.Fatalf("sentence still %d bytes: %q", len(s), s)
+		}
+	}
+	if got, want := shortSentences("ಇಲ್ಲಿದೆ:\n1. ಮೊದಲು.\n2. ನಂತರ.", 300), "ಇಲ್ಲಿದೆ:.\n1, ಮೊದಲು.\n2, ನಂತರ."; got != want {
+		t.Fatalf("list numbers: got %q, want %q", got, want)
+	}
+	// Numbers are read out as words, so a sum-heavy sentence is broken although it is short in bytes.
+	sum := "z = 1.2 × 9 + 0.8 × 8 − 10 = 10.8 + 6.4 − 10 = 7.2, ಹಾಗಾಗಿ ಸೇಬು, ಮತ್ತು ಇನ್ನೊಂದು 2.4 + 3.2 − 10 = −4.4."
+	if got := shortSentences(sum, 300); got == sum || len(sum) > 300 {
+		t.Fatalf("a %d-byte sentence of sums was not broken: %q", len(sum), got)
+	}
+	strip := func(s string) string { return strings.NewReplacer(".", "", ",", "", " ", "").Replace(s) }
+	if strip(got) != strip(long) {
+		t.Fatalf("words changed:\n%q\n%q", long, got)
+	}
+}

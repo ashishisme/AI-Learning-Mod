@@ -17,8 +17,10 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"ai-foundations-coach/internal/i18n"
 	"ai-foundations-coach/internal/narration"
@@ -30,6 +32,15 @@ func main() {
 
 // The API takes at most 5,000 bytes of text per request; keep a margin.
 const maxBytes = 4800
+
+// Chirp3-HD voices also refuse any one sentence that is too long ("sentences that are too long"). Kannada
+// and Tamil take three bytes a letter, and Markdown lists and tables run on without a full stop, so a
+// sentence over this many bytes gets a break added (SPEC-015 T021, 2026-11-19).
+const maxSentence = 200
+
+// numberBytes is roughly how long one digit or maths sign becomes when the service reads it out as a word
+// in Kannada or Tamil script.
+const numberBytes = 40
 
 func run(root string, args []string, getenv func(string) string, stdout, stderr io.Writer) int {
 	fs := flag.NewFlagSet("narrate", flag.ContinueOnError)
@@ -250,7 +261,7 @@ func (c *client) redact(s string) string {
 // MP3 parts are joined, which is valid for MP3 frames of the same encoding.
 func (c *client) speak(v narration.Voice, text string) ([]byte, error) {
 	var out []byte
-	for _, part := range split(text, maxBytes) {
+	for _, part := range split(shortSentences(text, maxSentence), maxBytes) {
 		audio, err := c.synthesize(v, part)
 		if err != nil {
 			return nil, err
@@ -321,6 +332,99 @@ func split(text string, max int) []string {
 		parts = append(parts, text)
 	}
 	return parts
+}
+
+// shortSentences adds a sentence break inside any sentence longer than max bytes, at the last comma,
+// semicolon or colon before the limit, else at the last space, and ends each unpunctuated line with a full stop. Only the text sent to the speech service
+// changes; the track text and its hash stay as they are.
+func shortSentences(text string, max int) string {
+	var b strings.Builder
+	for _, line := range strings.SplitAfter(text, "\n") {
+		// A list number ("1. ") is read as a number, not a sentence end, so it becomes "1, ".
+		line = listNumberRe.ReplaceAllString(line, "$1$2, ")
+		// The service does not end a sentence at a line break, so a list or table line gets a full stop.
+		if body := strings.TrimRight(line, " \n"); body != "" && strings.HasSuffix(line, "\n") &&
+			!strings.ContainsAny(body[len(body)-1:], ".?!") && !strings.HasSuffix(body, "।") {
+			line = body + ".\n"
+		}
+		start := 0
+		for i := 0; i <= len(line); i++ {
+			end := i == len(line)
+			if !end && !strings.HasPrefix(line[i:], ". ") && !strings.HasPrefix(line[i:], "? ") &&
+				!strings.HasPrefix(line[i:], "! ") && !strings.HasPrefix(line[i:], "। ") {
+				continue
+			}
+			stop := len(line)
+			if !end {
+				stop = i + 1
+				if strings.HasPrefix(line[i:], "। ") {
+					stop = i + len("।")
+				}
+			}
+			sent := line[start:stop]
+			lead := len(sent) - len(strings.TrimLeft(sent, " "))
+			b.WriteString(sent[:lead])
+			for sent = sent[lead:]; ; {
+				if spoken(sent) <= max {
+					b.WriteString(sent)
+					break
+				}
+				fit := fitting(sent, max)
+				cut := lastIndexAny(sent[:fit], []string{", ", "; ", ": ", "، "})
+				if cut <= 0 {
+					cut = strings.LastIndex(sent[:fit], " ") + 1
+				}
+				if cut <= 1 {
+					b.WriteString(sent) // one unbroken word; leave it to the service
+					break
+				}
+				b.WriteString(strings.TrimRight(sent[:cut], ",;: ") + ". ")
+				sent = strings.TrimLeft(sent[cut:], " ")
+			}
+			start = stop
+			if end {
+				break
+			}
+			i = stop - 1
+		}
+	}
+	return b.String()
+}
+
+// spoken estimates a sentence's length as the service measures it: the service reads digits and maths
+// signs out as words ("4" is ನಾಲ್ಕು), so each counts as numberBytes.
+func spoken(s string) int {
+	n := 0
+	for _, r := range s {
+		if isSpokenAsWord(r) {
+			n += numberBytes
+		} else {
+			n += utf8.RuneLen(r)
+		}
+	}
+	return n
+}
+
+// fitting returns the longest prefix of s, in bytes, whose spoken length is at most max.
+func fitting(s string, max int) int {
+	n := 0
+	for i, r := range s {
+		w := utf8.RuneLen(r)
+		if isSpokenAsWord(r) {
+			w = numberBytes
+		}
+		if n+w > max {
+			return i
+		}
+		n += w
+	}
+	return len(s)
+}
+
+var listNumberRe = regexp.MustCompile(`^(\s*)([0-9]+)\. `)
+
+func isSpokenAsWord(r rune) bool {
+	return (r >= '0' && r <= '9') || strings.ContainsRune("=+−×÷<>≥≤%", r)
 }
 
 // lastIndexAny returns the end of the last separator found in s, or -1.

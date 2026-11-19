@@ -208,13 +208,27 @@ Anyone picking this up (person or agent) should start here. Work is on branch `c
     - Left as drafted, by the "approve all" decision:
       - the 5 differences between the interface and the lesson words in `kn-terms-to-align.md`;
       - the roller-coaster option in the Kids ethics quiz.
-- [ ] T021 [US1] Run `go run ./cmd/narrate -lang kn -dry-run`, then report the recordings and characters billed. After the owner approves the cost, record with `go run ./cmd/narrate -lang kn` (0 failed).
+- [X] T021 [US1] Run `go run ./cmd/narrate -lang kn -dry-run`, then report the recordings and characters billed. After the owner approves the cost, record with `go run ./cmd/narrate -lang kn` (0 failed).
+  - **Done 2026-11-19:** 690 recordings, 0 failed, 88 MB; local manifest `2c1acfbc…`.
+  - The Chirp3-HD voices refuse "sentences that are too long", so the first run made 627 of 690. `cmd/narrate` now passes the request text through `shortSentences`:
+    - a list number at the start of a line becomes "1, ", because the service reads "1." as a number;
+    - a line without its own full stop gets one, because the service ignores line breaks;
+    - a sentence longer than 200 spoken bytes is broken at a comma, or else at a space. Digits and maths signs count 40 bytes each, because the service reads them out as words.
+
+    Only the request changes; the track text and its hash stay the same. Tamil will need the same treatment.
+
 - [ ] T022 [US1] Owner uploads: `cd "/Users/santoshsharma/Documents/code/AI Learning Mod" && gcloud storage rsync --recursive public-content/audio gs://ai-learning-513415-ai-foundations-coach-narration/audio`. Check that `gcloud storage cat …/audio/kn/manifest.json | shasum` equals the local `shasum public-content/audio/kn/manifest.json`.
-- [ ] T023 [US1] Set `kn` to `"status": "approved"` (keep `"beta": true`) in `public-content/languages.json`. Run the release gates:
+- [X] T023 [US1] Set `kn` to `"status": "approved"` (keep `"beta": true`) in `public-content/languages.json`. Run the release gates:
   - `go run ./cmd/ingest -verify` (with audio) exits 0;
   - `go vet ./...`, `go test ./...`, `go run ./cmd/assetcheck`, `npx tsc --noEmit -p .`;
   - the full Playwright suite, including T014 un-skipped;
   - an owner check by eye (quickstart step 5).
+  - **Done 2026-11-19:**
+    - The bucket manifest matches the local one (`2c1acfbc…`).
+    - `ingest -verify` with audio exits 0, and go vet, go test, assetcheck and tsc pass.
+    - Playwright: 264 passed, 1 skipped, and 1 failed. The failure is `settings-hosted-local`, which fails only on the spare port 3001.
+    - The owner checked the app locally and asked to release.
+
 - [ ] T024 [US1] When the owner asks, commit with explicit paths and push `cloud-beta-2`. Tag `v0.13.0` only on the owner's word; the owner approves promote. Check the live site: `/api/runtime` lists `kn` with beta, the switcher shows it, and a lesson plays Kannada narration.
 
 **Checkpoint**: Kannada is live as beta (SC-001, SC-002, SC-004, SC-006 for `kn`).
