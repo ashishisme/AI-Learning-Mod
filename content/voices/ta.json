@@ -1,0 +1,9 @@
+{
+  "language": "ta",
+  "note": "Approved by the owner (beta) on 2026-11-19 (SPEC-015 T028): the same Chirp3-HD voices as Kannada. Chirp3-HD voices accept no pitch other than 0.",
+  "personas": {
+    "chip": { "voice": "ta-IN-Chirp3-HD-Kore", "speakingRate": 1.0, "pitch": 0 },
+    "nova": { "voice": "ta-IN-Chirp3-HD-Aoede", "speakingRate": 1.0, "pitch": 0 },
+    "alan": { "voice": "ta-IN-Chirp3-HD-Charon", "speakingRate": 1.0, "pitch": 0 }
+  }
+}

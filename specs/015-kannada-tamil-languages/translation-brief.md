@@ -61,3 +61,14 @@ your file is a problem to fix. `no review entry` is expected (the owner approves
 ## Report back (short)
 Files written; the final check output (should be empty apart from clip-check info lines); terms you had to choose
 that are not in the glossary (Kannada → English); anything the owner should look at.
+
+## Using this brief for Tamil (T029–T030)
+
+Swap these into the brief above:
+- language code `ta`; output `public-content/lang/ta/lessons/<name>.json`, quizzes `web/src/data/quizzes/ta.json`;
+- glossary `content/glossary/ta.json`, interface strings `web/src/i18n/ta.json` (Chip is சிப், Nova நோவா, Prof. Alan பேரா. ஆலன்);
+- natural Tamil a Chennai or Madurai teacher would be happy with: avoid both heavy pure-Tamil coinages and Sanskrit-heavy forms where a common word exists;
+- register: Kids address the child as நீ, adults get நீங்கள்;
+- glossary style: **இயந்திரக் கற்றல் (machine learning)** at first use in each section;
+- digits plain ASCII 0-9, never Tamil numerals;
+- the check uses `ta` in place of `kn`.

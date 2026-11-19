@@ -1,33 +1,36 @@
-// SPEC: SPEC-015 AC-84, FR-009, FR-I18N-10 (US1 Kannada); DC-11
+// SPEC: SPEC-015 AC-84, FR-009, FR-I18N-10 (US1 Kannada, US2 Tamil T025); DC-11
 import { test, expect, Page } from '@playwright/test'
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 const EN = { code: 'en', name: 'English', speechLang: 'en-US' }
-const KN = { code: 'kn', name: 'ಕನ್ನಡ', speechLang: 'kn-IN', beta: true }
-const knUI = join(process.cwd(), 'src', 'i18n', 'kn.json')
-const knLesson = (id: string, mode: string) => join(process.cwd(), '..', 'public-content', 'lang', 'kn', 'lessons', `${id}.${mode}.json`)
+type Lang = { code: string; name: string; speechLang: string; english: string; font: RegExp; kidsFont: RegExp; others: RegExp }
+const LANGS: Lang[] = [
+  { code: 'kn', name: 'ಕನ್ನಡ', speechLang: 'kn-IN', english: 'Kannada', font: /NotoSansKannada/, kidsFont: /BalooTamma2/, others: /NotoSans(Tamil|Devanagari)|BalooThambi/ },
+  { code: 'ta', name: 'தமிழ்', speechLang: 'ta-IN', english: 'Tamil', font: /NotoSansTamil/, kidsFont: /BalooThambi2/, others: /NotoSans(Kannada|Devanagari)|BalooTamma/ },
+]
+const uiFile = (code: string) => join(process.cwd(), 'src', 'i18n', `${code}.json`)
+const lessonFile = (code: string, id: string, mode: string) => join(process.cwd(), '..', 'public-content', 'lang', code, 'lessons', `${id}.${mode}.json`)
 
-test.skip(!existsSync(knUI), 'needs web/src/i18n/kn.json (T016)')
-
-// The runtime offers Kannada as a beta. The server keeps Kannada hidden until the owner approves it (T023), so
-// until then the test serves the drafted Kannada lesson files itself, as the server will once it is listed.
-async function offerKannada(page: Page, opts: { stored?: boolean } = { stored: true }) {
-  await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: false, authRequired: false, tutorEnabled: false, feedbackEnabled: false, languages: [EN, KN] } }))
+// The runtime offers the language as a beta. The server keeps a language hidden until the owner approves it, so
+// until then the test serves the drafted lesson files itself, as the server will once it is listed.
+async function offer(L: Lang, page: Page, opts: { stored?: boolean } = { stored: true }) {
+  const lang = { code: L.code, name: L.name, speechLang: L.speechLang, beta: true }
+  await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: false, authRequired: false, tutorEnabled: false, feedbackEnabled: false, languages: [EN, lang] } }))
   await page.route(/\/api\/lessons\/[^/?]+\?/, async (r) => {
     const u = new URL(r.request().url())
     const id = decodeURIComponent(u.pathname.split('/').pop() || '')
     const mode = u.searchParams.get('mode')
-    const file = mode ? knLesson(id, mode) : ''
-    if (u.searchParams.get('lang') !== 'kn' || !file || !existsSync(file)) return r.fallback()
-    await r.fulfill({ body: readFileSync(file, 'utf8'), headers: { 'content-type': 'application/json', 'content-language': 'kn' } })
+    const file = mode ? lessonFile(L.code, id, mode) : ''
+    if (u.searchParams.get('lang') !== L.code || !file || !existsSync(file)) return r.fallback()
+    await r.fulfill({ body: readFileSync(file, 'utf8'), headers: { 'content-type': 'application/json', 'content-language': L.code } })
   })
   if (opts.stored) {
-    await page.addInitScript(() => {
+    await page.addInitScript((code) => {
       if (!localStorage.getItem('ai-foundations-language')) {
-        localStorage.setItem('ai-foundations-language', JSON.stringify({ state: { code: 'kn', chosenAt: '2026-11-18T00:00:00Z' }, version: 0 }))
+        localStorage.setItem('ai-foundations-language', JSON.stringify({ state: { code, chosenAt: '2026-11-18T00:00:00Z' }, version: 0 }))
       }
-    })
+    }, L.code)
   }
 }
 
@@ -49,54 +52,56 @@ async function openJourney(page: Page, journey: 'junior' | 'plain-english' | 'st
   await page.waitForTimeout(300)
 }
 
-test.describe('Kannada (SPEC-015 US1)', () => {
-  test('the menu shows Kannada as a beta, and choosing it switches the page without a reload', async ({ page }) => {
-    await offerKannada(page, { stored: false })
+for (const L of LANGS) test.describe(`${L.english} (SPEC-015)`, () => {
+  test.skip(!existsSync(uiFile(L.code)), `needs web/src/i18n/${L.code}.json`)
+
+  test(`the menu shows ${L.english} as a beta, and choosing it switches the page without a reload`, async ({ page }) => {
+    await offer(L, page, { stored: false })
     await page.goto('/')
     const switcher = page.getByTestId('language-switcher').first()
-    await expect(switcher.locator('option')).toHaveText(['English', 'ಕನ್ನಡ (beta)'])
+    await expect(switcher.locator('option')).toHaveText(['English', `${L.name} (beta)`])
     await page.evaluate(() => { (window as unknown as { marker: number }).marker = 1 })
-    await switcher.selectOption('kn')
-    await expect.poll(() => htmlLang(page), { timeout: 1000 }).toBe('kn')
+    await switcher.selectOption(L.code)
+    await expect.poll(() => htmlLang(page), { timeout: 1000 }).toBe(L.code)
     expect(await page.evaluate(() => (window as unknown as { marker?: number }).marker)).toBe(1)
   })
 
   for (const journey of ['junior', 'plain-english', 'standard'] as const) {
-    test(`a ${journey} lesson in Kannada has no not-translated notice and uses the Kannada font`, async ({ page }) => {
+    test(`a ${journey} lesson in ${L.english} has no not-translated notice and uses the ${L.english} font`, async ({ page }) => {
       const mode = journey === 'standard' ? 'detailed' : journey
-      test.skip(!existsSync(knLesson('1-intro', mode)), `needs public-content/lang/kn/lessons/1-intro.${mode}.json (T018/T019)`)
+      test.skip(!existsSync(lessonFile(L.code, '1-intro', mode)), `needs public-content/lang/${L.code}/lessons/1-intro.${mode}.json`)
       const fonts = fontRequests(page)
-      await offerKannada(page)
+      await offer(L, page)
       await openJourney(page, journey)
       await expect(page.getByTestId('not-translated-notice')).toHaveCount(0)
-      await expect.poll(() => fonts.some((u) => /NotoSansKannada/.test(u))).toBe(true)
-      expect(fonts.filter((u) => /NotoSans(Tamil|Devanagari)|BalooThambi/.test(u))).toEqual([])
+      await expect.poll(() => fonts.some((u) => L.font.test(u))).toBe(true)
+      expect(fonts.filter((u) => L.others.test(u))).toEqual([])
     })
   }
 
-  // Analysis G3, FR-009: the Kids journey draws Kannada in Baloo Tamma 2; the adult journeys never fetch it.
-  test('a Kids lesson in Kannada uses Baloo Tamma 2, and a Plain English one does not', async ({ browser }) => {
-    test.skip(!existsSync(knLesson('1-intro', 'junior')), 'needs the Kannada Kids lesson (T018)')
+  // Analysis G3, FR-009: the Kids journey draws the script in its Baloo font; the adult journeys never fetch it.
+  test(`a Kids lesson in ${L.english} uses its Baloo font, and a Plain English one does not`, async ({ browser }) => {
+    test.skip(!existsSync(lessonFile(L.code, '1-intro', 'junior')), `needs the ${L.english} Kids lesson`)
     const kids = await browser.newPage()
     const kidsFonts = fontRequests(kids)
-    await offerKannada(kids)
+    await offer(L, kids)
     await openJourney(kids, 'junior')
-    await expect.poll(() => kidsFonts.some((u) => /BalooTamma2/.test(u))).toBe(true)
+    await expect.poll(() => kidsFonts.some((u) => L.kidsFont.test(u))).toBe(true)
     await kids.close()
 
     const plain = await browser.newPage()
     const plainFonts = fontRequests(plain)
-    await offerKannada(plain)
+    await offer(L, plain)
     await openJourney(plain, 'plain-english')
     await plain.waitForTimeout(500)
-    expect(plainFonts.filter((u) => /BalooTamma2/.test(u))).toEqual([])
+    expect(plainFonts.filter((u) => L.kidsFont.test(u))).toEqual([])
     await plain.close()
   })
 
-  // DC-11 at phone width: longer Kannada words must not push anything off screen or shrink a target.
+  // DC-11 at phone width: longer words must not push anything off screen or shrink a target.
   test('at 390 px nothing is wider than the screen and every button is at least 44 × 44', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
-    await offerKannada(page)
+    await offer(L, page)
     const problems: string[] = []
     const check = async (where: string) => {
       await page.getByRole('heading').first().waitFor()

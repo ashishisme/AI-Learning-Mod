@@ -4,41 +4,56 @@ description: "Tasks for SPEC-015: Kannada and Tamil"
 
 # Tasks: Kannada and Tamil
 
-## Handoff (read first; updated 2026-11-18)
+## Handoff (read first; updated 2026-11-19)
 
 Anyone picking this up (person or agent) should start here. Work is on branch `cloud-beta-2`.
 
-**Done and pushed**
-- 60cfa35: stage 1 (safety, feedback, server messages, fonts, glossary).
-- 344ce67: `web/src/i18n/kn.json`, approved as `owner (beta)` in `content/review/kn.json`; `content/voices/kn.json`; `web/tests/languages-kn-ta.spec.ts` (T014; its lesson tests skip until the lesson files exist).
-- Kannada is still `hidden` in `public-content/languages.json`, so learners see nothing yet.
+**Kannada is done (US1, T014–T024).** It is live as a beta in v0.13.0, promoted on 2026-11-19. Its commits are 60cfa35, 344ce67, 341efd8 and 91ead6b. Use them as the worked example for Tamil: every Tamil step below has a Kannada twin. The narration fix in `cmd/narrate` (short sentences for Chirp3-HD) already applies to Tamil.
 
-**Drafted, not committed** (T018–T019 done 2026-11-19; term alignment done the same day: 13 decisions, 61 places, glossary now 72 terms)
-- `public-content/lang/kn/lessons/*.junior.json`: all 6 written.
-- `*.plain-english.json` and `*.detailed.json`: being written by parallel agents, one per lesson. Each lesson needs all three files.
-- `web/src/data/quizzes/kn.json`: done; the check is clean.
-- How to draft or fix a file: follow [translation-brief.md](translation-brief.md). It covers the inputs, the hard rules (only translatable fields change, Markdown, `§` and code are kept, clip step counts match) and style (Kids say ನೀನು, adults ನೀವು; glossary term, then the English in brackets at first use in each section).
-- Check one file:
+**Tamil (US2): where it stands on 2026-11-19 (nothing committed yet)**
+- On 2026-11-19 the owner approved the glossary, voices and interface strings for beta, saying users will review them live. Before that approval two fixes were applied: "bias" in the perceptron widget became பயாஸ், with a new glossary entry "bias (in a neuron)"; பாரபட்சம் stays for fairness. The gender-analogy title became ஆண்–பெண் ஒப்புமைகள்.
+- T026 glossary: [content/glossary/ta.json](../../content/glossary/ta.json), 73 terms (Kannada's 72 plus "bias (in a neuron)"), approved by owner (beta). The glossary is not in the review ledger; this note is its record.
+- T027 interface strings: `web/src/i18n/ta.json`, 625 keys, approved in `content/review/ta.json` as `owner (beta)`. Register: நீ on the same keys where Kannada uses ನೀನು, நீங்கள் elsewhere. `lesson.takeQuiz` is shortened to வினாடி வினா. The following may run long at 390 px, and T025/T031 will show whether they do: `settings.insecureTls`, `auth.signOutClear`, `widget.expert.dusty`, `help.tabOllama`. AI with case endings is written ஏஐ-யை / ஏஐ-க்கு. Re-check after any change (re-approval is then needed):
   ```bash
-  go run ./cmd/ingest -verify -audio=false 2>&1 | grep "kn <path>" | grep -v "no review entry"
+  python3 -c "import json;e=json.load(open('web/src/i18n/en.json'));t=json.load(open('web/src/i18n/ta.json'));print(list(e)==list(t), len(t))"
+  go run ./cmd/ingest -verify -audio=false 2>&1 | grep "web/src/i18n/ta.json"
+  (cd web && npx tsc --noEmit)
   ```
-  It must print nothing apart from `clip-check:` info lines.
+- T028 voices: `content/voices/ta.json` uses Chip ta-IN-Chirp3-HD-Kore, Nova Aoede, Alan Charon, all at pitch 0. Approved by owner (beta).
+- `web/src/i18n/index.ts` finds language files on its own. Tamil goes live only through `public-content/languages.json`, where `ta` is `hidden` until T035.
 
-**Next steps, in order** (steps 1–5 done on 2026-11-19; the next one is T020 approval)
-1. Finish any missing lesson file. Compare against the 18 names in `public-content/lessons/`; a file is missing if `go run ./cmd/review -lang kn` lists it as `missing`. Then make sure every file passes the check above.
-2. Align terms between the quizzes and the lessons; the list collected so far is [kn-terms-to-align.md](kn-terms-to-align.md). The quiz agent chose these terms, which are not in the glossary:
-   - inference engine ತೀರ್ಮಾನ ಎಂಜಿನ್;
-   - inheritance ಬಳುವಳಿ;
-   - forward and backward chaining ಮುಂದಕ್ಕೆ/ಹಿಂದಕ್ಕೆ ಸಾಗುವ ತರ್ಕ;
-   - attention ಗಮನ;
-   - hallucination ಎಐ ಭ್ರಮೆ;
-   - narrow and general AI ಸೀಮಿತ/ಸಾಮಾನ್ಯ ಎಐ.
+**If the previous session ended mid-step:** the drafting subagents write straight to disk, so whatever they finished is there. A lesson file counts as done only if it exists and its check (step 3) prints nothing but `clip-check:` lines; redraft any file that is missing or fails it. Subagent reports may be lost, so [ta-terms-to-align.md](ta-terms-to-align.md) may lack the lesson terms. Before the alignment step, rebuild that list by reading the lesson files for technical terms not in `content/glossary/ta.json`. Nothing for Tamil is committed yet: work in the same checkout, and run `git status` first.
 
-   Use one term per concept across the lessons and quizzes. Add the agreed terms to `content/glossary/kn.json`; the owner reconfirms the glossary.
-3. Write `public-content/lang/kn/index.json` in the shape of `lang/hi/index.json`. Each title must be the start of its Detailed lesson's `title`.
-4. Run `go test ./internal/i18n/ ./internal/ingest/`, then from `web/` run `npx playwright test tests/languages-kn-ta.spec.ts`. The lesson tests should no longer skip.
-5. Tick T014, T018 and T019, then continue at T020 (owner approval with exact commands, plus a dated note for the server messages).
-6. T021 is the narration dry-run and needs the owner's cost approval before recording. T022: the owner runs the rsync. T023–T024: approve `kn` (keep beta), run the gates, then commit, push and tag v0.13.0 on the owner's word. Promote is always the owner's.
+**Drafting finished 2026-11-19 (steps 2–6 done, nothing committed):**
+- All 18 lesson files and `web/src/data/quizzes/ta.json` are drafted by 7 subagents, and every check is clean.
+- Term alignment: 14 replacements. Program is புரோகிராம்/புரோகிராமர் (நிரல் removed); OCR is ஒளியியல் எழுத்து அறிதல்; algorithmic bias is அல்காரிதப் பாரபட்சம்; backpropagation is பேக்ப்ரொபகேஷன். The glossary grew from 73 to 130 terms, and the 57 new ones need the owner to reconfirm. Every drafter's terms and review notes are in [ta-terms-to-align.md](ta-terms-to-align.md).
+- `public-content/lang/ta/index.json` is written.
+- Gates: `go test ./internal/i18n/ ./internal/ingest/` ok; tsc ok. Playwright: 269 passed, 1 skipped, and 2 failed. One is the expected `settings-hosted-local`. The other, `revise-cld-v1 › teach-it-back gives feedback`, is flaky: an English-only test that passed 2 of 3 on rerun.
+- Left as drafted, to be reviewed live by users: "picky" is கறார் in lessons and கண்டிப்பு in the perceptron widget; sliding window is ஜன்னல்; context window is சூழல் சாளரம்.
+- Step 7 (T033 approval) done 2026-11-19. **Next: step 8, recording**, started the same day.
+
+**Next steps for Tamil, in order**
+1. ~~Owner confirms the glossary (T026) and the voices (T028).~~ Done 2026-11-19.
+2. ~~T025~~ done 2026-11-19 (and the first T031 fix). Was: extend `web/tests/languages-kn-ta.spec.ts` with the same cases for `ta` (copy the Kannada block; `தமிழ் (beta)`, `NotoSansTamil`, `BalooThambi2` on Kids only, `<html lang="ta">`, 390 px check).
+3. T029–T030 (started 2026-11-19 with 7 parallel subagents; any file missing or failing its check below is unfinished): draft the 18 lessons (`public-content/lang/ta/lessons/<id>.<junior|plain-english|detailed>.json` for 1-intro, 2-symbolic, 3-neuralnetworks, 4-computervision, 5-nlp, 7-ethics) and `web/src/data/quizzes/ta.json`. Kannada used 7 parallel subagents, one per lesson (all three files) plus one for the quizzes, each given [translation-brief.md](translation-brief.md) with the Tamil settings at its end. Check each file:
+   ```bash
+   go run ./cmd/ingest -verify -audio=false 2>&1 | grep "ta <path>" | grep -v "no review entry"
+   ```
+   It must print nothing apart from `clip-check:` info lines.
+4. Term alignment: collect every term the drafters chose outside the glossary (collected in [ta-terms-to-align.md](ta-terms-to-align.md); the Kannada example is [kn-terms-to-align.md](kn-terms-to-align.md)), pick one term per concept across the interface, lessons and quizzes (the interface term wins), apply it everywhere, and add the new terms to `content/glossary/ta.json` for the owner to reconfirm.
+5. Write `public-content/lang/ta/index.json` in the shape of `lang/kn/index.json`; each title is the start of its Detailed lesson's `title`.
+6. Run `go test ./internal/i18n/ ./internal/ingest/` and, from `web/`, `npx playwright test tests/languages-kn-ta.spec.ts`. Fix phone-width overflow in shared components (T031).
+7. T033: the owner approves. Give the exact command, then record a dated note here for the glossary, index.json and the server messages (not covered by the ledger):
+   ```bash
+   go run ./cmd/review -lang ta -reviewer "owner (beta)" -approve web/src/i18n/ta.json web/src/data/quizzes/ta.json public-content/lang/ta/lessons/*.json
+   ```
+8. T032: dry run `TTS_ACCESS_TOKEN="$(gcloud auth print-access-token)" TTS_PROJECT=ai-learning-513415 go run ./cmd/narrate -lang ta -dry-run`, report the count and cost (Kannada was 690 recordings, about $8), and record only when the owner says so (same command without `-dry-run`).
+9. T034: the owner uploads (Claude cannot write to the bucket):
+   ```bash
+   cd "/Users/santoshsharma/Documents/code/AI Learning Mod" && gcloud storage rsync --recursive public-content/audio gs://ai-learning-513415-ai-foundations-coach-narration/audio
+   ```
+   Then compare the shasum of the bucket's `audio/manifest.json` with the local one.
+10. T035: set `ta` to `"status": "approved", "beta": true` in `public-content/languages.json`, run the gates (`go run ./cmd/ingest -verify`, `go vet ./...`, `go test ./...`, assetcheck, `npx tsc --noEmit`, Playwright), then commit and push when the owner asks, and tag `v0.14.0` on the owner's word. Promote is always the owner's.
 
 **Rules that carry over**
 - Commit only with explicit paths. Never commit:
@@ -229,7 +244,7 @@ Anyone picking this up (person or agent) should start here. Work is on branch `c
     - Playwright: 264 passed, 1 skipped, and 1 failed. The failure is `settings-hosted-local`, which fails only on the spare port 3001.
     - The owner checked the app locally and asked to release.
 
-- [ ] T024 [US1] When the owner asks, commit with explicit paths and push `cloud-beta-2`. Tag `v0.13.0` only on the owner's word; the owner approves promote. Check the live site: `/api/runtime` lists `kn` with beta, the switcher shows it, and a lesson plays Kannada narration.
+- [X] T024 [US1] When the owner asks, commit with explicit paths and push `cloud-beta-2`. Tag `v0.13.0` only on the owner's word; the owner approves promote. Check the live site: `/api/runtime` lists `kn` with beta, the switcher shows it, and a lesson plays Kannada narration.
 
 **Checkpoint**: Kannada is live as beta (SC-001, SC-002, SC-004, SC-006 for `kn`).
 
@@ -241,17 +256,17 @@ Anyone picking this up (person or agent) should start here. Work is on branch `c
 
 **Independent Test**: [quickstart.md](quickstart.md) with `ta`, plus the 390 px overflow check.
 
-- [ ] T025 [US2] Extend `web/tests/languages-kn-ta.spec.ts` with the same cases for `ta` ("தமிழ்", NotoSansTamil, Baloo Thambi 2 on Kids pages only, `<html lang="ta">`, the 390 px width check with the longest Tamil strings).
-- [ ] T026 [US2] Draft `content/glossary/ta.json`; the owner confirms the terms.
-- [ ] T027 [US2] Draft `web/src/i18n/ta.json` (every key, placeholders kept). Shorten any string that overflows at 390 px and record it in the T033 review notes.
-- [ ] T028 [US2] Listening test for `ta-IN` voices (as T017), then `content/voices/ta.json`.
-- [ ] T029 [P] [US2] Draft the six Tamil Kids lessons in `public-content/lang/ta/lessons/<id>.junior.json`.
-- [ ] T030 [P] [US2] Draft the six Tamil Plain English and six Tamil Detailed lessons (clips kept exact), `web/src/data/quizzes/ta.json` and `public-content/lang/ta/index.json`.
-- [ ] T031 [US2] Fix any phone-width overflow found by T025 in the shared components (`web/src/components/*`), using wrapping (`break-words`, `min-w-0`) rather than smaller text. Re-run the Kannada and Hindi tests to confirm nothing regressed.
+- [X] T025 [US2] Extend `web/tests/languages-kn-ta.spec.ts` with the same cases for `ta` ("தமிழ்", NotoSansTamil, Baloo Thambi 2 on Kids pages only, `<html lang="ta">`, the 390 px width check with the longest Tamil strings). *(Done 2026-11-19: the spec now loops over `LANGS` (kn, ta); 12 cases.)*
+- [X] T026 [US2] Draft `content/glossary/ta.json`; the owner confirms the terms. *(Approved by owner (beta) 2026-11-19; see Handoff.)*
+- [X] T027 [US2] Draft `web/src/i18n/ta.json` (every key, placeholders kept). Shorten any string that overflows at 390 px and record it in the T033 review notes. *(Approved by owner (beta) 2026-11-19; see Handoff.)*
+- [X] T028 [US2] Listening test for `ta-IN` voices (as T017), then `content/voices/ta.json`. *(Approved by owner (beta) 2026-11-19; see Handoff.)*
+- [X] T029 [P] [US2] Draft the six Tamil Kids lessons in `public-content/lang/ta/lessons/<id>.junior.json`.
+- [X] T030 [P] [US2] Draft the six Tamil Plain English and six Tamil Detailed lessons (clips kept exact), `web/src/data/quizzes/ta.json` and `public-content/lang/ta/index.json`.
+- [X] T031 [US2] Fix any phone-width overflow found by T025 in the shared components (`web/src/components/*`), using wrapping (`break-words`, `min-w-0`) rather than smaller text. Re-run the Kannada and Hindi tests to confirm nothing regressed. *(2026-11-19: the journey tabs in `AudienceModeSelector.tsx` overflowed at 390 px ("குழந்தைகளுக்கு (8–14)"); the tab row now wraps (`flex-wrap max-w-full`). Re-run the full suite once all Tamil lessons exist.)*
 - [ ] T032 [US2] Run `go run ./cmd/narrate -lang ta -dry-run`, then report and record once the owner approves the cost.
-- [ ] T033 [US2] Owner review and approval as `owner (beta)` of every Tamil file (exact commands given) and the Tamil server messages, recorded as a dated note here, as in T020 (analysis U1).
+- [X] T033 [US2] Owner review and approval as `owner (beta)` of every Tamil file (exact commands given) and the Tamil server messages, recorded as a dated note here, as in T020 (analysis U1). *(2026-11-19: the owner said "ok approved". Ledger `content/review/ta.json`: the quizzes and 18 lessons are approved as `owner (beta)`, and the UI earlier. Recorded here because the ledger does not cover them: the server messages (`messages.go` ta entries, from 60cfa35), `public-content/lang/ta/index.json` and the 130-term glossary, all approved by owner (beta) on 2026-11-19. Users review live.)*
 - [ ] T034 [US2] Owner uploads the recordings, then the manifest check (as T022).
-- [ ] T035 [US2] Set `ta` to approved (beta kept), run the release gates (as T023), then commit, push and tag the next version when the owner asks.
+- [ ] T035 [US2] Set `ta` to approved (beta kept), run the release gates (as T023), then commit, push and tag `v0.14.0` when the owner asks.
 
 **Checkpoint**: Tamil is live as beta (SC-001..SC-006 for `ta`).
 

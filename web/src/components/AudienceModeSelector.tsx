@@ -45,7 +45,7 @@ export const AudienceModeSelector: React.FC<Props> = ({ className = '' }) => {
         <div
           role="tablist"
           aria-label={t('adaptive.modeLabel')}
-          className="inline-flex p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs font-semibold gap-1"
+          className="inline-flex flex-wrap max-w-full p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs font-semibold gap-1"
         >
           {options.map((opt) => {
             const isActive = mode === opt.id
