@@ -12,3 +12,4 @@ One line per fix (SPEC-016 FR-014). Record the report id and a neutral before �
 | 2026-11-21 | issue #8 | lang/hi/lessons/3-neuralnetworks.junior.json › clue-weights, bias, how-it-learns | computer neuron introduced before weights |
 | 2026-11-21 | issue #8 | lang/hi/lessons/1-intro.junior.json › glossary “AI”; 7-ethics recap and teach-back | AI definition includes rules; counting is a first check, then find why |
 | 2026-11-21 | owner decision | lang/hi/lessons/{2-symbolic,3-neuralnetworks,5-nlp}.junior.json | Kids register made consistent with आप (no तुम; -इए/-ें forms) |
+| 2026-11-21 | content audit | lang/hi/lessons/4-computervision.plain-english.json › sections[1] diagram alt | restored “3x3 कन्वोल्यूशन खिड़की”, which was missing from the picture description |

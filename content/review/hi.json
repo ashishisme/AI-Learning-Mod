@@ -104,10 +104,10 @@
       "path": "public-content/lang/hi/lessons/4-computervision.plain-english.json",
       "kind": "adaptive",
       "sourceHash": "335aaa258747b9e1c6c40272bffaf9560573bc55c76f65373f751f934ed32309",
-      "translationHash": "0a970455a6f88496880c094baff1fef5fab5489f218724b748488011532814e1",
+      "translationHash": "d783b5e3ac28dca17a1a46370e113fe1b033689f89679556ef9eaead521d782a",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-18"
+      "date": "2026-11-21"
     },
     {
       "path": "public-content/lang/hi/lessons/5-nlp.detailed.json",
