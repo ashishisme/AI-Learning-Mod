@@ -13,11 +13,11 @@
     {
       "path": "public-content/lang/kn/lessons/1-intro.junior.json",
       "kind": "adaptive",
-      "sourceHash": "b858a59060e5518617a3359cdacd85d168fc5ef84d4a15042e5ad33836ea0637",
-      "translationHash": "336b1b30e0401248f3510a37f276fac1fec3403f71c31d1ebccd4cd04d8af3e0",
+      "sourceHash": "0a1948b5f1f2da48cc4ecefa0f2270f3cb412ff6e7bf80d8ada9ad975ed2528f",
+      "translationHash": "e58259cfb661e24525afbb8e7fdf94f89909a2a89f393ebdc51b703bffabd141",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-19"
+      "date": "2026-11-21"
     },
     {
       "path": "public-content/lang/kn/lessons/1-intro.plain-english.json",
@@ -67,11 +67,11 @@
     {
       "path": "public-content/lang/kn/lessons/3-neuralnetworks.junior.json",
       "kind": "adaptive",
-      "sourceHash": "3cb166a925b699e2ce58e3b7f0e7b63aaed1d0c0ae4442c0c509f4f6b0b49cb1",
-      "translationHash": "440ad1d7f375009f1775cb8539881923d0a7e9d9ddf879ffd2eb439c80302b29",
+      "sourceHash": "181bb861eb922e7b99482f4dd02cdce9eacdaaf9275166adbaf3febefdcb3bd0",
+      "translationHash": "ced42bb9c4930ded23f1b1dbfa4bc0bdf6424ab960da15d604cb4dac6e25cd60",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-19"
+      "date": "2026-11-21"
     },
     {
       "path": "public-content/lang/kn/lessons/3-neuralnetworks.plain-english.json",
@@ -94,11 +94,11 @@
     {
       "path": "public-content/lang/kn/lessons/4-computervision.junior.json",
       "kind": "adaptive",
-      "sourceHash": "9e32cdafb87660ffbd4cafdd466fb270620749c59668c08c9174b33b04b5df1a",
-      "translationHash": "eb97e106da726b2c4b238998b368f3a2c37235995f718f242b34ab9630e6cb6a",
+      "sourceHash": "15dd339564cb809edddcaa7247e594831879eb4a6ea7988d951f4729c855b188",
+      "translationHash": "622efaffa413bfbae9e2e1875cc207f7a051b09f736be747d77b15deaa8bfc6f",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-19"
+      "date": "2026-11-21"
     },
     {
       "path": "public-content/lang/kn/lessons/4-computervision.plain-english.json",
@@ -121,11 +121,11 @@
     {
       "path": "public-content/lang/kn/lessons/5-nlp.junior.json",
       "kind": "adaptive",
-      "sourceHash": "18ad93a5ff0d87c58ebdc2c06004298b956f06ef2ce83737b5b4ab1a7137bc5b",
-      "translationHash": "0defa6601dd96ea02f90180cf65fe24493ed5b26041d223a8f9807bb4dbc2493",
+      "sourceHash": "71276555704963c283c779c3de08e2b4e59ad7fb77aa137afd54d89610ea62b6",
+      "translationHash": "37584090ebb9ed02135769746b8043079d0ab90381def09242c064f9acc82749",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-19"
+      "date": "2026-11-21"
     },
     {
       "path": "public-content/lang/kn/lessons/5-nlp.plain-english.json",
@@ -148,11 +148,11 @@
     {
       "path": "public-content/lang/kn/lessons/7-ethics.junior.json",
       "kind": "adaptive",
-      "sourceHash": "4216f47a7557ed78c29c8c600206ac05755f45766419730317d45f2658a89bc3",
-      "translationHash": "45a65177a4d252486d8868b692fafcc59a4870cd26afcdec77aede8c8f239387",
+      "sourceHash": "33b345879bbcaa86ef5a3fa9df05fad3ac2a8247ab1e6d8807662c3d1bb41116",
+      "translationHash": "3f25938a571974b8e037c8184aed16681b462e69f68663b79499320134795561",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-19"
+      "date": "2026-11-21"
     },
     {
       "path": "public-content/lang/kn/lessons/7-ethics.plain-english.json",
@@ -175,8 +175,8 @@
     {
       "path": "web/src/i18n/kn.json",
       "kind": "ui",
-      "sourceHash": "a2f87763e3630dd33a80993360c95ceacc08def04b74e8bc49bee4afa5053713",
-      "translationHash": "033bcac54694b9595dbe237f821403e4f65e3aa902f9ead46b03a672cb58837d",
+      "sourceHash": "cbd3726e5192bd185c2e62ea9ff2400267931b9319a03baef70bb86f64876664",
+      "translationHash": "39f542a26375ca534529d2e5a670485625b6b4c393c806697bf3526663f10f91",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-21"

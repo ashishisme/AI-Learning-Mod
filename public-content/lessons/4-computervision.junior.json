@@ -25,7 +25,7 @@
         "metaphorName": "Mosaic Tiles",
         "description": "A mosaic is a picture made of little tiles. Up close you see tiles. Step back, and you see a face."
       },
-      "bodyMarkdown": "Zoom in on a photo, and you will see tiny squares called **pixels**. Each pixel is one colour.\n\nA computer can't see colours the way you do. It turns each pixel into a number. Dark pixels get small numbers. Bright pixels get big numbers. So a photo is a big grid of numbers.",
+      "bodyMarkdown": "Zoom in on a photo, and you will see tiny squares called **pixels**. Each pixel is one colour.\n\nA computer can't see colours the way you do. It turns each pixel’s colour into numbers. Darker colours get smaller numbers. Brighter colours get bigger numbers. So a photo is a big grid of numbers.",
       "jargonBuster": [
         {
           "term": "Pixels",
@@ -51,14 +51,14 @@
         "add": "A colour pixel has three numbers: how much red, green and blue it has. Mix those three, and you can make any colour on a screen."
       },
       "checkIn": {
-        "question": "What does a computer turn each pixel into?",
+        "question": "What does a computer turn each pixel’s colour into?",
         "options": [
-          "🔢 A number",
+          "🔢 Numbers",
           "🎨 A paint pot"
         ],
         "correctIndex": 0,
         "praise": "Yes! Pictures become numbers.",
-        "explanation": "A computer turns every pixel into a number."
+        "explanation": "A computer turns each pixel’s colour into numbers."
       }
     },
     {
@@ -197,7 +197,7 @@
       ],
       "correctIndex": 0,
       "praise": "Great! Pixels become numbers.",
-      "explanation": "A computer turns each pixel into a number, so a picture is a grid of numbers."
+      "explanation": "A computer turns each pixel’s colour into numbers, so a picture is a grid of numbers."
     },
     {
       "question": "What does the sliding window light up?",

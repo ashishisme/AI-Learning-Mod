@@ -251,7 +251,7 @@
         "A sound"
       ],
       "correctIndex": 0,
-      "explanation": "A computer turns each pixel into a number."
+      "explanation": "A computer turns each pixel’s colour into numbers."
     }
   ]
 }

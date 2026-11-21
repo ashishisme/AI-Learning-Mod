@@ -19,13 +19,13 @@
     {
       "id": "what-is-ai",
       "heading": "1. A Computer That Learns",
-      "bigIdea": "AI is a computer that learns from examples.",
+      "bigIdea": "Most AI today learns from examples. Some AI follows rules people write.",
       "chipQuote": "Most computers only do what they are told. I can learn!",
       "analogy": {
         "metaphorName": "Teaching Your Little Cousin",
-        "description": "Your little cousin points at a dog and says \"cat\". You show her lots of dogs. Soon she gets it right every time."
+        "description": "Your little cousin calls a dog “cat”. You show her lots of dogs, and soon she gets it right."
       },
-      "bodyMarkdown": "A normal computer follows steps, one by one. A step list like this is called an **algorithm**. Type 2 + 2, and it always says 4.\n\n**AI** works in a new way. We show it lots of examples. It looks for what they have in common. Then it can make a good guess about something it has never seen.",
+      "bodyMarkdown": "A normal computer follows steps, one by one. A step list like this is called an **algorithm**. Type 2 + 2, and it always says 4.\n\n**AI** works in a new way. We show it lots of examples. It finds what they share, then makes a good guess about something new.",
       "jargonBuster": [
         {
           "term": "Algorithm",
@@ -164,13 +164,13 @@
           "terminalA": "Ha, not much! I went to my friend's birthday and ate way too much cake. My tummy hurt after.",
           "terminalB": "Weekend activities commonly include leisure, social gatherings and rest, which support overall well-being.",
           "correctAnswer": "Terminal B",
-          "explanation": "Terminal B sounds like a fact book. It never says what it did. People tell little stories about their own day."
+          "explanation": "Terminal B sounds like a fact book, so it’s a good guess. But it’s only a clue! A computer can make up a story too, and a person can give a dull answer."
         },
         "goal": "Spot the computer, then say how you knew.",
         "scaffold": "guided",
         "predictionPrompt": "Before you pick: what would a real person say about their weekend?",
         "hints": [
-          "People talk about things that happened to them.",
+          "Does it sound like someone who was really there?",
           "A computer can sound too neat, like a fact book."
         ],
         "successMessage": "Great detective work! Telling people from computers is harder than it looks.",
@@ -186,7 +186,7 @@
         "metaphorName": "The Rule Book and the Photo Album",
         "description": "Way 1 is a rule book. It says: \"A dog has four legs and a tail.\" Way 2 is a photo album full of dogs."
       },
-      "bodyMarkdown": "Way 1: people write the **rules** by hand. Rules work well for clear jobs, like maths. But a dog lying in a box breaks the rules!\n\nWay 2: people give lots of examples. The computer finds the pattern itself. This is how most AI is built today.",
+      "bodyMarkdown": "Way 1: people write the **rules** by hand. Rules work well for clear jobs, like maths. But what if a dog is curled up in a box? The rule can’t see its legs or tail, so it gets stuck. A rule only works on what the computer can see!\n\nWay 2: people give lots of examples. The computer finds the pattern itself. This is how most AI is built today.",
       "jargonBuster": [
         {
           "term": "Rules",

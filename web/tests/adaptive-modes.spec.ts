@@ -65,7 +65,7 @@ test.describe('Adaptive Audience Modes (Kids 8-14 & Plain English)', () => {
 
     // Verify reveal card
     await expect(page.getByText('Spot On!')).toBeVisible()
-    await expect(page.getByText('Terminal B sounds like a fact book.')).toBeVisible()
+    await expect(page.getByText(/Terminal B sounds like a fact book, so it’s a good guess/)).toBeVisible()
 
     // Verify Play Again reset button
     const playAgainBtn = page.getByRole('button', { name: 'Play Again' })

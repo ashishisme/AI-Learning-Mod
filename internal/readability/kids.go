@@ -15,6 +15,7 @@ const (
 	MaxGrade1214     = 6.0
 	MaxAvgSentence   = 12.0
 	MaxSentenceWords = 18
+	MaxCoreWords     = 90 // soft: a WARN only (issue #8)
 	MaxNewWords811   = 2
 	MaxNewWords1214  = 3
 )
@@ -124,6 +125,12 @@ func CheckKidsLesson(raw []byte, visualOK func(path string) bool) ([]Summary, []
 			for _, part := range []string{s.BigIdea, s.ChipQuote, s.Analogy.Description, body, captions} {
 				if part != "" {
 					all.WriteString(StripMarkdown(part) + "\n\n")
+				}
+			}
+			// Issue #8: a card aims at about 60–80 core words (SPEC-012). Over 90 is a warning to trim when the lesson is next edited.
+			if !teen {
+				if n := len(Words(StripMarkdown(s.BigIdea + " " + s.ChipQuote + " " + s.Analogy.Description + " " + s.BodyMarkdown))); n > MaxCoreWords {
+					add(Warn, band, s.ID, "long-section", "%d core words, aim for 60–80 (warn above %d)", n, MaxCoreWords)
 				}
 			}
 			if !teen && captions != "" {

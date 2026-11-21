@@ -70,7 +70,7 @@
         "metaphorName": "The Fair Referee",
         "description": "A good referee makes sure both teams get the same chances, all game long."
       },
-      "bodyMarkdown": "How do we know if an AI is fair? We test it on lots of people, and we count. Does each group get a yes about as often?\n\nIf not, we fix it. We add examples from everyone and test again. In the game below, you check a robot that picks space cadets.",
+      "bodyMarkdown": "How do we know if an AI is fair? We test it on lots of people, and we count. Does each group get a yes about as often?\n\nIf not, that’s a warning sign. We look for why. Is the robot saying no to people who should get a yes? We fix the cause, then test again. In the game below, you check a robot that picks space cadets.",
       "diagram": {
         "type": "clip",
         "clip": "chip-playground-scale",
@@ -86,7 +86,7 @@
         ]
       },
       "teen": {
-        "add": "Experts call this a **fairness audit**. They compare the yes rate for each group. A big gap is a warning sign that needs fixing.",
+        "add": "Experts call this a **fairness audit**. They compare the yes rate for each group. They also check whether people who qualify get a yes in every group. Different checks can disagree, so people must decide what fair means.",
         "jargonBuster": [
           {
             "term": "Fairness audit",
