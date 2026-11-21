@@ -95,3 +95,19 @@ gcloud storage rsync --recursive public-content/audio gs://<narration bucket>/au
   - `/api/runtime` lists the language;
   - the switcher shows it;
   - a lesson plays its recorded narration.
+
+## What Kannada and Tamil taught us (SPEC-015, 2026-11)
+
+- **No reviewer yet?** The owner can approve as `-reviewer "owner (beta)"` and keep `"beta": true` in `languages.json`, so the switcher says "(beta)". Live learners then act as reviewers (SPEC-016).
+- **Fonts.** Each script needs its Noto Sans font, and the Kids journey needs a matching Baloo font (Baloo Tamma 2 for Kannada, Baloo Thambi 2 for Tamil) in `web/src/index.css`. The fonts are self-hosted, and downloading them needs the owner's approval. `web/tests/languages-kn-ta.spec.ts` checks that each page fetches only its own script's font, and that the Kids font loads on Kids pages only.
+- **Safety and personal-details tests run per language.** Add `testdata/<code>_*.json` corpora; the tests pick them up by file name. `i18n.FoldScripts` folds each script's digits to ASCII before the checks, so add the new script there.
+- **Drafting.** Claude drafted every file. One subagent per lesson worked well, following a short brief such as `specs/015-kannada-tamil-languages/translation-brief.md`.
+  - **Align terms afterwards.** Parallel drafters choose different words for the same term. Collect each drafter's terms in a `<code>-terms-to-align.md`, pick one form, update the glossary, then replace the others.
+  - **Register.** The Kids journey uses the informal "you" (ನೀನು, நீ), and the adult journeys use the formal one (ನೀವು, நீங்கள்).
+- **Phone width.** Longer words overflow. Run the 390 px check in the language test. Fix overflow by wrapping (`flex-wrap`, `break-words`, `min-w-0`), never by shrinking text.
+- **Voices.** The Chirp3-HD voices Kore (Chip), Aoede (Nova) and Charon (Prof. Alan) worked for both languages.
+  - **Long sentences.** These voices refuse long sentences. `cmd/narrate` shortens the request text (`shortSentences`), but the track text and its hash stay the same.
+  - **Failed recordings.** A run can still fail part-way, for example 374 of 690 recorded. Rerun the same command: it records only the missing tracks.
+- **Cost.** A language costs about 690 recordings and 270k–440k characters, or about $8–$15.
+- **The upload.** After recording, the owner runs the rsync. Then check the upload: `gcloud storage cat …/audio/<code>/manifest.json | shasum -a 256` must equal the local manifest's hash.
+- **Order of release.** Switch the language to `approved` only after the upload is checked, then run the gates, tag the release, and have the owner approve promote.

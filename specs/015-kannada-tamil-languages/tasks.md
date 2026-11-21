@@ -234,7 +234,7 @@ Anyone picking this up (person or agent) should start here. Work is on branch `c
 
     Only the request changes; the track text and its hash stay the same. Tamil will need the same treatment.
 
-- [ ] T022 [US1] Owner uploads: `cd "/Users/santoshsharma/Documents/code/AI Learning Mod" && gcloud storage rsync --recursive public-content/audio gs://ai-learning-513415-ai-foundations-coach-narration/audio`. Check that `gcloud storage cat …/audio/kn/manifest.json | shasum` equals the local `shasum public-content/audio/kn/manifest.json`.
+- [X] T022 [US1] Owner uploads: `cd "/Users/santoshsharma/Documents/code/AI Learning Mod" && gcloud storage rsync --recursive public-content/audio gs://ai-learning-513415-ai-foundations-coach-narration/audio`. Check that `gcloud storage cat …/audio/kn/manifest.json | shasum` equals the local `shasum public-content/audio/kn/manifest.json`.
 - [X] T023 [US1] Set `kn` to `"status": "approved"` (keep `"beta": true`) in `public-content/languages.json`. Run the release gates:
   - `go run ./cmd/ingest -verify` (with audio) exits 0;
   - `go vet ./...`, `go test ./...`, `go run ./cmd/assetcheck`, `npx tsc --noEmit -p .`;
@@ -267,8 +267,8 @@ Anyone picking this up (person or agent) should start here. Work is on branch `c
 - [X] T031 [US2] Fix any phone-width overflow found by T025 in the shared components (`web/src/components/*`), using wrapping (`break-words`, `min-w-0`) rather than smaller text. Re-run the Kannada and Hindi tests to confirm nothing regressed. *(2026-11-19: the journey tabs in `AudienceModeSelector.tsx` overflowed at 390 px ("குழந்தைகளுக்கு (8–14)"); the tab row now wraps (`flex-wrap max-w-full`). Re-run the full suite once all Tamil lessons exist.)*
 - [X] T032 [US2] Run `go run ./cmd/narrate -lang ta -dry-run`, then report and record once the owner approves the cost. *(Done 2026-11-19: 690 recordings, about 437k characters billed over two runs.)*
 - [X] T033 [US2] Owner review and approval as `owner (beta)` of every Tamil file (exact commands given) and the Tamil server messages, recorded as a dated note here, as in T020 (analysis U1). *(2026-11-19: the owner said "ok approved". Ledger `content/review/ta.json`: the quizzes and 18 lessons are approved as `owner (beta)`, and the UI earlier. Recorded here because the ledger does not cover them: the server messages (`messages.go` ta entries, from 60cfa35), `public-content/lang/ta/index.json` and the 130-term glossary, all approved by owner (beta) on 2026-11-19. Users review live.)*
-- [ ] T034 [US2] Owner uploads the recordings, then the manifest check (as T022).
-- [ ] T035 [US2] Set `ta` to approved (beta kept), run the release gates (as T023), then commit, push and tag `v0.14.0` when the owner asks.
+- [X] T034 [US2] Owner uploads the recordings, then the manifest check (as T022). *(Checked 2026-11-21: the bucket manifests match the local ones for hi `d821e6e9`, kn `a0ae2e89` and ta `7765d2ef`.)*
+- [X] T035 [US2] Set `ta` to approved (beta kept), run the release gates (as T023), then commit, push and tag `v0.14.0` when the owner asks. *(2026-11-21: gates on a clean worktree of be996cb plus this change pass; Playwright 270 passed, 1 skipped, 1 failed (settings-hosted-local, expected on 3001). Tagged v0.14.0; promote needs the owner.)*
 
 **Checkpoint**: Tamil is live as beta (SC-001..SC-006 for `ta`).
 
@@ -276,7 +276,7 @@ Anyone picking this up (person or agent) should start here. Work is on branch `c
 
 ## Phase 6: Polish & cross-cutting
 
-- [ ] T036 [P] Update `docs/adding-a-language.md` with what the Kannada pilot taught:
+- [X] T036 [P] Update `docs/adding-a-language.md` with what the Kannada pilot taught:
   - script fonts and the Kids font per script;
   - the generalised safety tests (`<code>_*.json`);
   - `FoldScripts`;
