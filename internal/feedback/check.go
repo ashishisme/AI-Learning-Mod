@@ -26,7 +26,7 @@ const (
 var (
 	emailRe = regexp.MustCompile(`[a-z0-9._%+\-]+@[a-z0-9\-]+(?:\.[a-z0-9\-]+)*\.[a-z]{2,}`)
 	// "name at gmail dot com", "name (at) gmail.com"
-	spokenEmailRe = regexp.MustCompile(`[a-z0-9._\-]+\s*(?:\bat\b|\(at\)|\[at\])\s*[a-z0-9\-]+(?:\s+dot\s+|\s*\.\s*)` + tlds + `\b`)
+	spokenEmailRe = regexp.MustCompile(`[a-z0-9._\-]+\s*(?:\bat\b|\(at\)|\[at\])\s*[a-z0-9\-]+(?:\s+dot\s+|\s*\.\s*|\s*(?:\(dot\)|\[dot\])\s*)` + tlds + `\b`)
 
 	linkRe = regexp.MustCompile(`https?://|\bwww\.|\b[a-z0-9\-]+\.` + tlds + `\b|\b(?:t|wa)\.me/`)
 	// "@asha_k", "my insta", "add me on snapchat"
