@@ -97,7 +97,7 @@ In the language menu, the "(beta)" next to Kannada, Tamil or Hindi leads to one 
 
 ### Functional Requirements
 
-- **FR-001**: Each new feedback record MUST keep the interface language code it was sent in, taken from the list of offered languages; any other value is refused as invalid.
+- **FR-001**: Each new feedback record MUST keep the interface language code it was sent in, taken from the list of offered languages; any other value is stored as unknown.
 - **FR-002**: The feedback categories MUST add "translation" (shown to learners as a wording problem) alongside bug, content, idea and other.
 - **FR-003**: A feedback record MAY carry a section id, a clip step number (1–20) and the journey; each is checked against a strict pattern and refused if malformed. No new free-text field is added.
 - **FR-004**: Every lesson section in every journey, and the clip player, MUST offer a "Report a wording problem" control when feedback is enabled, and none when it is not.

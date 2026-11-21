@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-14
 
-**Status**: Draft
+**Status**: Done (2026-11-21). Kannada (v0.13.0) and Tamil (v0.14.0) are live as beta languages.
 
 **Input**: User description: "Add Kannada (kn) and Tamil (ta) as learner languages, following docs/adding-a-language.md and the SPEC-009 language framework. Owner decisions 2026-11-14: the owner approves the text as 'owner (beta)'; record narration before launch; Kannada first as the pilot, then Tamil; Claude drafts every translation with a per-language glossary."
 

@@ -281,8 +281,8 @@ Anyone picking this up (person or agent) should start here. Work is on branch `c
   - the generalised safety tests (`<code>_*.json`);
   - `FoldScripts`;
   - voice choice notes.
-- [ ] T037 [P] Update the memory file `spec-015-kannada-tamil.md` after each release.
-- [ ] T038 Set `spec/ACCEPTANCE.md` AC-82..AC-84 to "PASS (automated)". Close SPEC-015 in its spec status and `spec/SPEC.md` §0 once SC-001..SC-006 hold for both languages.
+- [X] T037 [P] Update the memory file `spec-015-kannada-tamil.md` after each release.
+- [X] T038 Set `spec/ACCEPTANCE.md` AC-82..AC-84 to "PASS (automated)". Close SPEC-015 in its spec status and `spec/SPEC.md` §0 once SC-001..SC-006 hold for both languages.
 
 ---
 

@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.18.0 |
+| Version | 2.19.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Lessons | Written for this course and committed in `public-content/` (FR-CNT-12, NFR-LIC-03; SPEC-013 closed 2026-11-14, v0.10.0) |
@@ -543,6 +543,18 @@ recordings are warnings, and narration uses a device voice in the language or sa
 available (FR-I18N-08). The language menu labels it as beta. Removing `beta` restores the full gate
 (native review and recordings) for that language.
 
+**FR-I18N-11.** Added 2.19.0 (SPEC-016 FR-001..FR-015). Wording reports. Learner feedback (FR-047..FR-059) adds the
+category `translation`. A record may carry the interface language (one of the offered codes; any other is
+stored as unknown), a section id (`^[a-z0-9][a-z0-9-]{0,63}$`) and a clip step (1–20); no new free-text field. When
+feedback is enabled, each Plain English and Detailed section and each clip player offers “Report a wording
+problem”, and the Kids journey offers it once at the lesson end; it opens the feedback dialog with the category
+and a read-only line naming the place. All feedback protections (500 characters, personal-details refusal in
+the learner’s language, AI audit, no identity, 5 per hour, 180-day deletion) apply unchanged, and the rule check
+is covered by adversarial test sets in every listed language. The admin inbox and its CSV filter by language
+(`unknown` for older records) and show language, section, step and journey. A beta language’s menu entry has
+a one-line note that invites wording reports when feedback is enabled. Fixes are logged in
+`content/review/<code>-changes.md` with the report id and never the learner’s words.
+
 ---
 
 ## 5. Non-functional requirements
@@ -829,7 +841,7 @@ admin audit entries); (b) operational counters (daily AI spend tally,
 rate-limit counters, aggregate usage counts per day, a last-seen time per
 beta account); and (c) learner feedback records (a rating, a category, a
 message of at most 500 characters scrubbed of emails, phone numbers and
-links, and context fields: group label, lesson, audience mode, app version,
+links, and context fields: group label, lesson, audience mode, interface language, section, clip step (amended 2.19.0, FR-I18N-11), app version,
 time), with no Beta ID, network address, session or device details, deleted
 automatically after 180 days. It shall contain no personal data and no
 learner question or answer text from the AI tutor, shall be reached only
