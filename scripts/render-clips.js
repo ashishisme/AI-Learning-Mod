@@ -1009,6 +1009,8 @@ async function renderScenes() {
   const browser = await chromium.launch();
 
   const scenes = [
+    { name: 'turing-test', fn: renderTuringTestFrame.toString() },
+    { name: 'forward-chaining', fn: renderForwardChainingFrame.toString() },
     { name: 'convolution-scan', fn: renderConvolutionScanFrame.toString() },
     { name: 'vector-attention', fn: renderVectorAttentionFrame.toString() },
     { name: 'fairness-calibration', fn: renderFairnessCalibrationFrame.toString() }
@@ -1037,6 +1039,8 @@ async function renderScenes() {
       canvas.width = W;
       canvas.height = H;
       const ctx = canvas.getContext('2d');
+      // FR-016: no words in the video, the captions carry them. Text with letters keeps only its emoji; numbers and symbols stay.
+      for (const m of ['fillText', 'strokeText']) { const draw = ctx[m].bind(ctx); ctx[m] = (s, ...a) => { s = String(s); if (/\p{L}/u.test(s)) s = (s.match(/\p{Extended_Pictographic}/gu) || []).join(''); if (s) draw(s, ...a); }; }
 
       const stream = canvas.captureStream(FPS);
       const mimeWebm = 'video/webm;codecs=vp9';

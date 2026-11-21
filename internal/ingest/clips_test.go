@@ -135,7 +135,7 @@ func TestClipNumbersAndSymbolsAreAllowedInThePicture(t *testing.T) {
 
 // SPEC-014 SC-001 (T027): every Detailed section shows a picture, a clip or its activity widget.
 func TestEveryDetailedSectionHasAPicture(t *testing.T) {
-	t.Skip("SPEC-014 T035: turned on once every lesson's clips are approved")
+
 	files, err := filepath.Glob(filepath.Join("..", "..", "public-content", "lessons", "*.detailed.json"))
 	if err != nil || len(files) == 0 {
 		t.Fatalf("no Detailed lessons found: %v", err)

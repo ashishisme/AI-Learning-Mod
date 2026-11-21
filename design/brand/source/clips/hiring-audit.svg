@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img">
+  <style>
+    .s { display: none }
+    .s:target { display: inline }
+    .card { fill: #FFFFFF; stroke: #475569; stroke-width: 1.5 }
+    .box { fill: #DBEAFE; stroke: #1D4ED8; stroke-width: 2 }
+    .val { font: 700 15px system-ui, sans-serif; fill: #0F172A }
+    .mid { font: 700 15px system-ui, sans-serif; fill: #0F172A; text-anchor: middle }
+    .tiny { font: 700 12px system-ui, sans-serif; fill: #0F172A; text-anchor: middle }
+    .track { fill: #E2E8F0 }
+    .arrow { stroke: #334155; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round }
+    .grow { transform-box: fill-box; transform-origin: left center }
+    .pop { transform-box: fill-box; transform-origin: center }
+    .s:target .in { animation: show 0.8s ease-out 1 both }
+    .s:target .in2 { animation: show 0.8s ease-out 0.5s 1 both }
+    .s:target .grow { animation: grow 1.2s ease-out 0.2s 1 both }
+    .s:target .pop { animation: pop 0.6s ease-out 1.2s 1 both }
+    .s:target .slide { animation: slide 1.2s ease-in-out 0.4s 1 both }
+    .s:target .fade { animation: fade 0.8s ease-out 0.9s 1 both }
+    .s:target .spin { animation: spin 1.2s ease-in-out 0.8s 1 both }
+    @keyframes show { from { opacity: 0 } to { opacity: 1 } }
+    @keyframes grow { from { transform: scaleX(0) } to { transform: none } }
+    @keyframes pop { 0% { transform: scale(0.4); opacity: 0 } 70% { transform: scale(1.15); opacity: 1 } 100% { transform: scale(1); opacity: 1 } }
+    @keyframes slide { from { transform: translateX(var(--from)) } to { transform: none } }
+    @keyframes fade { from { opacity: 1 } to { opacity: 0.3 } }
+    @keyframes spin { from { transform: rotate(-270deg) } to { transform: none } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important } }
+  </style>
+  <defs>
+    <g id="p"><circle cy="-5" r="4.5"/><path d="M-8 10 a8 7 0 0 1 16 0z"/></g>
+    <g id="ok"><circle r="7" fill="#047857"/><path d="M-3.5 0 l2.5 2.5 l4 -5" stroke="#FFFFFF" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g id="no"><circle r="7" fill="#B91C1C"/><path d="M-3 -3 l6 6 M3 -3 l-6 6" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/></g>
+    <!-- group A blue (top), group B orange (below), each with an empty 0-100% bar -->
+    <g id="rows">
+      <use href="#p" x="24" y="40" fill="#1D4ED8"/>
+      <use href="#p" x="24" y="82" fill="#C2410C"/>
+      <rect class="track" x="172" y="33" width="120" height="14" rx="7"/>
+      <rect class="track" x="172" y="75" width="120" height="14" rx="7"/>
+    </g>
+    <!-- ratio line from 0.5 to 1.0; the 0.80 mark at x 190 -->
+    <g id="line">
+      <rect x="40" y="136" width="150" height="12" fill="#FEE2E2"/>
+      <rect x="190" y="136" width="100" height="12" fill="#DCFCE7"/>
+      <path d="M40 142 H290 M190 130 V154" stroke="#334155" stroke-width="2" stroke-linecap="round"/>
+      <text x="190" y="170" class="tiny">0.80</text>
+    </g>
+    <!-- step 1 numbers and bars -->
+    <g id="r1">
+      <text x="42" y="45" class="val">60 ÷ 200 = 30%</text>
+      <text x="42" y="87" class="val">27 ÷ 150 = 18%</text>
+    </g>
+    <rect id="b1a" x="172" y="33" width="36" height="14" rx="7" fill="#1D4ED8"/>
+    <rect id="b1b" x="172" y="75" width="21.6" height="14" rx="7" fill="#C2410C"/>
+    <!-- feature cards for step 4 -->
+    <g id="chip"><rect class="card" x="-38" y="-14" width="76" height="28" rx="8"/><rect x="-6" y="-7" width="30" height="5" rx="2.5" fill="#1D4ED8"/><rect x="-6" y="2" width="20" height="5" rx="2.5" fill="#1D4ED8"/></g>
+    <marker id="head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#334155"/></marker>
+  </defs>
+  <rect width="320" height="180" rx="16" fill="#FFFBEB"/>
+
+  <!-- 1: selection rates 30% and 18% -->
+  <g id="s1" class="s">
+    <use href="#rows"/>
+    <g class="in"><use href="#r1"/></g>
+    <use href="#b1a" class="grow"/>
+    <use href="#b1b" class="grow"/>
+  </g>
+
+  <!-- 2: 18% ÷ 30% = 0.60, below 0.80: flagged -->
+  <g id="s2" class="s">
+    <use href="#rows"/><use href="#r1"/><use href="#b1a"/><use href="#b1b"/>
+    <use href="#line"/>
+    <text x="150" y="120" class="mid in">18% ÷ 30% = 0.60</text>
+    <circle cx="90" cy="142" r="7" fill="#B91C1C" stroke="#FFFFFF" stroke-width="2" class="slide" style="--from: 200px"/>
+    <g class="pop"><use href="#no" x="244" y="115"/></g>
+  </g>
+
+  <!-- 3: true positive rates among the qualified: 52 ÷ 80 = 65%, 24 ÷ 60 = 40% -->
+  <g id="s3" class="s">
+    <use href="#rows"/>
+    <use href="#ok" x="36" y="33"/><use href="#ok" x="36" y="75"/>
+    <g class="in">
+      <text x="52" y="45" class="val">52 ÷ 80 = 65%</text>
+      <text x="52" y="87" class="val">24 ÷ 60 = 40%</text>
+    </g>
+    <rect class="grow" x="172" y="33" width="78" height="14" rx="7" fill="#1D4ED8"/>
+    <rect class="grow" x="172" y="75" width="48" height="14" rx="7" fill="#C2410C"/>
+    <g class="pop">
+      <path d="M250 50 V112 M220 92 V112" stroke="#B91C1C" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <path d="M224 108 L220 112 L224 116 M246 108 L250 112 L246 116 M220 112 H250" stroke="#B91C1C" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+
+  <!-- 4: one feature is a proxy: remove it and retrain -->
+  <g id="s4" class="s">
+    <use href="#chip" x="62" y="40"/>
+    <use href="#chip" x="62" y="140"/>
+    <circle cx="44" cy="40" r="6" fill="#1D4ED8"/>
+    <rect x="38" y="134" width="12" height="12" rx="2" fill="#1D4ED8"/>
+    <path d="M102 44 L164 72" class="arrow" marker-end="url(#head)"/><path d="M102 136 L164 108" class="arrow" marker-end="url(#head)"/>
+    <rect class="box" x="172" y="58" width="84" height="64" rx="12"/>
+    <g class="fade" opacity="0.3">
+      <use href="#chip" x="62" y="90"/>
+      <path d="M35 88 L44 83 L53 88 L44 93z M39 90 v5 q5 3 10 0 v-5" fill="#C2410C"/>
+      <path d="M102 90 H164" class="arrow" stroke-dasharray="4 4"/>
+    </g>
+    <g class="pop"><use href="#no" x="100" y="77"/></g>
+    <g class="spin" style="transform-origin: 214px 90px">
+      <path d="M230 90 A16 16 0 1 1 214 74" stroke="#1D4ED8" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M208 68 L215 74 L208 80" stroke="#1D4ED8" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+
+  <!-- 5: measure again: 29% and 24%, ratio 0.83 passes -->
+  <g id="s5" class="s">
+    <use href="#rows"/>
+    <text x="42" y="45" class="val">58 ÷ 200 = 29%</text>
+    <text x="42" y="87" class="val">36 ÷ 150 = 24%</text>
+    <rect class="grow" x="172" y="33" width="34.8" height="14" rx="7" fill="#1D4ED8"/>
+    <rect class="grow" x="172" y="75" width="28.8" height="14" rx="7" fill="#C2410C"/>
+    <use href="#line"/>
+    <text x="150" y="120" class="mid in2">24% ÷ 29% ≈ 0.83</text>
+    <circle cx="205" cy="142" r="7" fill="#047857" stroke="#FFFFFF" stroke-width="2" class="slide" style="--from: -115px"/>
+    <g class="pop"><use href="#ok" x="244" y="115"/></g>
+  </g>
+</svg>

@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-14 | **Updated**: 2026-11-15
 
-**Status**: In progress. Clarified 2026-11-15; the player and release-check changes those answers need are not built yet.
+**Status**: Done (2026-11-21). Every Detailed section has a picture, a clip or a widget; all clips and videos are approved, have no words, and are voiced in hi, kn and ta.
 
 **Input**: User description: "Animated concept clips for lessons. Evolved through owner approvals: transition from static SVG to bespoke fluid 60fps micro-videos rendered with headless Chromium Playwright pipeline; expand with Option B to deliver bespoke micro-videos across all 3 audience modes (Detailed, Junior / Kids, and Plain English) for all 6 core curriculum modules (1-intro, 2-symbolic, 3-neuralnetworks, 4-computervision, 5-nlp, 7-ethics). Junior mode features vector mascot Chip the Robot with cartoon physics; Plain English mode features minimalist dark-mode business/executive infographics; Detailed mode features engineering telemetry and neural topologies. Decoupled multilingual captions and voice narration in English and Hindi; zero baked-in text or audio in video source files; strict ≤ 750 KB payload budget per video; WCAG 2.1 AA touch controls (≥ 44×44 px)."
 

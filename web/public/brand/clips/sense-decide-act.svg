@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img">
+  <style>
+    .s { display: none }
+    .s:target { display: inline }
+    .arrow { stroke: #334155; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round }
+    .loop { stroke: #1D4ED8; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round }
+    .pop { transform-box: fill-box; transform-origin: center }
+    .s:target .in { animation: show 0.8s ease-out 1 both }
+    .s:target .in2 { animation: show 0.8s ease-out 0.4s 1 both }
+    .s:target .pop { animation: pop 0.6s ease-out 0.3s 1 both }
+    .s:target .draw { stroke-dasharray: 420; animation: draw 1.6s ease-in-out 1 both }
+    .s:target .tip { animation: fade 0.4s ease-out 1.5s 1 both }
+    @keyframes show { from { opacity: 0; transform: translateX(-8px) } to { opacity: 1; transform: none } }
+    @keyframes fade { from { opacity: 0 } to { opacity: 1 } }
+    @keyframes pop { 0% { transform: scale(0.4); opacity: 0 } 70% { transform: scale(1.15); opacity: 1 } 100% { transform: scale(1); opacity: 1 } }
+    @keyframes draw { from { stroke-dashoffset: 420 } to { stroke-dashoffset: 0 } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important } }
+  </style>
+  <defs>
+    <!-- sense: a microphone (voice), a bank card (payment), a location pin (where you are) -->
+    <g id="mic"><rect x="-5" y="-13" width="10" height="16" rx="5" fill="#1D4ED8"/><path d="M-9 -3 a9 9 0 0 0 18 0 M0 6 v5 M-5 11 h10" stroke="#1D4ED8" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>
+    <g id="card"><rect x="-15" y="-10" width="30" height="20" rx="3" fill="#FFFFFF" stroke="#334155" stroke-width="2"/><rect x="-15" y="-6" width="30" height="5" fill="#334155"/><rect x="-10" y="3" width="9" height="4" rx="1" fill="#B45309"/></g>
+    <g id="pin"><path d="M0 12 C-10 1 -10 -12 0 -12 C10 -12 10 1 0 12z" fill="#047857"/><circle cy="-4" r="3.5" fill="#FFFFFF"/></g>
+    <!-- decide: a chip -->
+    <g id="chip"><rect x="-13" y="-13" width="26" height="26" rx="5" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="2"/><path d="M-6 -13 v-4 M6 -13 v-4 M-6 13 v4 M6 13 v4 M-13 -6 h-4 M-13 6 h-4 M13 -6 h4 M13 6 h4" stroke="#1D4ED8" stroke-width="2" stroke-linecap="round"/><circle r="4.5" fill="#1D4ED8"/></g>
+    <!-- act: subtitles on a screen, a warning bell, a route -->
+    <g id="subs"><rect x="-21" y="-14" width="42" height="28" rx="4" fill="#FFFFFF" stroke="#334155" stroke-width="2"/><rect x="-14" y="0" width="28" height="4" rx="2" fill="#0F172A"/><rect x="-10" y="7" width="20" height="4" rx="2" fill="#0F172A"/></g>
+    <g id="bell"><path d="M-11 6 q3 -2 3 -9 a8 8 0 0 1 16 0 q0 7 3 9z" fill="#B91C1C"/><circle cy="10" r="3" fill="#B91C1C"/><path d="M-16 -8 q-3 5 0 10 M16 -8 q3 5 0 10" stroke="#B91C1C" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+    <g id="route"><path d="M-18 9 C-4 9 -8 -7 6 -7 H14" stroke="#047857" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="4 4"/><circle cx="-18" cy="9" r="4" fill="#047857"/><path d="M16 -1 C9 -8 9 -17 16 -17 C23 -17 23 -8 16 -1z" fill="#047857"/></g>
+    <g id="sense"><use href="#mic" x="44" y="30"/><use href="#card" x="44" y="80"/><use href="#pin" x="44" y="130"/></g>
+    <g id="arrows1"><path class="arrow" d="M70 30 H128 M121 24 l7 6 l-7 6 M70 80 H128 M121 74 l7 6 l-7 6 M70 130 H128 M121 124 l7 6 l-7 6"/></g>
+    <g id="chips"><use href="#chip" x="158" y="30"/><use href="#chip" x="158" y="80"/><use href="#chip" x="158" y="130"/></g>
+    <g id="arrows2"><path class="arrow" d="M186 30 H238 M231 24 l7 6 l-7 6 M186 80 H238 M231 74 l7 6 l-7 6 M186 130 H238 M231 124 l7 6 l-7 6"/></g>
+    <g id="acts"><use href="#subs" x="272" y="30"/><use href="#bell" x="272" y="80"/><use href="#route" x="272" y="130"/></g>
+  </defs>
+  <rect width="320" height="180" rx="16" fill="#FFFBEB"/>
+
+  <!-- 1: sense: a voice, a card payment, your location -->
+  <g id="s1" class="s">
+    <g class="in"><use href="#sense"/></g>
+  </g>
+
+  <!-- 2: decide: each signal goes into a chip -->
+  <g id="s2" class="s">
+    <use href="#sense"/>
+    <g class="in"><use href="#arrows1"/></g>
+    <g class="pop"><use href="#chips"/></g>
+  </g>
+
+  <!-- 3: act: subtitles, a fraud alert, a route -->
+  <g id="s3" class="s">
+    <use href="#sense"/><use href="#arrows1"/><use href="#chips"/>
+    <g class="in"><use href="#arrows2"/></g>
+    <g class="pop"><use href="#acts"/></g>
+  </g>
+
+  <!-- 4: the result feeds back into sensing: a loop -->
+  <g id="s4" class="s">
+    <use href="#sense"/><use href="#arrows1"/><use href="#chips"/><use href="#arrows2"/><use href="#acts"/>
+    <path class="loop draw" d="M296 148 V166 H44 V150"/>
+    <path class="loop tip" d="M38 156 l6 -6 l6 6"/>
+  </g>
+</svg>

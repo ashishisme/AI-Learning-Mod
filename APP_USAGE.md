@@ -114,6 +114,15 @@ Each lesson embeds a mathematical playground designed to build physical intuitio
 
 ---
 
+## 🎬 Watch-the-Idea Clips
+
+Most lesson sections show a short clip: a video or a step-by-step drawing. The pictures carry no words; every word is in the caption under it, so the same clip works in every language.
+
+- **Play / Pause** runs the clip; **← Previous step**, **Next** and the step bars move one step at a time.
+- Each step's caption is read aloud (recorded voices in Hindi, Kannada and Tamil; the device voice in English). **🔇 Mute clips** silences them for this visit.
+- **Speed** changes the picture speed only.
+- With **reduced motion** on in your device settings, nothing moves: the clip shows each step still, and you step through it.
+
 ## 🎙️ Audio Studio 2.0 & Voice Controls
 
 1. **Floating Audio Controller:** Click the floating speaker button on any lesson to open playback controls.

@@ -25,7 +25,19 @@
           "simpleExplanation": "A diagram of concepts joined by labelled relationships, such as \"is a\" or \"has part\"."
         }
       ],
-      "realWorld": "Insurance quote forms, benefit eligibility checkers and building-regulation tools encode their policies as rules."
+      "realWorld": "Insurance quote forms, benefit eligibility checkers and building-regulation tools encode their policies as rules.",
+      "diagram": {
+        "type": "clip",
+        "clip": "facts-as-graph",
+        "caption": "Facts as nodes and links",
+        "alt": "A box holding 39.2 appears on its own. A patient node joins it by a link marked with a thermometer. A gauge link with a mark at 38 joins 39.2 to a fever node. Finally a new link with a tick joins the patient straight to fever.",
+        "steps": [
+          "Data is a raw value on its own, like a reading of 39.2.",
+          "Link it to a patient, and it becomes information: the patient's temperature is 39.2 °C.",
+          "Knowledge says how to use it: a temperature above 38 °C indicates a fever.",
+          "In a semantic network, concepts are nodes and relationships are labelled links. Now the patient links straight to fever."
+        ]
+      }
     },
     {
       "id": "expert-system-parts",
@@ -123,7 +135,20 @@
           "simpleExplanation": "A fact that backward chaining must establish on the way to its main goal."
         }
       ],
-      "realWorld": "Spacecraft and industrial plants use rule-based fault protection like this, because every action can be traced to a specific rule."
+      "realWorld": "Spacecraft and industrial plants use rule-based fault protection like this, because every action can be traced to a specific rule.",
+      "diagram": {
+        "type": "clip",
+        "clip": "rover-diagnosis",
+        "caption": "Forward chaining the rover's symptoms",
+        "alt": "Four sensor facts on the left: dusty panels, daytime, low battery and a misaligned dish. Rules 1 and 3 fire to give power degraded and communication lost. Rule 2 joins power degraded and battery low into safe mode. Rule 4 joins safe mode and communication lost into an emergency halt. Rules 5 and 6 are crossed out.",
+        "steps": [
+          "The sensors report: panels dusty, daytime, battery low, dish misaligned.",
+          "Pass 1: rule 1 fires, giving power degraded. Rule 3 fires, giving communication lost.",
+          "Pass 2: rule 2 now has both conditions, giving safe mode.",
+          "Pass 3: rule 4 now has both conditions, giving emergency halt.",
+          "Pass 4: nothing new is added, so the engine stops. Rules 5 and 6 never fire."
+        ]
+      }
     },
     {
       "id": "rover-activity",

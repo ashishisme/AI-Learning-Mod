@@ -25,7 +25,20 @@
           "simpleExplanation": "Finding and labelling names of people, places, organisations and dates in text."
         }
       ],
-      "realWorld": "Review sites summarise customer opinions with sentiment analysis, and email apps pick out dates and places to suggest calendar events."
+      "realWorld": "Review sites summarise customer opinions with sentiment analysis, and email apps pick out dates and places to suggest calendar events.",
+      "diagram": {
+        "type": "clip",
+        "clip": "sentence-to-tasks",
+        "caption": "One sentence, many language tasks",
+        "alt": "A speech bubble holds one line of text, which splits into six token blocks. From the tokens, a smiling face is picked over a frowning one; three blocks are marked as a person, a place and a date; and the tokens become a bubble in another script and a speaker sending out sound.",
+        "steps": [
+          "A sentence comes in as text, like a short review.",
+          "First, it is split into tokens.",
+          "Sentiment analysis decides the review is positive, not negative.",
+          "Named entity recognition picks out the people, places and dates.",
+          "Machine translation turns it into another language, and speech synthesis reads it aloud."
+        ]
+      }
     },
     {
       "id": "tokens",
@@ -136,7 +149,20 @@
           "simpleExplanation": "Multiply matching entries of two vectors and add the results."
         }
       ],
-      "realWorld": "Phone keyboards once suggested the next word with n-gram counts like these; most now use small neural language models."
+      "realWorld": "Phone keyboards once suggested the next word with n-gram counts like these; most now use small neural language models.",
+      "diagram": {
+        "type": "clip",
+        "clip": "similarity-and-next-word",
+        "caption": "Similarity, then next-word probabilities",
+        "alt": "Two arrows, (3, 4) and (4, 3), point almost the same way, and 24 ÷ (5 × 5) = 0.96. Then (3, 4) and (4, −3) meet at a right angle, and 12 − 12 = 0. Bars show next-word probabilities: after “the”, “cat” 2/3 and “dog” 1/3; after “cat”, “sat” 1/2 and “ran” 1/2. Finally “the cat sat” scores 2/3 × 1/2 = 1/3 with a tick, and “the dog ran” scores 1/3 × 0 = 0 with a cross.",
+        "steps": [
+          "These two vectors point almost the same way: their cosine similarity is 0.96.",
+          "These two meet at a right angle, so the dot product is 0.",
+          "After “the”, “cat” gets 2/3 and “dog” gets 1/3.",
+          "After “cat”, “sat” and “ran” get 1/2 each.",
+          "“The cat sat” scores 1/3, but “the dog ran” scores 0."
+        ]
+      }
     },
     {
       "id": "vector-activity",

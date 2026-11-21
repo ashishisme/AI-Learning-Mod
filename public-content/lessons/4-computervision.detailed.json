@@ -25,7 +25,19 @@
           "simpleExplanation": "Labelling every pixel of an image with the class it belongs to."
         }
       ],
-      "realWorld": "Phone cameras use detection to find faces for focus, car parks use OCR to read number plates, and video calls use segmentation to blur your background."
+      "realWorld": "Phone cameras use detection to find faces for focus, car parks use OCR to read number plates, and video calls use segmentation to blur your background.",
+      "diagram": {
+        "type": "clip",
+        "clip": "classify-detect-segment",
+        "caption": "Three vision tasks on one picture",
+        "alt": "A street picture with three cars and a cyclist on a road above a pavement. First the whole picture gets one label tag. Then a box is drawn around each car and around the cyclist. Finally every pixel is coloured: sky, road, pavement, cars and the cyclist each get their own colour.",
+        "steps": [
+          "Here is one picture: three cars and a cyclist on a road, with pavement below.",
+          "Image classification gives one label to the whole picture: a street.",
+          "Object detection finds each object and draws a box around it: three cars and a cyclist.",
+          "Segmentation labels every pixel: road, pavement, sky, cars and the person on the bike."
+        ]
+      }
     },
     {
       "id": "images-as-numbers",
@@ -128,7 +140,20 @@
           "simpleExplanation": "Keeping only the largest value in each small block of a feature map."
         }
       ],
-      "realWorld": "Document scanning apps find the edges of a page this way before straightening it."
+      "realWorld": "Document scanning apps find the edges of a page this way before straightening it.",
+      "diagram": {
+        "type": "clip",
+        "clip": "edge-filter-by-hand",
+        "caption": "The edge filter, cell by cell",
+        "alt": "A 4 by 5 grid of pixels where every row reads 0, 0, 0, 9, 9, next to the vertical-edge filter −1, 0, 1 / −2, 0, 2 / −1, 0, 1 and an empty 2 by 3 output. A window slides across the image: over the dark columns it gives 0, and over the edge 9 + 18 + 9 = 36, twice. Both output rows read 0, 36, 36, and max pooling over the first two columns keeps only 36.",
+        "steps": [
+          "Every row of the image reads 0, 0, 0, 9, 9.",
+          "Over columns 1 to 3 every product is 0.",
+          "Over columns 2 to 4 the rows give 9, 18 and 9: 36 in all.",
+          "Columns 3 to 5 also give 36, so both output rows read 0, 36, 36.",
+          "Max pooling keeps only 36: there is an edge here."
+        ]
+      }
     },
     {
       "id": "convolution-activity",

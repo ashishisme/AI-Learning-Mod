@@ -29,7 +29,19 @@
           "simpleExplanation": "Building software that improves at a task by fitting itself to examples, rather than following only hand-written rules."
         }
       ],
-      "realWorld": "Fraud alerts from your bank, the route your maps app suggests and the subtitles on a video call all come from narrow AI systems."
+      "realWorld": "Fraud alerts from your bank, the route your maps app suggests and the subtitles on a video call all come from narrow AI systems.",
+      "diagram": {
+        "type": "clip",
+        "clip": "sense-decide-act",
+        "caption": "Sense, decide, act",
+        "alt": "Three everyday AI systems side by side. A microphone, a bank card and a map pin each send a signal to a chip, which turns it into an action: subtitles on a screen, a warning bell and a route. Then an arrow loops from the actions back to the start.",
+        "steps": [
+          "An AI system first senses something: your voice, a card payment, or where you are.",
+          "Then it decides, by running what it senses through a model.",
+          "Then it acts: it shows subtitles, sends a fraud alert, or suggests a route.",
+          "What happens next is sensed again, so the loop keeps going."
+        ]
+      }
     },
     {
       "id": "turing-test",
@@ -129,7 +141,20 @@
           "simpleExplanation": "Examples kept aside during learning and used only to check how well the model works on cases it has not seen."
         }
       ],
-      "realWorld": "Email providers retrain their spam filters continuously as people mark messages as spam or not spam."
+      "realWorld": "Email providers retrain their spam filters continuously as people mark messages as spam or not spam.",
+      "diagram": {
+        "type": "clip",
+        "clip": "rule-vs-learned",
+        "caption": "A written rule versus a learned one",
+        "alt": "A number line from 0 to 6 counts suspicious phrases. Spam emails sit above the line and genuine ones below, and everything right of a dashed cut-off is flagged. The written cut-off at 2 flags the genuine email with 2 phrases. Trying cut-offs 2, 3 and 4 gives 1, 0 and 2 mistakes, so learning picks 3. On four new emails it gets 3 right and misses the spam with 2, an accuracy of 75%. Moving the cut-off back to 2 catches that spam but flags the genuine email with 2.",
+        "steps": [
+          "A programmer writes a rule: flag 2 or more suspicious phrases.",
+          "On ten labelled emails, it flags one genuine email by mistake.",
+          "Learning tries each cut-off, and 3 makes no mistakes.",
+          "On four new emails it gets three right: 75%.",
+          "A cut-off of 2 catches the missed spam, but flags a genuine email."
+        ]
+      }
     },
     {
       "id": "imitation-activity",

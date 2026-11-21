@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img">
+  <style>
+    .s { display: none }
+    .s:target { display: inline }
+    text { text-anchor: middle; font-family: system-ui, sans-serif; font-weight: 700 }
+    .dk { fill: #1E293B; stroke: #475569 }
+    .lt { fill: #F8FAFC; stroke: #475569 }
+    .nd { font-size: 13px; fill: #FFFFFF }
+    .nl { font-size: 13px; fill: #0F172A }
+    .neg { fill: #FEE2E2; stroke: #475569 }
+    .pos { fill: #DBEAFE; stroke: #475569 }
+    .zer { fill: #FFFFFF; stroke: #475569 }
+    .fneg { font-size: 11px; fill: #991B1B }
+    .fpos { font-size: 11px; fill: #1E3A8A }
+    .fzer { font-size: 11px; fill: #334155 }
+    .emp { fill: #FFFFFF; stroke: #94A3B8; stroke-dasharray: 3 3 }
+    .oc { fill: #FFFFFF; stroke: #475569 }
+    .hit { fill: #FDE68A; stroke: #475569 }
+    .ov { font-size: 14px; fill: #0F172A }
+    .eq { font-size: 16px; fill: #0F172A }
+    .win { fill: none; stroke: #1D4ED8; stroke-width: 3.5 }
+    .halo { fill: none; stroke: #FFFFFF; stroke-width: 7.5 }
+    .pool { fill: none; stroke: #B45309; stroke-width: 2.5; stroke-dasharray: 5 3 }
+    .pop { transform-box: fill-box; transform-origin: center }
+    .s:target .in { animation: show 0.8s ease-out 0.4s 1 both }
+    .s:target .pop { animation: pop 0.6s ease-out 0.9s 1 both }
+    .s:target .late { animation: show 0.8s ease-out 1.2s 1 both }
+    .s:target .fade { animation: show 0.8s ease-out 1 both }
+    .s:target .step { animation: step 1s ease-in-out 1 both }
+    @keyframes show { from { opacity: 0 } to { opacity: 1 } }
+    @keyframes pop { 0% { transform: scale(0.4); opacity: 0 } 70% { transform: scale(1.15); opacity: 1 } 100% { transform: scale(1); opacity: 1 } }
+    @keyframes step { from { transform: translateX(-24px) } to { transform: none } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important } }
+  </style>
+  <defs>
+    <!-- the 4 by 5 image: every row reads 0, 0, 0, 9, 9 -->
+    <g id="img" stroke-width="1"><rect class="dk" x="10" y="34" width="24" height="24"/><text class="nd" x="22" y="51">0</text><rect class="dk" x="34" y="34" width="24" height="24"/><text class="nd" x="46" y="51">0</text><rect class="dk" x="58" y="34" width="24" height="24"/><text class="nd" x="70" y="51">0</text><rect class="lt" x="82" y="34" width="24" height="24"/><text class="nl" x="94" y="51">9</text><rect class="lt" x="106" y="34" width="24" height="24"/><text class="nl" x="118" y="51">9</text><rect class="dk" x="10" y="58" width="24" height="24"/><text class="nd" x="22" y="75">0</text><rect class="dk" x="34" y="58" width="24" height="24"/><text class="nd" x="46" y="75">0</text><rect class="dk" x="58" y="58" width="24" height="24"/><text class="nd" x="70" y="75">0</text><rect class="lt" x="82" y="58" width="24" height="24"/><text class="nl" x="94" y="75">9</text><rect class="lt" x="106" y="58" width="24" height="24"/><text class="nl" x="118" y="75">9</text><rect class="dk" x="10" y="82" width="24" height="24"/><text class="nd" x="22" y="99">0</text><rect class="dk" x="34" y="82" width="24" height="24"/><text class="nd" x="46" y="99">0</text><rect class="dk" x="58" y="82" width="24" height="24"/><text class="nd" x="70" y="99">0</text><rect class="lt" x="82" y="82" width="24" height="24"/><text class="nl" x="94" y="99">9</text><rect class="lt" x="106" y="82" width="24" height="24"/><text class="nl" x="118" y="99">9</text><rect class="dk" x="10" y="106" width="24" height="24"/><text class="nd" x="22" y="123">0</text><rect class="dk" x="34" y="106" width="24" height="24"/><text class="nd" x="46" y="123">0</text><rect class="dk" x="58" y="106" width="24" height="24"/><text class="nd" x="70" y="123">0</text><rect class="lt" x="82" y="106" width="24" height="24"/><text class="nl" x="94" y="123">9</text><rect class="lt" x="106" y="106" width="24" height="24"/><text class="nl" x="118" y="123">9</text></g>
+    <!-- the vertical-edge filter: −1 0 1 / −2 0 2 / −1 0 1 -->
+    <g id="flt" stroke-width="1"><rect class="neg" x="142" y="34" width="22" height="22"/><text class="fneg" x="153" y="49">−1</text><rect class="zer" x="164" y="34" width="22" height="22"/><text class="fzer" x="175" y="49">0</text><rect class="pos" x="186" y="34" width="22" height="22"/><text class="fpos" x="197" y="49">1</text><rect class="neg" x="142" y="56" width="22" height="22"/><text class="fneg" x="153" y="71">−2</text><rect class="zer" x="164" y="56" width="22" height="22"/><text class="fzer" x="175" y="71">0</text><rect class="pos" x="186" y="56" width="22" height="22"/><text class="fpos" x="197" y="71">2</text><rect class="neg" x="142" y="78" width="22" height="22"/><text class="fneg" x="153" y="93">−1</text><rect class="zer" x="164" y="78" width="22" height="22"/><text class="fzer" x="175" y="93">0</text><rect class="pos" x="186" y="78" width="22" height="22"/><text class="fpos" x="197" y="93">1</text></g>
+    <path id="arr" d="M144 120 H212 M204 113 L212 120 L204 127" fill="none" stroke="#334155" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </defs>
+  <rect width="320" height="180" rx="16" fill="#FFFBEB"/>
+
+  <!-- 1: the image, the filter, and an empty 2 by 3 output -->
+  <g id="s1" class="s">
+    <g class="fade"><use href="#img"/><use href="#flt"/><use href="#arr"/></g>
+    <rect class="emp" x="222" y="48" width="28" height="28"/><rect class="emp" x="250" y="48" width="28" height="28"/><rect class="emp" x="278" y="48" width="28" height="28"/><rect class="emp" x="222" y="76" width="28" height="28"/><rect class="emp" x="250" y="76" width="28" height="28"/><rect class="emp" x="278" y="76" width="28" height="28"/>
+  </g>
+
+  <!-- 2: over columns 1 to 3 every pixel is 0, so the output is 0 -->
+  <g id="s2" class="s">
+    <use href="#img"/><use href="#flt"/><use href="#arr"/><rect class="emp" x="222" y="48" width="28" height="28"/><rect class="emp" x="250" y="48" width="28" height="28"/><rect class="emp" x="278" y="48" width="28" height="28"/><rect class="emp" x="222" y="76" width="28" height="28"/><rect class="emp" x="250" y="76" width="28" height="28"/><rect class="emp" x="278" y="76" width="28" height="28"/>
+    <rect class="halo fade" x="9" y="33" width="74" height="74" rx="3"/><rect class="win fade" x="9" y="33" width="74" height="74" rx="3"/>
+    <g class="pop"><rect class="oc" x="222" y="48" width="28" height="28"/><text class="ov" x="236" y="67">0</text></g>
+    <text class="eq in" x="158" y="160">0 + 0 + 0 = 0</text>
+  </g>
+
+  <!-- 3: over columns 2 to 4 the rows give 9, 18 and 9: 36 -->
+  <g id="s3" class="s">
+    <use href="#img"/><use href="#flt"/><use href="#arr"/><rect class="emp" x="222" y="48" width="28" height="28"/><rect class="emp" x="250" y="48" width="28" height="28"/><rect class="emp" x="278" y="48" width="28" height="28"/><rect class="emp" x="222" y="76" width="28" height="28"/><rect class="emp" x="250" y="76" width="28" height="28"/><rect class="emp" x="278" y="76" width="28" height="28"/>
+    <rect class="halo step" x="33" y="33" width="74" height="74" rx="3"/><rect class="win step" x="33" y="33" width="74" height="74" rx="3"/>
+    <g><rect class="oc" x="222" y="48" width="28" height="28"/><text class="ov" x="236" y="67">0</text></g><g class="pop"><rect class="hit" x="250" y="48" width="28" height="28"/><text class="ov" x="264" y="67">36</text></g>
+    <text class="eq in" x="158" y="160">9 + 18 + 9 = 36</text>
+  </g>
+
+  <!-- 4: over columns 3 to 5, 36 again; both output rows read 0, 36, 36 -->
+  <g id="s4" class="s">
+    <use href="#img"/><use href="#flt"/><use href="#arr"/><rect class="emp" x="222" y="48" width="28" height="28"/><rect class="emp" x="250" y="48" width="28" height="28"/><rect class="emp" x="278" y="48" width="28" height="28"/><rect class="emp" x="222" y="76" width="28" height="28"/><rect class="emp" x="250" y="76" width="28" height="28"/><rect class="emp" x="278" y="76" width="28" height="28"/>
+    <rect class="halo step" x="57" y="33" width="74" height="74" rx="3"/><rect class="win step" x="57" y="33" width="74" height="74" rx="3"/>
+    <g><rect class="oc" x="222" y="48" width="28" height="28"/><text class="ov" x="236" y="67">0</text></g><g><rect class="hit" x="250" y="48" width="28" height="28"/><text class="ov" x="264" y="67">36</text></g><g class="pop"><rect class="hit" x="278" y="48" width="28" height="28"/><text class="ov" x="292" y="67">36</text></g>
+    <g class="late"><g><rect class="oc" x="222" y="76" width="28" height="28"/><text class="ov" x="236" y="95">0</text></g><g><rect class="hit" x="250" y="76" width="28" height="28"/><text class="ov" x="264" y="95">36</text></g><g><rect class="hit" x="278" y="76" width="28" height="28"/><text class="ov" x="292" y="95">36</text></g></g>
+    <text class="eq in" x="158" y="160">9 + 18 + 9 = 36</text>
+  </g>
+
+  <!-- 5: 2 by 2 max pooling over the first two output columns keeps 36 -->
+  <g id="s5" class="s">
+    <use href="#img"/><use href="#flt"/><use href="#arr"/>
+    <g><rect class="oc" x="222" y="48" width="28" height="28"/><text class="ov" x="236" y="67">0</text></g><g><rect class="hit" x="250" y="48" width="28" height="28"/><text class="ov" x="264" y="67">36</text></g><g><rect class="hit" x="278" y="48" width="28" height="28"/><text class="ov" x="292" y="67">36</text></g><g><rect class="oc" x="222" y="76" width="28" height="28"/><text class="ov" x="236" y="95">0</text></g><g><rect class="hit" x="250" y="76" width="28" height="28"/><text class="ov" x="264" y="95">36</text></g><g><rect class="hit" x="278" y="76" width="28" height="28"/><text class="ov" x="292" y="95">36</text></g>
+    <rect class="pool fade" x="223" y="49" width="54" height="54" rx="4"/>
+    <g class="in"><path d="M250 108 V128 M244 122 L250 128 L256 122" fill="none" stroke="#B45309" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g class="pop"><rect class="hit" x="236" y="132" width="28" height="28" stroke-width="2"/><text class="ov" x="250" y="151">36</text></g>
+  </g>
+</svg>

@@ -21,7 +21,20 @@
           "simpleExplanation": "Clear responsibility for what an AI system does, with ways to challenge and correct its decisions."
         }
       ],
-      "realWorld": "Public bodies in many countries now publish registers of the algorithms they use, with a named person responsible for each."
+      "realWorld": "Public bodies in many countries now publish registers of the algorithms they use, with a named person responsible for each.",
+      "diagram": {
+        "type": "clip",
+        "clip": "principles-around-decision",
+        "caption": "Five principles around one decision",
+        "alt": "A decision card with a yes and a no sits in the middle. Around it appear five icons: a balance scale for fairness, a shield for reliability and safety, a padlock for privacy and security, an eye for transparency and explainability, and a person for accountability, with an arrow back to the decision. At the end every icon gets a tick.",
+        "steps": [
+          "One decision sits in the middle: a yes or a no.",
+          "Fairness is the balance scale. Reliability and safety are the shield.",
+          "Privacy and security are the padlock. Transparency is the eye.",
+          "Accountability is the person: someone answers for the decision and can correct it.",
+          "Each principle must become a check that a team can carry out."
+        ]
+      }
     },
     {
       "id": "sources-of-bias",
@@ -129,7 +142,20 @@
           "simpleExplanation": "A structured check of a system's outcomes, here comparing groups with fairness measures."
         }
       ],
-      "realWorld": "Independent auditors of hiring tools publish selection rates and impact ratios by group in much this format."
+      "realWorld": "Independent auditors of hiring tools publish selection rates and impact ratios by group in much this format.",
+      "diagram": {
+        "type": "clip",
+        "clip": "hiring-audit",
+        "caption": "Auditing a hiring model, step by step",
+        "alt": "Group A is in blue and Group B in orange. Their selection rates are 60 ÷ 200 = 30% and 27 ÷ 150 = 18%, and the ratio 18% ÷ 30% = 0.60 falls below the 0.80 mark. Among qualified applicants the rates are 52 ÷ 80 = 65% and 24 ÷ 60 = 40%. One feature is crossed out and the model is retrained. Afterwards the rates are 58 ÷ 200 = 29% and 36 ÷ 150 = 24%, and the ratio of about 0.83 passes the 0.80 mark.",
+        "steps": [
+          "Group A, in blue, has 30% shortlisted. Group B, in orange, has 18%.",
+          "18% divided by 30% is 0.60, below 0.80, so it is flagged.",
+          "Among qualified people, Group A gets 65% and Group B only 40%.",
+          "One feature penalises career breaks. The team removes it and retrains.",
+          "After the fix, rates are 29% and 24%. The ratio, about 0.83, passes."
+        ]
+      }
     },
     {
       "id": "bias-activity",

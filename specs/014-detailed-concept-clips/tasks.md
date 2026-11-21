@@ -201,13 +201,13 @@ description: "Tasks for SPEC-014: concept clips for Detailed lessons"
 For each clip below: draw it (source master + release copy + `proposed` register entry), add the `type: "clip"` diagram to the named section, and make every number match the section text.
 
 - [X] T028 [P] [US2] Lesson 3 (pilot): `machine-learning-basics` (examples in, a rule out, a new example sorted) and `worked-example` (each training step's weights and line, numbers from the text), in `public-content/lessons/3-neuralnetworks.detailed.json`.
-- [ ] T029 [P] [US2] Lesson 1: `defining-ai` (sense → decide → act loop, a few everyday devices) and `worked-example` (a written rule failing on a new case, a learned one adjusting), in `public-content/lessons/1-intro.detailed.json`.
-- [ ] T030 [P] [US2] Lesson 2: `knowledge-representation` (facts as nodes and links) and `worked-example` (the rover's symptoms firing rules to a diagnosis, matching the text), in `public-content/lessons/2-symbolic.detailed.json`.
-- [ ] T031 [P] [US2] Lesson 4: `vision-tasks` (classify, detect, segment on one picture) and `worked-example` (the edge filter computed cell by cell, numbers from the text), in `public-content/lessons/4-computervision.detailed.json`.
-- [ ] T032 [P] [US2] Lesson 5: `nlp-tasks` (sentence → tokens → task outputs) and `worked-example` (similarity scores, then next-word probabilities as bars, numbers from the text), in `public-content/lessons/5-nlp.detailed.json`.
-- [ ] T033 [P] [US2] Lesson 7: `principles` (the principles as icons around a decision), `measuring-fairness` (two groups' approval rates and their ratio, numbers from the text) and `worked-example` (the hiring audit step by step), in `public-content/lessons/7-ethics.detailed.json`.
-- [ ] T034 [US2] Owner review of the T018–T022 and T028–T033 drawings and captions, lesson by lesson. Set each approved clip's register entry to `approved`.
-- [ ] T035 [US2] Remove the `t.Skip` from T027, once every lesson's clips are approved.
+- [X] T029 [P] [US2] Lesson 1: `defining-ai` (sense → decide → act loop, a few everyday devices) and `worked-example` (a written rule failing on a new case, a learned one adjusting), in `public-content/lessons/1-intro.detailed.json`.
+- [X] T030 [P] [US2] Lesson 2: `knowledge-representation` (facts as nodes and links) and `worked-example` (the rover's symptoms firing rules to a diagnosis, matching the text), in `public-content/lessons/2-symbolic.detailed.json`.
+- [X] T031 [P] [US2] Lesson 4: `vision-tasks` (classify, detect, segment on one picture) and `worked-example` (the edge filter computed cell by cell, numbers from the text), in `public-content/lessons/4-computervision.detailed.json`.
+- [X] T032 [P] [US2] Lesson 5: `nlp-tasks` (sentence → tokens → task outputs) and `worked-example` (similarity scores, then next-word probabilities as bars, numbers from the text), in `public-content/lessons/5-nlp.detailed.json`.
+- [X] T033 [P] [US2] Lesson 7: `principles` (the principles as icons around a decision), `measuring-fairness` (two groups' approval rates and their ratio, numbers from the text) and `worked-example` (the hiring audit step by step), in `public-content/lessons/7-ethics.detailed.json`. *(2026-11-21: clips `sense-decide-act`, `rule-vs-learned`, `facts-as-graph`, `rover-diagnosis`, `classify-detect-segment`, `edge-filter-by-hand`, `sentence-to-tasks`, `similarity-and-next-word`, `principles-around-decision`, `hiring-audit`; `measuring-fairness` already had its video. Added in en, hi, kn and ta, registered `proposed`, hi/kn/ta captions recorded (141 tracks each). Several clips sit at 28–30 s; the Hindi steps were shortened to fit.)*
+- [X] T034 [US2] Owner review of the T018–T022 and T028–T033 drawings and captions, lesson by lesson. Set each approved clip's register entry to `approved`. *(2026-11-21: owner said "approve spec 014": 10 new clips and 18 re-rendered videos set to approved in the register; the 5 changed Detailed lessons approved in en (owner) and hi/kn/ta (owner (beta)).)*
+- [X] T035 [US2] Remove the `t.Skip` from T027, once every lesson's clips are approved. *(2026-11-21: skip removed; the test passes.)*
 
 **Checkpoint**: SC-001: 30 of 36 Detailed sections have a picture or clip; the other 6 have their widget.
 
@@ -234,9 +234,9 @@ Repeat T036–T042 for each lesson, in the order 3 (v0.11.0; ticked boxes record
 
 ## Phase 7: Polish & cross-cutting
 
-- [ ] T043 [P] Mention clips (Play, step, mute, reduced motion) in the Help and usage text: `APP_USAGE.md` and the Help modal strings in `web/src/i18n/en.json` / `hi.json`, the Hindi via the ledger.
-- [ ] T044 [P] Keep `docs/own-content-plan.md`'s progress section and the memory file for SPEC-014 updated after each release.
-- [ ] T045 Set `spec/ACCEPTANCE.md` AC-76..AC-78 to "PASS (automated)" after the green runs. Close SPEC-014 (status in `specs/014-detailed-concept-clips/spec.md` and `spec/SPEC.md` §0) once SC-001..SC-007 are met.
+- [X] T043 [P] Mention clips (Play, step, mute, reduced motion) in the Help and usage text: `APP_USAGE.md` and the Help modal strings in `web/src/i18n/en.json` / `hi.json`, the Hindi via the ledger. *(2026-11-21: `help.clipsTitle`/`help.clipsBody` in en, hi, kn, ta, approved; APP_USAGE.md section.)*
+- [X] T044 [P] Keep `docs/own-content-plan.md`'s progress section and the memory file for SPEC-014 updated after each release.
+- [X] T045 Set `spec/ACCEPTANCE.md` AC-76..AC-78 to "PASS (automated)" after the green runs. Close SPEC-014 (status in `specs/014-detailed-concept-clips/spec.md` and `spec/SPEC.md` §0) once SC-001..SC-007 are met. *(2026-11-21: AC-76..81 already PASS; SPEC-014 closed.)*
 
 ---
 
@@ -345,7 +345,7 @@ This phase also closes the gaps found while generating these tasks.
 ### Hindi voice and approvals (US4)
 
 - [X] T067 [US4] Hindi voices for the video captions. Only the 14 lesson 3 drawn-clip steps are recorded today; the Kids and Plain English videos and the Detailed videos for lessons 1, 2, 4, 5 and 7 are not. Run `go run ./cmd/narrate -lang hi -dry-run` and report the recordings and characters billed. After the owner approves the cost, record, then the owner uploads, then check the manifest fingerprint.
-- [ ] T068 [US4] The owner confirms the Hindi approvals that T054 recorded for the 12 Kids and Plain English files, or approves them again. They also approve the files changed by T060 and the strings from T066. All with `go run ./cmd/review -lang hi -reviewer "owner (beta)" -approve …`, and the English ledger as needed.
+- [X] T068 [US4] The owner confirms the Hindi approvals that T054 recorded for the 12 Kids and Plain English files, or approves them again. They also approve the files changed by T060 and the strings from T066. All with `go run ./cmd/review -lang hi -reviewer "owner (beta)" -approve …`, and the English ledger as needed. *(2026-11-21: the ledgers show these files approved and current; confirmed by "approve spec 014".)*
 
 ### Polish
 
@@ -355,7 +355,8 @@ This phase also closes the gaps found while generating these tasks.
   - merge the two "Success Criteria" headings.
 
   Then re-check `checklists/requirements.md`.
-- [ ] T070 Release gates:
+- [X] T069a The videos broke FR-016: the render scripts drew English words with `fillText`. Owner decision 2026-11-21: re-render without words (option A; the rule stays). Each `scripts/render-*.js` now wraps `fillText`/`strokeText` so that any text containing a letter draws only its emoji, while numbers and symbols stay. `render-clips.js` also lists `turing-test` and `forward-chaining`, which its batch had dropped. All 18 videos and posters are re-rendered with `node scripts/render-clips.js`, `render-perceptron-clip.js`, `render-kids-clips.js` and `render-plain-clips.js`. The owner re-approves the new videos when reviewing the clips.
+- [X] T070 Release gates: *(2026-11-21: go vet/test, ingest -verify with audio, assetcheck, tsc pass; Playwright 268 passed, the English baseline re-recorded for the new clips and Help text, settings-hosted-local expected.)*
   - `go vet ./...`, `go test ./...`;
   - `go run ./cmd/ingest -verify` (with audio), `go run ./cmd/assetcheck`, `npx tsc --noEmit -p .`;
   - the full Playwright suite on 3001 (only `settings-hosted-local` may fail).

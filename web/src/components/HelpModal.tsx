@@ -111,6 +111,15 @@ export const HelpModal: React.FC = () => {
                 </p>
               </div>
 
+              <div className="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/40">
+                <h4 className="font-bold text-amber-900 dark:text-amber-200 text-sm mb-1 flex items-center gap-1.5">
+                  <span aria-hidden="true">🎬</span> {t('help.clipsTitle')}
+                </h4>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-xs">
+                  {rich(t('help.clipsBody'))}
+                </p>
+              </div>
+
               <div className="space-y-3">
                 <h4 className="font-extrabold text-slate-900 dark:text-white text-sm">
                   {t('help.simulators')}

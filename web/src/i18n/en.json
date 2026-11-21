@@ -87,6 +87,8 @@
   "feedback.title": "Send feedback",
   "help.audioTitle": "🎙️ Audio Studio & AI Teaching Assistant",
   "help.close": "Close help modal",
+  "help.clipsBody": "Many lessons have a short clip. Press <b>Play</b>, or step through it with <b>Previous</b> and <b>Next</b>; each step has a caption that is read aloud. <b>Mute</b> silences the voice for this visit. With reduced motion turned on, the clip stays still and you move step by step.",
+  "help.clipsTitle": "Watch the idea",
   "help.copied": "Copied! ✓",
   "help.copy": "Copy",
   "help.download": "Download Ollama (ollama.com)",

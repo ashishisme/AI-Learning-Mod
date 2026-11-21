@@ -58,11 +58,11 @@
     {
       "path": "public-content/lessons/1-intro.detailed.json",
       "kind": "adaptive",
-      "sourceHash": "2f3cb25390e86144fbc7f7d77874e6eb355a8c0de75c43848561d16eeca9310a",
+      "sourceHash": "4c91a8229dd3d99276b671e35d4687790e2994dc2c1e68e7b309912dc8e2d766",
       "translationHash": "",
       "status": "approved",
       "reviewer": "owner",
-      "date": "2026-11-18"
+      "date": "2026-11-21"
     },
     {
       "path": "public-content/lessons/1-intro.junior.json",
@@ -85,11 +85,11 @@
     {
       "path": "public-content/lessons/2-symbolic.detailed.json",
       "kind": "adaptive",
-      "sourceHash": "e75d6f121950351fb8890c7cf2af0eb61de4021a22ac87df00e3a4d2944d7c40",
+      "sourceHash": "280e69e4fb6af1b5f3807518f7306e6063fc2b8cc3e915b2a99d3aff90fd7b74",
       "translationHash": "",
       "status": "approved",
       "reviewer": "owner",
-      "date": "2026-11-18"
+      "date": "2026-11-21"
     },
     {
       "path": "public-content/lessons/2-symbolic.junior.json",
@@ -139,11 +139,11 @@
     {
       "path": "public-content/lessons/4-computervision.detailed.json",
       "kind": "adaptive",
-      "sourceHash": "bd3ae35425e8e5844e74a0527dec4bd28bbd627c1a3ab4b7533d99e1d5e8a7bf",
+      "sourceHash": "d7e4df62d6fe878038134328f92d6c928e03daca07e2180288dbe109af70ba34",
       "translationHash": "",
       "status": "approved",
       "reviewer": "owner",
-      "date": "2026-11-18"
+      "date": "2026-11-21"
     },
     {
       "path": "public-content/lessons/4-computervision.junior.json",
@@ -166,11 +166,11 @@
     {
       "path": "public-content/lessons/5-nlp.detailed.json",
       "kind": "adaptive",
-      "sourceHash": "2d3aebcec5b49d38a60ecf81258d5977175e30f783d0d1c0306929d33a652dfb",
+      "sourceHash": "fc02a1506ab25f4e05bd753ab4b8ec10d22ad34fbc28defea09ff3d021d4f904",
       "translationHash": "",
       "status": "approved",
       "reviewer": "owner",
-      "date": "2026-11-18"
+      "date": "2026-11-21"
     },
     {
       "path": "public-content/lessons/5-nlp.junior.json",
@@ -193,11 +193,11 @@
     {
       "path": "public-content/lessons/7-ethics.detailed.json",
       "kind": "adaptive",
-      "sourceHash": "d8afccd6be7b876a259f5b22e43dd89db6c805590bc381e52e25a9739fe6b806",
+      "sourceHash": "805d22feaeaaa19c0c018aba92eaabb2beb374fb9038b916b6b2206242f2881e",
       "translationHash": "",
       "status": "approved",
       "reviewer": "owner",
-      "date": "2026-11-18"
+      "date": "2026-11-21"
     },
     {
       "path": "public-content/lessons/7-ethics.junior.json",
