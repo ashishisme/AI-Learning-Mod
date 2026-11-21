@@ -10,3 +10,4 @@ One line per fix (SPEC-016 FR-014). Record the report id and a neutral before �
 | 2026-11-21 | issue #8 | lang/ta/lessons/4-computervision.junior.json › pixels-grid, check-in, mini-quiz; 5-nlp recall | a pixel's colour becomes numbers (not one number) |
 | 2026-11-21 | issue #8 | lang/ta/lessons/1-intro.junior.json › what-is-ai | big idea includes rule-based AI; section trimmed |
 | 2026-11-21 | issue #8 | lang/ta/lessons/3-neuralnetworks.junior.json › clue-weights, bias, how-it-learns | computer neuron introduced before weights |
+| 2026-11-21 | issue #8 | lang/ta/lessons/1-intro.junior.json › glossary “AI”; 7-ethics recap and teach-back | AI definition includes rules; counting is a first check, then find why |

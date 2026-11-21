@@ -13,8 +13,8 @@
     {
       "path": "public-content/lang/ta/lessons/1-intro.junior.json",
       "kind": "adaptive",
-      "sourceHash": "0a1948b5f1f2da48cc4ecefa0f2270f3cb412ff6e7bf80d8ada9ad975ed2528f",
-      "translationHash": "99abecba6badd0f31a7c2febc8a6641f8ffc6004edf0583a774799484ff35f71",
+      "sourceHash": "e327d9c0f0b333366fd2c9f571ea32622ea28d582e4a253b372e09a2a65ceaef",
+      "translationHash": "4d88e42af6e74f6504818b65ead5c3e5a4f258792342241bcfa385a609e0c063",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-21"
@@ -148,8 +148,8 @@
     {
       "path": "public-content/lang/ta/lessons/7-ethics.junior.json",
       "kind": "adaptive",
-      "sourceHash": "33b345879bbcaa86ef5a3fa9df05fad3ac2a8247ab1e6d8807662c3d1bb41116",
-      "translationHash": "7f9c537ec2fc7b0702e3b8e64524600df0194652b8a7095fb14629850531b8d8",
+      "sourceHash": "080d81892fa41ab8f7fe5b914cdc2390e53a0e2fbf32c971492ae1110e87a7dd",
+      "translationHash": "cbca0a9dd8915dad98028de8c488678abbfe27e0feb2926651df328b1529ad31",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-21"

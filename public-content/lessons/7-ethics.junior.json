@@ -11,7 +11,7 @@
   },
   "recap": [
     "AI copies its examples, so one-sided examples make it unfair.",
-    "To check fairness, count who the AI says yes to.",
+    "To check fairness, count who the AI says yes to. If a group misses out, find out why.",
     "For big choices, a person should have the final say."
   ],
   "bands": true,
@@ -237,12 +237,12 @@
   "teachBack": {
     "prompt": "Chip asks: How can we stop an AI from being unfair? Pick the best answer for a friend.",
     "options": [
-      "Use examples from everyone, and count who it says yes to.",
+      "Count who it says yes to, and find out why if a group misses out.",
       "Make the AI run faster.",
       "Let the AI make every choice on its own."
     ],
     "correctIndex": 0,
-    "explanation": "Right! Fair examples plus careful counting help keep AI fair."
+    "explanation": "Right! Counting shows a problem, and finding the cause helps fix it."
   },
   "recall": [
     {

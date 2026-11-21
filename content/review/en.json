@@ -67,7 +67,7 @@
     {
       "path": "public-content/lessons/1-intro.junior.json",
       "kind": "adaptive",
-      "sourceHash": "0a1948b5f1f2da48cc4ecefa0f2270f3cb412ff6e7bf80d8ada9ad975ed2528f",
+      "sourceHash": "e327d9c0f0b333366fd2c9f571ea32622ea28d582e4a253b372e09a2a65ceaef",
       "translationHash": "",
       "status": "approved",
       "reviewer": "owner",
@@ -202,7 +202,7 @@
     {
       "path": "public-content/lessons/7-ethics.junior.json",
       "kind": "adaptive",
-      "sourceHash": "33b345879bbcaa86ef5a3fa9df05fad3ac2a8247ab1e6d8807662c3d1bb41116",
+      "sourceHash": "080d81892fa41ab8f7fe5b914cdc2390e53a0e2fbf32c971492ae1110e87a7dd",
       "translationHash": "",
       "status": "approved",
       "reviewer": "owner",

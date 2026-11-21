@@ -132,6 +132,12 @@ description: "Tasks for SPEC-016: wording feedback from beta learners"
   - `terraform apply`.
 
   Until then, production shows no report links (FR-004).
+  - **Cost estimate (2026-11-21):**
+    - One audit sends the fixed prompt (about 300 tokens) plus the message (500 characters at most, about 400 tokens in Indic scripts), and gets back at most 60 tokens. So it is at most about 750 tokens in and 60 out.
+    - With a Flash-Lite-class model at about $0.10 per million input tokens and $0.40 per million output tokens (check the current price list first), one audit costs about $0.0001.
+    - 1,000 reports a month cost about $0.10, and 10,000 about $1.
+    - The auditor key secret adds about $0.06 a month.
+    - The existing daily AI spend ceiling caps it, and each learner can send at most 5 reports an hour.
 - [X] T022 Release gates: *(2026-11-21: go vet/test, ingest -verify with audio, assetcheck, tsc pass; Playwright 270 passed plus the reruns, English baseline re-recorded; settings-hosted-local expected.)*
   - go vet and test;
   - `ingest -verify` with audio;

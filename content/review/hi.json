@@ -13,8 +13,8 @@
     {
       "path": "public-content/lang/hi/lessons/1-intro.junior.json",
       "kind": "adaptive",
-      "sourceHash": "0a1948b5f1f2da48cc4ecefa0f2270f3cb412ff6e7bf80d8ada9ad975ed2528f",
-      "translationHash": "a581cdbbdc44d1d996158efa6a45892032af5342cf247727d4c75c4a0dc10fc1",
+      "sourceHash": "e327d9c0f0b333366fd2c9f571ea32622ea28d582e4a253b372e09a2a65ceaef",
+      "translationHash": "ac1ba0284b85b8c522c7e6056c73f7b98944add9dafc8af6ae81e0d618b09874",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-21"
@@ -41,10 +41,10 @@
       "path": "public-content/lang/hi/lessons/2-symbolic.junior.json",
       "kind": "adaptive",
       "sourceHash": "7599f181d20d01a740ad4f39ade98dbf6a5d4fcfa79de7b33a3d2fe9914214f1",
-      "translationHash": "3ad8ebf05dbc1fcb65ce55849bd6e41b79107982352ff816e48ea939ea717516",
+      "translationHash": "f68eb1c4e23f1724e5f78a7939578cc65f0a7e5e636f6759e31621fb1afe0167",
       "status": "approved",
       "reviewer": "owner (beta)",
-      "date": "2026-11-18"
+      "date": "2026-11-21"
     },
     {
       "path": "public-content/lang/hi/lessons/2-symbolic.plain-english.json",
@@ -68,7 +68,7 @@
       "path": "public-content/lang/hi/lessons/3-neuralnetworks.junior.json",
       "kind": "adaptive",
       "sourceHash": "181bb861eb922e7b99482f4dd02cdce9eacdaaf9275166adbaf3febefdcb3bd0",
-      "translationHash": "745497a04f9cb99e2c70d96e2cf199f831efb2c4b2542ee325192d5b9d851508",
+      "translationHash": "fdbd858b25ccd7177cbeca9d3550ee83b8a50651c0dc1d5cabc58c86872a3d60",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-21"
@@ -122,7 +122,7 @@
       "path": "public-content/lang/hi/lessons/5-nlp.junior.json",
       "kind": "adaptive",
       "sourceHash": "71276555704963c283c779c3de08e2b4e59ad7fb77aa137afd54d89610ea62b6",
-      "translationHash": "11f0c16c2a8a32b36cd324c09d846aaeeeb7f2744064164828a92586443a564e",
+      "translationHash": "df7d31c137e9672a6462f5583edeb98d4967fc9d3bf667180e8bea3fc6618e74",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-21"
@@ -148,8 +148,8 @@
     {
       "path": "public-content/lang/hi/lessons/7-ethics.junior.json",
       "kind": "adaptive",
-      "sourceHash": "33b345879bbcaa86ef5a3fa9df05fad3ac2a8247ab1e6d8807662c3d1bb41116",
-      "translationHash": "8c151fb9786d22962607124b99db46a5d5d54fef99cf3b694cec70effd25017c",
+      "sourceHash": "080d81892fa41ab8f7fe5b914cdc2390e53a0e2fbf32c971492ae1110e87a7dd",
+      "translationHash": "739a49b36616952c39a02453c26216652abd1ffca26cc151dddf26ebe94c5a52",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-21"
