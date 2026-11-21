@@ -86,9 +86,9 @@
 | AC-82 | FR-I18N-05 | `internal/api/safety_lang_test.go`, `internal/feedback/check_lang_test.go` | PASS (automated) | SPEC-015: Kannada and Tamil safety and personal-details rules |
 | AC-83 | FR-UI-17 | `web/tests/i18n-foundation.spec.ts` | PASS (automated) | SPEC-015: script fonts only when the script is on screen |
 | AC-84 | SPEC-015 | `web/tests/languages-kn-ta.spec.ts` | PASS (automated) | SPEC-015: a Kannada / Tamil learner, beta, fonts, 390 px |
-| AC-85 | FR-I18N-11 | `internal/feedback/service_test.go`, `internal/api/feedback_lang_test.go` | pending | SPEC-016: language, section and step stored and validated; `translation` category |
-| AC-86 | FR-I18N-11 | `internal/api/feedback_handlers_test.go`, `web/tests/feedback.spec.ts` | pending | SPEC-016: admin filter and CSV by language |
-| AC-87 | FR-I18N-11 | `web/tests/feedback.spec.ts`, `web/tests/languages-kn-ta.spec.ts` | pending | SPEC-016: report links, Kids once per lesson, beta note |
-| AC-88 | FR-I18N-11 | `internal/feedback/check_adversarial_test.go` | pending | SPEC-016: disguised phone numbers and emails refused; number-heavy reports pass |
-| AC-89 | FR-I18N-12 | `internal/feedback/limits_test.go`, `internal/api/feedback_handlers_test.go`, `web/tests/wording-feedback.spec.ts` | pending | SPEC-016: 10 a day and 50 in total per learner; admin Controls tab changes them, audited |
-| AC-90 | FR-I18N-13 | `internal/feedback/ratings_test.go`, `internal/api/feedback_handlers_test.go`, `cmd/server/config_test.go`, `web/tests/wording-feedback.spec.ts` | pending | SPEC-016: star ratings one set per learner, overwrite, kept with the account; rules-only feedback |
+| AC-85 | FR-I18N-11 | `internal/feedback/service_test.go`, `internal/api/feedback_lang_test.go` | PASS (automated) | SPEC-016: language, section and step stored and validated; `translation` category |
+| AC-86 | FR-I18N-11 | `internal/api/feedback_handlers_test.go`, `web/tests/wording-feedback.spec.ts` | PASS (automated) | SPEC-016: admin filter and CSV by language |
+| AC-87 | FR-I18N-11 | `web/tests/wording-feedback.spec.ts`, `web/tests/languages-kn-ta.spec.ts` | PASS (automated) | SPEC-016: report links, Kids once per lesson, beta note |
+| AC-88 | FR-I18N-11 | `internal/feedback/check_adversarial_test.go` | PASS (automated) | SPEC-016: disguised phone numbers and emails refused; number-heavy reports pass |
+| AC-89 | FR-I18N-12 | `internal/feedback/limits_test.go`, `internal/api/feedback_handlers_test.go`, `web/tests/wording-feedback.spec.ts` | PASS (automated) | SPEC-016: 10 a day and 50 in total per learner; admin Controls tab changes them, audited |
+| AC-90 | FR-I18N-13 | `internal/feedback/ratings_test.go`, `internal/api/feedback_handlers_test.go`, `cmd/server/config_test.go`, `web/tests/wording-feedback.spec.ts` | PASS (automated) | SPEC-016: star ratings one set per learner, overwrite, kept with the account; rules-only feedback |

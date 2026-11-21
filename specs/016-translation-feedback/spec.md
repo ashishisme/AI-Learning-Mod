@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-21
 
-**Status**: Draft
+**Status**: Done (2026-11-21). Live in v0.18.0: two-part feedback (star ratings and written messages), wording reports from sections and clips, per-learner limits, and the admin Read feedback, Ratings and Controls tabs. Feedback runs on the free rule check only (FR-I18N-13); the AI auditor is optional and not configured.
 
 **Input**: User description: "Translation and content feedback from beta learners (SPEC-016). Kannada, Tamil and Hindi are approved only as 'owner (beta)' with no native reviewer; the owner wants live users to review them. Extend the existing learner feedback (FR-047..FR-059, DC-09 c) rather than build a new system: (1) store the interface language with each feedback record and add a 'translation' category; (2) a small 'Report a wording problem' link on each lesson section and clip that opens the existing dialog pre-filled with lesson, section id, journey and language; (3) the admin console lists feedback filtered by language, lesson and category, and exports CSV per language; (4) a documented owner workflow: triage, fix, re-approve as owner (beta), re-record only changed tracks, release; (5) the language menu's beta label links to a one-line explanation inviting wording reports. Out of scope: user accounts, public comments, automatic translation edits. Keep the 180-day retention and no-identity rules; all UI strings translated in hi, kn, ta."
 

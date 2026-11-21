@@ -126,7 +126,7 @@ description: "Tasks for SPEC-016: wording feedback from beta learners"
 - [X] T018 [P] Extend `web/tests/languages-kn-ta.spec.ts` (390 px) with feedback on: the report links and beta note cause no overflow and stay at least 44×44.
 - [X] T019 [P] Grow `internal/feedback/testdata/adversarial/*.json` with English and Hindi-specific cases seen during T011. The set must stay green.
 - [X] T020 The owner approves the hi, kn and ta UI strings, recorded as owner (beta). *(2026-11-21: owner said "approve and record all pending".)*
-- [ ] T021 Turn feedback on in production. This is an owner decision with a cost:
+- [X] T021 Turn feedback on in production. This is an owner decision with a cost: *(Done 2026-11-21 without an AI auditor, per the owner redesign (FR-I18N-13): `FEEDBACK_ENABLED=true` was set on Cloud Run with `gcloud run services update --no-traffic`, then v0.18.0 was promoted. Live: `feedbackEnabled: true`, and the log says “rule check only”. The owner adds `feedback_enabled = true` to the Cloud Shell tfvars so a later `terraform apply` keeps it.)*
   - set `feedback_auditor` (`base_url`, `model`) in the untracked tfvars;
   - add the auditor key secret;
   - `terraform apply`.
@@ -146,7 +146,7 @@ description: "Tasks for SPEC-016: wording feedback from beta learners"
   - the full Playwright suite on 3001, re-recording the English baseline if the Help or lesson text changed.
 
   When the owner asks: commit, push, and tag. The owner approves promote.
-- [ ] T023 Set AC-85..AC-88 to PASS (automated). Set the spec status to Done, and update the memory file.
+- [X] T023 Set AC-85..AC-88 to PASS (automated). Set the spec status to Done, and update the memory file. *(Done 2026-11-21: AC-85..AC-90 PASS (automated); the AC-86 and AC-87 test paths corrected to `wording-feedback.spec.ts`; spec status Done.)*
 
 ## Progress notes (2026-11-21)
 
