@@ -110,7 +110,8 @@ test.describe('SPEC-006 revise-cld-v1', () => {
     const card = page.locator('[data-testid="teach-back"]')
     await card.scrollIntoViewIfNeeded()
     await expect(card).toBeVisible()
-    await card.getByRole('button').nth(1).click() // a wrong answer
+    // The options are shuffled, so pick one that is not the correct answer rather than a fixed position.
+    await card.getByRole('button').filter({ hasNotText: 'rules from experts' }).first().click()
     await expect(card.locator('[role="status"]')).toContainText('Good try')
   })
 
