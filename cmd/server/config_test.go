@@ -248,3 +248,15 @@ func TestCloudLogFormat(t *testing.T) {
 		t.Errorf("log line: %s", line)
 	}
 }
+
+// FR-I18N-13: FEEDBACK_ENABLED=true turns feedback on with the rule check alone, and still needs access control.
+func TestFeedbackCanRunOnTheRuleCheckAlone(t *testing.T) {
+	on := map[string]string{"FEEDBACK_ENABLED": "true"}
+	c, err := LoadConfig(env(with(on)))
+	if err != nil || !c.FeedbackEnabled || !c.FeedbackRulesOnly {
+		t.Fatalf("rules only: %+v %v", c, err)
+	}
+	if c, _ := LoadConfig(env(on)); c.FeedbackEnabled {
+		t.Error("feedback needs access control")
+	}
+}

@@ -130,9 +130,8 @@ test.describe('Journey Switcher (SPEC-011 User Story 2)', () => {
 
     await page.goto('/')
     await page.getByRole('button', { name: 'Feedback' }).click()
-    await page.getByRole('radio', { name: '5' }).check()
-    await page.getByRole('textbox', { name: 'Message (optional)' }).fill('Great explanation!')
-    await page.getByRole('button', { name: 'Send feedback' }).click()
+    await page.getByRole('textbox', { name: 'Message' }).fill('Great explanation!')
+    await page.getByRole('button', { name: 'Send message' }).click()
 
     await expect.poll(() => postedMode).toBe('plain-english')
   })

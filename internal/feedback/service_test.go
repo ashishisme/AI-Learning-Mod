@@ -35,14 +35,15 @@ func newSvc(t *testing.T) (*Service, state.Store, *time.Time) {
 func TestValidation(t *testing.T) {
 	s, _, _ := newSvc(t)
 	mut := map[string]func(*Input){
-		"rating 0":       func(i *Input) { i.Rating = 0 },
-		"rating 6":       func(i *Input) { i.Rating = 6 },
-		"bad category":   func(i *Input) { i.Category = "rant" },
-		"bad mode":       func(i *Input) { i.Mode = "pirate" },
-		"long message":   func(i *Input) { i.Message = strings.Repeat("a", 501) },
-		"bad lesson":     func(i *Input) { i.LessonID = "../etc" },
-		"long version":   func(i *Input) { i.AppVersion = strings.Repeat("1", 21) },
-		"version spaces": func(i *Input) { i.AppVersion = "call me" },
+		"no rating, no text": func(i *Input) { i.Rating, i.Message = 0, "" },
+		"rating -1":          func(i *Input) { i.Rating = -1 },
+		"rating 6":           func(i *Input) { i.Rating = 6 },
+		"bad category":       func(i *Input) { i.Category = "rant" },
+		"bad mode":           func(i *Input) { i.Mode = "pirate" },
+		"long message":       func(i *Input) { i.Message = strings.Repeat("a", 501) },
+		"bad lesson":         func(i *Input) { i.LessonID = "../etc" },
+		"long version":       func(i *Input) { i.AppVersion = strings.Repeat("1", 21) },
+		"version spaces":     func(i *Input) { i.AppVersion = "call me" },
 	}
 	for name, m := range mut {
 		in := clean

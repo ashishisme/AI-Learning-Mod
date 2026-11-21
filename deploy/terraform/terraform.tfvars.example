@@ -15,3 +15,6 @@ oidc_issuer      = "https://accounts.google.com"
 oidc_client_id   = "<OAUTH_CLIENT_ID>"
 admin_emails     = "<ADMIN_EMAIL>"
 backup_retention = "1209600s"
+
+# Learner feedback with the free rule check only (no AI, no key): set to true to switch it on.
+# feedback_enabled = true

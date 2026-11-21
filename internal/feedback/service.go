@@ -12,6 +12,7 @@ import (
 	"encoding/csv"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"log/slog"
 	"regexp"
 	"strconv"
@@ -29,13 +30,24 @@ const (
 	retention       = 180 * 24 * time.Hour
 	waitingLimit    = 7 * 24 * time.Hour
 	ratePrefix      = "fbrate:"
-	claimTTL        = 2 * time.Minute // well over the auditor's timeout; lets another instance retry after a crash
+	dayPrefix       = "fbday:"   // stored reports per learner per IST day
+	totalPrefix     = "fbtotal:" // stored reports per learner, ever
+	limitKeyDaily   = "fbcfg:daily"
+	limitKeyTotal   = "fbcfg:total"
+	// Defaults and ceilings for the per-learner limits (owner decision 2026-11-21). An admin may change them.
+	DefaultDailyLimit = 10
+	DefaultTotalLimit = 50
+	MaxDailyLimit     = 100
+	MaxTotalLimit     = 1000
+	claimTTL          = 2 * time.Minute // well over the auditor's timeout; lets another instance retry after a crash
 )
 
 var (
-	ErrInvalid  = errors.New("feedback: invalid input")
-	ErrLimit    = errors.New("feedback: too many submissions")
-	ErrNotFound = errors.New("feedback: not found")
+	ErrInvalid    = errors.New("feedback: invalid input")
+	ErrLimit      = errors.New("feedback: too many submissions")
+	ErrDailyLimit = errors.New("feedback: daily limit for this learner")
+	ErrTotalLimit = errors.New("feedback: total limit for this learner")
+	ErrNotFound   = errors.New("feedback: not found")
 )
 
 // PIIError means the rule check found personal details. Nothing was stored. Kind is a fixed label;
@@ -70,7 +82,7 @@ func validate(in *Input) error {
 		in.Mode = "standard"
 	}
 	switch {
-	case in.Rating < 1 || in.Rating > 5,
+	case in.Rating < 0 || in.Rating > 5, in.Rating == 0 && in.Message == "", // SPEC-016 FR-I18N-13: written feedback needs no star rating
 		in.Category != "bug" && in.Category != "content" && in.Category != "idea" && in.Category != "other" && in.Category != "translation",
 		in.Lang != "" && !langRe.MatchString(in.Lang),
 		in.SectionID != "" && !sectionRe.MatchString(in.SectionID),
@@ -108,6 +120,34 @@ func rateKey(betaID string, now time.Time) string {
 	return ratePrefix + hex.EncodeToString(sum[:])[:16] + ":" + auth.HourKey(now)
 }
 
+func learnerHash(betaID string) string {
+	sum := sha256.Sum256([]byte(betaID))
+	return hex.EncodeToString(sum[:])[:16]
+}
+
+func dayKey(betaID string, now time.Time) string {
+	return dayPrefix + learnerHash(betaID) + ":" + now.In(auth.IST).Format("2006-01-02")
+}
+
+func totalKey(betaID string) string { return totalPrefix + learnerHash(betaID) }
+
+// Limits are the per-learner caps in force: the admin's values, or the defaults.
+type Limits struct {
+	Daily int `json:"daily"`
+	Total int `json:"total"`
+}
+
+func limitsIn(tx state.Tx) Limits {
+	l := Limits{Daily: DefaultDailyLimit, Total: DefaultTotalLimit}
+	if v := tx.GetCounter(limitKeyDaily); v > 0 {
+		l.Daily = int(v)
+	}
+	if v := tx.GetCounter(limitKeyTotal); v > 0 {
+		l.Total = int(v)
+	}
+	return l
+}
+
 func newID() string {
 	b := make([]byte, 9)
 	_, _ = rand.Read(b)
@@ -135,9 +175,25 @@ func (s *Service) Submit(ctx context.Context, betaID, label string, in Input) er
 		if found {
 			return nil
 		}
+		// Only stored reports use up the daily and total allowance (a refused message stores nothing).
+		lim := limitsIn(tx)
+		dk, tk := dayKey(betaID, now), totalKey(betaID)
+		if tx.GetCounter(tk) >= int64(lim.Total) {
+			return ErrTotalLimit
+		}
+		if tx.GetCounter(dk) >= int64(lim.Daily) {
+			return ErrDailyLimit
+		}
+		tx.AddCounter(dk, 1)
+		tx.AddCounter(tk, 1)
+		// With no AI auditor configured (FR-I18N-13), a message that passed the rule check goes straight to the inbox.
+		review := state.ReviewWaiting
+		if s.auditor == nil {
+			review = state.ReviewPassed
+		}
 		tx.PutFeedback(state.Feedback{
 			ID: newID(), At: now, Rating: in.Rating, Category: in.Category, Message: in.Message, Label: label,
-			LessonID: in.LessonID, Mode: in.Mode, AppVersion: in.AppVersion, Lang: in.Lang, SectionID: in.SectionID, Step: in.Step, Status: state.FeedbackNew, Review: state.ReviewWaiting,
+			LessonID: in.LessonID, Mode: in.Mode, AppVersion: in.AppVersion, Lang: in.Lang, SectionID: in.SectionID, Step: in.Step, Status: state.FeedbackNew, Review: review,
 		})
 		return nil
 	})
@@ -447,6 +503,13 @@ func (s *Service) Sweep(ctx context.Context, now time.Time) error {
 				counters = append(counters, key)
 			}
 		}
+		counters = append(counters, sweepRatings(tx)...)
+		today := now.In(auth.IST).Format("2006-01-02")
+		for key := range tx.ListCounters(dayPrefix) {
+			if i := strings.LastIndexByte(key, ':'); i > 0 && key[i+1:] < today {
+				counters = append(counters, key)
+			}
+		}
 		return nil
 	}); err != nil {
 		return err
@@ -471,4 +534,25 @@ func stepCell(n int) string {
 		return ""
 	}
 	return strconv.Itoa(n)
+}
+
+// GetLimits returns the per-learner limits in force.
+func (s *Service) GetLimits(ctx context.Context) (Limits, error) {
+	var l Limits
+	err := s.store.View(ctx, func(tx state.Tx) error { l = limitsIn(tx); return nil })
+	return l, err
+}
+
+// SetLimits changes the per-learner limits and records the change in the audit trail.
+func (s *Service) SetLimits(ctx context.Context, actor string, l Limits) error {
+	if l.Daily < 1 || l.Daily > MaxDailyLimit || l.Total < 1 || l.Total > MaxTotalLimit || l.Daily > l.Total {
+		return ErrInvalid
+	}
+	return s.store.Do(ctx, func(tx state.Tx) error {
+		old := limitsIn(tx)
+		tx.AddCounter(limitKeyDaily, int64(l.Daily)-tx.GetCounter(limitKeyDaily))
+		tx.AddCounter(limitKeyTotal, int64(l.Total)-tx.GetCounter(limitKeyTotal))
+		audit(tx, s.now(), actor, "feedback.limits", "-", fmt.Sprintf("daily=%d->%d total=%d->%d", old.Daily, l.Daily, old.Total, l.Total))
+		return nil
+	})
 }

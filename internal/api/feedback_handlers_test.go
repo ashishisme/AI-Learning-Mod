@@ -181,3 +181,69 @@ func TestAdminFeedbackWritesNeedCSRFAndAreAudited(t *testing.T) {
 		t.Error("feedback text must not reach the audit trail")
 	}
 }
+
+// FR-I18N-12: an admin reads and changes the per-learner limits; writes need CSRF and are audited.
+func TestAdminFeedbackLimits(t *testing.T) {
+	e := newAdminEnv(t, []string{adminAddr})
+	e.signIn(t)
+	if _, body := e.do(t, "GET", "/api/admin/feedback/limits", nil, nil); !strings.Contains(body, `"daily":10`) || !strings.Contains(body, `"total":50`) {
+		t.Errorf("defaults: %s", body)
+	}
+	if resp, _ := e.do(t, "POST", "/api/admin/feedback/limits", map[string]int{"daily": 20, "total": 100}, nil); resp.StatusCode != 403 {
+		t.Errorf("no csrf: %d", resp.StatusCode)
+	}
+	if resp, _ := e.post(t, "/api/admin/feedback/limits", map[string]int{"daily": 0, "total": 100}); resp.StatusCode != 400 {
+		t.Errorf("invalid: %d", resp.StatusCode)
+	}
+	if resp, body := e.post(t, "/api/admin/feedback/limits", map[string]int{"daily": 20, "total": 100}); resp.StatusCode != 200 || !strings.Contains(body, `"daily":20`) {
+		t.Errorf("change: %d %s", resp.StatusCode, body)
+	}
+	if _, audit := e.do(t, "GET", "/api/admin/audit", nil, nil); !strings.Contains(audit, "feedback.limits") {
+		t.Errorf("audit: %s", audit)
+	}
+}
+
+// FR-I18N-13: a learner saves, reads and overwrites one set of ratings; the admin sees only the summary.
+func TestRatingsEndpoints(t *testing.T) {
+	e := newAdminEnv(t, []string{adminAddr})
+	e.signIn(t)
+	learner, betaID, _ := activateLearner(t, e, "")
+	post := func(body map[string]any) (*http.Response, string) {
+		raw, _ := json.Marshal(body)
+		resp, err := learner.Post(e.app.URL+"/api/feedback/ratings", "application/json", bytes.NewReader(raw))
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer resp.Body.Close()
+		b, _ := io.ReadAll(resp.Body)
+		return resp, string(b)
+	}
+	get := func() string {
+		resp, err := learner.Get(e.app.URL + "/api/feedback/ratings")
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer resp.Body.Close()
+		b, _ := io.ReadAll(resp.Body)
+		return string(b)
+	}
+	if resp, _ := (&http.Client{}).Get(e.app.URL + "/api/feedback/ratings"); resp.StatusCode != 401 {
+		t.Errorf("signed out: %d", resp.StatusCode)
+	}
+	if resp, _ := post(map[string]any{"lessons": 4, "ease": 5, "voice": 3}); resp.StatusCode != 200 {
+		t.Fatalf("save: %d", resp.StatusCode)
+	}
+	if resp, _ := post(map[string]any{"lessons": 2, "ease": 3, "translation": 4, "lang": "en"}); resp.StatusCode != 200 {
+		t.Fatalf("overwrite: %d", resp.StatusCode)
+	}
+	if got := get(); !strings.Contains(got, `"lessons":2`) || !strings.Contains(got, `"voice":0`) || !strings.Contains(got, `"translation":0`) {
+		t.Errorf("after overwrite (voice cleared, English translation dropped): %s", got)
+	}
+	if resp, _ := post(map[string]any{"lessons": 9}); resp.StatusCode != 400 {
+		t.Errorf("9 stars: %d", resp.StatusCode)
+	}
+	_, sum := e.do(t, "GET", "/api/admin/feedback/ratings", nil, nil)
+	if !strings.Contains(sum, `"learners":1`) || strings.Contains(sum, betaID) {
+		t.Errorf("summary: %s", sum)
+	}
+}

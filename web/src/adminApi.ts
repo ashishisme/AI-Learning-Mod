@@ -95,3 +95,9 @@ export const fetchFeedback = (f: Record<string, string | number | undefined> = {
 export const setFeedbackStatus = (id: string, status: 'new' | 'read' | 'resolved') =>
   post<void>(`/api/admin/feedback/${enc(id)}/status`, { status })
 export const deleteFeedback = (id: string) => post<void>(`/api/admin/feedback/${enc(id)}/delete`)
+export interface FeedbackLimits { daily: number; total: number; maxDaily: number; maxTotal: number }
+export const fetchFeedbackLimits = () => get<FeedbackLimits>('/api/admin/feedback/limits')
+export const setFeedbackLimits = (daily: number, total: number) => post<FeedbackLimits>('/api/admin/feedback/limits', { daily, total })
+export interface AreaSummary { average: number; count: number; stars: number[]; byLang?: Record<string, AreaSummary> }
+export interface RatingsSummary { learners: number; areas: Record<string, AreaSummary> }
+export const fetchFeedbackRatings = () => get<RatingsSummary>('/api/admin/feedback/ratings')

@@ -47,6 +47,8 @@ export async function mockAdmin(page: Page, opts: Opts = {}) {
     if (p === '/api/admin/costs') return route.fulfill({ json: { generatedAt: '2026-11-02T10:00:00Z', ai: { estimated: true, todayUSD: 0.12, ceilingUSD: 1, ceilingReached: false, monthToDateUSD: 1.9, budgetUSD: 30, budgetUsedPct: 6.3, thresholds: { '50': false, '90': false, '100': false }, projectedMonthUSD: null }, hosting: { connected: false, reason: 'Cloud billing source is not connected', items: [] } } })
     if (p === '/api/admin/users/activity') return route.fulfill({ json: { generatedAt: '2026-11-02T10:00:00Z', activeNow: 14, activeLast24h: 88, activeLast7d: 201, inactive14d: 7, byLabel: [] } })
     if (p === '/api/admin/feedback') return route.fulfill({ json: opts.feedback ? opts.feedback(req) : { items: [], total: 0, unread: 0, held: { waiting: 0, withheld: 0, byReason: {} } } })
+    if (p === '/api/admin/feedback/ratings') return route.fulfill({ json: { learners: 3, areas: { lessons: { average: 4.33, count: 3, stars: [0, 0, 0, 2, 1] }, ease: { average: 5, count: 1, stars: [0, 0, 0, 0, 1] }, voice: { average: 0, count: 0, stars: [0, 0, 0, 0, 0] }, translation: { average: 3, count: 1, stars: [0, 0, 1, 0, 0], byLang: { ta: { average: 3, count: 1, stars: [0, 0, 1, 0, 0] } } } } } })
+    if (p === '/api/admin/feedback/limits') return route.fulfill({ json: { daily: 10, total: 50, maxDaily: 100, maxTotal: 1000 } })
     if (p === '/api/admin/accounts') return route.fulfill({ json: { items: ACCOUNTS, total: 2 } })
     if (p === '/api/admin/invites') return route.fulfill({ json: { items: INVITES, total: 2 } })
     if (p === '/api/admin/audit') return route.fulfill({ json: { items: opts.audit ? opts.audit(req) : [] } })

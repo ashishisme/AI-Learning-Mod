@@ -150,6 +150,16 @@ description: "Tasks for SPEC-016: wording feedback from beta learners"
 
 ## Progress notes (2026-11-21)
 
+- **Owner redesign (2026-11-21, FR-I18N-13):** feedback now has two parts.
+  - **Part 1, star ratings** for lessons, ease of use, voice, and translation (non-English only). There is one set per learner, overwritten on resubmit and kept while the account exists.
+  - **Part 2, written messages**, with no stars needed. They pass the rule check only, with no AI auditor, and are limited to 10 a day and 50 in total.
+  - The admin Feedback page has three tabs: Read feedback, Ratings and Controls.
+  - Production switch: set `feedback_enabled = true` in the tfvars, then plan and apply. No key, Vertex or Gemini is needed.
+  - 2026-11-21: the owner approved the new feedback text in hi, kn and ta, and the ledgers are current. The admin texts that said feedback needs the AI auditor are updated.
+  - The live Vertex test, run for reference, found the model wrongly held back 4% of genuine messages and missed spelled-out digits, which the rule check catches anyway.
+
+- **Owner decision 2026-11-21:** each learner may send at most 10 reports a day and 50 in total, and an admin can change both. The admin Feedback page now has two parts, “Read feedback” and “Controls”. Built as FR-I18N-12: `limits_test.go`, `/api/admin/feedback/limits`, `FeedbackPage.tsx`, and the dailyLimit and totalLimit strings in 4 languages. The opt-in live auditor test is `auditor_live_test.go`.
+
 - **Done (T001–T019), not committed:**
   - SPEC.md 2.19.0 FR-I18N-11, plus AC-85..88.
   - Backend: the record, validation, handler, admin filter and CSV. An unknown language code is stored as "" rather than refused, so the existing refusal-language behaviour is kept.

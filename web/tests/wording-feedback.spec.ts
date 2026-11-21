@@ -39,9 +39,8 @@ test('a Tamil learner reports a wording problem on a Detailed section, and its p
   const dialog = page.getByRole('dialog')
   await expect(dialog).toContainText(ta['feedback.about'].replace('{place}', ''))
   await expect(dialog.getByRole('combobox')).toHaveValue('translation')
-  await dialog.getByRole('radio', { name: '3' }).check()
   await dialog.getByRole('textbox').fill('வாக்கியம் இயல்பாக இல்லை')
-  await dialog.getByRole('button', { name: ta['feedback.title'] }).click()
+  await dialog.getByRole('button', { name: ta['feedback.send'] }).click()
   await expect.poll(() => sent.length).toBe(1)
   expect(sent[0]).toMatchObject({ category: 'translation', lang: 'ta', lessonId: '5-nlp', mode: 'standard' })
   expect(String(sent[0].sectionId)).toMatch(/^[a-z0-9][a-z0-9-]*$/)
@@ -54,8 +53,8 @@ test('a report from a clip carries the step on screen', async ({ page }) => {
   const clip = page.locator('figure').filter({ has: page.getByTestId('report-wording') }).first()
   await clip.getByTestId('report-wording').click()
   const dialog = page.getByRole('dialog')
-  await dialog.getByRole('radio', { name: '4' }).check()
-  await dialog.getByRole('button', { name: 'Send feedback' }).click()
+  await dialog.getByRole('textbox').fill('step 1 reads oddly')
+  await dialog.getByRole('button', { name: 'Send message' }).click()
   await expect.poll(() => sent.length).toBe(1)
   expect(sent[0]).toMatchObject({ category: 'translation', lang: 'en', step: 1 })
 })
@@ -98,4 +97,79 @@ test('admin filters feedback by language and sees where each report points', asy
   await page.locator('label', { hasText: /^Language/ }).locator('select').selectOption('ta')
   await expect.poll(() => lastQuery).toContain('lang=ta')
   await expect(page.getByRole('link', { name: 'Export CSV' })).toHaveAttribute('href', /lang=ta/)
+})
+
+// FR-I18N-12: the Feedback page has Read and Controls; an admin raises the per-learner limits.
+test('admin raises the per-learner feedback limits on the Controls tab', async ({ page }) => {
+  const mock = await mockAdmin(page, {
+    feedback: () => ({ items: [], total: 0, unread: 0, held: { waiting: 0, withheld: 0, byReason: {} } }),
+    post: (req) => req.path === '/api/admin/feedback/limits' ? { status: 200, json: { ...(req.body as object), maxDaily: 100, maxTotal: 1000 } } : undefined,
+  })
+  await page.goto('/admin/feedback')
+  await expect(page.getByRole('navigation', { name: 'Feedback sections' }).getByRole('link', { name: 'Read feedback' })).toBeVisible()
+  await page.getByRole('link', { name: 'Controls' }).click()
+  await expect(page.getByTestId('limits-now')).toHaveText('Now: 10 a day, 50 in total per learner.')
+  await page.getByLabel('Per day').fill('5')
+  await page.getByLabel('In total').fill('80')
+  await page.getByRole('button', { name: 'Save limits' }).click()
+  await expect(page.getByRole('status')).toContainText('Saved: 5 a day, 80 in total per learner.')
+  expect(mock.posts().find((r) => r.path === '/api/admin/feedback/limits')?.body).toEqual({ daily: 5, total: 80 })
+})
+
+test('a learner at the daily or total limit sees a friendly message in their language', async ({ page }) => {
+  await setup(page, { feedback: true, lang: 'ta' })
+  let code = 'feedback_daily_limit'
+  await page.route('**/api/feedback', (r) => r.fulfill({ status: 429, json: { code, error: 'limit' } }))
+  await openLesson(page, '5-nlp')
+  await page.locator('article > [data-testid="report-wording"]').first().click()
+  const dialog = page.getByRole('dialog')
+  await dialog.getByRole('textbox').fill('சொல் சரியில்லை')
+  await dialog.getByRole('button', { name: ta['feedback.send'] }).click()
+  await expect(dialog.getByRole('status')).toHaveText(ta['feedback.dailyLimit'])
+  code = 'feedback_total_limit'
+  await dialog.getByRole('button', { name: ta['feedback.send'] }).click()
+  await expect(dialog.getByRole('status')).toHaveText(ta['feedback.totalLimit'])
+})
+
+// FR-I18N-13: part 1 is star ratings, one saved set per learner that a resubmit overwrites.
+test('ratings show the saved stars, offer Translation only in another language, and save the new set', async ({ page }) => {
+  await setup(page, { feedback: true, lang: 'ta' })
+  let saved: Record<string, unknown> = {}
+  await page.route('**/api/feedback/ratings', (r) => {
+    if (r.request().method() === 'POST') { saved = r.request().postDataJSON(); return r.fulfill({ json: saved }) }
+    return r.fulfill({ json: { lessons: 4, ease: 0, voice: 0, translation: 2, lang: 'ta' } })
+  })
+  await page.goto('/')
+  await page.getByRole('button', { name: ta['feedback.button'] }).click()
+  const part = page.getByTestId('ratings-part')
+  await expect(part.getByRole('radio', { name: ta['feedback.stars'].replace('{n}', '4') }).first()).toBeChecked()
+  await expect(part.getByRole('group', { name: ta['feedback.area.translation'] })).toBeVisible()
+  await expect(part.getByRole('button', { name: ta['feedback.updateRatings'] })).toBeVisible()
+  await part.getByRole('group', { name: ta['feedback.area.ease'] }).getByText('★').nth(4).click()
+  await part.getByRole('button', { name: ta['feedback.updateRatings'] }).click()
+  await expect(part.getByRole('status')).toHaveText(ta['feedback.ratingsSaved'])
+  expect(saved).toMatchObject({ lessons: 4, ease: 5, translation: 2, lang: 'ta' })
+})
+
+test('in English there is no Translation rating, and a wording report shows only the written part', async ({ page }) => {
+  await setup(page, { feedback: true })
+  await page.route('**/api/feedback/ratings', (r) => r.fulfill({ json: { lessons: 0, ease: 0, voice: 0, translation: 0 } }))
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Feedback' }).click()
+  await expect(page.getByTestId('ratings-part').getByRole('group')).toHaveCount(3)
+  await expect(page.getByRole('button', { name: 'Save ratings' })).toBeDisabled()
+  await page.keyboard.press('Escape')
+  await openLesson(page, '5-nlp')
+  await page.locator('article > [data-testid="report-wording"]').first().click()
+  await expect(page.getByTestId('ratings-part')).toHaveCount(0)
+  await expect(page.getByTestId('write-part')).toBeVisible()
+})
+
+test('admin sees the ratings summary with Translation split by language', async ({ page }) => {
+  await mockAdmin(page, { feedback: () => ({ items: [], total: 0, unread: 0, held: { waiting: 0, withheld: 0, byReason: {} } }) })
+  await page.goto('/admin/feedback/ratings')
+  await expect(page.getByTestId('ratings-learners')).toContainText('3 learners have rated')
+  const table = page.getByRole('table', { name: 'Average ratings by area' })
+  await expect(table).toContainText('4.33 ★')
+  await expect(table).toContainText('Translation: Tamil')
 })

@@ -298,6 +298,7 @@ resource "google_cloud_run_v2_service" "coach" {
             BUDGET_PUSH_AUDIENCE        = local.budget_push_url
             BUDGET_PUSH_SERVICE_ACCOUNT = google_service_account.budget_push.email
           },
+          var.feedback_enabled && var.feedback_auditor == null ? { FEEDBACK_ENABLED = "true" } : {},
           var.feedback_auditor == null ? {} : {
             FEEDBACK_AUDITOR_BASE_URL = var.feedback_auditor.base_url
             FEEDBACK_AUDITOR_MODEL    = var.feedback_auditor.model

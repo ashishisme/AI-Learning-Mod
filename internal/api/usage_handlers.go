@@ -98,11 +98,15 @@ func registerLearnerExtras(mux *http.ServeMux, cfg RouterConfig, langs *i18n.Set
 
 	if cfg.Feedback == nil || cfg.Auth == nil {
 		mux.HandleFunc("POST /api/feedback", notAvailable)
+		mux.HandleFunc("GET /api/feedback/ratings", notAvailable)
+		mux.HandleFunc("POST /api/feedback/ratings", notAvailable)
 		return
 	}
 	limiter := NewRateLimiter(20, time.Minute)
 	limiter.SetTrustedProxyHops(cfg.TrustedProxyHops)
 	mux.Handle("POST /api/feedback", limiter.Middleware(requireJSON(submitFeedback(cfg.Feedback, langs))))
+	mux.Handle("GET /api/feedback/ratings", myRatings(cfg.Feedback))
+	mux.Handle("POST /api/feedback/ratings", limiter.Middleware(requireJSON(saveRatings(cfg.Feedback, langs))))
 }
 
 // submitFeedback takes an optional "lang". It picks the language of the reply (English unless approved) and,
@@ -145,10 +149,58 @@ func submitFeedback(fb *feedback.Service, langs *i18n.Set) http.Handler {
 			writeSecretJSONStatus(w, http.StatusUnprocessableEntity, map[string]string{"error": i18n.FeedbackRejection(langs.Resolve(in.Lang), pii.Kind), "code": "pii_detected", "kind": pii.Kind})
 		case errors.Is(err, feedback.ErrInvalid):
 			writeAuthError(w, http.StatusBadRequest, "invalid", "That feedback is not valid")
+		case errors.Is(err, feedback.ErrDailyLimit):
+			writeAuthError(w, http.StatusTooManyRequests, "feedback_daily_limit", "You have sent today's feedback. Please try again tomorrow.")
+		case errors.Is(err, feedback.ErrTotalLimit):
+			writeAuthError(w, http.StatusTooManyRequests, "feedback_total_limit", "Thank you! You have sent the most feedback allowed.")
 		case errors.Is(err, feedback.ErrLimit):
 			writeAuthError(w, http.StatusTooManyRequests, "feedback_limit", "Thanks! You've sent a few already. Please try again later.")
 		default:
 			writeAuthError(w, http.StatusServiceUnavailable, "unavailable", "Service temporarily unavailable")
 		}
+	})
+}
+
+// myRatings returns the signed-in learner's saved star ratings (FR-I18N-13).
+func myRatings(fb *feedback.Service) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess, ok := SessionFrom(r.Context())
+		if !ok {
+			writeAuthError(w, http.StatusUnauthorized, "signin_required", msgSignInRequired)
+			return
+		}
+		rt, err := fb.MyRatings(r.Context(), sess.BetaID)
+		if err != nil {
+			writeAuthError(w, http.StatusServiceUnavailable, "unavailable", "Service temporarily unavailable")
+			return
+		}
+		writeSecretJSON(w, rt)
+	})
+}
+
+// saveRatings stores the learner's star ratings, replacing any earlier set (FR-I18N-13). The translation
+// rating counts only for an offered language other than English.
+func saveRatings(fb *feedback.Service, langs *i18n.Set) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess, ok := SessionFrom(r.Context())
+		if !ok {
+			writeAuthError(w, http.StatusUnauthorized, "signin_required", msgSignInRequired)
+			return
+		}
+		var in feedback.Ratings
+		if !decodeBody(w, r, &in) {
+			return
+		}
+		if in.Translation > 0 && (in.Lang == "en" || langs.Resolve(in.Lang) != in.Lang) {
+			in.Translation, in.Lang = 0, "" // not an offered language: the translation star is dropped
+		}
+		if in.Translation == 0 {
+			in.Lang = ""
+		}
+		if err := fb.SaveRatings(r.Context(), sess.BetaID, in); err != nil {
+			writeAuthError(w, http.StatusBadRequest, "invalid", "Those ratings are not valid")
+			return
+		}
+		writeSecretJSON(w, in)
 	})
 }

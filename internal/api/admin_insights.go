@@ -224,3 +224,35 @@ func (h *adminHandlers) feedbackDelete(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusNoContent)
 }
+
+// feedbackLimits reads and changes the per-learner limits (FR-I18N-12). A change is audited by the service.
+func (h *adminHandlers) feedbackLimits(w http.ResponseWriter, r *http.Request) {
+	l, err := h.fb.GetLimits(r.Context())
+	if err != nil {
+		h.feedbackFail(w, err)
+		return
+	}
+	writeSecretJSON(w, map[string]int{"daily": l.Daily, "total": l.Total, "maxDaily": feedback.MaxDailyLimit, "maxTotal": feedback.MaxTotalLimit})
+}
+
+func (h *adminHandlers) setFeedbackLimits(w http.ResponseWriter, r *http.Request) {
+	var in feedback.Limits
+	if !decodeBody(w, r, &in) {
+		return
+	}
+	if err := h.fb.SetLimits(r.Context(), adminEmail(r.Context()), in); err != nil {
+		h.feedbackFail(w, err)
+		return
+	}
+	h.feedbackLimits(w, r)
+}
+
+// feedbackRatings is the admin summary of star ratings: averages and counts, never a learner (FR-I18N-13).
+func (h *adminHandlers) feedbackRatings(w http.ResponseWriter, r *http.Request) {
+	sum, err := h.fb.RatingsSummary(r.Context())
+	if err != nil {
+		h.feedbackFail(w, err)
+		return
+	}
+	writeSecretJSON(w, sum)
+}

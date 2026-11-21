@@ -175,8 +175,8 @@
     {
       "path": "web/src/i18n/ta.json",
       "kind": "ui",
-      "sourceHash": "cbd3726e5192bd185c2e62ea9ff2400267931b9319a03baef70bb86f64876664",
-      "translationHash": "014db48650416da456f464e095a7566e88a13564e3f3c4af25826a75d95ca548",
+      "sourceHash": "8e0f34632aa11d29e14be0883b29df14d385b0750f13c9db29845a0e4e16ff96",
+      "translationHash": "d8e781d271323054da0ac0f0336d511353a08c49d8047cebb553585de6deab77",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-21"

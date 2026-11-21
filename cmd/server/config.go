@@ -33,11 +33,12 @@ type AppConfig struct {
 	MonthlyBudgetUSD float64
 	TrustedProxyHops int
 
-	AuditorBaseURL  string
-	AuditorAPIKey   string
-	AuditorKeyFile  string // a mounted secret, read on every review so rotation needs no deploy
-	AuditorModel    string
-	FeedbackEnabled bool
+	AuditorBaseURL    string
+	AuditorAPIKey     string
+	AuditorKeyFile    string // a mounted secret, read on every review so rotation needs no deploy
+	AuditorModel      string
+	FeedbackEnabled   bool
+	FeedbackRulesOnly bool // no AI auditor: messages that pass the rule check go straight to the inbox
 	// AuditorKeyUnreadable means the auditor is configured but its key cannot be read, so feedback
 	// stays hidden. It is not a startup failure: the rest of the app works without feedback.
 	AuditorKeyUnreadable bool
@@ -186,7 +187,9 @@ func LoadConfig(getenv func(string) string) (AppConfig, error) {
 		raw, err := os.ReadFile(c.AuditorKeyFile)
 		c.AuditorKeyUnreadable = err != nil || strings.TrimSpace(string(raw)) == ""
 	}
-	c.FeedbackEnabled = c.AuthEnabled && set == 3 && !c.AuditorKeyUnreadable
+	// FR-I18N-13: FEEDBACK_ENABLED=true turns feedback on with the rule check alone; an AI auditor is optional.
+	c.FeedbackRulesOnly = set == 0 && strings.EqualFold(get("FEEDBACK_ENABLED"), "true")
+	c.FeedbackEnabled = c.AuthEnabled && ((set == 3 && !c.AuditorKeyUnreadable) || c.FeedbackRulesOnly)
 
 	if c.AuthEnabled {
 		if len(c.SessionSecret) < 32 {

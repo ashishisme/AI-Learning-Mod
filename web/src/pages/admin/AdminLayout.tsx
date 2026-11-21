@@ -8,7 +8,7 @@ import { Audit } from './Audit'
 import { Overview } from './Overview'
 import { Usage } from './Usage'
 import { Costs } from './Costs'
-import { FeedbackInbox } from './FeedbackInbox'
+import { FeedbackPage } from './FeedbackPage'
 import { useRuntimeStore } from '../../store'
 
 const ERRORS: Record<string, string> = {
@@ -41,11 +41,11 @@ const Later: React.FC<{ title: string }> = ({ title }) => (
   </section>
 )
 
-// The server only has feedback routes once the AI auditor is configured (FR-058, O2).
+// The server only has feedback routes once feedback is switched on (FR-I18N-13: FEEDBACK_ENABLED, or an AI auditor).
 const FeedbackOff: React.FC = () => (
   <section aria-labelledby="feedback-off-h" className="rounded-lg border border-slate-300 dark:border-slate-700 p-6">
     <h2 id="feedback-off-h" className="text-lg font-bold mb-1">Feedback is off</h2>
-    <p data-testid="feedback-off" className="text-sm text-slate-700 dark:text-slate-300">Learners can send feedback once the AI auditor is configured.</p>
+    <p data-testid="feedback-off" className="text-sm text-slate-700 dark:text-slate-300">Feedback is off. To switch it on, set <code>feedback_enabled = true</code> in the Terraform settings and apply. No AI or key is needed.</p>
   </section>
 )
 
@@ -167,7 +167,7 @@ export const AdminLayout: React.FC = () => {
         <Route path="users" element={<UsersInvites />} />
         <Route path="usage" element={<Usage />} />
         <Route path="costs" element={<Costs />} />
-        <Route path="feedback" element={feedbackEnabled ? <FeedbackInbox unreadChanged={setFeedbackUnread} /> : <FeedbackOff />} />
+        <Route path="feedback/*" element={feedbackEnabled ? <FeedbackPage unreadChanged={setFeedbackUnread} /> : <FeedbackOff />} />
         <Route path="audit" element={<Audit />} />
         <Route path="*" element={<Later title="Not found" />} />
       </Routes>

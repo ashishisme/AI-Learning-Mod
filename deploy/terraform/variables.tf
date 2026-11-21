@@ -54,6 +54,12 @@ variable "admin_emails" {
   type        = string
 }
 
+variable "feedback_enabled" {
+  description = "Turn learner feedback on with the free rule check only (FR-I18N-13): star ratings plus written messages without personal details go straight to the admin inbox. No AI auditor, key or extra cost. Ignored when feedback_auditor is set."
+  type        = bool
+  default     = false
+}
+
 variable "feedback_auditor" {
   description = "Set this only after adding a version to the auditor key secret. Until then feedback stays hidden (owner decision O2)."
   type = object({

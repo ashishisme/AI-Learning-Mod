@@ -172,7 +172,10 @@ func main() {
 				Audience: appCfg.BudgetPushAudience, ServiceAccount: appCfg.BudgetPushAccount,
 			}
 		}
-		if appCfg.FeedbackEnabled {
+		if appCfg.FeedbackRulesOnly && appCfg.FeedbackEnabled {
+			routerCfg.Feedback = feedback.NewService(store, nil)
+			slog.Info("Feedback is on with the rule check only: messages without personal details go straight to the inbox")
+		} else if appCfg.FeedbackEnabled {
 			routerCfg.Feedback = feedback.NewService(store, feedback.NewModelAuditor(feedback.AuditorConfig{
 				BaseURL: appCfg.AuditorBaseURL, APIKey: appCfg.AuditorAPIKey, KeyFile: appCfg.AuditorKeyFile, Model: appCfg.AuditorModel,
 				Guarded: appCfg.Hosted, Tally: routerCfg.Spend,
@@ -181,7 +184,7 @@ func main() {
 		} else if appCfg.AuditorKeyUnreadable {
 			slog.Warn("Feedback is hidden: the auditor key file cannot be read")
 		} else {
-			slog.Info("Feedback is off: set FEEDBACK_AUDITOR_BASE_URL, FEEDBACK_AUDITOR_API_KEY or _FILE, and FEEDBACK_AUDITOR_MODEL to turn it on")
+			slog.Info("Feedback is off: set FEEDBACK_ENABLED=true to turn it on with the rule check (or configure FEEDBACK_AUDITOR_* for an AI auditor)")
 		}
 		routerCfg.OIDC = auth.NewOIDC(auth.OIDCConfig{
 			Issuer: appCfg.OIDCIssuer, ClientID: appCfg.OIDCClientID, ClientSecret: appCfg.OIDCClientSecret,

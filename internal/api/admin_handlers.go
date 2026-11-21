@@ -94,6 +94,9 @@ func registerAdmin(mux *http.ServeMux, cfg RouterConfig) {
 		mux.Handle("GET /api/admin/feedback.csv", guard(h.feedbackCSV))
 		mux.Handle("POST /api/admin/feedback/{id}/status", guard(h.feedbackStatus))
 		mux.Handle("POST /api/admin/feedback/{id}/delete", guard(h.feedbackDelete))
+		mux.Handle("GET /api/admin/feedback/limits", guard(h.feedbackLimits))
+		mux.Handle("GET /api/admin/feedback/ratings", guard(h.feedbackRatings))
+		mux.Handle("POST /api/admin/feedback/limits", guard(h.setFeedbackLimits))
 	}
 }
 
