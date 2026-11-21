@@ -90,3 +90,5 @@
 | AC-86 | FR-I18N-11 | `internal/api/feedback_handlers_test.go`, `web/tests/feedback.spec.ts` | pending | SPEC-016: admin filter and CSV by language |
 | AC-87 | FR-I18N-11 | `web/tests/feedback.spec.ts`, `web/tests/languages-kn-ta.spec.ts` | pending | SPEC-016: report links, Kids once per lesson, beta note |
 | AC-88 | FR-I18N-11 | `internal/feedback/check_adversarial_test.go` | pending | SPEC-016: disguised phone numbers and emails refused; number-heavy reports pass |
+| AC-89 | FR-I18N-12 | `internal/feedback/limits_test.go`, `internal/api/feedback_handlers_test.go`, `web/tests/wording-feedback.spec.ts` | pending | SPEC-016: 10 a day and 50 in total per learner; admin Controls tab changes them, audited |
+| AC-90 | FR-I18N-13 | `internal/feedback/ratings_test.go`, `internal/api/feedback_handlers_test.go`, `cmd/server/config_test.go`, `web/tests/wording-feedback.spec.ts` | pending | SPEC-016: star ratings one set per learner, overwrite, kept with the account; rules-only feedback |

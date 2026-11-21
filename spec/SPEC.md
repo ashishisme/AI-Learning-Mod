@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.19.0 |
+| Version | 2.21.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Lessons | Written for this course and committed in `public-content/` (FR-CNT-12, NFR-LIC-03; SPEC-013 closed 2026-11-14, v0.10.0) |
@@ -554,6 +554,23 @@ is covered by adversarial test sets in every listed language. The admin inbox an
 (`unknown` for older records) and show language, section, step and journey. A beta language’s menu entry has
 a one-line note that invites wording reports when feedback is enabled. Fixes are logged in
 `content/review/<code>-changes.md` with the report id and never the learner’s words.
+
+**FR-I18N-12.** Added 2.20.0 (SPEC-016, owner decision 2026-11-21). Per-learner feedback limits. Besides the 5-an-hour
+limit, each learner may store at most 10 feedback reports per IST day and 50 in total (refused messages do not
+count). The counts are operational counters keyed by a hash of the Beta ID (DC-09 b); the daily counts are swept
+after their day. An admin may change both limits (daily 1–100, total 1–1000, daily not above total) on the admin
+Feedback page, which has two parts, “Read feedback” (the inbox) and “Controls” (the limits); each change is
+written to the audit trail. A learner over a limit sees a message in their language.
+
+**FR-I18N-13.** Added 2.21.0 (SPEC-016, owner decisions 2026-11-21). Feedback has two parts. (1) **Star ratings**:
+1–5 stars for “lessons are easy to understand”, “the app is easy to use” and “voices and narration”, plus
+“translation” for a learner using another offered language. Each learner has one set, kept as counters keyed by a
+hash of the Beta ID (DC-09 b), shown back to them, overwritten on resubmit, not limited, and deleted when the
+account no longer exists; admins see only averages, counts and the star spread per area, with translation split
+by language. (2) **A written message** (no star rating needed), checked by the FR-048 rule check and limited by
+FR-I18N-12. The AI auditor (FR-055..FR-058) becomes optional: with `FEEDBACK_ENABLED=true` and no auditor,
+messages that pass the rule check go straight to the admin inbox. A wording report (FR-I18N-11) opens only the
+written part. The admin Feedback page has three parts: Read feedback, Ratings and Controls.
 
 ---
 
