@@ -5,11 +5,15 @@ import { useAudienceModeStore } from '../store'
 import pkg from '../../package.json'
 import { useLanguage, useT } from '../i18n'
 
-export const FeedbackDialog: React.FC<{ close: () => void }> = ({ close }) => {
+// A wording report (SPEC-016) names its place: the section id, the clip step and a readable label.
+export type WordingPlace = { sectionId?: string; step?: number; label: string }
+
+export const FeedbackDialog: React.FC<{ close: () => void; place?: WordingPlace }> = ({ close, place }) => {
   const t = useT()
-  const { code: lang } = useLanguage()
+  // The language of the text being reported is the one showing when the dialog opened (spec edge case).
+  const [lang] = useState(useLanguage().code)
   const [rating, setRating] = useState(0)
-  const [category, setCategory] = useState('content')
+  const [category, setCategory] = useState(place ? 'translation' : 'content')
   const [message, setMessage] = useState('')
   const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState(false)
@@ -36,7 +40,7 @@ export const FeedbackDialog: React.FC<{ close: () => void }> = ({ close }) => {
     if (!rating || busy) return
     setBusy(true); setNotice('')
     try {
-      const response = await fetch('/api/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ rating, category, message, lessonId, mode, appVersion: pkg.version, lang }) })
+      const response = await fetch('/api/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ rating, category, message, lessonId, mode, appVersion: pkg.version, lang, sectionId: place?.sectionId, step: place?.step }) })
       if (!response.ok) {
         const body = await response.json().catch(() => ({}))
         throw new ApiError(response.status, body.error || t('feedback.sendFailedShort'), body)
@@ -58,9 +62,10 @@ export const FeedbackDialog: React.FC<{ close: () => void }> = ({ close }) => {
   return <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4"><div ref={panel} role="dialog" aria-modal="true" aria-labelledby="feedback-title" className="w-full max-w-lg rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 p-5 shadow-xl">
     <div className="flex justify-between items-center"><h2 id="feedback-title" className="text-xl font-bold">{t('feedback.title')}</h2><button type="button" aria-label={t('feedback.close')} className="min-h-11 min-w-11 focus-visible:ring-2 focus-visible:ring-blue-600" onClick={close}>✕</button></div>
     <p className="text-sm my-3">{t('feedback.privacy')}</p>
+    {place && <p className="text-sm font-semibold mb-3">{t('feedback.about', { place: place.label })}</p>}
     <form onSubmit={submit} className="space-y-4">
       <fieldset><legend className="font-semibold">{t('feedback.rating')}</legend><div className="flex gap-2">{[1,2,3,4,5].map((n) => <label key={n} className="min-h-11 min-w-11 flex items-center gap-1"><input type="radio" name="rating" value={n} checked={rating === n} onChange={() => setRating(n)} className="focus-visible:ring-2 focus-visible:ring-blue-600" />{n}</label>)}</div></fieldset>
-      <label className="block font-semibold">{t('feedback.category')}<select value={category} onChange={(e) => setCategory(e.target.value)} className="block w-full min-h-11 p-2 border border-slate-500 rounded bg-white dark:bg-slate-900 focus-visible:ring-2 focus-visible:ring-blue-600"><option value="content">{t('feedback.content')}</option><option value="bug">{t('feedback.bug')}</option><option value="idea">{t('feedback.idea')}</option><option value="other">{t('feedback.other')}</option></select></label>
+      <label className="block font-semibold">{t('feedback.category')}<select value={category} onChange={(e) => setCategory(e.target.value)} className="block w-full min-h-11 p-2 border border-slate-500 rounded bg-white dark:bg-slate-900 focus-visible:ring-2 focus-visible:ring-blue-600"><option value="translation">{t('feedback.translation')}</option><option value="content">{t('feedback.content')}</option><option value="bug">{t('feedback.bug')}</option><option value="idea">{t('feedback.idea')}</option><option value="other">{t('feedback.other')}</option></select></label>
       <label className="block font-semibold">{t('feedback.message')}<textarea value={message} onChange={(e) => setMessage(e.target.value)} maxLength={500} className="block w-full min-h-24 p-2 border border-slate-500 rounded bg-white dark:bg-slate-900 focus-visible:ring-2 focus-visible:ring-blue-600" /></label>
       <p className="text-sm">{t('feedback.count', { n: message.length })}</p>
       {notice && <p role="status" className="text-sm font-semibold">{notice}</p>}

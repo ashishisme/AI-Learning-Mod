@@ -66,6 +66,7 @@
   "expiry.days.other": "{count} ದಿನಗಳು",
   "expiry.dismiss": "ಮುಚ್ಚಿ",
   "expiry.notice": "ನಿಮ್ಮ ಬೀಟಾ ಪ್ರವೇಶ {date} ರಂದು ಮುಗಿಯುತ್ತದೆ ({days} ಉಳಿದಿವೆ). ಇನ್ನೂ ಸಮಯ ಬೇಕಾದರೆ ನಿಮ್ಮ ಶಿಕ್ಷಕರು ಅಥವಾ ನಿರ್ವಾಹಕರನ್ನು ಕೇಳಿ.",
+  "feedback.about": "ಯಾವುದರ ಬಗ್ಗೆ: {place}",
   "feedback.bug": "ದೋಷ",
   "feedback.button": "ಪ್ರತಿಕ್ರಿಯೆ",
   "feedback.category": "ವರ್ಗ",
@@ -80,6 +81,7 @@
   "feedback.piiDefault": "ವೈಯಕ್ತಿಕ ವಿವರಗಳು",
   "feedback.privacy": "ದಯವಿಟ್ಟು ಹೆಸರು, ಫೋನ್ ಸಂಖ್ಯೆ, ಇಮೇಲ್ ಅಥವಾ ವಿಳಾಸ ಬರೆಯಬೇಡಿ. ನಿರ್ವಾಹಕರು ಓದುವ ಮೊದಲು ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಪರಿಶೀಲಿಸಲಾಗುತ್ತದೆ.",
   "feedback.rating": "ರೇಟಿಂಗ್",
+  "feedback.report": "ಪದಗಳ ತಪ್ಪು ತಿಳಿಸಿ",
   "feedback.sendFailed": "ಪ್ರತಿಕ್ರಿಯೆ ಕಳುಹಿಸಲು ಆಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
   "feedback.sendFailedShort": "ಪ್ರತಿಕ್ರಿಯೆ ಕಳುಹಿಸಲು ಆಗಲಿಲ್ಲ",
   "feedback.sending": "ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ…",
@@ -218,6 +220,9 @@
   "kids.trail.status.next": "ಮುಂದಿನದು",
   "kids.trail.title": "ನಿನ್ನ ಎಐ ಸಾಹಸದ ಪಯಣ",
   "language.beta": "(ಬೀಟಾ)",
+  "language.betaInfo": "ಈ ಅನುವಾದದ ಬಗ್ಗೆ",
+  "language.betaNote": "ಈ ಅನುವಾದ ಹೊಸದು.",
+  "language.betaNoteInvite": "ಈ ಅನುವಾದ ಹೊಸದು. ಯಾವುದಾದರೂ ವಾಕ್ಯ ಸರಿಯಾಗಿಲ್ಲ ಎನಿಸಿದರೆ, ಯಾವುದೇ ಪಾಠದಲ್ಲಿ “ಪದಗಳ ತಪ್ಪು ತಿಳಿಸಿ” ಬಳಸಿ.",
   "language.label": "ಭಾಷೆ",
   "lesson.back": "ಪಠ್ಯಕ್ರಮಕ್ಕೆ ಹಿಂತಿರುಗಿ",
   "lesson.colab": "Colab ನಲ್ಲಿ ತೆರೆಯಿರಿ",
@@ -625,5 +630,6 @@
   "clip.mute": "🔇 ಕ್ಲಿಪ್ ಧ್ವನಿ ನಿಲ್ಲಿಸಿ",
   "clip.cue": "ಹಂತ {n} ಕ್ಕೆ ಹೋಗಿ",
   "clip.speed": "ವೇಗ {rate}×",
-  "ageBand.back": "← ಹಿಂದೆ"
+  "ageBand.back": "← ಹಿಂದೆ",
+  "feedback.translation": "ಪದಗಳ ತಪ್ಪು"
 }

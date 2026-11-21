@@ -66,6 +66,7 @@
   "expiry.days.other": "{count} days",
   "expiry.dismiss": "Dismiss",
   "expiry.notice": "Your beta access ends on {date} ({days} left). Ask your teacher or admin if you need more time.",
+  "feedback.about": "About: {place}",
   "feedback.bug": "Bug",
   "feedback.button": "Feedback",
   "feedback.category": "Category",
@@ -80,6 +81,7 @@
   "feedback.piiDefault": "personal details",
   "feedback.privacy": "Please do not include names, phone numbers, emails or addresses. Feedback is checked before an admin can read it.",
   "feedback.rating": "Rating",
+  "feedback.report": "Report a wording problem",
   "feedback.sendFailed": "Could not send feedback. Please try again.",
   "feedback.sendFailedShort": "Could not send feedback",
   "feedback.sending": "Sending…",
@@ -218,6 +220,9 @@
   "kids.trail.status.next": "Next",
   "kids.trail.title": "Your AI adventure trail",
   "language.beta": "(beta)",
+  "language.betaInfo": "About this translation",
+  "language.betaNote": "This translation is new.",
+  "language.betaNoteInvite": "This translation is new. If a sentence reads wrong, use “Report a wording problem” in any lesson.",
   "language.label": "Language",
   "lesson.back": "Back to Curriculum",
   "lesson.colab": "Open in Colab",
@@ -625,5 +630,6 @@
   "clip.mute": "🔇 Mute clips",
   "clip.cue": "Go to step {n}",
   "clip.speed": "Speed {rate}×",
-  "ageBand.back": "← Back"
+  "ageBand.back": "← Back",
+  "feedback.translation": "Wording problem"
 }

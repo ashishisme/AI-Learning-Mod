@@ -3,6 +3,8 @@
 // holds the last frame of a cue until its caption has been read. Under reduced motion it never plays: Previous, Next
 // and the cue targets show each cue's still frame and read its caption once.
 import React, { useEffect, useId, useRef, useState } from 'react'
+import { ReportWordingButton } from './FeedbackButton'
+import type { WordingPlace } from './FeedbackDialog'
 import { useT } from '../i18n'
 import { useAudioStore } from '../store'
 import { useClipStore } from '../stores/clipStore'
@@ -18,6 +20,7 @@ interface Props {
   // "<lessonId>/<mode>/section-<id>-clip-": the narration key of cue n is this plus n.
   trackPrefix: string
   speechLang: string
+  report?: WordingPlace // SPEC-016: "Report a wording problem" for the step on screen
   cues?: number[] // cue start times in seconds, one per caption
 }
 
@@ -28,7 +31,7 @@ const SPEEDS = [1, 1.25, 0.75]
 const control =
   'min-h-[44px] min-w-[44px] px-3.5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 aria-disabled:opacity-40 aria-disabled:cursor-not-allowed'
 
-export const VideoClipPlayer: React.FC<Props> = ({ clip, caption, alt, steps, trackPrefix, speechLang, cues = DEFAULT_CUES }) => {
+export const VideoClipPlayer: React.FC<Props> = ({ clip, caption, alt, steps, trackPrefix, speechLang, cues = DEFAULT_CUES, report }) => {
   const t = useT()
   const descId = useId()
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -400,6 +403,7 @@ export const VideoClipPlayer: React.FC<Props> = ({ clip, caption, alt, steps, tr
           </button>
         </div>
       </div>
+      {report && <ReportWordingButton place={{ ...report, step: step + 1 }} />}
     </figure>
   )
 }

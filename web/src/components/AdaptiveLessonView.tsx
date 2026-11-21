@@ -21,6 +21,7 @@ import { StepperDiagram } from './StepperDiagram'
 import { ClipPlayer } from './ClipPlayer'
 import { VideoClipPlayer } from './VideoClipPlayer'
 import { WidgetFrame } from './WidgetFrame'
+import { ReportWordingButton } from './FeedbackButton'
 import { ChoiceCard } from './ChoiceCard'
 import { useShuffledOrder } from '../services/shuffle'
 import { WordCard } from './WordCard'
@@ -193,6 +194,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                     steps={section.diagram.steps}
                     trackPrefix={`${trackPrefix}${sectionTrackId}-clip-`}
                     speechLang={contentSpeechLang}
+                    report={isJunior ? undefined : { sectionId: section.id, label: `${payload.title} › ${section.heading}` }}
                   />
                 ) : (
                   <ClipPlayer
@@ -202,6 +204,7 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                     steps={section.diagram.steps}
                     trackPrefix={`${trackPrefix}${sectionTrackId}-clip-`}
                     speechLang={contentSpeechLang}
+                    report={isJunior ? undefined : { sectionId: section.id, label: `${payload.title} › ${section.heading}` }}
                   />
                 )
               )}
@@ -405,6 +408,9 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
                 </p>
               )}
 
+              {/* SPEC-016 FR-004: one wording report per section outside the Kids journey */}
+              {!isJunior && <ReportWordingButton place={{ sectionId: section.id, label: `${payload.title} › ${section.heading}` }} />}
+
               {/* Jargon Buster List */}
               {/* SPEC FR-UI-23: a section's check-in, never scored */}
               {banded && section.checkIn && (
@@ -495,6 +501,9 @@ export const AdaptiveLessonView: React.FC<Props> = ({ payload }) => {
           </ol>
         </section>
       )}
+
+      {/* SPEC-016: the Kids journey offers one wording report, for the whole lesson */}
+      {isJunior && <ReportWordingButton place={{ label: payload.title }} />}
 
       {/* Teach-it-back (SPEC-006 FR-REV-12) */}
       {payload.teachBack && (

@@ -165,7 +165,7 @@ func (h *adminHandlers) resetTutor(w http.ResponseWriter, r *http.Request) {
 func feedbackFilter(r *http.Request) feedback.Filter {
 	q := r.URL.Query()
 	rating, _ := strconv.Atoi(q.Get("rating"))
-	return feedback.Filter{Status: q.Get("status"), Category: q.Get("category"), LessonID: q.Get("lessonId"), Label: q.Get("label"),
+	return feedback.Filter{Status: q.Get("status"), Category: q.Get("category"), LessonID: q.Get("lessonId"), Label: q.Get("label"), Lang: q.Get("lang"),
 		Rating: rating, Limit: intParam(r, "limit", 100, 1, 500), Offset: intParam(r, "offset", 0, 0, 1_000_000)}
 }
 

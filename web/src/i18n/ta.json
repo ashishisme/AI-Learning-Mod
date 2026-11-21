@@ -66,6 +66,7 @@
   "expiry.days.other": "{count} நாட்கள்",
   "expiry.dismiss": "மூடு",
   "expiry.notice": "உங்கள் பீட்டா அணுகல் {date} அன்று முடிகிறது ({days} மீதம்). இன்னும் நேரம் தேவைப்பட்டால் உங்கள் ஆசிரியர் அல்லது நிர்வாகியிடம் கேளுங்கள்.",
+  "feedback.about": "எதைப் பற்றி: {place}",
   "feedback.bug": "பிழை",
   "feedback.button": "கருத்து",
   "feedback.category": "வகை",
@@ -80,6 +81,7 @@
   "feedback.piiDefault": "தனிப்பட்ட விவரங்கள்",
   "feedback.privacy": "பெயர், தொலைபேசி எண், மின்னஞ்சல் அல்லது முகவரியைச் சேர்க்காதீர்கள். நிர்வாகி படிக்கும் முன் கருத்து சரிபார்க்கப்படும்.",
   "feedback.rating": "மதிப்பீடு",
+  "feedback.report": "சொல் பிழையைத் தெரிவியுங்கள்",
   "feedback.sendFailed": "கருத்தை அனுப்ப முடியவில்லை. மீண்டும் முயலுங்கள்.",
   "feedback.sendFailedShort": "கருத்தை அனுப்ப முடியவில்லை",
   "feedback.sending": "அனுப்புகிறது…",
@@ -218,6 +220,9 @@
   "kids.trail.status.next": "அடுத்தது",
   "kids.trail.title": "உன் ஏஐ சாகசப் பயணம்",
   "language.beta": "(பீட்டா)",
+  "language.betaInfo": "இந்த மொழிபெயர்ப்பு பற்றி",
+  "language.betaNote": "இந்த மொழிபெயர்ப்பு புதியது.",
+  "language.betaNoteInvite": "இந்த மொழிபெயர்ப்பு புதியது. ஏதாவது வாக்கியம் சரியாக இல்லை என்றால், எந்தப் பாடத்திலும் “சொல் பிழையைத் தெரிவியுங்கள்” என்பதைப் பயன்படுத்துங்கள்.",
   "language.label": "மொழி",
   "lesson.back": "பாடத்திட்டத்துக்குத் திரும்பு",
   "lesson.colab": "Colab-இல் திற",
@@ -625,5 +630,6 @@
   "clip.mute": "🔇 கிளிப் ஒலியை நிறுத்து",
   "clip.cue": "படி {n}-க்குச் செல்",
   "clip.speed": "வேகம் {rate}×",
-  "ageBand.back": "← பின்செல்"
+  "ageBand.back": "← பின்செல்",
+  "feedback.translation": "சொல் பிழை"
 }

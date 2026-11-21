@@ -82,7 +82,7 @@ type Feedback struct {
 	ID             string     `json:"id"`
 	At             time.Time  `json:"at"`
 	Rating         int        `json:"rating"`
-	Category       string     `json:"category"` // bug | content | idea | other
+	Category       string     `json:"category"` // bug | content | idea | other | translation
 	Message        string     `json:"message"`  // empty once withheld
 	Label          string     `json:"label"`
 	LessonID       string     `json:"lessonId"`
@@ -94,6 +94,9 @@ type Feedback struct {
 	ReviewedAt     *time.Time `json:"reviewedAt,omitempty"`
 	ReviewTries    int        `json:"reviewTries"`
 	ClaimedUntil   *time.Time `json:"claimedUntil,omitempty"` // one auditor worker at a time across instances
+	Lang           string     `json:"lang,omitempty"`         // interface language; "" on records before SPEC-016
+	SectionID      string     `json:"sectionId,omitempty"`    // wording reports (SPEC-016)
+	Step           int        `json:"step,omitempty"`         // clip step, 1-based
 }
 
 var (

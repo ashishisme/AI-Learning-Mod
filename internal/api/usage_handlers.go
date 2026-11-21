@@ -105,8 +105,8 @@ func registerLearnerExtras(mux *http.ServeMux, cfg RouterConfig, langs *i18n.Set
 	mux.Handle("POST /api/feedback", limiter.Middleware(requireJSON(submitFeedback(cfg.Feedback, langs))))
 }
 
-// submitFeedback takes an optional "lang". It only picks the language of the reply, falls back to English
-// unless the language is approved, and is never stored (SPEC-009 FR-002, FR-022).
+// submitFeedback takes an optional "lang". It picks the language of the reply (English unless approved) and,
+// since SPEC-016 FR-001, is stored with the record when it is an offered language; any other code is stored as unknown.
 func submitFeedback(fb *feedback.Service, langs *i18n.Set) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sess, ok := SessionFrom(r.Context())
@@ -122,12 +122,19 @@ func submitFeedback(fb *feedback.Service, langs *i18n.Set) http.Handler {
 			Mode       string `json:"mode"`
 			AppVersion string `json:"appVersion"`
 			Lang       string `json:"lang"`
+			SectionID  string `json:"sectionId"`
+			Step       int    `json:"step"`
 		}
 		if !decodeBody(w, r, &in) {
 			return
 		}
+		stored := langs.Resolve(in.Lang) // an offered code, or "en"
+		if stored != in.Lang {
+			stored = "" // not offered: kept as unknown, never stored as sent
+		}
 		err := fb.Submit(r.Context(), sess.BetaID, sess.Label, feedback.Input{
 			Rating: in.Rating, Category: in.Category, Message: in.Message, LessonID: in.LessonID, Mode: in.Mode, AppVersion: in.AppVersion,
+			Lang: stored, SectionID: in.SectionID, Step: in.Step,
 		})
 		var pii *feedback.PIIError
 		switch {

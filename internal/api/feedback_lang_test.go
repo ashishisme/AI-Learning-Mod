@@ -67,3 +67,40 @@ func langSet(t *testing.T, status string) *i18n.Set {
 	}
 	return s
 }
+
+// SPEC-016 FR-001, FR-003: an offered language, the section and the step are stored; an unknown code is stored as "".
+func TestFeedbackStoresOfferedLanguageSectionAndStep(t *testing.T) {
+	st, err := state.OpenFileStore(filepath.Join(t.TempDir(), "state.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	fb := feedback.NewService(st, nil)
+	h := submitFeedback(fb, langSet(t, "approved"))
+	for i, lang := range []string{"hi", "xx", ""} {
+		body, _ := json.Marshal(map[string]any{"rating": 3, "category": "translation", "message": "step 2 reads oddly", "lessonId": "5-nlp", "lang": lang, "sectionId": "worked-example", "step": 2})
+		req := httptest.NewRequest(http.MethodPost, "/api/feedback", strings.NewReader(string(body)))
+		req = req.WithContext(context.WithValue(req.Context(), sessionKey{}, auth.SessionInfo{BetaID: "BETA-S" + strings.Repeat("X", i+1), Label: "School A"}))
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, req)
+		if rec.Code != http.StatusCreated {
+			t.Fatalf("%q: %d %s", lang, rec.Code, rec.Body)
+		}
+	}
+	var got []string
+	_ = st.View(context.Background(), func(tx state.Tx) error {
+		for _, f := range tx.ListFeedback() {
+			if f.SectionID != "worked-example" || f.Step != 2 || f.Category != "translation" {
+				t.Errorf("record %+v", f)
+			}
+			got = append(got, f.Lang)
+		}
+		return nil
+	})
+	count := map[string]int{}
+	for _, g := range got {
+		count[g]++
+	}
+	if len(got) != 3 || count["hi"] != 1 || count[""] != 2 {
+		t.Errorf("langs %q", got)
+	}
+}

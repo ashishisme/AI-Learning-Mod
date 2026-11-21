@@ -66,6 +66,7 @@
   "expiry.days.other": "{count} दिन",
   "expiry.dismiss": "हटाएँ",
   "expiry.notice": "आपकी बीटा पहुँच {date} को समाप्त हो जाएगी ({days} शेष)। यदि आपको और समय चाहिए, तो अपने शिक्षक या एडमिन से कहें।",
+  "feedback.about": "किस बारे में: {place}",
   "feedback.bug": "बग (Bug)",
   "feedback.button": "फ़ीडबैक",
   "feedback.category": "श्रेणी",
@@ -80,6 +81,7 @@
   "feedback.piiDefault": "निजी जानकारी",
   "feedback.privacy": "कृपया नाम, फ़ोन नंबर, ईमेल या पता शामिल न करें। एडमिन के पढ़ने से पहले फ़ीडबैक की जाँच की जाती है।",
   "feedback.rating": "रेटिंग",
+  "feedback.report": "शब्दों की गलती बताएँ",
   "feedback.sendFailed": "फ़ीडबैक नहीं भेजा जा सका। कृपया फिर कोशिश करें।",
   "feedback.sendFailedShort": "फ़ीडबैक नहीं भेजा जा सका",
   "feedback.sending": "भेजा जा रहा है…",
@@ -218,6 +220,9 @@
   "kids.trail.status.next": "अगला",
   "kids.trail.title": "आपका एआई सफ़र",
   "language.beta": "(बीटा)",
+  "language.betaInfo": "इस अनुवाद के बारे में",
+  "language.betaNote": "यह अनुवाद नया है।",
+  "language.betaNoteInvite": "यह अनुवाद नया है। अगर कोई वाक्य ठीक न लगे, तो किसी भी पाठ में “शब्दों की गलती बताएँ” चुनें।",
   "language.label": "भाषा",
   "lesson.back": "पाठ्यक्रम पर वापस जाएँ",
   "lesson.colab": "Colab में खोलें",
@@ -625,5 +630,6 @@
   "clip.mute": "🔇 क्लिप की आवाज़ बंद करें",
   "clip.cue": "चरण {n} पर जाएँ",
   "clip.speed": "गति {rate}×",
-  "ageBand.back": "← वापस"
+  "ageBand.back": "← वापस",
+  "feedback.translation": "शब्दों की गलती"
 }

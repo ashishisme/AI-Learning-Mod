@@ -197,7 +197,7 @@ func TestCSVIsFormulaSafePassedOnlyAndAudited(t *testing.T) {
 		t.Fatal(err)
 	}
 	out := string(raw)
-	if !strings.HasPrefix(out, "at,rating,category,message,label,lessonId,mode,appVersion,status\n") || !strings.Contains(out, "'=SUM") {
+	if !strings.HasPrefix(out, "at,rating,category,message,label,lessonId,mode,appVersion,status,lang,section,step\n") || !strings.Contains(out, "'=SUM") {
 		t.Errorf("csv: %s", out)
 	}
 	if strings.Contains(out, "still waiting") {

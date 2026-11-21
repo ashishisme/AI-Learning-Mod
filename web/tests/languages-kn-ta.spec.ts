@@ -14,9 +14,11 @@ const lessonFile = (code: string, id: string, mode: string) => join(process.cwd(
 
 // The runtime offers the language as a beta. The server keeps a language hidden until the owner approves it, so
 // until then the test serves the drafted lesson files itself, as the server will once it is listed.
-async function offer(L: Lang, page: Page, opts: { stored?: boolean } = { stored: true }) {
+async function offer(L: Lang, page: Page, opts: { stored?: boolean; feedback?: boolean } = { stored: true }) {
   const lang = { code: L.code, name: L.name, speechLang: L.speechLang, beta: true }
-  await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: false, authRequired: false, tutorEnabled: false, feedbackEnabled: false, languages: [EN, lang] } }))
+  const fb = opts.feedback === true // SPEC-016 T018: signed in with feedback on, so the report links and beta note show
+  await page.route('**/api/runtime', (r) => r.fulfill({ json: { hosted: fb, authRequired: fb, tutorEnabled: false, feedbackEnabled: fb, languages: [EN, lang] } }))
+  if (fb) await page.route('**/api/auth/session', (r) => r.fulfill({ json: { authenticated: true, betaId: 'BETA-7KQ3-M9XP', label: 'School A', expiresAt: '2027-01-01T08:30:00Z', daysLeft: 61, expiringSoon: false } }))
   await page.route(/\/api\/lessons\/[^/?]+\?/, async (r) => {
     const u = new URL(r.request().url())
     const id = decodeURIComponent(u.pathname.split('/').pop() || '')
@@ -101,7 +103,7 @@ for (const L of LANGS) test.describe(`${L.english} (SPEC-015)`, () => {
   // DC-11 at phone width: longer words must not push anything off screen or shrink a target.
   test('at 390 px nothing is wider than the screen and every button is at least 44 × 44', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
-    await offer(L, page)
+    await offer(L, page, { stored: true, feedback: true })
     const problems: string[] = []
     const check = async (where: string) => {
       await page.getByRole('heading').first().waitFor()

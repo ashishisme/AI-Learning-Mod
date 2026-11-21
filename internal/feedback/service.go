@@ -52,11 +52,16 @@ type Input struct {
 	LessonID   string
 	Mode       string
 	AppVersion string
+	Lang       string // checked against the offered languages by the handler
+	SectionID  string
+	Step       int
 }
 
 var (
 	lessonRe  = regexp.MustCompile(`^[a-z0-9][a-z0-9_-]{0,63}$`)
 	versionRe = regexp.MustCompile(`^[0-9A-Za-z.+-]{0,20}$`)
+	sectionRe = regexp.MustCompile(`^[a-z0-9][a-z0-9-]{0,63}$`)
+	langRe    = regexp.MustCompile(`^[a-z]{2,3}$`)
 )
 
 func validate(in *Input) error {
@@ -66,7 +71,10 @@ func validate(in *Input) error {
 	}
 	switch {
 	case in.Rating < 1 || in.Rating > 5,
-		in.Category != "bug" && in.Category != "content" && in.Category != "idea" && in.Category != "other",
+		in.Category != "bug" && in.Category != "content" && in.Category != "idea" && in.Category != "other" && in.Category != "translation",
+		in.Lang != "" && !langRe.MatchString(in.Lang),
+		in.SectionID != "" && !sectionRe.MatchString(in.SectionID),
+		in.Step < 0 || in.Step > 20,
 		in.Mode != "standard" && in.Mode != "junior" && in.Mode != "plain-english",
 		utf8.RuneCountInString(in.Message) > MaxMessageRunes,
 		in.LessonID != "" && !lessonRe.MatchString(in.LessonID),
@@ -129,7 +137,7 @@ func (s *Service) Submit(ctx context.Context, betaID, label string, in Input) er
 		}
 		tx.PutFeedback(state.Feedback{
 			ID: newID(), At: now, Rating: in.Rating, Category: in.Category, Message: in.Message, Label: label,
-			LessonID: in.LessonID, Mode: in.Mode, AppVersion: in.AppVersion, Status: state.FeedbackNew, Review: state.ReviewWaiting,
+			LessonID: in.LessonID, Mode: in.Mode, AppVersion: in.AppVersion, Lang: in.Lang, SectionID: in.SectionID, Step: in.Step, Status: state.FeedbackNew, Review: state.ReviewWaiting,
 		})
 		return nil
 	})
@@ -276,9 +284,9 @@ func (s *Service) settle(ctx context.Context, id string, v Verdict) bool {
 
 // Filter selects passed feedback for admins.
 type Filter struct {
-	Status, Category, LessonID, Label string
-	Rating                            int
-	Limit, Offset                     int
+	Status, Category, LessonID, Label, Lang string
+	Rating                                  int
+	Limit, Offset                           int
 }
 
 // Item is what an admin may see.
@@ -293,6 +301,9 @@ type Item struct {
 	Mode       string    `json:"mode"`
 	AppVersion string    `json:"appVersion"`
 	Status     string    `json:"status"`
+	Lang       string    `json:"lang"`
+	SectionID  string    `json:"sectionId,omitempty"`
+	Step       int       `json:"step,omitempty"`
 }
 
 // Held counts items an admin cannot read. It never carries text.
@@ -304,12 +315,13 @@ type Held struct {
 
 func (f Filter) matches(x state.Feedback) bool {
 	return x.Review == state.ReviewPassed && (f.Status == "" || x.Status == f.Status) && (f.Category == "" || x.Category == f.Category) &&
-		(f.LessonID == "" || x.LessonID == f.LessonID) && (f.Label == "" || x.Label == f.Label) && (f.Rating == 0 || x.Rating == f.Rating)
+		(f.LessonID == "" || x.LessonID == f.LessonID) && (f.Label == "" || x.Label == f.Label) && (f.Rating == 0 || x.Rating == f.Rating) &&
+		(f.Lang == "" || x.Lang == f.Lang || f.Lang == "unknown" && x.Lang == "")
 }
 
 func itemOf(x state.Feedback) Item {
 	return Item{ID: x.ID, At: x.At, Rating: x.Rating, Category: x.Category, Message: x.Message, Label: x.Label,
-		LessonID: x.LessonID, Mode: x.Mode, AppVersion: x.AppVersion, Status: x.Status}
+		LessonID: x.LessonID, Mode: x.Mode, AppVersion: x.AppVersion, Status: x.Status, Lang: x.Lang, SectionID: x.SectionID, Step: x.Step}
 }
 
 // List returns one page of passed items, newest first, the total, the unread count and held counts.
@@ -396,12 +408,12 @@ func (s *Service) CSV(ctx context.Context, actor string, f Filter) ([]byte, erro
 	err := s.store.Do(ctx, func(tx state.Tx) error {
 		buf.Reset() // a transaction may run more than once
 		w = csv.NewWriter(&buf)
-		_ = w.Write([]string{"at", "rating", "category", "message", "label", "lessonId", "mode", "appVersion", "status"})
+		_ = w.Write([]string{"at", "rating", "category", "message", "label", "lessonId", "mode", "appVersion", "status", "lang", "section", "step"})
 		n := 0
 		for _, x := range tx.ListFeedback() {
 			if f.matches(x) {
 				_ = w.Write([]string{x.At.In(auth.IST).Format(time.RFC3339), strconv.Itoa(x.Rating), x.Category, csvCell(x.Message),
-					csvCell(x.Label), x.LessonID, x.Mode, x.AppVersion, x.Status})
+					csvCell(x.Label), x.LessonID, x.Mode, x.AppVersion, x.Status, x.Lang, x.SectionID, stepCell(x.Step)})
 				n++
 			}
 		}
@@ -452,4 +464,11 @@ func (s *Service) Sweep(ctx context.Context, now time.Time) error {
 		return true
 	})
 	return errors.Join(err, err2)
+}
+
+func stepCell(n int) string {
+	if n == 0 {
+		return ""
+	}
+	return strconv.Itoa(n)
 }

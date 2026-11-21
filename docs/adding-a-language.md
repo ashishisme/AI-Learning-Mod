@@ -111,3 +111,5 @@ gcloud storage rsync --recursive public-content/audio gs://<narration bucket>/au
 - **Cost.** A language costs about 690 recordings and 270k–440k characters, or about $8–$15.
 - **The upload.** After recording, the owner runs the rsync. Then check the upload: `gcloud storage cat …/audio/<code>/manifest.json | shasum -a 256` must equal the local manifest's hash.
 - **Order of release.** Switch the language to `approved` only after the upload is checked, then run the gates, tag the release, and have the owner approve promote.
+
+- **Fixing wording after launch:** follow [fixing-a-translation.md](fixing-a-translation.md) for learner reports.

@@ -2,6 +2,8 @@
 // A step-by-step animated picture for a Detailed section. The drawing is shown as an image, one step at a
 // time (`#sK`), so nothing from it runs in the page. Each step's caption is read aloud while the clip plays.
 import React, { useEffect, useId, useRef, useState } from 'react'
+import { ReportWordingButton } from './FeedbackButton'
+import type { WordingPlace } from './FeedbackDialog'
 import { useT } from '../i18n'
 import { useAudioStore } from '../store'
 import { useClipStore } from '../stores/clipStore'
@@ -16,6 +18,7 @@ interface Props {
   // "<lessonId>/<mode>/section-<id>-clip-": the narration key of step n is this plus n.
   trackPrefix: string
   speechLang: string
+  report?: WordingPlace // SPEC-016: "Report a wording problem" for the step on screen
 }
 
 export const STEP_MIN_MS = 2000 // a step's entrance animation lasts at most 2 s
@@ -27,7 +30,7 @@ export const holdMs = (text: string) => (text.split(/\s+/).filter(Boolean).lengt
 const button =
   'min-h-[44px] min-w-[44px] px-4 py-2 rounded-xl text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 aria-disabled:opacity-40 aria-disabled:cursor-not-allowed'
 
-export const ClipPlayer: React.FC<Props> = ({ clip, caption, alt, steps, trackPrefix, speechLang }) => {
+export const ClipPlayer: React.FC<Props> = ({ clip, caption, alt, steps, trackPrefix, speechLang, report }) => {
   const t = useT()
   const descId = useId()
   const figureRef = useRef<HTMLElement>(null)
@@ -267,6 +270,7 @@ export const ClipPlayer: React.FC<Props> = ({ clip, caption, alt, steps, trackPr
           {t('widget.stepOf', { n: step + 1, total: steps.length })}
         </span>
       </div>
+      {report && <ReportWordingButton place={{ ...report, step: step + 1 }} />}
     </figure>
   )
 }

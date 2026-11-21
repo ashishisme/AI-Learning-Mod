@@ -125,6 +125,13 @@ func TestAdminInboxShowsOnlyWhatPassedBothChecks(t *testing.T) {
 	if strings.Contains(csvBody, "Asha") || !strings.Contains(csvBody, "Lesson 2 was clear") {
 		t.Errorf("csv: %s", csvBody)
 	}
+	// SPEC-016 FR-008, FR-009: the language filter reaches the list and the CSV; a record without one is "unknown".
+	if _, b := e.do(t, "GET", "/api/admin/feedback.csv?lang=unknown", nil, nil); !strings.Contains(b, "Lesson 2 was clear") || !strings.Contains(b, ",lang,section,step") {
+		t.Errorf("csv unknown: %s", b)
+	}
+	if _, b := e.do(t, "GET", "/api/admin/feedback?lang=kn", nil, nil); !strings.Contains(b, `"total":0`) {
+		t.Errorf("list kn: %s", b)
+	}
 	_, ov := e.do(t, "GET", "/api/admin/overview", nil, nil)
 	if !strings.Contains(ov, `"unread":1`) {
 		t.Errorf("overview: %s", ov)

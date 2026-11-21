@@ -163,6 +163,7 @@ func digitRunKind(s string) (string, bool) {
 	best := ""
 	runDigits, runStart := 0, -1
 	prevEnd := -1
+	prevWord := false // the previous token was a spelled-out digit
 	repeat := 1
 	flush := func(end int) {
 		if runDigits >= 7 {
@@ -191,7 +192,12 @@ func digitRunKind(s string) (string, bool) {
 		isDigits := tok[0] >= '0' && tok[0] <= '9'
 		_, isWord := numberWords[tok]
 		rep, isRepeat := repeatWords[tok]
-		if prevEnd >= 0 && !strings.ContainsFunc(s[prevEnd:loc[0]], func(r rune) bool { return !strings.ContainsRune(" \t\n\r+().-", r) }) && runStart >= 0 {
+		// A comma joins spelled-out digits ("nine eight seven, six five"), never numerals, so "3, 4, 5" stays a list.
+		seps := " \t\n\r+().-"
+		if prevWord && isWord {
+			seps += ","
+		}
+		if prevEnd >= 0 && !strings.ContainsFunc(s[prevEnd:loc[0]], func(r rune) bool { return !strings.ContainsRune(seps, r) }) && runStart >= 0 {
 			// still contiguous
 		} else if runStart >= 0 {
 			flush(prevEnd)
@@ -221,6 +227,7 @@ func digitRunKind(s string) (string, bool) {
 			repeat = 1
 		}
 		prevEnd = loc[1]
+		prevWord = isWord
 	}
 	if runStart >= 0 {
 		flush(prevEnd)

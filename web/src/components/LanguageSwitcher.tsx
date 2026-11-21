@@ -2,8 +2,8 @@
 // A native select: keyboard, screen reader and the phone's own picker work without extra code, and
 // it stays compact as more languages arrive. Each option is written in its own language and script,
 // so a learner who cannot read the current one still finds theirs.
-import React from 'react'
-import { useLanguageStore } from '../store'
+import React, { useEffect, useId, useRef, useState } from 'react'
+import { useAuthStore, useLanguageStore, useRuntimeStore } from '../store'
 import { useLanguage, useT } from '../i18n'
 
 interface Props {
@@ -14,6 +14,10 @@ export const LanguageSwitcher: React.FC<Props> = ({ variant = 'header' }) => {
   const { code, languages } = useLanguage()
   const setLanguage = useLanguageStore((s) => s.setLanguage)
   const t = useT()
+  const beta = languages.find((l) => l.code === code)?.beta === true
+  const feedbackOn = useRuntimeStore((s) => s.feedbackEnabled)
+  const signedIn = useAuthStore((s) => s.status === 'authenticated')
+  const invite = feedbackOn && signedIn
   if (languages.length < 2) return null
 
   // The accessible name also says "Language" in English, for someone stuck in a script they don't read.
@@ -38,13 +42,36 @@ export const LanguageSwitcher: React.FC<Props> = ({ variant = 'header' }) => {
       ))}
     </select>
   )
-  if (variant === 'header') return select
+  const withNote = beta ? <span className="relative inline-flex items-center gap-1">{select}<BetaNote text={t(invite ? 'language.betaNoteInvite' : 'language.betaNote')} label={t('language.betaInfo')} /></span> : select
+  if (variant === 'header') return withNote
   return (
     <div>
       <label htmlFor="settings-language" className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
         {label}
       </label>
-      {select}
+      {withNote}
     </div>
+  )
+}
+
+// SPEC-016 FR-011: a beta language's one-line note, opened from a 44×44 info button and closed with Esc.
+const BetaNote: React.FC<{ text: string; label: string }> = ({ text, label }) => {
+  const [open, setOpen] = useState(false)
+  const id = useId()
+  const button = useRef<HTMLButtonElement>(null)
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setOpen(false); button.current?.focus() } }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [open])
+  return (
+    <>
+      <button ref={button} type="button" data-testid="beta-note-button" aria-label={label} aria-expanded={open} aria-describedby={open ? id : undefined}
+        onClick={() => setOpen((o) => !o)}
+        className="min-h-11 min-w-11 shrink-0 rounded-full text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">ⓘ</button>
+      {open && <p id={id} role="note" data-testid="beta-note"
+        className="absolute right-0 top-full mt-1 z-40 w-64 max-w-[calc(100vw-2rem)] p-3 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-sm text-slate-800 dark:text-slate-100 shadow-lg break-words">{text}</p>}
+    </>
   )
 }
