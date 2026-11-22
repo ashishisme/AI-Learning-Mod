@@ -67,7 +67,7 @@ export const SignOutControl: React.FC = () => {
     'min-h-11 px-4 rounded-lg border border-slate-400 dark:border-slate-500 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600'
   return (
     <>
-      <span data-testid="header-betaid" className="hidden sm:inline font-mono text-xs text-slate-700 dark:text-slate-300">
+      <span data-testid="header-betaid" className="hidden lg:inline font-mono text-xs text-slate-700 dark:text-slate-300">
         {betaId}
       </span>
       <button type="button" data-testid="signout-btn" className={cls} onClick={() => setOpen(true)}>

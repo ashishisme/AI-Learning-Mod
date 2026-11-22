@@ -57,6 +57,7 @@ export const LanguageSwitcher: React.FC<Props> = ({ variant = 'header' }) => {
 // SPEC-016 FR-011: a beta language's one-line note, opened from a 44×44 info button and closed with Esc.
 const BetaNote: React.FC<{ text: string; label: string }> = ({ text, label }) => {
   const [open, setOpen] = useState(false)
+  const [pos, setPos] = useState({ top: 64, right: 16 }) // fixed, so a scrolling or wrapping header never clips it
   const id = useId()
   const button = useRef<HTMLButtonElement>(null)
   useEffect(() => {
@@ -68,10 +69,10 @@ const BetaNote: React.FC<{ text: string; label: string }> = ({ text, label }) =>
   return (
     <>
       <button ref={button} type="button" data-testid="beta-note-button" aria-label={label} aria-expanded={open} aria-describedby={open ? id : undefined}
-        onClick={() => setOpen((o) => !o)}
+        onClick={(e) => { const r = e.currentTarget.getBoundingClientRect(); setPos({ top: r.bottom + 4, right: Math.max(16, window.innerWidth - r.right) }); setOpen((o) => !o) }}
         className="min-h-11 min-w-11 shrink-0 rounded-full text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">ⓘ</button>
-      {open && <p id={id} role="note" data-testid="beta-note"
-        className="absolute right-0 top-full mt-1 z-40 w-64 max-w-[calc(100vw-2rem)] p-3 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-sm text-slate-800 dark:text-slate-100 shadow-lg break-words">{text}</p>}
+      {open && <p id={id} role="note" data-testid="beta-note" style={{ top: pos.top, right: pos.right }}
+        className="fixed z-40 w-64 max-w-[calc(100vw-2rem)] whitespace-normal p-3 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-sm text-slate-800 dark:text-slate-100 shadow-lg break-words">{text}</p>}
     </>
   )
 }

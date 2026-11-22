@@ -100,6 +100,25 @@ for (const L of LANGS) test.describe(`${L.english} (SPEC-015)`, () => {
     await plain.close()
   })
 
+  // Tablet and desktop, signed in with feedback on: no header item is squeezed below its text, and the
+  // header wraps to at most two rows instead of overlapping (owner report 2026-11-21, Tamil header).
+  for (const width of [768, 1024, 1280]) test(`at ${width} px the header items never overlap or spill`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 800 })
+    await offer(L, page, { stored: true, feedback: true })
+    await page.goto('/lesson/4-computervision')
+    await expect(page.getByTestId('lesson-title')).toBeVisible()
+    const r = await page.evaluate(() => {
+      const spills: string[] = []
+      for (const el of Array.from(document.querySelectorAll('header a, header button, header select, header span'))) {
+        const e = el as HTMLElement
+        if (e.offsetWidth && e.scrollWidth > e.clientWidth + 1 && getComputedStyle(e).overflowX === 'visible') spills.push((e.textContent || '').trim().slice(0, 20))
+      }
+      return { spills, height: document.querySelector('header')!.getBoundingClientRect().height }
+    })
+    expect(r.spills).toEqual([])
+    expect(r.height).toBeLessThanOrEqual(120)
+  })
+
   // DC-11 at phone width: longer words must not push anything off screen or shrink a target.
   test('at 390 px nothing is wider than the screen and every button is at least 44 × 44', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })

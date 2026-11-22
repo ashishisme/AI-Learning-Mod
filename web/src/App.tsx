@@ -45,10 +45,12 @@ export const App: React.FC = () => {
     <div data-journey={journey} className={`flex flex-col min-h-screen ${journey === 'junior' ? 'bg-[var(--kids-bg)]' : 'bg-slate-50 dark:bg-slate-950'} text-slate-900 dark:text-slate-100 selection:bg-indigo-500 selection:text-white transition-colors duration-200`}>
       {/* Top Application Bar */}
       <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/90 dark:border-slate-800 shadow-xs transition-all">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+        {/* Items never shrink below their text. On a phone the menu scrolls sideways; from sm up it wraps to a
+            second row when a language has long words (Tamil, Kannada), so nothing overlaps. */}
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 min-h-14 py-1.5 flex items-center justify-between gap-x-3 gap-y-1.5 sm:flex-wrap">
           <Link
             to="/"
-            className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-md"
+            className="flex shrink-0 items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-md"
           >
             <KidVisual
               assetId="app-mark"
@@ -58,12 +60,12 @@ export const App: React.FC = () => {
               priority
               className="rounded-lg shadow-sm group-hover:scale-105 transition-transform"
             />
-            <span className="font-semibold text-sm tracking-tight text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
+            <span className="whitespace-nowrap font-semibold text-sm tracking-tight text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
               {t('nav.brand')}
             </span>
           </Link>
 
-          <nav className="flex min-w-0 overflow-x-auto items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400">
+          <nav className="flex min-w-0 overflow-x-auto sm:overflow-visible sm:flex-wrap sm:justify-end items-center gap-2 [&>*]:shrink-0 [&>*]:whitespace-nowrap text-xs font-medium text-slate-600 dark:text-slate-400">
             <Link
               to="/"
               className="hidden sm:inline-flex items-center flex-shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-md hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
@@ -94,7 +96,7 @@ export const App: React.FC = () => {
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-xs transition"
             >
               <span className="text-sm">❓</span>
-              <span className="font-semibold hidden sm:inline">{t('nav.help')}</span>
+              <span className="font-semibold hidden lg:inline">{t('nav.help')}</span>
             </button>
 
             {/* FR-UI-14, AC-34: Global Settings Drawer Trigger */}
@@ -106,7 +108,7 @@ export const App: React.FC = () => {
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-xs transition"
             >
               <span className="text-sm">⚙️</span>
-              <span className="font-semibold hidden sm:inline">{t('nav.settings')}</span>
+              <span className="font-semibold hidden lg:inline">{t('nav.settings')}</span>
               {settings.provider === 'local' ? (
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" title={t('nav.localActive')} />
               ) : (
