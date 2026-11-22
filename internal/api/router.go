@@ -2,8 +2,18 @@
 package api
 
 import (
+	"encoding/json"
 	"io/fs"
+	"log/slog"
 	"net/http"
+	"strings"
+
+	"ai-foundations-coach/internal/auth"
+	"ai-foundations-coach/internal/cost"
+	"ai-foundations-coach/internal/feedback"
+	"ai-foundations-coach/internal/i18n"
+	"ai-foundations-coach/internal/spend"
+	"ai-foundations-coach/internal/usage"
 )
 
 type RouterConfig struct {
@@ -12,6 +22,82 @@ type RouterConfig struct {
 	RateLimiter *RateLimiter
 	ModelClient ModelClient
 	StaticFS    fs.FS // for SPA static assets
+
+	// Hosted is true on a public deployment (SPEC-008 FR-018..FR-022): the AI endpoint, key,
+	// model and TLS behaviour come only from server configuration, per-request overrides are
+	// ignored, outbound calls to non-public addresses are refused, and AI-config-test is
+	// unavailable.
+	Hosted bool
+	// TrustedProxyHops is the number of reverse proxies in front of the server (see RateLimiter).
+	TrustedProxyHops int
+
+	// Auth turns on invite-only sign-in (SPEC-008 FR-001). When nil the app behaves as before and
+	// /api/auth/* and /api/admin/* do not exist.
+	Auth          *auth.Service
+	OIDC          *auth.OIDC
+	Signer        *auth.Signer
+	AdminEmails   []string
+	SecureCookies bool // set the Secure flag on cookies (PUBLIC_BASE_URL is https)
+	// Usage counts activity, Cost reports what the beta costs, Feedback holds learner feedback.
+	// All are nil on a self-hosted run with no state store.
+	Usage    *usage.Recorder
+	Cost     *cost.Provider
+	Feedback *feedback.Service
+	// Spend is the shared daily AI ceiling (FR-025). Nil means no ceiling (self-hosted, no store).
+	Spend *spend.Tally
+	// TutorDisabled refuses every tutor request (FR-024). The zero value leaves the tutor on.
+	TutorDisabled bool
+	// FeedbackEnabled is reported to the UI; it is true only when the auditor is configured (FR-058).
+	FeedbackEnabled bool
+	// TutorLatch switches the tutor off at the monthly budget until an admin resets it (FR-026), and
+	// BudgetPush lets a verified budget notification trip it. Nil on a self-hosted run.
+	TutorLatch *spend.Latch
+	BudgetPush *BudgetPush
+	// Release is the tag this image was built from, empty outside a release (FR-031).
+	Release string
+}
+
+// RuntimeInfo is what the UI needs to know about this deployment.
+type RuntimeInfo struct {
+	Hosted          bool   `json:"hosted"`
+	AuthRequired    bool   `json:"authRequired"`
+	TutorEnabled    bool   `json:"tutorEnabled"`
+	FeedbackEnabled bool   `json:"feedbackEnabled"`
+	Release         string `json:"release,omitempty"`
+	// Languages lists the approved interface languages, English first (SPEC-009 FR-001).
+	Languages []LanguageInfo `json:"languages"`
+}
+
+// LanguageInfo is one approved language as the UI needs it.
+type LanguageInfo struct {
+	Code       string `json:"code"`
+	Name       string `json:"name"`
+	SpeechLang string `json:"speechLang"`
+	Beta       bool   `json:"beta,omitempty"`
+}
+
+func languageInfos(s *i18n.Set) []LanguageInfo {
+	var out []LanguageInfo
+	for _, l := range s.Approved() {
+		out = append(out, LanguageInfo{Code: l.Code, Name: l.Name, SpeechLang: l.SpeechLang, Beta: l.Beta})
+	}
+	return out
+}
+
+// RuntimeHandler reports deployment facts the UI needs. It is separate from /api/health,
+// which must stay exactly {"ok":true} (NFR-REL-02).
+func RuntimeHandler(info RuntimeInfo) http.HandlerFunc {
+	body, _ := json.Marshal(info)
+	return func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write(body)
+	}
+}
+
+func hostedUnavailable(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusForbidden)
+	_, _ = w.Write([]byte(`{"error":"not available on this server"}`))
 }
 
 // NewRouter constructs the stdlib net/http ServeMux with method+path routes per DC-02.
@@ -21,8 +107,18 @@ func NewRouter(cfg RouterConfig) http.Handler {
 
 	// Content handler
 	lessonsHandler := NewLessonsHandler(cfg.ContentDir)
+	lessonsHandler.usage = cfg.Usage
+	// SPEC-009: languages offered to learners. A broken list must not take the site down, so it
+	// falls back to English only and says why.
+	langs, err := i18n.Load(lessonsHandler.contentDir)
+	if err != nil {
+		slog.Error("Offering English only: cannot read languages.json", "error", err.Error())
+		langs = nil
+	}
+	lessonsHandler.langs = langs
 	mux.HandleFunc("GET /api/lessons", lessonsHandler.GetIndex)
 	mux.HandleFunc("GET /api/lessons/{id}", lessonsHandler.GetLesson)
+	mux.HandleFunc("GET "+AudioURLPrefix+"{lang}/{path...}", audioHandler(lessonsHandler.contentDir, langs))
 
 	// Health handler
 	mux.HandleFunc("GET /api/health", HealthHandler)
@@ -32,18 +128,55 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	if limiter == nil {
 		limiter = NewRateLimiter(RateLimitLimit, RateLimitWindow)
 	}
+	limiter.SetTrustedProxyHops(cfg.TrustedProxyHops)
 	tutorHandler := NewTutorHandler(cfg.OpenAIKey, cfg.ContentDir, cfg.ModelClient)
+	tutorHandler.hosted = cfg.Hosted
+	tutorHandler.enabled = !cfg.TutorDisabled
+	tutorHandler.spend = cfg.Spend
+	tutorHandler.latch = cfg.TutorLatch
+	tutorHandler.usage = cfg.Usage
+	tutorHandler.langs = langs
 	mux.Handle("POST /api/tutor", limiter.Middleware(tutorHandler))
 	mux.Handle("POST /api/tutor/stream", limiter.Middleware(tutorHandler))
 
-	// Config test handler (FR-SET-03)
-	mux.HandleFunc("POST /api/config/test", ConfigTestHandler)
+	if cfg.Auth != nil {
+		registerAuth(mux, cfg)
+		registerAdmin(mux, cfg)
+	}
+
+	registerLearnerExtras(mux, cfg, langs)
+	registerBudgetPush(mux, cfg)
+
+	// Lets the UI hide controls that do not apply on a hosted deployment (FR-021).
+	mux.HandleFunc("GET /api/runtime", RuntimeHandler(RuntimeInfo{
+		Hosted: cfg.Hosted, AuthRequired: cfg.Auth != nil, TutorEnabled: !cfg.TutorDisabled,
+		FeedbackEnabled: cfg.Auth != nil && cfg.FeedbackEnabled,
+		Release:         cfg.Release,
+		Languages:       languageInfos(langs),
+	}))
+
+	if cfg.Hosted {
+		// FR-020: unavailable to everyone, with no outbound call and no content change.
+		mux.HandleFunc("POST /api/config/test", hostedUnavailable)
+		// FR-021a: the prompt for a learner's own local AI. No model call, so no spend.
+		mux.Handle("POST /api/tutor/prepare", limiter.Middleware(TutorPrepareHandler(cfg.ContentDir, cfg.Usage, langs)))
+	} else {
+		// Config test handler (FR-SET-03)
+		mux.HandleFunc("POST /api/config/test", ConfigTestHandler)
+	}
 
 	// Static SPA assets serving with client-side fallback (if provided)
 	if cfg.StaticFS != nil {
 		fileServer := http.FileServer(http.FS(cfg.StaticFS))
 		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			path := r.URL.Path
+			// An unknown API path must not get index.html, or callers fail parsing it as JSON.
+			if strings.HasPrefix(path, "/api/") {
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusNotFound)
+				_, _ = w.Write([]byte(`{"error":"not found"}`))
+				return
+			}
 			if path == "/" || path == "" {
 				fileServer.ServeHTTP(w, r)
 				return
@@ -63,8 +196,14 @@ func NewRouter(cfg RouterConfig) http.Handler {
 
 	// Chain middlewares: PanicRecovery outermost -> SecurityHeaders -> Mux
 	var handler http.Handler = mux
+	if cfg.Auth != nil {
+		handler = seenMiddleware(cfg.Usage)(handler)
+		handler = SessionGate(cfg.Auth, cfg.SecureCookies)(handler)
+	}
 	handler = SecurityHeadersMiddleware(handler)
 	handler = PanicRecoveryMiddleware(handler)
+	handler = RequestIDMiddleware(handler)
+	handler = usageMiddleware(cfg.Usage)(handler) // outermost, so it also counts panics answered with 500
 
 	return handler
 }

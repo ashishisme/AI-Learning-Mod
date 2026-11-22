@@ -1,0 +1,260 @@
+{
+  "lessonId": "4-computervision",
+  "mode": "junior",
+  "origin": "own",
+  "title": "Computer Eyes 👁️",
+  "readingTimeMinutes": 5,
+  "mascot": {
+    "name": "Chip",
+    "avatar": "🤖",
+    "greeting": "Hi, it's Chip! How does a phone know it's your face? Let's look at pictures the way a computer does!"
+  },
+  "recap": [
+    "To a computer, a picture is a grid of numbers.",
+    "A small window slides over the picture to find edges.",
+    "Stacks of filters find lines, then shapes, then things."
+  ],
+  "bands": true,
+  "sections": [
+    {
+      "id": "pixels-grid",
+      "heading": "1. Pictures Made of Tiny Squares",
+      "bigIdea": "To a computer, every picture is a grid of numbers.",
+      "chipQuote": "Zoom in really close on a photo. What do you see?",
+      "analogy": {
+        "metaphorName": "Mosaic Tiles",
+        "description": "A mosaic is a picture made of little tiles. Up close you see tiles. Step back, and you see a face."
+      },
+      "bodyMarkdown": "Zoom in on a photo, and you will see tiny squares called **pixels**. Each pixel is one colour.\n\nA computer can't see colours the way you do. It turns each pixel’s colour into numbers. Darker colours get smaller numbers. Brighter colours get bigger numbers. So a photo is a big grid of numbers.",
+      "jargonBuster": [
+        {
+          "term": "Pixels",
+          "simpleExplanation": "The tiny coloured squares that make up a picture on a screen."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "From photo to numbers",
+        "alt": "Three steps: a photo is made of tiny squares, each square gets a number, and the whole photo becomes a grid of numbers.",
+        "content": "",
+        "steps": [
+          "A photo is made of tiny squares. 🟦🟦",
+          "Each square gets a number. Dark is small, bright is big.",
+          "The whole photo becomes a grid of numbers. 🔢"
+        ]
+      },
+      "more": {
+        "title": "Which numbers?",
+        "bodyMarkdown": "In a black and white picture, black is often 0 and white is 255. All the greys are in between."
+      },
+      "teen": {
+        "add": "A colour pixel has three numbers: how much red, green and blue it has. Mix those three, and you can make any colour on a screen."
+      },
+      "checkIn": {
+        "question": "What does a computer turn each pixel’s colour into?",
+        "options": [
+          "🔢 Numbers",
+          "🎨 A paint pot"
+        ],
+        "correctIndex": 0,
+        "praise": "Yes! Pictures become numbers.",
+        "explanation": "A computer turns each pixel’s colour into numbers."
+      }
+    },
+    {
+      "id": "convolutions-filter",
+      "heading": "2. The Sliding Window",
+      "bigIdea": "A small window slides over the picture to find edges.",
+      "chipQuote": "I look at a picture one small patch at a time!",
+      "analogy": {
+        "metaphorName": "The Magnifying Glass",
+        "description": "You slide a magnifying glass over a map, one spot at a time, looking for rivers."
+      },
+      "bodyMarkdown": "To find shapes, the computer uses a tiny window called a **filter**. It is only three squares wide.\n\nThe filter slides across the picture, one step at a time. At each stop, it checks the numbers under it. Where dark meets bright, it lights up. That line is an **edge**.",
+      "jargonBuster": [
+        {
+          "term": "Filter",
+          "simpleExplanation": "A tiny window that slides over a picture looking for one kind of pattern."
+        },
+        {
+          "term": "Edge",
+          "simpleExplanation": "A place in a picture where dark meets bright, like the outline of a shape."
+        }
+      ],
+      "diagram": {
+        "type": "clip",
+        "clip": "chip-magnifying-glass",
+        "media": "video",
+        "caption": "Watch Chip's magic magnifying glass",
+        "alt": "Chip the robot slides a magnifying glass over a cat photo, finding pointy ears and whiskers to recognize the cat.",
+        "steps": [
+          "A cat photo sits on Chip's board.",
+          "Chip moves a magic glass over the photo.",
+          "Pointy ears and whiskers light up green.",
+          "Chip steps back. The small shapes make a cat face.",
+          "Chip's screen glows: \"A cat! 99% sure!\""
+        ]
+      },
+      "teen": {
+        "add": "This slide-multiply-add trick is called **convolution**. The numbers inside the filter decide what it finds: edges, blur or lines in one direction.",
+        "jargonBuster": [
+          {
+            "term": "Convolution",
+            "simpleExplanation": "Sliding a filter over a picture and adding up what it finds at each spot."
+          }
+        ]
+      },
+      "interactiveWidget": {
+        "type": "convolution-sim",
+        "title": "🔍 Try It: The Edge Finder",
+        "instruction": "Pick a drawing and a filter. Watch the glowing squares show where the edges are.",
+        "goal": "Make the computer light up the edges of a shape.",
+        "scaffold": "guided",
+        "predictionPrompt": "Before you pick a filter: where do you think the edges are?",
+        "hints": [
+          "Edges are where dark meets bright.",
+          "Try the blur filter to see the opposite."
+        ],
+        "successMessage": "Edges found! That is the first thing computer eyes learn to see.",
+        "allowFreePlay": true
+      }
+    },
+    {
+      "id": "deep-cnn-blocks",
+      "heading": "3. From Lines to Faces",
+      "bigIdea": "Stack lots of filters, and the computer sees bigger and bigger shapes.",
+      "chipQuote": "Lines make shapes. Shapes make things!",
+      "analogy": {
+        "metaphorName": "Building Blocks",
+        "description": "Small blocks make a wall. Walls make a room. Rooms make a whole house."
+      },
+      "bodyMarkdown": "One filter finds simple lines. Now stack lots of filters in rows. The first row finds lines. The next row joins lines into shapes, like circles. The last row joins shapes into things, like a cat's face.\n\nThe computer learns which filters to use by itself, from lots of photos.",
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Each row sees something bigger",
+        "content": "graph LR\n    P[\"🖼️ Photo\"] --> L1[\"Row 1: lines ➖\"]\n    L1 --> L2[\"Row 2: shapes ⭕\"]\n    L2 --> L3[\"Row 3: things 🐱\"]",
+        "alt": "A photo goes into row 1, which finds lines, then row 2, which finds shapes, then row 3, which finds things like a cat."
+      },
+      "teen": {
+        "add": "A stack like this is called a **convolutional neural network**, or CNN. Each row is a layer, just like the layers of neurons in lesson 3.",
+        "jargonBuster": [
+          {
+            "term": "Convolutional neural network",
+            "simpleExplanation": "Layers of filters that find lines, then shapes, then whole things. Also called a CNN."
+          }
+        ]
+      },
+      "checkIn": {
+        "question": "What does the first row of filters find?",
+        "options": [
+          "➖ Simple lines",
+          "🐱 Whole cats",
+          "🎵 Music"
+        ],
+        "correctIndex": 0,
+        "praise": "Right! The first row finds lines.",
+        "explanation": "The first row finds lines. Later rows join them into shapes and things."
+      }
+    },
+    {
+      "id": "real-world-vision",
+      "heading": "4. Computer Eyes All Around You",
+      "bigIdea": "Computer eyes help us every day.",
+      "chipQuote": "Cameras plus AI can spot things super fast!",
+      "analogy": {
+        "metaphorName": "A Helper Who Never Blinks",
+        "description": "A camera can watch all day and night without getting tired or bored."
+      },
+      "bodyMarkdown": "Your phone uses computer eyes to open when it sees your face. Cars use them to spot people crossing the road. Doctors use them to look at X-rays. Farmers use them to spot sick plants.\n\nBut computer eyes can make mistakes. For big choices, a person still checks.",
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Where computer eyes help",
+        "content": "graph TD\n    V[\"👁️ Computer eyes\"] --> A[\"📱 Face unlock\"]\n    V --> B[\"🚗 Spotting people on the road\"]\n    V --> C[\"🩻 Checking X-rays\"]\n    V --> D[\"🌱 Finding sick plants\"]",
+        "alt": "Computer eyes help with face unlock, spotting people on the road, checking X-rays and finding sick plants."
+      },
+      "teen": {
+        "add": "Computer eyes only know what they were shown. If a face camera learned from too few kinds of faces, it can fail for some people. You will see why in lesson 7."
+      },
+      "checkIn": {
+        "question": "Who should check a big choice made with computer eyes?",
+        "options": [
+          "🧑 A person",
+          "📷 Nobody"
+        ],
+        "correctIndex": 0,
+        "praise": "Yes! People check the big choices.",
+        "explanation": "Computer eyes can make mistakes, so a person checks big choices."
+      }
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What is a picture to a computer?",
+      "options": [
+        "A grid of numbers",
+        "A painting",
+        "A sound"
+      ],
+      "correctIndex": 0,
+      "praise": "Great! Pixels become numbers.",
+      "explanation": "A computer turns each pixel’s colour into numbers, so a picture is a grid of numbers."
+    },
+    {
+      "question": "What does the sliding window light up?",
+      "options": [
+        "Places where dark meets bright",
+        "Only red squares",
+        "The middle of the picture"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes! Those places are edges.",
+      "explanation": "The filter lights up where dark meets bright. That is an edge."
+    },
+    {
+      "question": "What does the first row of filters find?",
+      "options": [
+        "Simple lines",
+        "Whole faces",
+        "Names"
+      ],
+      "correctIndex": 0,
+      "praise": "Spot on! Lines come first.",
+      "explanation": "The first row finds lines. Later rows find shapes, then things."
+    },
+    {
+      "band": "12-14",
+      "question": "What is a stack of filter layers called?",
+      "options": [
+        "A convolutional neural network (CNN)",
+        "A knowledge base",
+        "A pixel"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly! Stacks of filters make a CNN.",
+      "explanation": "Layers of filters that find lines, shapes and things are called a convolutional neural network."
+    }
+  ],
+  "teachBack": {
+    "prompt": "Chip asks: How does a computer find a cat in a photo? Pick the best answer for a friend.",
+    "options": [
+      "It turns the photo into numbers and finds lines, then shapes, then the cat.",
+      "It looks at the photo just like a person does.",
+      "Someone tells it where the cat is every time."
+    ],
+    "correctIndex": 0,
+    "explanation": "Right! Numbers, then lines, then shapes, then the cat."
+  },
+  "recall": [
+    {
+      "fromLesson": "3-neuralnetworks",
+      "question": "What does a weight do in a neuron?",
+      "options": [
+        "It says how much a clue counts",
+        "It stores the neuron's name",
+        "It makes the screen brighter"
+      ],
+      "correctIndex": 0,
+      "explanation": "A weight says how much each clue counts."
+    }
+  ]
+}

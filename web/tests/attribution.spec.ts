@@ -1,52 +1,42 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, Page } from '@playwright/test'
 
-// SPEC: AC-26 (NFR-LIC-01, FR-ATT-01): The attribution footer appears on /, /lesson/:id, and /quiz/:id.
-test.describe('AC-26 Mandatory Attribution Footer', () => {
-  const expectedText =
-    'Curriculum based on microsoft/AI-For-Beginners (MIT License). Not affiliated with Microsoft.'
+// SPEC: AC-26 (NFR-LIC-01, FR-ATT-01; amended 2.15.0, SPEC-013 FR-012): the footer appears on /,
+// /lesson/:id and /quiz/:id, names the maker, and names and links to no other course.
+test.describe('AC-26 Site footer', () => {
+  async function expectOurFooter(page: Page) {
+    const footer = page.getByTestId('site-footer')
+    await expect(footer).toBeVisible()
+    await expect(footer).toContainText('Qunisphere')
+    await expect(footer.getByRole('button', { name: /help/i })).toBeVisible()
+    await expect(footer).not.toContainText(/microsoft|AI-For-Beginners/i)
+    await expect(page.locator('a[href*="microsoft" i]')).toHaveCount(0)
+  }
 
   test('AC-26: appears on /', async ({ page }) => {
-    await page.route('**/api/lessons', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ commitSha: '1234567890123456789012345678901234567890', lessons: [] }),
-      })
-    })
-
+    await page.route('**/api/lessons', (route) => route.fulfill({ json: { lessons: [] } }))
     await page.goto('/')
-    const footer = page.locator('[data-testid="attribution-footer"]')
-    await expect(footer).toBeVisible()
-    await expect(footer).toContainText(expectedText)
+    await expectOurFooter(page)
   })
 
   test('AC-26: appears on /lesson/:id', async ({ page }) => {
-    await page.route('**/api/lessons/test-lesson', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          id: 'test-lesson',
-          module: 'Module',
+    await page.route('**/api/lessons/test-lesson?*', (route) =>
+      route.fulfill({
+        json: {
+          lessonId: 'test-lesson',
+          mode: 'detailed',
+          origin: 'own',
           title: 'Test Lesson',
-          order: 0,
-          path: 'lessons/test/README.md',
-          commitSha: '1234567890123456789012345678901234567890',
-          blocks: [{ type: 'markdown', content: 'Sample content' }],
-        }),
+          sections: [{ id: 's1', heading: 'One', bodyMarkdown: 'Sample content' }],
+        },
       })
-    })
-
+    )
     await page.goto('/lesson/test-lesson')
-    const footer = page.locator('[data-testid="attribution-footer"]')
-    await expect(footer).toBeVisible()
-    await expect(footer).toContainText(expectedText)
+    await expect(page.getByTestId('lesson-title')).toHaveText('Test Lesson')
+    await expectOurFooter(page)
   })
 
   test('AC-26: appears on /quiz/:id', async ({ page }) => {
     await page.goto('/quiz/test-lesson')
-    const footer = page.locator('[data-testid="attribution-footer"]')
-    await expect(footer).toBeVisible()
-    await expect(footer).toContainText(expectedText)
+    await expectOurFooter(page)
   })
 })

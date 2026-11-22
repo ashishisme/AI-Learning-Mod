@@ -1,0 +1,63 @@
+import React from 'react'
+import { ChipVectorAvatar } from './ChipVectorAvatar'
+import { AudioNarrationButton } from './AudioNarrationButton'
+import { useT } from '../i18n'
+
+interface Props {
+  greeting?: string
+  // The language of a given greeting; the default greeting is in the chosen language.
+  speechLang?: string
+  // "<lessonId>/<mode>/" of a lesson's own greeting, for its recording (SPEC-009 FR-012).
+  trackPrefix?: string
+}
+
+export const ChipMascotBanner: React.FC<Props> = ({ greeting: given, speechLang, trackPrefix }) => {
+  const t = useT()
+  const greeting = given || t('adaptive.chipGreeting')
+  return (
+    <div className="kids-card relative overflow-hidden p-5 sm:p-6 shadow-lg mb-8">
+      {/* Decorative background glow circle */}
+      <div className="absolute -top-12 -right-12 w-40 h-40 bg-amber-300/20 rounded-full blur-2xl pointer-events-none" />
+
+      <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-5">
+        {/* Animated Robot Vector Character */}
+        <div className="relative flex-shrink-0 w-20 h-20 bg-white/90 dark:bg-slate-800/90 rounded-2xl border-2 border-amber-300 dark:border-amber-500 shadow-md flex items-center justify-center">
+          <ChipVectorAvatar size={70} />
+          <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white dark:border-slate-800"></span>
+          </span>
+        </div>
+
+        {/* Speech Bubble */}
+        <div className="flex-1">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+            <div className="flex items-center gap-2">
+              <span className="kids-heading text-base font-bold tracking-wide">
+                {t('adaptive.chipName')}
+              </span>
+              <span className="text-xs uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-amber-200/90 dark:bg-amber-800 text-amber-900 dark:text-amber-100 shadow-xs">
+                {t('adaptive.chipRole')}
+              </span>
+              <span className="text-xs text-amber-800 dark:text-amber-300 font-bold hidden md:inline">
+                {t('adaptive.chipReady')}
+              </span>
+            </div>
+
+            <AudioNarrationButton
+              id="chip-mascot-greeting"
+              speechLang={given ? speechLang : undefined}
+              trackKey={given && trackPrefix ? trackPrefix + 'chip-mascot-greeting' : 'global/chip-mascot-greeting'}
+              textToRead={greeting}
+              label={t('narration.listenChip')}
+              variant="chip"
+            />
+          </div>
+          <p className="kids-ink text-sm sm:text-base leading-relaxed font-medium">
+            "{greeting}"
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}

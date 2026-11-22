@@ -1,0 +1,277 @@
+{
+  "lessonId": "3-neuralnetworks",
+  "mode": "junior",
+  "origin": "own",
+  "title": "Connecting the Brain's Spark Plugs ⚡",
+  "readingTimeMinutes": 5,
+  "mascot": {
+    "name": "Chip",
+    "avatar": "🤖",
+    "greeting": "Beep boop! Today we look inside your head. Your brain gave people the idea for a kind of AI called neural networks!"
+  },
+  "recap": [
+    "A neuron is a tiny switch that says yes or no.",
+    "A weight says how much each clue counts.",
+    "A neuron learns by fixing its weights after each mistake."
+  ],
+  "bands": true,
+  "sections": [
+    {
+      "id": "meet-the-neuron",
+      "heading": "1. Meet the Neuron",
+      "bigIdea": "A neuron is a tiny switch that says yes or no.",
+      "chipQuote": "Your brain has billions of tiny cells. They help you see, think and move!",
+      "analogy": {
+        "metaphorName": "The Two-Key Treasure Box",
+        "description": "Think of a treasure box with two locks. It only opens when both keys turn. A neuron waits for enough clues before it says yes."
+      },
+      "bodyMarkdown": "Your brain is full of **neurons**. Each one listens to clues from the cells next to it. When it gets enough clues, it switches on and sends a spark. If not, it stays quiet.\n\nSo a neuron is a bit like a light switch. It is on or off.",
+      "jargonBuster": [
+        {
+          "term": "Neuron",
+          "simpleExplanation": "A tiny cell in your brain. It listens to clues and then says yes or no.",
+          "visual": "neuron"
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "How a neuron says yes or no",
+        "alt": "Four steps: clues arrive at a neuron, the neuron adds them up, checks if it has enough, and then either sends a spark or stays quiet.",
+        "content": "",
+        "steps": [
+          "Clues come in from other neurons. ✉️",
+          "The neuron adds up the clues. ➕",
+          "It asks: \"Do I have enough?\"",
+          "Enough? Spark! ⚡ Not enough? Stay quiet. 💤"
+        ]
+      },
+      "more": {
+        "title": "The parts of a real neuron",
+        "bodyMarkdown": "A real neuron has tiny branches called dendrites that catch signals. The middle of the cell adds them up. A long wire called an axon passes the signal on. Your brain has about 86 billion neurons!"
+      },
+      "teen": {
+        "add": "Scientists call switching on \"firing\". A neuron fires when its signals add up past a set level. Billions of these small choices, made at the same time, let you read this sentence."
+      },
+      "checkIn": {
+        "question": "A neuron got enough clues. What does it do?",
+        "options": [
+          "⚡ It sends a spark",
+          "💤 It stays quiet"
+        ],
+        "correctIndex": 0,
+        "praise": "Yes! Enough clues means it switches on.",
+        "explanation": "A neuron switches on and sends a spark when it gets enough clues."
+      }
+    },
+    {
+      "id": "clue-weights",
+      "heading": "2. Some Clues Count More",
+      "bigIdea": "Some clues matter more than others.",
+      "chipQuote": "Is it an apple? Let's look for clues!",
+      "analogy": {
+        "metaphorName": "The Music Mixer",
+        "description": "A DJ has a slider for each sound. Push a slider up, and that sound gets loud. Pull it down, and it goes quiet."
+      },
+      "bodyMarkdown": "Scientists copied this idea into a computer. A computer neuron has a slider for each clue. We call it a **weight**. It shows how much that clue counts. A big weight means the clue counts a lot. A small weight means it hardly counts.\n\nTo spot an apple, a sweet taste gets a big weight. A sticker on the skin gets no weight at all.",
+      "jargonBuster": [
+        {
+          "term": "Weight",
+          "simpleExplanation": "A number that says how much a clue counts. A big weight means a big say.",
+          "visual": "weight"
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Each clue has its own weight",
+        "content": "graph LR\n    Sweet[\"🍬 Sweet? (big weight)\"] -->|counts a lot| Add[\"➕ Add up the clues\"]\n    Round[\"⚪ Round? (some weight)\"] -->|counts a bit| Add\n    Sticker[\"🏷️ Sticker? (no weight)\"] -.->|counts zero| Add\n    Add --> Out{\"🍎 Apple or not?\"}",
+        "alt": "Three clues go into an adder. Sweet has a big weight and counts a lot, round has some weight and counts a bit, and a sticker has no weight and counts zero. The adder then decides: apple or not?"
+      },
+      "teen": {
+        "add": "The neuron multiplies each clue by its weight and then adds up the results. This total is called the **weighted sum**.",
+        "jargonBuster": [
+          {
+            "term": "Weighted sum",
+            "simpleExplanation": "Each clue times its weight, all added together.",
+            "visual": "weighted-sum"
+          }
+        ]
+      }
+    },
+    {
+      "id": "bias",
+      "heading": "3. Easy or Picky?",
+      "bigIdea": "Some neurons switch on easily. Some need lots of proof.",
+      "scene": "easy-or-picky",
+      "chipQuote": "One of my friends says yes to every game. Another one needs a lot of asking!",
+      "analogy": {
+        "metaphorName": "The Picky Friend",
+        "description": "One friend says yes to every plan. Another friend says no until you give good reasons. A neuron can be easy or picky too."
+      },
+      "bodyMarkdown": "The **bias** sets how hard it is for the computer neuron to switch on. Change the bias, and the neuron gets easier or harder to switch on.\n\nWeights and bias work as a team. Together they help the neuron make a good choice.",
+      "jargonBuster": [
+        {
+          "term": "Bias",
+          "simpleExplanation": "A number that makes a neuron easier or harder to switch on.",
+          "visual": "bias"
+        }
+      ],
+      "teen": {
+        "add": "In math, the bias is one more number added to the weighted sum. If the total ends up at zero or more, the neuron fires."
+      }
+    },
+    {
+      "id": "how-it-learns",
+      "heading": "4. A Neuron in a Computer",
+      "bigIdea": "A computer neuron learns by fixing its mistakes.",
+      "scene": "learning-bike",
+      "scenePlays": true,
+      "chipQuote": "When you learn to ride a bike, you wobble, fix it and try again!",
+      "analogy": {
+        "metaphorName": "Learning to Ride a Bike",
+        "description": "You do not read a book to ride a bike. You wobble, you fix your balance, and you try again."
+      },
+      "bodyMarkdown": "The computer neuron has a name: a **perceptron**. It is made of math. It looks at clues, adds them up and says yes or no.\n\nAt first it makes lots of mistakes. Each time it gets one wrong, it moves its weights a bit. After lots of practice, its guesses get good.",
+      "jargonBuster": [
+        {
+          "term": "Perceptron",
+          "simpleExplanation": "A neuron made of math inside a computer. It adds up clues and says yes or no.",
+          "visual": "perceptron"
+        }
+      ],
+      "diagram": {
+        "type": "clip",
+        "clip": "chip-fruit-sorter",
+        "media": "video",
+        "caption": "Watch Chip sort fruit by fixing mistakes",
+        "alt": "Chip the robot tilts a wooden ramp as apples and lemons roll down, fixing the ramp angle after each mistake until every fruit is sorted.",
+        "steps": [
+          "Apples and lemons roll down a sorting ramp.",
+          "A lemon rolls into the apple crate: oops, a mistake!",
+          "Chip nudges the ramp angle to fix the mistake.",
+          "Another fruit goes wrong, so Chip tilts it again.",
+          "Every fruit lands in the right crate! Training complete!"
+        ]
+      },
+      "more": {
+        "title": "Who built the first one?",
+        "bodyMarkdown": "The first perceptron was built in 1957 by a scientist named Frank Rosenblatt. It was a big machine that learned to tell simple shapes apart."
+      },
+      "teen": {
+        "add": "One perceptron can only learn simple rules. Put many of them in rows, and each row passes its answers to the next. These rows are called **layers**, and a stack of layers is a neural network.",
+        "jargonBuster": [
+          {
+            "term": "Layer",
+            "simpleExplanation": "A row of neurons that all get the same clues and pass their answers on to the next row.",
+            "visual": "layer"
+          }
+        ]
+      },
+      "checkIn": {
+        "question": "The perceptron got an answer wrong. What does it do next?",
+        "options": [
+          "It moves its weights a bit",
+          "It gives up",
+          "It turns itself off"
+        ],
+        "correctIndex": 0,
+        "praise": "Right! Small fixes after each mistake are how it learns.",
+        "explanation": "After each mistake, the perceptron moves its weights a little, so its next guess is better."
+      }
+    },
+    {
+      "id": "interactive-perceptron-demo",
+      "heading": "5. Train Your Own Neuron: The Fruit Sorter",
+      "bigIdea": "Now you get to teach a neuron!",
+      "scene": "fruit-sorter",
+      "chipQuote": "Move the sliders until the neuron can tell apples from lemons.",
+      "analogy": {
+        "metaphorName": "The Fruit Stand Inspector",
+        "description": "An apple is sweet and round. A lemon is sour and long. Help the neuron say apple for apples and lemon for lemons."
+      },
+      "bodyMarkdown": "Pick a fruit. Then move the sliders and watch the total change. When the neuron gets it right, you have trained it!",
+      "interactiveWidget": {
+        "type": "perceptron-sim",
+        "title": "⚡ Try It: The Fruit Sorting Neuron",
+        "goal": "Move the sliders so the neuron says apple for apples and lemon for lemons.",
+        "scaffold": "guided",
+        "predictionPrompt": "Before you start: which clue should count more, sweet or round?",
+        "hints": [
+          "Give a bigger weight to the clue that tells the fruits apart.",
+          "Change the bias to make the neuron easier or harder to switch on."
+        ],
+        "successMessage": "You trained a neuron! You moved the weights until it got the right answer.",
+        "allowFreePlay": true
+      }
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What does a weight do in a neuron?",
+      "options": [
+        "It weighs the computer on a scale",
+        "It says how much a clue counts",
+        "It makes the internet slow"
+      ],
+      "correctIndex": 1,
+      "praise": "Spot on! Weights tell the neuron which clues matter most.",
+      "explanation": "A big weight means a clue counts a lot. A small weight means it hardly counts."
+    },
+    {
+      "question": "What does the bias change?",
+      "options": [
+        "How hard it is for the neuron to switch on",
+        "The mood of the computer",
+        "The color of the screen"
+      ],
+      "correctIndex": 0,
+      "praise": "Great! The bias makes a neuron easy or picky.",
+      "explanation": "Change the bias, and the neuron needs fewer or more clues before it says yes."
+    },
+    {
+      "question": "What does a neuron do with its clues?",
+      "options": [
+        "It adds them up and says yes or no",
+        "It throws them away",
+        "It turns them into music"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes! Add up the clues, then switch on or stay quiet.",
+      "explanation": "A neuron adds up its clues. If it has enough, it switches on."
+    },
+    {
+      "band": "12-14",
+      "question": "What do we call rows of neurons that pass their answers to the next row?",
+      "options": [
+        "Layers",
+        "Weights",
+        "Stickers"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly! Stack layers and you get a neural network.",
+      "explanation": "Neurons in a neural network sit in rows called layers. Each layer passes its answers to the next one."
+    }
+  ],
+  "teachBack": {
+    "prompt": "Chip asks: How does a neuron learn? Pick the best explanation for a friend.",
+    "options": [
+      "It nudges its weights up or down until its guesses get better.",
+      "Someone types in the right answer every time.",
+      "It memorizes every picture exactly."
+    ],
+    "correctIndex": 0,
+    "explanation": "Yes! Learning means nudging the weights until the guesses are right."
+  },
+  "recall": [
+    {
+      "fromLesson": "2-symbolic",
+      "question": "In a rule-based system, what does an if-then rule do?",
+      "options": [
+        "Connects a fact to an action",
+        "Learns from pictures",
+        "Adds random noise"
+      ],
+      "correctIndex": 0,
+      "explanation": "Rules link conditions to actions, so answers can be traced."
+    }
+  ]
+}

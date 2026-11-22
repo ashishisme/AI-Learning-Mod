@@ -1,0 +1,10 @@
+{
+  "lessons": [
+    { "id": "1-intro", "module": "intro", "title": "Artificial Intelligence", "order": 0 },
+    { "id": "2-symbolic", "module": "symbolic", "title": "Knowledge Representation and Expert Systems", "order": 1 },
+    { "id": "3-neuralnetworks", "module": "neuralnetworks", "title": "Neural Networks", "order": 2 },
+    { "id": "4-computervision", "module": "computervision", "title": "Computer Vision", "order": 3 },
+    { "id": "5-nlp", "module": "nlp", "title": "Natural Language Processing", "order": 4 },
+    { "id": "7-ethics", "module": "ethics", "title": "Responsible AI", "order": 5 }
+  ]
+}

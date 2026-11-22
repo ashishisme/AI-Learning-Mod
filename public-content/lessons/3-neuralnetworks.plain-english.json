@@ -1,0 +1,209 @@
+{
+  "lessonId": "3-neuralnetworks",
+  "mode": "plain-english",
+  "origin": "own",
+  "title": "Neural Networks, Without the Maths 🧠",
+  "readingTimeMinutes": 7,
+  "intro": "Neural networks power most of today's AI, from photo apps to chat assistants. This lesson explains the basic building block, how it learns, and why stacking many of them works so well.",
+  "sections": [
+    {
+      "id": "biological-inspiration",
+      "heading": "1. A Tiny Decision-Maker",
+      "analogy": {
+        "metaphorName": "The Hiring Panel Member",
+        "description": "Picture one member of a hiring panel. They look at a few things on a CV, give each a different importance, and say yes or no. An artificial neuron makes decisions in much the same way."
+      },
+      "bodyMarkdown": "Your brain contains billions of nerve cells, or neurons, each passing signals on when it receives enough input. Computer scientists borrowed that idea in a very simplified form.\n\nAn **artificial neuron** takes several inputs, for example a fruit's colour, size and sweetness. It decides how much each input should count, adds them up, and gives an output, such as \"apple\" or \"not apple\". The earliest version, from the 1950s, was called the **perceptron**.",
+      "jargonBuster": [
+        {
+          "term": "Artificial neuron",
+          "simpleExplanation": "A small piece of software that weighs up several inputs and produces one output."
+        },
+        {
+          "term": "Perceptron",
+          "simpleExplanation": "The earliest artificial neuron, from the 1950s. It makes a simple yes or no decision."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "What one artificial neuron does",
+        "alt": "Four steps: inputs come in, each is given an importance, they are added up, and the neuron outputs yes or no.",
+        "content": "",
+        "steps": [
+          "Inputs come in: colour, size, sweetness.",
+          "Each input gets an importance: sweetness matters a lot, size a little.",
+          "The neuron adds up the evidence.",
+          "Enough evidence? It says yes. Otherwise, no."
+        ]
+      },
+      "realWorld": "A spam filter that weighs up the sender, certain words and the number of links before deciding is doing a similar kind of judgement."
+    },
+    {
+      "id": "weights-bias-activation",
+      "heading": "2. Importance, Starting Point and the Decision",
+      "analogy": {
+        "metaphorName": "The Mixing Desk",
+        "description": "A sound engineer has a slider for each microphone. Push one up and that voice dominates. A neuron has a slider for each input."
+      },
+      "bodyMarkdown": "Each input has a **weight**: a number saying how much it counts. A large weight means the input strongly influences the decision; a weight near zero means it is mostly ignored. A negative weight pushes the other way.\n\nThe neuron also has a **bias**, which sets how easily it says yes overall. A neuron with a high bias needs only a little evidence; one with a low bias needs a lot.\n\nFinally, an **activation** rule turns the total into an output, such as yes or no, or a confidence between 0 and 1.",
+      "jargonBuster": [
+        {
+          "term": "Weight",
+          "simpleExplanation": "A number that says how much one input counts towards the neuron's decision."
+        },
+        {
+          "term": "Bias",
+          "simpleExplanation": "A number that makes the neuron more or less inclined to say yes, whatever the inputs."
+        },
+        {
+          "term": "Activation",
+          "simpleExplanation": "The rule that turns the neuron's total into its output."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Inputs, weights, bias and activation",
+        "content": "graph LR\n    I1[\"Sweetness\"] -->|high weight| S[\"Add up\"]\n    I2[\"Roundness\"] -->|medium weight| S\n    I3[\"Sticker on skin\"] -->|zero weight| S\n    B[\"Bias\"] --> S\n    S --> A{\"Activation\"}\n    A --> O[\"Apple or not\"]",
+        "alt": "Three inputs with different weights, sweetness high, roundness medium and a sticker zero, plus a bias, are added up. The activation rule turns the total into the answer: apple or not."
+      },
+      "realWorld": "A credit check weighs income, existing debt and payment history very differently. That is weighting in action."
+    },
+    {
+      "id": "learning-from-mistakes",
+      "heading": "3. How a Neuron Learns",
+      "analogy": {
+        "metaphorName": "Adjusting a Recipe",
+        "description": "Your first loaf is too salty, so next time you add a little less. Too flat, so a bit more yeast. Small corrections after each try, until it comes out right."
+      },
+      "bodyMarkdown": "Nobody sets the weights by hand. The neuron starts with random ones and is shown labelled examples: this fruit is an apple, this one is not.\n\nEach time it gets one wrong, its weights and bias are nudged slightly in the direction that would have given the right answer. Repeat this over thousands of examples, and the weights settle on values that work. This process is called **training**.\n\nOne neuron can only learn simple, straight-line distinctions. That limit is why we connect many of them.",
+      "jargonBuster": [
+        {
+          "term": "Training",
+          "simpleExplanation": "Showing a model labelled examples and adjusting its weights after each mistake until it performs well."
+        }
+      ],
+      "diagram": {
+        "type": "clip",
+        "clip": "plain-linear-classifier",
+        "media": "video",
+        "caption": "Finding the decision boundary through iterative error correction",
+        "alt": "A scatter plot of customer accounts where a linear decision boundary shifts iteratively to separate churn risks from loyal customers.",
+        "steps": [
+          "Customer account metrics are plotted on engagement and tenure axes.",
+          "The system draws an initial trial line to divide loyal accounts from churn risks.",
+          "Misclassified accounts generate prediction errors, signaling that the boundary needs adjustment.",
+          "The model iteratively adjusts weights, rotating the line toward the optimal separation boundary.",
+          "The calibrated boundary reliably flags high-risk accounts so teams can intervene proactively."
+        ]
+      },
+      "realWorld": "Every time you mark an email as \"not spam\", you supply a labelled example that can be used to nudge a filter's weights."
+    },
+    {
+      "id": "layers-networks",
+      "heading": "4. From One Neuron to a Network",
+      "analogy": {
+        "metaphorName": "An Organisation Chart",
+        "description": "Front-line staff spot details, team leads combine them into patterns, and managers make the final call. A neural network passes information up through layers in a similar way."
+      },
+      "bodyMarkdown": "Connect many neurons in **layers** and you get a **neural network**. The first layer looks at the raw inputs. Each following layer combines the previous layer's outputs into more complex patterns. The last layer gives the answer.\n\nWith enough layers and enough examples, networks learn things no single neuron could, such as recognising faces or translating sentences. Networks with many layers are called deep learning. The trade-off is that their reasoning is spread across millions of weights, which makes it hard to explain any single decision.",
+      "jargonBuster": [
+        {
+          "term": "Layer",
+          "simpleExplanation": "A row of neurons that all receive the same inputs and pass their outputs to the next row."
+        },
+        {
+          "term": "Neural network",
+          "simpleExplanation": "Many artificial neurons connected in layers, trained together on examples."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Layers of a small network",
+        "content": "graph LR\n    In[\"Inputs\"] --> L1[\"Layer 1: simple features\"]\n    L1 --> L2[\"Layer 2: combinations\"]\n    L2 --> Out[\"Output: the answer\"]",
+        "alt": "Inputs go into layer 1, which finds simple features, then layer 2, which combines them, then the output layer, which gives the answer."
+      },
+      "realWorld": "Photo tagging, voice recognition and chat assistants are all built on large neural networks."
+    },
+    {
+      "id": "interactive-perceptron-playground",
+      "heading": "5. Try It: Train a Fruit Sorter",
+      "analogy": {
+        "metaphorName": "Quality Control on the Line",
+        "description": "On a packing line, someone sets the sorting machine so apples go one way and lemons the other. Here, you are that someone."
+      },
+      "bodyMarkdown": "This sorter is a single neuron. Each fruit is described by two inputs. Adjust the weights and the bias, and watch the dividing line move, until every fruit lands on the correct side.\n\nNotice how changing one weight tilts the line, while changing the bias shifts it. That is exactly what training does automatically, thousands of times over.",
+      "realWorld": "Sorting machines in food packing, and simple yes or no checks in software, work on the same principle.",
+      "interactiveWidget": {
+        "type": "perceptron-sim",
+        "title": "⚡ Try It: The Fruit Sorting Neuron",
+        "goal": "Adjust the weights and bias until the sorter puts every fruit on the correct side.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you adjust anything: which input should carry more weight?",
+        "hints": [
+          "Change one weight at a time and watch the line tilt.",
+          "Change the bias to slide the line without tilting it."
+        ],
+        "successMessage": "That is training by hand. A real network makes these adjustments automatically, across millions of weights.",
+        "allowFreePlay": true
+      }
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What does a weight do in an artificial neuron?",
+      "options": [
+        "Sets how much one input counts",
+        "Stores the answer",
+        "Makes the computer faster"
+      ],
+      "correctIndex": 0,
+      "praise": "Right. Weights set each input's influence.",
+      "explanation": "Each input has a weight: large means it strongly influences the decision; near zero means it is mostly ignored."
+    },
+    {
+      "question": "How does a neuron learn during training?",
+      "options": [
+        "Someone types in the correct weights",
+        "Its weights are nudged after each mistake",
+        "It memorises every example"
+      ],
+      "correctIndex": 1,
+      "praise": "Exactly. Small corrections, many times.",
+      "explanation": "During training, weights and bias are nudged slightly after each wrong guess, over thousands of examples."
+    },
+    {
+      "question": "Why do we connect neurons into layers?",
+      "options": [
+        "One neuron can only learn simple distinctions",
+        "It uses less electricity",
+        "Layers are easier to explain"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes. Layers let networks learn complex patterns.",
+      "explanation": "A single neuron can only separate things with a straight line. Layers combine simple patterns into complex ones."
+    }
+  ],
+  "teachBack": {
+    "prompt": "How would you explain a neural network to a colleague?",
+    "options": [
+      "Many simple decision-makers in layers, whose weights are tuned on examples.",
+      "A computer copy of the human brain.",
+      "A list of rules written by experts."
+    ],
+    "correctIndex": 0,
+    "explanation": "That's it. Simple units, layered, with weights learned from examples."
+  },
+  "recall": [
+    {
+      "fromLesson": "2-symbolic",
+      "question": "What can a rule-based system do that a neural network finds hard?",
+      "options": [
+        "Show exactly which rule led to a decision",
+        "Recognise faces",
+        "Learn from examples"
+      ],
+      "correctIndex": 0,
+      "explanation": "Rule-based systems can trace each decision to a written rule."
+    }
+  ]
+}

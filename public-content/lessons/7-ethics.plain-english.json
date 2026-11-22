@@ -1,0 +1,200 @@
+{
+  "lessonId": "7-ethics",
+  "mode": "plain-english",
+  "origin": "own",
+  "title": "Responsible AI, in Plain English 🧭",
+  "readingTimeMinutes": 7,
+  "intro": "AI can make decisions about loans, jobs and healthcare. This lesson covers how it can go wrong, how organisations check for problems, and the principles that keep it trustworthy.",
+  "sections": [
+    {
+      "id": "mirror-problem",
+      "heading": "1. AI Reflects Its Data, Flaws Included",
+      "analogy": {
+        "metaphorName": "The Hiring Habit",
+        "description": "If a company has always hired from the same few universities, a new manager who copies past decisions will keep doing the same, even without meaning to. An AI trained on those decisions does exactly that."
+      },
+      "bodyMarkdown": "Machine learning finds patterns in past data. If that data reflects unfair treatment, gaps or old habits, the model learns those too. The result is **algorithmic bias**: a system that treats some groups worse than others.\n\nThis can happen even when sensitive details such as gender or ethnicity are removed, because other details, like postcode or hobbies, can act as stand-ins for them. Bias is rarely intended. It usually comes from data nobody examined closely enough.",
+      "jargonBuster": [
+        {
+          "term": "Algorithmic bias",
+          "simpleExplanation": "When an AI system systematically treats some groups worse, usually because of patterns in its training data."
+        },
+        {
+          "term": "Proxy",
+          "simpleExplanation": "A detail, like a postcode, that indirectly reveals something sensitive, like ethnicity or income."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "How bias gets in",
+        "alt": "Four steps: past decisions contain unfair patterns, they become training data, the model learns the patterns, and it repeats them at scale.",
+        "content": "",
+        "steps": [
+          "Past decisions contain unfair patterns.",
+          "Those decisions become training data.",
+          "The model learns the patterns, including the unfair ones.",
+          "It repeats them, quickly and at scale."
+        ]
+      },
+      "realWorld": "Recruitment screening, credit scoring and facial recognition have all had publicly reported cases of biased results."
+    },
+    {
+      "id": "fairness-audits",
+      "heading": "2. Checking for Fairness",
+      "analogy": {
+        "metaphorName": "The Mystery Shopper",
+        "description": "Retailers send mystery shoppers to see whether every customer gets the same service. A fairness audit sends many test cases through an AI system to see whether every group gets the same treatment."
+      },
+      "bodyMarkdown": "A **fairness audit** compares outcomes across groups. A common check is the selection rate: what share of each group gets a yes. If one group's rate is far below another's, that is a warning sign. A widely used rule of thumb flags a problem when one group's rate is under 80% of the highest group's.\n\nFixes include collecting more representative data, removing or reducing proxies, adjusting how decisions are made, and then auditing again. Fairness is checked repeatedly, not once.",
+      "jargonBuster": [
+        {
+          "term": "Fairness audit",
+          "simpleExplanation": "A check that compares how an AI system's outcomes differ between groups of people."
+        },
+        {
+          "term": "Selection rate",
+          "simpleExplanation": "The share of a group that receives a positive decision, such as an interview or a loan."
+        }
+      ],
+      "realWorld": "Many employers and lenders now audit automated decisions regularly, and some laws require it.",
+      "interactiveWidget": {
+        "type": "bias-detective-sim",
+        "title": "🔎 Try It: The Fairness Audit",
+        "instruction": "Switch between the original model and the corrected one. Compare the selection rates for each group.",
+        "goal": "Find the gap in selection rates, then apply the corrected model.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you switch models: do you expect both groups to be selected at similar rates?",
+        "hints": [
+          "Compare each group's selection rate, not just the totals.",
+          "Check whether the lower rate is at least 80% of the higher one."
+        ],
+        "successMessage": "That is a fairness audit: measure outcomes by group, fix the gap, and measure again.",
+        "allowFreePlay": true
+      },
+      "diagram": {
+        "type": "clip",
+        "clip": "plain-disparate-impact-audit",
+        "media": "video",
+        "caption": "Auditing selection rates and balancing demographic parity",
+        "alt": "A corporate hiring dashboard measuring disparate impact between candidate groups and calibrating thresholds to meet fairness regulations.",
+        "steps": [
+          "The compliance dashboard monitors candidate progression across demographic candidate cohorts.",
+          "A significant gap emerges between group selection rates, triggering an equity audit.",
+          "The four-fifths rule reveals a disparate impact ratio below legal compliance benchmarks.",
+          "Teams adjust screening thresholds to eliminate irrelevant proxies while keeping role qualifications.",
+          "The calibrated selection ratio meets regulatory standards, ensuring fair and auditable hiring."
+        ]
+      }
+    },
+    {
+      "id": "explainability-blackbox",
+      "heading": "3. Explaining Decisions",
+      "analogy": {
+        "metaphorName": "The Rejected Application",
+        "description": "If your loan is refused, you want to know why, and what you could change. \"The computer said no\" is not an acceptable answer."
+      },
+      "bodyMarkdown": "Many powerful models, especially large neural networks, are a **black box**: their decision comes from millions of learned numbers, with no simple reason to point to.\n\n**Explainability** methods help. They can show which inputs mattered most for a decision, for example that income and existing debt drove a credit decision, while age did not. People affected by important decisions often have a right to a meaningful explanation, and organisations need explanations to spot errors and bias.",
+      "jargonBuster": [
+        {
+          "term": "Black box",
+          "simpleExplanation": "A system whose internal reasoning is too complex to read directly."
+        },
+        {
+          "term": "Explainability",
+          "simpleExplanation": "Methods that show which factors drove an AI system's decision."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Opening the black box",
+        "content": "graph LR\n    In[\"Application details\"] --> BB[\"Model: a black box\"]\n    BB --> D[\"Decision: refused\"]\n    BB -.-> X[\"Explanation: income and debt mattered most\"]",
+        "alt": "Application details go into a black-box model, which outputs a decision, refused. An explainability method adds an explanation: income and debt mattered most."
+      },
+      "realWorld": "Credit decisions, insurance pricing and medical risk scores increasingly come with a list of the main factors behind them."
+    },
+    {
+      "id": "governance-accountability",
+      "heading": "4. People in Charge: Oversight and Principles",
+      "analogy": {
+        "metaphorName": "The Co-Pilot",
+        "description": "Modern aircraft can largely fly themselves, but a qualified pilot stays responsible and can take over at any moment. AI used for serious decisions needs the same arrangement."
+      },
+      "bodyMarkdown": "For high-stakes decisions, organisations keep a **human in the loop**: a qualified person reviews the AI's recommendation, can override it, and is accountable for the result.\n\nMost responsible AI frameworks share a similar set of principles: fairness, reliability and safety, privacy and security, inclusiveness, transparency, and accountability. In practice that means testing before launch, monitoring after, protecting personal data, documenting what a system is for and how it was built, and naming who answers for it when it goes wrong.",
+      "jargonBuster": [
+        {
+          "term": "Human in the loop",
+          "simpleExplanation": "A person reviews and can override an AI system's decisions, and is accountable for them."
+        },
+        {
+          "term": "Accountability",
+          "simpleExplanation": "Clear responsibility for what an AI system does, including when it goes wrong."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Six common principles",
+        "content": "graph TD\n    R[\"Responsible AI\"] --> F[\"Fairness\"]\n    R --> S[\"Reliability and safety\"]\n    R --> P[\"Privacy and security\"]\n    R --> I[\"Inclusiveness\"]\n    R --> T[\"Transparency\"]\n    R --> A[\"Accountability\"]",
+        "alt": "Responsible AI rests on six common principles: fairness, reliability and safety, privacy and security, inclusiveness, transparency, and accountability."
+      },
+      "realWorld": "Hospitals, banks and public services increasingly publish how they use AI and who is responsible for it."
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "How can an AI system become biased?",
+      "options": [
+        "It learns unfair patterns from its training data",
+        "It chooses to be unfair",
+        "It runs out of memory"
+      ],
+      "correctIndex": 0,
+      "praise": "Right. Bias usually comes from the data.",
+      "explanation": "Models learn patterns in past data, including unfair ones, even when sensitive fields are removed."
+    },
+    {
+      "question": "What does a fairness audit compare?",
+      "options": [
+        "Outcomes such as selection rates across groups",
+        "How fast the system runs",
+        "The cost of the system"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes. Compare outcomes by group.",
+      "explanation": "A fairness audit checks whether different groups receive positive decisions at similar rates."
+    },
+    {
+      "question": "What does \"human in the loop\" mean?",
+      "options": [
+        "A person reviews and can override the AI, and is accountable",
+        "The AI copies a human",
+        "A person types every answer"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly. A person stays responsible.",
+      "explanation": "For high-stakes decisions, a qualified person reviews recommendations and remains accountable."
+    }
+  ],
+  "teachBack": {
+    "prompt": "How would you explain responsible AI to a colleague?",
+    "options": [
+      "Checking AI for bias, explaining its decisions, protecting data and keeping a person accountable.",
+      "Making AI as fast as possible.",
+      "Letting AI make every decision on its own."
+    ],
+    "correctIndex": 0,
+    "explanation": "That's it. Fair, explainable, private and accountable."
+  },
+  "recall": [
+    {
+      "fromLesson": "5-nlp",
+      "question": "Why should you check important facts from a chat assistant?",
+      "options": [
+        "It predicts likely text, which is not always true",
+        "It is always out of date",
+        "It never uses real words"
+      ],
+      "correctIndex": 0,
+      "explanation": "Language models generate likely text and can state false things confidently."
+    }
+  ]
+}

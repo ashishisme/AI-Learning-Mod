@@ -1,0 +1,2021 @@
+{
+  "schemaVersion": 1,
+  "rules": "See design/brand/README.md. Only status \"approved\" with trademarkScreen \"clear\" may ship in web/public/brand/.",
+  "assets": [
+    {
+      "id": "app-mark",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.appMarkAlt",
+      "releaseFiles": [
+        {
+          "path": "app-mark.svg",
+          "sha256": "b013d9cbeb971dd96bb145aff17102138d8c2957a38b3d1d61013d42deeb3ad1"
+        }
+      ],
+      "purpose": "app mark",
+      "sourceMaster": "design/brand/source/app-mark.svg",
+      "sourceSha256": "b013d9cbeb971dd96bb145aff17102138d8c2957a38b3d1d61013d42deeb3ad1",
+      "usageLocation": [
+        "web/src/App.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "chip-wave",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.chipWaveAlt",
+      "releaseFiles": [
+        {
+          "path": "chip-wave.svg",
+          "sha256": "cfbad2ae9d9a4a59756cc4e0f677a0946b2da4c1d7f9d8553bbe5d5c61d83434"
+        }
+      ],
+      "purpose": "chip wave",
+      "sourceMaster": "design/brand/source/chip-wave.svg",
+      "sourceSha256": "cfbad2ae9d9a4a59756cc4e0f677a0946b2da4c1d7f9d8553bbe5d5c61d83434",
+      "usageLocation": [
+        "web/public/brand/chip-wave.svg (reserved pose)"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "chip-think",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.chipThinkAlt",
+      "releaseFiles": [
+        {
+          "path": "chip-think.svg",
+          "sha256": "64df1bcc21a8fe32418cf533939e5896a39da183cba9eb794ed4a9ede24339b1"
+        }
+      ],
+      "purpose": "chip think",
+      "sourceMaster": "design/brand/source/chip-think.svg",
+      "sourceSha256": "64df1bcc21a8fe32418cf533939e5896a39da183cba9eb794ed4a9ede24339b1",
+      "usageLocation": [
+        "web/public/brand/chip-think.svg (reserved pose)"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "chip-cheer",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.chipCheerAlt",
+      "releaseFiles": [
+        {
+          "path": "chip-cheer.svg",
+          "sha256": "97f1e33f2ce046509c8abfeb9b3eebe7f0c8830b12b2c865816b32f41554e6ef"
+        }
+      ],
+      "purpose": "chip cheer",
+      "sourceMaster": "design/brand/source/chip-cheer.svg",
+      "sourceSha256": "97f1e33f2ce046509c8abfeb9b3eebe7f0c8830b12b2c865816b32f41554e6ef",
+      "usageLocation": [
+        "web/src/components/kids/KidsHome.tsx",
+        "web/src/pages/Quiz.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "stop-1-intro",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.stop1Alt",
+      "releaseFiles": [
+        {
+          "path": "stop-1-intro.svg",
+          "sha256": "3c7ecb2811a55d7e02f81b9fc1b8fafc204e0fe09e28492641da7b127da034a7"
+        }
+      ],
+      "purpose": "stop 1 intro",
+      "sourceMaster": "design/brand/source/stop-1-intro.svg",
+      "sourceSha256": "3c7ecb2811a55d7e02f81b9fc1b8fafc204e0fe09e28492641da7b127da034a7",
+      "usageLocation": [
+        "web/src/components/kids/StopArt.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "stop-2-symbolic",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.stop2Alt",
+      "releaseFiles": [
+        {
+          "path": "stop-2-symbolic.svg",
+          "sha256": "0757760a92a0f89a3b150641c097bd41d9633f9dbe18563f22035fb49cd07893"
+        }
+      ],
+      "purpose": "stop 2 symbolic",
+      "sourceMaster": "design/brand/source/stop-2-symbolic.svg",
+      "sourceSha256": "0757760a92a0f89a3b150641c097bd41d9633f9dbe18563f22035fb49cd07893",
+      "usageLocation": [
+        "web/src/components/kids/StopArt.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "stop-3-neuralnetworks",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.stop3Alt",
+      "releaseFiles": [
+        {
+          "path": "stop-3-neuralnetworks.svg",
+          "sha256": "fb0c19202288b437f7ed06398ddae4d726bd9008f4ba4faa619469a4e655ea10"
+        }
+      ],
+      "purpose": "stop 3 neuralnetworks",
+      "sourceMaster": "design/brand/source/stop-3-neuralnetworks.svg",
+      "sourceSha256": "fb0c19202288b437f7ed06398ddae4d726bd9008f4ba4faa619469a4e655ea10",
+      "usageLocation": [
+        "web/src/components/kids/StopArt.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "stop-4-computervision",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.stop4Alt",
+      "releaseFiles": [
+        {
+          "path": "stop-4-computervision.svg",
+          "sha256": "dd3f2c3593b83f4a15dbf5a3b0772f8a62c7ee02b8178e0d60a7e6b74251bf02"
+        }
+      ],
+      "purpose": "stop 4 computervision",
+      "sourceMaster": "design/brand/source/stop-4-computervision.svg",
+      "sourceSha256": "dd3f2c3593b83f4a15dbf5a3b0772f8a62c7ee02b8178e0d60a7e6b74251bf02",
+      "usageLocation": [
+        "web/src/components/kids/StopArt.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "stop-5-nlp",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.stop5Alt",
+      "releaseFiles": [
+        {
+          "path": "stop-5-nlp.svg",
+          "sha256": "ead446e8431acddd002d36240f196e50f16966553fc7e5ec29a2cd719c859bef"
+        }
+      ],
+      "purpose": "stop 5 nlp",
+      "sourceMaster": "design/brand/source/stop-5-nlp.svg",
+      "sourceSha256": "ead446e8431acddd002d36240f196e50f16966553fc7e5ec29a2cd719c859bef",
+      "usageLocation": [
+        "web/src/components/kids/StopArt.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "stop-7-ethics",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.stop7Alt",
+      "releaseFiles": [
+        {
+          "path": "stop-7-ethics.svg",
+          "sha256": "1dd5a6d1748df3b253ad152220a4a1e3a98c8347f505e40781654557f3842634"
+        }
+      ],
+      "purpose": "stop 7 ethics",
+      "sourceMaster": "design/brand/source/stop-7-ethics.svg",
+      "sourceSha256": "1dd5a6d1748df3b253ad152220a4a1e3a98c8347f505e40781654557f3842634",
+      "usageLocation": [
+        "web/src/components/kids/StopArt.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "concept-martian-puppy",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.conceptPuppyAlt",
+      "releaseFiles": [
+        {
+          "path": "concept-martian-puppy.svg",
+          "sha256": "1f63d4e38d5c0a65e832765c32236a28bd6561e83b8b9b4bc9e760329337d84d"
+        }
+      ],
+      "purpose": "concept martian puppy",
+      "sourceMaster": "design/brand/source/concept-martian-puppy.svg",
+      "sourceSha256": "1f63d4e38d5c0a65e832765c32236a28bd6561e83b8b9b4bc9e760329337d84d",
+      "usageLocation": [
+        "web/src/components/VisualMetaphorCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "concept-symbolic-maze",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.conceptMazeAlt",
+      "releaseFiles": [
+        {
+          "path": "concept-symbolic-maze.svg",
+          "sha256": "23177abcba2cdf005f0ffbec88febbbb9658b977a44b4b01dd03156fcaea814c"
+        }
+      ],
+      "purpose": "concept symbolic maze",
+      "sourceMaster": "design/brand/source/concept-symbolic-maze.svg",
+      "sourceSha256": "23177abcba2cdf005f0ffbec88febbbb9658b977a44b4b01dd03156fcaea814c",
+      "usageLocation": [
+        "web/src/components/VisualMetaphorCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "concept-neuron-switch",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.conceptNeuronAlt",
+      "releaseFiles": [
+        {
+          "path": "concept-neuron-switch.svg",
+          "sha256": "d73a49784d85640222ee799131a335bf4c303e18a0862a3a0a20fec8e2632251"
+        }
+      ],
+      "purpose": "concept neuron switch",
+      "sourceMaster": "design/brand/source/concept-neuron-switch.svg",
+      "sourceSha256": "d73a49784d85640222ee799131a335bf4c303e18a0862a3a0a20fec8e2632251",
+      "usageLocation": [
+        "web/src/components/VisualMetaphorCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "concept-pixel-grid",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.conceptPixelAlt",
+      "releaseFiles": [
+        {
+          "path": "concept-pixel-grid.svg",
+          "sha256": "9bf3ad82580aa474b042c6b9bddc3eeff0abf1b14fd31dbbc1530dc06d421ecc"
+        }
+      ],
+      "purpose": "concept pixel grid",
+      "sourceMaster": "design/brand/source/concept-pixel-grid.svg",
+      "sourceSha256": "9bf3ad82580aa474b042c6b9bddc3eeff0abf1b14fd31dbbc1530dc06d421ecc",
+      "usageLocation": [
+        "web/src/components/VisualMetaphorCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "concept-word-vectors",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.conceptVectorsAlt",
+      "releaseFiles": [
+        {
+          "path": "concept-word-vectors.svg",
+          "sha256": "24ebc86fd8cad5f3cc15dc21c8ae1a0fae2561ec4ee429ffbf3721a998f3ae03"
+        }
+      ],
+      "purpose": "concept word vectors",
+      "sourceMaster": "design/brand/source/concept-word-vectors.svg",
+      "sourceSha256": "24ebc86fd8cad5f3cc15dc21c8ae1a0fae2561ec4ee429ffbf3721a998f3ae03",
+      "usageLocation": [
+        "web/src/components/VisualMetaphorCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "concept-fairness-scale",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG",
+      "rightsEvidence": "original work commissioned for AI Foundations Coach",
+      "altKey": "brand.conceptFairnessAlt",
+      "releaseFiles": [
+        {
+          "path": "concept-fairness-scale.svg",
+          "sha256": "c01615acadf942b2e57e8c20d0b1e198d4b4223aed2cb1123cf6a7c74bc71acd"
+        }
+      ],
+      "purpose": "concept fairness scale",
+      "sourceMaster": "design/brand/source/concept-fairness-scale.svg",
+      "sourceSha256": "c01615acadf942b2e57e8c20d0b1e198d4b4223aed2cb1123cf6a7c74bc71acd",
+      "usageLocation": [
+        "web/src/components/VisualMetaphorCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+        }
+      ],
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Reverse image search and Chip name check asserted by T028 completion note",
+        "evidence": "specs/011-kids-ui-overhaul/tasks.md T028 completion note"
+      }
+    },
+    {
+      "id": "word-neuron",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "words/neuron.svg",
+          "sha256": "908c053365d7d7553e1ea11ee05ab2e738dc92a53f3b9376a73bdf4388fa8cd4"
+        }
+      ],
+      "purpose": "a neuron collecting clues and sending a signal",
+      "sourceMaster": "design/brand/source/words/neuron.svg",
+      "sourceSha256": "908c053365d7d7553e1ea11ee05ab2e738dc92a53f3b9376a73bdf4388fa8cd4",
+      "usageLocation": [
+        "web/src/components/WordCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "2-3 s CSS loop, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "altKey": "adaptive.wordPicture",
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
+    },
+    {
+      "id": "word-weight",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "words/weight.svg",
+          "sha256": "db1c13026e329c3910f6536a6d4495668b6450d4aff154aa65675415f5a69345"
+        }
+      ],
+      "purpose": "clues with thick and thin lines: some count more",
+      "sourceMaster": "design/brand/source/words/weight.svg",
+      "sourceSha256": "db1c13026e329c3910f6536a6d4495668b6450d4aff154aa65675415f5a69345",
+      "usageLocation": [
+        "web/src/components/WordCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "2-3 s CSS loop, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "altKey": "adaptive.wordPicture",
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
+    },
+    {
+      "id": "word-bias",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "words/bias.svg",
+          "sha256": "afc82dc9bdec5036c88a1b78fcba7f853579a986039254657d0f2b46a2880dc3"
+        }
+      ],
+      "purpose": "a bar that sets how full the total must be to switch on",
+      "sourceMaster": "design/brand/source/words/bias.svg",
+      "sourceSha256": "afc82dc9bdec5036c88a1b78fcba7f853579a986039254657d0f2b46a2880dc3",
+      "usageLocation": [
+        "web/src/components/WordCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "2-3 s CSS loop, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "altKey": "adaptive.wordPicture",
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
+    },
+    {
+      "id": "word-perceptron",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "words/perceptron.svg",
+          "sha256": "26069b165d0509ce85000598be6f6ff896c020b9624844e4d91c788230659a26"
+        }
+      ],
+      "purpose": "inputs, an adder, a step and an answer light",
+      "sourceMaster": "design/brand/source/words/perceptron.svg",
+      "sourceSha256": "26069b165d0509ce85000598be6f6ff896c020b9624844e4d91c788230659a26",
+      "usageLocation": [
+        "web/src/components/WordCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "2-3 s CSS loop, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "altKey": "adaptive.wordPicture",
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
+    },
+    {
+      "id": "word-weighted-sum",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "words/weighted-sum.svg",
+          "sha256": "19839c7b2def12f9889c7f5d02afa33cc157bac1c1d4b5ae9f55fc42190c0ba9"
+        }
+      ],
+      "purpose": "weighted pieces stacked into one total",
+      "sourceMaster": "design/brand/source/words/weighted-sum.svg",
+      "sourceSha256": "19839c7b2def12f9889c7f5d02afa33cc157bac1c1d4b5ae9f55fc42190c0ba9",
+      "usageLocation": [
+        "web/src/components/WordCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "2-3 s CSS loop, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "altKey": "adaptive.wordPicture",
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
+    },
+    {
+      "id": "word-layer",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "words/layer.svg",
+          "sha256": "81727e023bf86efdccafdf81eeaa6deef70acf88b42e37cbf5ce1ebad3f0144d"
+        }
+      ],
+      "purpose": "three columns of neurons lighting up in turn",
+      "sourceMaster": "design/brand/source/words/layer.svg",
+      "sourceSha256": "81727e023bf86efdccafdf81eeaa6deef70acf88b42e37cbf5ce1ebad3f0144d",
+      "usageLocation": [
+        "web/src/components/WordCard.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "2-3 s CSS loop, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "altKey": "adaptive.wordPicture",
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
+    },
+    {
+      "id": "scene-easy-or-picky",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "scenes/easy-or-picky.svg",
+          "sha256": "97c020b38328f328661581b215e77f3aa5594444a4a1990e32d2eb175c88c179"
+        }
+      ],
+      "purpose": "two friends, one says yes easily and one is picky",
+      "sourceMaster": "design/brand/source/scenes/easy-or-picky.svg",
+      "sourceSha256": "97c020b38328f328661581b215e77f3aa5594444a4a1990e32d2eb175c88c179",
+      "usageLocation": [
+        "web/src/components/ScenePicture.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
+    },
+    {
+      "id": "scene-learning-bike",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "scenes/learning-bike.svg",
+          "sha256": "40831334b55f8bd43c3e1f6029941b8b71e75abf61162df40cd3c1a02753f55b"
+        }
+      ],
+      "purpose": "a kid wobbling on a bike, then riding straight",
+      "sourceMaster": "design/brand/source/scenes/learning-bike.svg",
+      "sourceSha256": "40831334b55f8bd43c3e1f6029941b8b71e75abf61162df40cd3c1a02753f55b",
+      "usageLocation": [
+        "web/src/components/ScenePicture.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play, once, 4.5 s",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
+    },
+    {
+      "id": "scene-fruit-sorter",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-13)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "scenes/fruit-sorter.svg",
+          "sha256": "42c72897db713955b87d71bcb9be718a3be60e52817d161c30875b3d24612222"
+        }
+      ],
+      "purpose": "an apple and a lemon sorted into two boxes by a neuron",
+      "sourceMaster": "design/brand/source/scenes/fruit-sorter.svg",
+      "sourceSha256": "42c72897db713955b87d71bcb9be718a3be60e52817d161c30875b3d24612222",
+      "usageLocation": [
+        "web/src/components/ScenePicture.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "static",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes with no text, logos or third-party characters; owner review",
+        "evidence": "Owner approved all nine lesson-3 pictures on 2026-11-13 (session approval, recorded in specs/012-kids-content-easing/tasks.md T035)"
+      }
+    },
+    {
+      "id": "clip-supervised-learning",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/supervised-learning.svg",
+          "sha256": "614fd6e278efccfbcc07783946e62b255c592941c54fcd00ccc9be2c94f896bf"
+        }
+      ],
+      "purpose": "lesson 3 section clip: labelled examples train a model, the loss shrinks, test data checks it",
+      "sourceMaster": "design/brand/source/clips/supervised-learning.svg",
+      "sourceSha256": "614fd6e278efccfbcc07783946e62b255c592941c54fcd00ccc9be2c94f896bf",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-fruit-sorter-by-hand",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/fruit-sorter-by-hand.svg",
+          "sha256": "39e3039d49d3184da6025aedd68a909869e392a6ae2b0bcd43b8f159100198c1"
+        }
+      ],
+      "purpose": "lesson 3 worked-example clip: one perceptron learning step with the lesson's numbers",
+      "sourceMaster": "design/brand/source/clips/fruit-sorter-by-hand.svg",
+      "sourceSha256": "39e3039d49d3184da6025aedd68a909869e392a6ae2b0bcd43b8f159100198c1",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-perceptron-learning-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/perceptron-learning.webm",
+          "sha256": "e8fbbf59d76e37a9eb6935603d47ea2375c9114345a2a030a0a0a51c08806615"
+        },
+        {
+          "path": "videos/perceptron-learning.mp4",
+          "sha256": "10df1ae919bb77e4ee86a948ebf326b9f5c5a1281ca15c1f88fc4afccffa0f31"
+        },
+        {
+          "path": "videos/perceptron-learning-poster.jpg",
+          "sha256": "df8e73e0bc1cbf93aec903f00ea61749847feb625ce01e45cb36c47e106d69ee"
+        }
+      ],
+      "purpose": "lesson 3 60fps fluid concept clip: dividing line rotates and tilts with shaded half-spaces as perceptron weights learn",
+      "sourceMaster": "design/brand/source/videos/perceptron-learning.webm",
+      "sourceSha256": "e8fbbf59d76e37a9eb6935603d47ea2375c9114345a2a030a0a0a51c08806615",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original mathematical geometric animation, no third-party media",
+        "evidence": "Owner approved the lesson 3 pilot video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-turing-test-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/turing-test.webm",
+          "sha256": "4396a775ab521f4ca63854d3a69891f938918c1e762aa99e9a2173da1283f574"
+        },
+        {
+          "path": "videos/turing-test.mp4",
+          "sha256": "9ebd7ce5b5c25e344f6f4d5226d21c3d32b976d05bdc686e7a74d9cc38a85d37"
+        },
+        {
+          "path": "videos/turing-test-poster.jpg",
+          "sha256": "17a5b4d4575b57d0171e8df9f85f9e946fb02b2e0a3728949f79ac8ccda01da8"
+        }
+      ],
+      "purpose": "lesson 1 60fps concept clip: interrogator communicates with human and statistical AI with confidence gauge",
+      "sourceMaster": "design/brand/source/videos/turing-test.webm",
+      "sourceSha256": "4396a775ab521f4ca63854d3a69891f938918c1e762aa99e9a2173da1283f574",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original mathematical geometric animation, no third-party media",
+        "evidence": "Owner approved the lesson 1 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-forward-chaining-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/forward-chaining.webm",
+          "sha256": "ed9f6fc93faaa628d6f3151d23e8d644f7f19b0976e113ab483956eabd8d05c6"
+        },
+        {
+          "path": "videos/forward-chaining.mp4",
+          "sha256": "2edb5e4d67ecb6302c4c612c432724e138f0d15ac0f63ddf1f5b5e8daf39b990"
+        },
+        {
+          "path": "videos/forward-chaining-poster.jpg",
+          "sha256": "c3ba3fe06f3b4c6c639749847645e34f989cd791bb751de5dc3e81e59f11742b"
+        }
+      ],
+      "purpose": "lesson 2 60fps concept clip: forward chaining deduction cascade through knowledge graph",
+      "sourceMaster": "design/brand/source/videos/forward-chaining.webm",
+      "sourceSha256": "ed9f6fc93faaa628d6f3151d23e8d644f7f19b0976e113ab483956eabd8d05c6",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original mathematical geometric animation, no third-party media",
+        "evidence": "Owner approved the lesson 2 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-convolution-scan-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/convolution-scan.webm",
+          "sha256": "a09140a05c9442b23f263fbf4eacb7ea2dc491973f0531a47d1171af55ba62c3"
+        },
+        {
+          "path": "videos/convolution-scan.mp4",
+          "sha256": "305bba0c86b826d1f92c0c73a2b9aad235bcaa7963002b248fee4e460593ea6c"
+        },
+        {
+          "path": "videos/convolution-scan-poster.jpg",
+          "sha256": "f2d76ef4fcc512af324fefeba4560db79d3e964c92b08e24c1bbedfa56e1e676"
+        }
+      ],
+      "purpose": "lesson 4 60fps concept clip: 3x3 convolution sliding filter over 8x8 pixel grid with feature map activation and max pooling",
+      "sourceMaster": "design/brand/source/videos/convolution-scan.webm",
+      "sourceSha256": "a09140a05c9442b23f263fbf4eacb7ea2dc491973f0531a47d1171af55ba62c3",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original mathematical geometric animation, no third-party media",
+        "evidence": "Owner approved the lesson 4 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-vector-attention-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/vector-attention.webm",
+          "sha256": "5c8ae4bf4a4e3ac54906a5c6f49c5fc8891676371806541ee0cb2c75114ee313"
+        },
+        {
+          "path": "videos/vector-attention.mp4",
+          "sha256": "2dc7e02305a5b0e5803ced9772a2342c1d61deb9c9bc1c491dfc3c9d47aed12f"
+        },
+        {
+          "path": "videos/vector-attention-poster.jpg",
+          "sha256": "b0763c0553bc2973d1761393358f4e8d04d1c6afb1faf69948489a9ec15e0eaf"
+        }
+      ],
+      "purpose": "lesson 5 60fps concept clip: vector arithmetic embedding space and transformer self-attention query-key resolution",
+      "sourceMaster": "design/brand/source/videos/vector-attention.webm",
+      "sourceSha256": "5c8ae4bf4a4e3ac54906a5c6f49c5fc8891676371806541ee0cb2c75114ee313",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original mathematical geometric animation, no third-party media",
+        "evidence": "Owner approved the lesson 5 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-fairness-calibration-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/fairness-calibration.webm",
+          "sha256": "1ef6428cef17f0ed7084fcd54c55d74807f90e2f350f12755f5e7fb87450b132"
+        },
+        {
+          "path": "videos/fairness-calibration.mp4",
+          "sha256": "c106b3db6c3a41a118d13e7ad4851241d9199cf9e1e2c91ec61426d477dff04a"
+        },
+        {
+          "path": "videos/fairness-calibration-poster.jpg",
+          "sha256": "93e5d766491630597085e6ce71f6a3347744d0c19fd7f12b2a0a51f4ea5f921d"
+        }
+      ],
+      "purpose": "lesson 7 60fps concept clip: disparate impact balance scale and group-calibrated decision threshold recalibration",
+      "sourceMaster": "design/brand/source/videos/fairness-calibration.webm",
+      "sourceSha256": "1ef6428cef17f0ed7084fcd54c55d74807f90e2f350f12755f5e7fb87450b132",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original mathematical geometric animation, no third-party media",
+        "evidence": "Owner approved the lesson 7 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-chip-dog-learning-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/chip-dog-learning.webm",
+          "sha256": "8fb4cc8e480507b10a19d5233fe13bdc773c56cd8c31f632d1bf12d76557d70d"
+        },
+        {
+          "path": "videos/chip-dog-learning.mp4",
+          "sha256": "541d61f03894612ac4e665afbff715f99e6b43c544800aab6198f2b4c93dac85"
+        },
+        {
+          "path": "videos/chip-dog-learning-poster.jpg",
+          "sha256": "1ac3f5387c26d655db4b64ae1610589eaf8d3d0a5c21e8fbbd9378fa6dd1d3d9"
+        }
+      ],
+      "purpose": "kids lesson 1 60fps concept clip: chip looking at puppy photos finding shared traits",
+      "sourceMaster": "design/brand/source/videos/chip-dog-learning.webm",
+      "sourceSha256": "8fb4cc8e480507b10a19d5233fe13bdc773c56cd8c31f632d1bf12d76557d70d",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original cartoon robot animation, no third-party media",
+        "evidence": "Owner approved the kids lesson 1 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-chip-rule-robot-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/chip-rule-robot.webm",
+          "sha256": "997a800582f5fa0ee5fcd14afdd022e1cb806febf96a41ea6ae01c891d92357b"
+        },
+        {
+          "path": "videos/chip-rule-robot.mp4",
+          "sha256": "fc380e0a19163ca93689ac06f93af346c5b202c82892b81e17843af5440bfe4d"
+        },
+        {
+          "path": "videos/chip-rule-robot-poster.jpg",
+          "sha256": "e9201cdc5152304dba79775c47385988426b90fd867b0965e7482972bb6f3179"
+        }
+      ],
+      "purpose": "kids lesson 2 60fps concept clip: chip checking recipe rulebook clues to deduce bird and duck",
+      "sourceMaster": "design/brand/source/videos/chip-rule-robot.webm",
+      "sourceSha256": "997a800582f5fa0ee5fcd14afdd022e1cb806febf96a41ea6ae01c891d92357b",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original cartoon robot animation, no third-party media",
+        "evidence": "Owner approved the kids lesson 2 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-chip-fruit-sorter-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/chip-fruit-sorter.webm",
+          "sha256": "d4239814d0acaee30869c9b015400b4995196fb7fd8839431d85edd70504a636"
+        },
+        {
+          "path": "videos/chip-fruit-sorter.mp4",
+          "sha256": "1b6d5e0186c4a7af5ba84a7b5ca992a1fc75b36e0a817e3ab5978e58703969ec"
+        },
+        {
+          "path": "videos/chip-fruit-sorter-poster.jpg",
+          "sha256": "179c2b9b06c0745dc3f07ecaa79515890f02b391e91f1384014fbc9b48a9e365"
+        }
+      ],
+      "purpose": "kids lesson 3 60fps concept clip: conveyor belt apple and lemon sorting with tilting wooden ramp",
+      "sourceMaster": "design/brand/source/videos/chip-fruit-sorter.webm",
+      "sourceSha256": "d4239814d0acaee30869c9b015400b4995196fb7fd8839431d85edd70504a636",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original cartoon robot animation, no third-party media",
+        "evidence": "Owner approved the kids lesson 3 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-chip-magnifying-glass-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/chip-magnifying-glass.webm",
+          "sha256": "2241d3d53c100b53f392884534533e236119843e859cfcb6ef7724efd61d482d"
+        },
+        {
+          "path": "videos/chip-magnifying-glass.mp4",
+          "sha256": "bb89c7fd3e370885e324e7d3b8c765433b22de88730818bb945f165412f4aced"
+        },
+        {
+          "path": "videos/chip-magnifying-glass-poster.jpg",
+          "sha256": "2d60819afc71eaa7eaf6fa6a021177404c94ec6db1dcdb8cabb239a7f73fbdf5"
+        }
+      ],
+      "purpose": "kids lesson 4 60fps concept clip: chip sliding magic magnifying lens over cat photo highlighting ears and whiskers",
+      "sourceMaster": "design/brand/source/videos/chip-magnifying-glass.webm",
+      "sourceSha256": "2241d3d53c100b53f392884534533e236119843e859cfcb6ef7724efd61d482d",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original cartoon robot animation, no third-party media",
+        "evidence": "Owner approved the kids lesson 4 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-chip-word-blocks-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/chip-word-blocks.webm",
+          "sha256": "db45104acf578f46544ce039bffa5b6b00270dd552d21fec9c0cee522defa34f"
+        },
+        {
+          "path": "videos/chip-word-blocks.mp4",
+          "sha256": "6b875c6de0a63c12c4c8e3409f9557dcf025da7b695084d70046aee2a4b738ce"
+        },
+        {
+          "path": "videos/chip-word-blocks-poster.jpg",
+          "sha256": "3271cc67b767e8d54700ef6a30665cdfc0763f06eb34efdd61d27115adb28f58"
+        }
+      ],
+      "purpose": "kids lesson 5 60fps concept clip: toy word blocks with chip shining attention flashlight between puppy and it",
+      "sourceMaster": "design/brand/source/videos/chip-word-blocks.webm",
+      "sourceSha256": "db45104acf578f46544ce039bffa5b6b00270dd552d21fec9c0cee522defa34f",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original cartoon robot animation, no third-party media",
+        "evidence": "Owner approved the kids lesson 5 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-chip-playground-scale-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/chip-playground-scale.webm",
+          "sha256": "84e6e29aa2c27d369963441aa7e351f134da0c616cdc348ea52a6ab65ad8efad"
+        },
+        {
+          "path": "videos/chip-playground-scale.mp4",
+          "sha256": "b90ebe983fcca1f7321f175515676924c5a3f84979ded12175b67ebf06f80228"
+        },
+        {
+          "path": "videos/chip-playground-scale-poster.jpg",
+          "sha256": "9ae344d3d0352e137a387a786f65706927bcf72e50ac98871e9673a66e116899"
+        }
+      ],
+      "purpose": "kids lesson 7 60fps concept clip: playground see-saw balance scale with chip calibrating fair turns for all teams",
+      "sourceMaster": "design/brand/source/videos/chip-playground-scale.webm",
+      "sourceSha256": "84e6e29aa2c27d369963441aa7e351f134da0c616cdc348ea52a6ab65ad8efad",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original cartoon robot animation, no third-party media",
+        "evidence": "Owner approved the kids lesson 7 video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-plain-rules-vs-learning-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/plain-rules-vs-learning.webm",
+          "sha256": "6c8d7946d362a0e68b6baa2264f656e2460ea326bee3952bb5cc59ba4a12fb37"
+        },
+        {
+          "path": "videos/plain-rules-vs-learning.mp4",
+          "sha256": "a623ef72d9ee514d5cbe4219e9c15011bf8252fd5cbfb19a93a53d58c74ff737"
+        },
+        {
+          "path": "videos/plain-rules-vs-learning-poster.jpg",
+          "sha256": "3fea2c3ef557fffa6e9321bdb8866da756ab630d9709f82a4b3534086f12a67b"
+        }
+      ],
+      "purpose": "plain english lesson 1 60fps concept clip: explicit rule checklist vs learning from patterns data pipeline",
+      "sourceMaster": "design/brand/source/videos/plain-rules-vs-learning.webm",
+      "sourceSha256": "6c8d7946d362a0e68b6baa2264f656e2460ea326bee3952bb5cc59ba4a12fb37",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original editorial dark-mode infographic animation, no third-party media",
+        "evidence": "Owner approved the plain english concept video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-plain-decision-tree-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/plain-decision-tree.webm",
+          "sha256": "4d19834c9079dd88f5260cd639482761a12d6dffaf4547b3c68fe4cd08819d39"
+        },
+        {
+          "path": "videos/plain-decision-tree.mp4",
+          "sha256": "b905efaea3f72a2d4e60f85a2ddbcc19a16224f00b929f64200ab1c8bf64dcfa"
+        },
+        {
+          "path": "videos/plain-decision-tree-poster.jpg",
+          "sha256": "090b5142c25e2275d7124f7b3e836d9c76181a1c711882cfa179565de756dfd3"
+        }
+      ],
+      "purpose": "plain english lesson 2 60fps concept clip: branch loan decision tree filtering applications with deterministic rules",
+      "sourceMaster": "design/brand/source/videos/plain-decision-tree.webm",
+      "sourceSha256": "4d19834c9079dd88f5260cd639482761a12d6dffaf4547b3c68fe4cd08819d39",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original editorial dark-mode infographic animation, no third-party media",
+        "evidence": "Owner approved the plain english concept video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-plain-linear-classifier-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/plain-linear-classifier.webm",
+          "sha256": "bbdd0c5de69d8c3439bdefde4a174400926659cc71f164953b332d6a2c8c866d"
+        },
+        {
+          "path": "videos/plain-linear-classifier.mp4",
+          "sha256": "d9c45a7f511d9a154a3e0c9aa92bef46391e62e3b30fb8663d8959e68541f814"
+        },
+        {
+          "path": "videos/plain-linear-classifier-poster.jpg",
+          "sha256": "d04fd6132aa2551ec470b830aa9526ae06b732523d2865ea1b895113d0d3bfbc"
+        }
+      ],
+      "purpose": "plain english lesson 3 60fps concept clip: customer churn risk boundary learning separating accounts with iterative line fitting",
+      "sourceMaster": "design/brand/source/videos/plain-linear-classifier.webm",
+      "sourceSha256": "bbdd0c5de69d8c3439bdefde4a174400926659cc71f164953b332d6a2c8c866d",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original editorial dark-mode infographic animation, no third-party media",
+        "evidence": "Owner approved the plain english concept video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-plain-image-feature-scan-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/plain-image-feature-scan.webm",
+          "sha256": "322a38f1fd0e06469529dfbc66fa7491153fec8bd4c33085818ee502f0360196"
+        },
+        {
+          "path": "videos/plain-image-feature-scan.mp4",
+          "sha256": "8a5c3a0b2e9b8f0a3a6f50011d00e2a00b03dbda48aaa884b14b51e90f0f3d60"
+        },
+        {
+          "path": "videos/plain-image-feature-scan-poster.jpg",
+          "sha256": "acc41da957746981d9a26e15499887239ea1c80d142353305d1467f93abc4543"
+        }
+      ],
+      "purpose": "plain english lesson 4 60fps concept clip: industrial defect inspection scanner scanning pixel grid and finding edge features",
+      "sourceMaster": "design/brand/source/videos/plain-image-feature-scan.webm",
+      "sourceSha256": "322a38f1fd0e06469529dfbc66fa7491153fec8bd4c33085818ee502f0360196",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original editorial dark-mode infographic animation, no third-party media",
+        "evidence": "Owner approved the plain english concept video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-plain-transformer-context-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/plain-transformer-context.webm",
+          "sha256": "7bc49a72e4eb8056f8804099b92b2c50f05393a6421f47b8d03a6fcd4756489a"
+        },
+        {
+          "path": "videos/plain-transformer-context.mp4",
+          "sha256": "e426f0f399559ad2ff2ac37d9cec5a6b231ac981bf3d412a1bd21dce16f00468"
+        },
+        {
+          "path": "videos/plain-transformer-context-poster.jpg",
+          "sha256": "755d59145ebe5837858893b141c3700b98fd77968242c12b40a27bfcf4a6078d"
+        }
+      ],
+      "purpose": "plain english lesson 5 60fps concept clip: contract clause contextual attention routing semantic connections across keywords",
+      "sourceMaster": "design/brand/source/videos/plain-transformer-context.webm",
+      "sourceSha256": "7bc49a72e4eb8056f8804099b92b2c50f05393a6421f47b8d03a6fcd4756489a",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original editorial dark-mode infographic animation, no third-party media",
+        "evidence": "Owner approved the plain english concept video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-plain-disparate-impact-audit-video",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "videos/plain-disparate-impact-audit.webm",
+          "sha256": "b255276003a6fa5b2a39abea0c790bcea75869d173271ce15712ac5faf0e4062"
+        },
+        {
+          "path": "videos/plain-disparate-impact-audit.mp4",
+          "sha256": "b3871c89b3b66a8c67f03c38e161929fd3c885513bbf192b9d9d84e588f89737"
+        },
+        {
+          "path": "videos/plain-disparate-impact-audit-poster.jpg",
+          "sha256": "8a5d844e9f8abb5c1bdc479f0e5f243456a68e5557418cca29fdfd89d6494573"
+        }
+      ],
+      "purpose": "plain english lesson 7 60fps concept clip: hiring audit dashboard balancing demographic acceptance rates and equal opportunity",
+      "sourceMaster": "design/brand/source/videos/plain-disparate-impact-audit.webm",
+      "sourceSha256": "b255276003a6fa5b2a39abea0c790bcea75869d173271ce15712ac5faf0e4062",
+      "usageLocation": [
+        "web/src/components/VideoClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original rendered video for AI Foundations Coach",
+      "motion": "continuous 60fps video with chapter cue navigation; re-rendered 2026-11-21 without words (T069a)",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original editorial dark-mode infographic animation, no third-party media",
+        "evidence": "Owner approved the plain english concept video on 2026-11-14"
+      }
+    },
+    {
+      "id": "clip-sense-decide-act",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-21)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/sense-decide-act.svg",
+          "sha256": "a51990d12d4f7650154e0006271ad2e8f8844ddf34147365652696aee1fd4641"
+        }
+      ],
+      "purpose": "lesson 1 section clip: sense decide act",
+      "sourceMaster": "design/brand/source/clips/sense-decide-act.svg",
+      "sourceSha256": "a51990d12d4f7650154e0006271ad2e8f8844ddf34147365652696aee1fd4641",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-rule-vs-learned",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-21)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/rule-vs-learned.svg",
+          "sha256": "e32751b258f9f9a7c3ba91f0c786a25eee06a9dd0c3bc7366fbbf6a8adac401e"
+        }
+      ],
+      "purpose": "lesson 1 section clip: rule vs learned",
+      "sourceMaster": "design/brand/source/clips/rule-vs-learned.svg",
+      "sourceSha256": "e32751b258f9f9a7c3ba91f0c786a25eee06a9dd0c3bc7366fbbf6a8adac401e",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-facts-as-graph",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-21)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/facts-as-graph.svg",
+          "sha256": "bc0d197609690700be284af881acd4da45f3c565d890a6b794de2dd8f1668b73"
+        }
+      ],
+      "purpose": "lesson 2 section clip: facts as graph",
+      "sourceMaster": "design/brand/source/clips/facts-as-graph.svg",
+      "sourceSha256": "bc0d197609690700be284af881acd4da45f3c565d890a6b794de2dd8f1668b73",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-rover-diagnosis",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-21)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/rover-diagnosis.svg",
+          "sha256": "61ec9e57d4f6e6e5847f693215acc0edcbd9b4a5b03a2cf77f67e140681eb902"
+        }
+      ],
+      "purpose": "lesson 2 section clip: rover diagnosis",
+      "sourceMaster": "design/brand/source/clips/rover-diagnosis.svg",
+      "sourceSha256": "61ec9e57d4f6e6e5847f693215acc0edcbd9b4a5b03a2cf77f67e140681eb902",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-classify-detect-segment",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-21)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/classify-detect-segment.svg",
+          "sha256": "db8e8bcce4ffb15e26724b04083f514c0b80728cd327b1fe21fd16a750fa00ec"
+        }
+      ],
+      "purpose": "lesson 4 section clip: classify detect segment",
+      "sourceMaster": "design/brand/source/clips/classify-detect-segment.svg",
+      "sourceSha256": "db8e8bcce4ffb15e26724b04083f514c0b80728cd327b1fe21fd16a750fa00ec",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-edge-filter-by-hand",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-21)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/edge-filter-by-hand.svg",
+          "sha256": "19ebc1404608bb14452612174c0753ac6d5b3df752eb6d473ac1d9427d5a44c4"
+        }
+      ],
+      "purpose": "lesson 4 section clip: edge filter by hand",
+      "sourceMaster": "design/brand/source/clips/edge-filter-by-hand.svg",
+      "sourceSha256": "19ebc1404608bb14452612174c0753ac6d5b3df752eb6d473ac1d9427d5a44c4",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-sentence-to-tasks",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-21)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/sentence-to-tasks.svg",
+          "sha256": "5641c49ad24308b5785270dea7e51c52ca36718c4eed1f906368aba8f69f0dd3"
+        }
+      ],
+      "purpose": "lesson 5 section clip: sentence to tasks",
+      "sourceMaster": "design/brand/source/clips/sentence-to-tasks.svg",
+      "sourceSha256": "5641c49ad24308b5785270dea7e51c52ca36718c4eed1f906368aba8f69f0dd3",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-similarity-and-next-word",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-21)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/similarity-and-next-word.svg",
+          "sha256": "93e1e3bf4279484e9602a5b7f189408cee0d7e5117e7dd6201fbba884f5c7fbb"
+        }
+      ],
+      "purpose": "lesson 5 section clip: similarity and next word",
+      "sourceMaster": "design/brand/source/clips/similarity-and-next-word.svg",
+      "sourceSha256": "93e1e3bf4279484e9602a5b7f189408cee0d7e5117e7dd6201fbba884f5c7fbb",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-principles-around-decision",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-21)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/principles-around-decision.svg",
+          "sha256": "4f68e30f25bfeafff5ea78943c363c1d7dac77ce2e3a361ca762dd83e4f9e128"
+        }
+      ],
+      "purpose": "lesson 7 section clip: principles around decision",
+      "sourceMaster": "design/brand/source/clips/principles-around-decision.svg",
+      "sourceSha256": "4f68e30f25bfeafff5ea78943c363c1d7dac77ce2e3a361ca762dd83e4f9e128",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    },
+    {
+      "id": "clip-hiring-audit",
+      "status": "approved",
+      "trademarkScreen": "clear",
+      "creator": "hand-authored SVG (Claude, 2026-11-21)",
+      "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
+      "releaseFiles": [
+        {
+          "path": "clips/hiring-audit.svg",
+          "sha256": "03b1a5e93dd99cc619fec062275ab26f2c6cf5140511e02574b32b0f6771bd49"
+        }
+      ],
+      "purpose": "lesson 7 section clip: hiring audit",
+      "sourceMaster": "design/brand/source/clips/hiring-audit.svg",
+      "sourceSha256": "03b1a5e93dd99cc619fec062275ab26f2c6cf5140511e02574b32b0f6771bd49",
+      "usageLocation": [
+        "web/src/components/ClipPlayer.tsx"
+      ],
+      "rightsBasis": "Original hand-authored SVG for AI Foundations Coach",
+      "motion": "tap-to-play steps, ≤ 2 s each, still under reduced motion",
+      "reviewers": [
+        {
+          "role": "owner",
+          "decision": "approved",
+          "evidence": "Owner approved SPEC-014 on 2026-11-21 (session approval: \"approve spec 014\"), recorded in specs/014-detailed-concept-clips/tasks.md T034"
+        }
+      ],
+      "decorative": true,
+      "trademarkReview": {
+        "result": "clear",
+        "method": "Original hand-authored shapes and numbers, no words, logos or third-party characters; owner review",
+        "evidence": "Owner approved the lesson 3 pilot clips on 2026-11-14 (session approval, recorded in specs/014-detailed-concept-clips/tasks.md T017)"
+      }
+    }
+  ]
+}

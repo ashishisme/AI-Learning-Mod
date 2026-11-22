@@ -1,0 +1,211 @@
+{
+  "lessonId": "5-nlp",
+  "mode": "plain-english",
+  "origin": "own",
+  "title": "How Computers Handle Language, in Plain English 💬",
+  "readingTimeMinutes": 7,
+  "intro": "Translation apps, search boxes and chat assistants all work with human language. This lesson explains the main steps: splitting text up, capturing meaning, and predicting what comes next.",
+  "sections": [
+    {
+      "id": "tokenization-foundations",
+      "heading": "1. Splitting Text into Tokens",
+      "analogy": {
+        "metaphorName": "Sorting the Post",
+        "description": "Before a sorting office can deliver anything, it breaks a mailbag down into individual letters. A language system first breaks text down into small pieces it can handle."
+      },
+      "bodyMarkdown": "Computers cannot work with sentences directly. The first step is **tokenisation**: splitting text into small units called **tokens**. A token is often a whole word, but long or unusual words are split into common pieces, so \"unhelpfulness\" might become \"un\", \"help\", \"ful\" and \"ness\".\n\nEach token is then given an ID number from a fixed vocabulary. Working with pieces means the system can handle words it has never seen, as long as it knows the parts.",
+      "jargonBuster": [
+        {
+          "term": "Token",
+          "simpleExplanation": "A small piece of text, a word or part of a word, that a language model works with."
+        },
+        {
+          "term": "Tokenisation",
+          "simpleExplanation": "Splitting text into tokens before a computer processes it."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "From a sentence to token numbers",
+        "alt": "Three steps: a sentence, the sentence split into tokens, and each token replaced by an ID number.",
+        "content": "",
+        "steps": [
+          "Text: \"The delivery was unhelpfully late\"",
+          "Tokens: The | delivery | was | un | help | fully | late",
+          "IDs: 412 | 9081 | 77 | 301 | 2210 | 5864 | 3390"
+        ]
+      },
+      "realWorld": "When a chat service talks about a message limit in tokens, these are the pieces it means."
+    },
+    {
+      "id": "semantic-embeddings",
+      "heading": "2. Capturing Meaning with Embeddings",
+      "analogy": {
+        "metaphorName": "Seating at a Wedding",
+        "description": "A good seating plan puts people who get on near each other. An embedding places words on a map so that words used in similar ways sit close together."
+      },
+      "bodyMarkdown": "An ID number alone says nothing about meaning. So each token is turned into an **embedding**: a long list of numbers that acts like a position on a map of meaning.\n\nThe positions are learned from huge amounts of text. Words that appear in similar contexts end up close together: \"doctor\" near \"nurse\", \"Monday\" near \"Tuesday\". Directions on the map can even capture relationships, so the step from \"France\" to \"Paris\" resembles the step from \"Italy\" to \"Rome\".",
+      "jargonBuster": [
+        {
+          "term": "Embedding",
+          "simpleExplanation": "A list of numbers that places a word or phrase on a map of meaning."
+        }
+      ],
+      "realWorld": "Search that finds \"cheap flights\" when you typed \"budget airfare\" relies on embeddings to match meaning, not just exact words.",
+      "interactiveWidget": {
+        "type": "vector-math-sim",
+        "title": "🗺️ Try It: The Map of Meaning",
+        "instruction": "Pick an analogy and watch how moving between word positions on the map finds the answer.",
+        "goal": "Predict the word that completes each analogy, then check it on the map.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you run an analogy: what word do you expect as the answer?",
+        "hints": [
+          "The same direction on the map means the same kind of relationship.",
+          "Try a capital-city analogy."
+        ],
+        "successMessage": "That is why search and translation can match meaning rather than exact words.",
+        "allowFreePlay": true
+      }
+    },
+    {
+      "id": "sequence-attention",
+      "heading": "3. Context and Attention",
+      "analogy": {
+        "metaphorName": "Reading the Room",
+        "description": "\"That's great\" can be sincere or sarcastic. You decide by looking at what was said before. Language models do something similar: they decide which earlier words matter for the current one."
+      },
+      "bodyMarkdown": "Words change meaning with context. \"Bank\" in \"river bank\" and \"bank account\" are different things. Modern language models handle this with **attention**: for each word, the model weighs up all the other words in the passage and focuses on the ones that matter most for its meaning.\n\nThe design built around attention is called the **transformer**. It made it practical to train language models on enormous amounts of text, and it underpins today's translation tools and chat assistants.",
+      "jargonBuster": [
+        {
+          "term": "Attention",
+          "simpleExplanation": "A method that lets a model decide which other words matter most for understanding each word."
+        },
+        {
+          "term": "Transformer",
+          "simpleExplanation": "The model design, built around attention, behind most modern language AI."
+        }
+      ],
+      "diagram": {
+        "type": "clip",
+        "clip": "plain-transformer-context",
+        "media": "video",
+        "caption": "Contextual attention routing across sentence tokens",
+        "alt": "A legal contract clause where attention vectors connect words to their surrounding context to resolve ambiguity.",
+        "steps": [
+          "A contract clause is divided into individual word tokens for computational processing.",
+          "The model searches surrounding text to determine how each word influences neighboring terms.",
+          "Attention connections form weighted links between related keywords across the clause.",
+          "Context resolves ambiguous language, separating operational maintenance from financial obligations.",
+          "Enriched contextual representations enable high-precision contract search and automated analysis."
+        ]
+      },
+      "realWorld": "Translation apps that get \"bank\" right depending on the sentence are using attention to read context."
+    },
+    {
+      "id": "next-word-prediction",
+      "heading": "4. How Chat Assistants Write",
+      "analogy": {
+        "metaphorName": "Autocomplete, Scaled Up",
+        "description": "Your phone keyboard suggests the next word. A chat assistant does the same thing, but with a far larger model, far more training text, and one word after another until the answer is complete."
+      },
+      "bodyMarkdown": "A **large language model** is trained on a vast amount of text to predict the next token. When you ask a question, it predicts a likely first token of the answer, adds it, then predicts the next, and so on.\n\nThis produces fluent, often useful text. But the model is producing what is likely, not checking what is true. It can state wrong facts confidently, sometimes called **hallucination**. For anything that matters, such as health, money, law or citations, check the answer against a trusted source.",
+      "jargonBuster": [
+        {
+          "term": "Large language model",
+          "simpleExplanation": "A very large model trained on huge amounts of text to predict the next token."
+        },
+        {
+          "term": "Hallucination",
+          "simpleExplanation": "When a language model states something false as if it were true."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "How a chat assistant builds an answer",
+        "alt": "Four steps: read the question, predict the most likely next token, add it to the answer, and repeat until the answer is complete.",
+        "content": "",
+        "steps": [
+          "Read the question and everything written so far.",
+          "Predict the most likely next token.",
+          "Add it to the answer.",
+          "Repeat until the answer is complete."
+        ]
+      },
+      "realWorld": "Email drafting tools, chat assistants and document summarisers all generate text this way."
+    },
+    {
+      "id": "nlp-production",
+      "heading": "5. Language AI at Work",
+      "analogy": {
+        "metaphorName": "The Tireless Assistant",
+        "description": "Imagine an assistant who can skim a thousand emails, draft replies and translate a contract overnight, but who occasionally misreads something important. That is language AI in the workplace."
+      },
+      "bodyMarkdown": "Common uses include search that understands questions, spam and fraud filtering, translation, summarising long documents, transcribing meetings and drafting text.\n\nGood practice is to use it for a first draft or a first pass, then have a person check anything that will be relied on. Be careful with confidential information too: text you paste into an online tool may be stored or used by the provider, depending on their terms.",
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Where language AI helps",
+        "content": "graph TD\n    L[\"Language AI\"] --> S[\"Search\"]\n    L --> F[\"Spam and fraud filters\"]\n    L --> T[\"Translation\"]\n    L --> D[\"Summaries and drafts\"]\n    D --> C[\"A person checks before it is relied on\"]",
+        "alt": "Language AI helps with search, spam and fraud filters, translation, and summaries and drafts, which a person checks before they are relied on."
+      },
+      "realWorld": "Meeting transcription, inbox spam filters, translation apps and document summaries."
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What is a token?",
+      "options": [
+        "A small piece of text, like a word or part of a word",
+        "A password",
+        "A type of computer chip"
+      ],
+      "correctIndex": 0,
+      "praise": "Right. Text is split into tokens first.",
+      "explanation": "Tokenisation splits text into small units, often words or common word pieces."
+    },
+    {
+      "question": "What does an embedding capture?",
+      "options": [
+        "A word's meaning, as a position on a map",
+        "The word's spelling",
+        "How long the word is"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes. Similar meanings sit close together.",
+      "explanation": "An embedding is a list of numbers placing a word on a map of meaning learned from text."
+    },
+    {
+      "question": "Why should you check important facts from a chat assistant?",
+      "options": [
+        "It predicts likely text, which is not always true",
+        "It is always out of date",
+        "It never uses real words"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly. Fluent is not the same as accurate.",
+      "explanation": "Language models generate likely text and can state false things confidently."
+    }
+  ],
+  "teachBack": {
+    "prompt": "How would you explain how a chat assistant works to a colleague?",
+    "options": [
+      "It splits text into tokens and predicts the most likely next one, over and over.",
+      "It looks up every answer in a database of facts.",
+      "It understands the world the way people do."
+    ],
+    "correctIndex": 0,
+    "explanation": "That's it. Tokens in, likely next token out, repeated."
+  },
+  "recall": [
+    {
+      "fromLesson": "4-computervision",
+      "question": "How does a computer store a photo?",
+      "options": [
+        "As a grid of pixels stored as numbers",
+        "As a written description",
+        "As a single number"
+      ],
+      "correctIndex": 0,
+      "explanation": "A photo is a grid of pixels, each stored as numbers."
+    }
+  ]
+}

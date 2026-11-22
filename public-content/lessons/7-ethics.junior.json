@@ -1,0 +1,260 @@
+{
+  "lessonId": "7-ethics",
+  "mode": "junior",
+  "origin": "own",
+  "title": "Fair and Safe AI 🧭",
+  "readingTimeMinutes": 5,
+  "mascot": {
+    "name": "Chip",
+    "avatar": "🤖",
+    "greeting": "Hi, it's Chip! AI can be really helpful. But how do we make sure it is fair to everyone? Let's find out!"
+  },
+  "recap": [
+    "AI copies its examples, so one-sided examples make it unfair.",
+    "To check fairness, count who the AI says yes to. If a group misses out, find out why.",
+    "For big choices, a person should have the final say."
+  ],
+  "bands": true,
+  "sections": [
+    {
+      "id": "magic-mirror",
+      "heading": "1. AI Copies Its Examples",
+      "bigIdea": "AI learns from examples, so it copies their mistakes too.",
+      "chipQuote": "I only know what I was shown. So what I'm shown really matters!",
+      "analogy": {
+        "metaphorName": "The Copycat Parrot",
+        "description": "A parrot repeats what it hears. If it only ever hears one song, that is the only song it sings."
+      },
+      "bodyMarkdown": "AI learns from examples that people collect. If the examples are one-sided, the AI can treat some people unfairly. This is called **unfair bias**.\n\nSay a sports app only learned from photos of boys playing football. It might think girls can't play. The app isn't mean. It just never saw enough girls play.",
+      "jargonBuster": [
+        {
+          "term": "Unfair bias",
+          "simpleExplanation": "When AI treats some people worse because its examples were one-sided."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "How unfair bias gets in",
+        "alt": "Three steps: the examples show only one group, the AI learns from them, and it treats other people unfairly.",
+        "content": "",
+        "steps": [
+          "The examples show only one group. 📸",
+          "The AI learns from those examples. 🧠",
+          "It treats other people unfairly. ⚠️"
+        ]
+      },
+      "more": {
+        "title": "Is this the same bias as in lesson 3?",
+        "bodyMarkdown": "No. In lesson 3, a neuron's bias is a number that makes it easy or picky. Here, unfair bias means treating people unfairly. Same word, two meanings!"
+      },
+      "teen": {
+        "add": "Old records can carry unfair habits from the past. An AI trained on them can repeat those habits, even when nobody meant it to."
+      },
+      "checkIn": {
+        "question": "An app only saw photos of grown-ups. What might go wrong?",
+        "options": [
+          "🧒 It may not work well for kids",
+          "✅ Nothing at all"
+        ],
+        "correctIndex": 0,
+        "praise": "Yes! It never learned from kids.",
+        "explanation": "AI copies its examples. If kids were missing, it may not work well for them."
+      }
+    },
+    {
+      "id": "bias-detective",
+      "heading": "2. Be a Fairness Detective",
+      "bigIdea": "To catch unfair AI, count who it says yes to.",
+      "chipQuote": "Grab your magnifying glass. Let's check if a robot is fair!",
+      "analogy": {
+        "metaphorName": "The Fair Referee",
+        "description": "A good referee makes sure both teams get the same chances, all game long."
+      },
+      "bodyMarkdown": "How do we know if an AI is fair? We test it on lots of people, and we count. Does each group get a yes about as often?\n\nIf not, that’s a warning sign. We look for why. Is the robot saying no to people who should get a yes? We fix the cause, then test again. In the game below, you check a robot that picks space cadets.",
+      "diagram": {
+        "type": "clip",
+        "clip": "chip-playground-scale",
+        "media": "video",
+        "caption": "Watch Chip balance the playground scale",
+        "alt": "Chip the robot checks a playground see-saw balance scale, adjusting the game rules so both teams get a fair turn to play.",
+        "steps": [
+          "Two teams come to play on the swings.",
+          "A gate lets only one team in. The scale tips!",
+          "Chip sees the problem: \"That is not fair!\"",
+          "Chip fixes the gate so every kid gets a turn.",
+          "The scale is level. Fair play for all!"
+        ]
+      },
+      "teen": {
+        "add": "Experts call this a **fairness audit**. They compare the yes rate for each group. They also check whether people who qualify get a yes in every group. Different checks can disagree, so people must decide what fair means.",
+        "jargonBuster": [
+          {
+            "term": "Fairness audit",
+            "simpleExplanation": "A check that compares how an AI treats different groups of people."
+          }
+        ]
+      },
+      "interactiveWidget": {
+        "type": "bias-detective-sim",
+        "title": "🔎 Try It: The Fairness Detective",
+        "instruction": "Switch between the two robots. Compare how many from each group get picked.",
+        "goal": "Find out which group the robot treats unfairly, then fix it.",
+        "scaffold": "guided",
+        "predictionPrompt": "Before you switch robots: do you think the first robot is fair to both groups?",
+        "hints": [
+          "Compare how many from each group were picked.",
+          "Look at the fairness badge at the top."
+        ],
+        "successMessage": "Fairness fixed! Counting the yeses for every group is how people catch unfair robots.",
+        "allowFreePlay": true
+      }
+    },
+    {
+      "id": "human-in-loop",
+      "heading": "3. A Person Makes the Big Choices",
+      "bigIdea": "For big choices, a person should have the final say.",
+      "chipQuote": "I'm a fast helper. But some choices need a person!",
+      "analogy": {
+        "metaphorName": "The Map App and the Driver",
+        "description": "A map app suggests a road. The driver looks out of the window and decides if it is safe."
+      },
+      "bodyMarkdown": "AI is a fast helper. It can spot clues that people miss. But for big choices, like who sees a doctor first, a person decides.\n\nThis is called keeping a **human in the loop**. The person can catch the AI's mistakes. They also take charge of the choice.",
+      "jargonBuster": [
+        {
+          "term": "Human in the loop",
+          "simpleExplanation": "When a person checks the AI's work and makes the final choice."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "AI helps, a person decides",
+        "alt": "Three steps: the AI looks at the facts and gives a suggestion, a person checks it, and the person makes the final choice.",
+        "content": "",
+        "steps": [
+          "The AI looks at the facts and suggests an answer. 🤖",
+          "A person checks the suggestion. 🧑",
+          "The person makes the final choice. ✅"
+        ]
+      },
+      "teen": {
+        "add": "Someone has to answer for what an AI does. When a person makes the final call, it is clear who is responsible if things go wrong."
+      },
+      "checkIn": {
+        "question": "Who should make the final choice about a hospital visit?",
+        "options": [
+          "🧑‍⚕️ A person",
+          "🤖 The AI on its own"
+        ],
+        "correctIndex": 0,
+        "praise": "Right! A person has the final say.",
+        "explanation": "For big choices, AI helps but a person decides."
+      }
+    },
+    {
+      "id": "guardrails-future",
+      "heading": "4. Questions for Good AI",
+      "bigIdea": "People who build AI ask questions to keep it fair and safe.",
+      "chipQuote": "You can ask these questions about any app too!",
+      "analogy": {
+        "metaphorName": "Playground Rules",
+        "description": "Everyone can have fun at the playground because everyone follows the same rules."
+      },
+      "bodyMarkdown": "Good AI builders ask questions like these. Is it fair to everyone? Is it safe? Does it keep private things private? Can we explain what it did? Who fixes it if it goes wrong?\n\nYou can ask these questions too, about any app you use.",
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Five questions for good AI",
+        "content": "graph TD\n    G[\"🧭 Good AI\"] --> F[\"⚖️ Is it fair to everyone?\"]\n    G --> S[\"🛡️ Is it safe?\"]\n    G --> P[\"🔒 Does it keep private things private?\"]\n    G --> E[\"🔍 Can we explain what it did?\"]\n    G --> R[\"🙋 Who fixes it if it goes wrong?\"]",
+        "alt": "Good AI asks five questions: is it fair to everyone, is it safe, does it keep private things private, can we explain what it did, and who fixes it if it goes wrong."
+      },
+      "teen": {
+        "add": "These questions have names, like fairness, privacy and **transparency**. Transparency means being open about how an AI works and what it was trained on.",
+        "jargonBuster": [
+          {
+            "term": "Transparency",
+            "simpleExplanation": "Being open about how an AI works and what it learned from."
+          }
+        ]
+      },
+      "checkIn": {
+        "question": "Which is a good question to ask about an AI app?",
+        "options": [
+          "🔒 Does it keep my private things private?",
+          "🎨 What is its favourite colour?"
+        ],
+        "correctIndex": 0,
+        "praise": "Yes! Privacy is a key question.",
+        "explanation": "Good questions ask if an AI is fair, safe and private, and who fixes it."
+      }
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "Why can an AI be unfair?",
+      "options": [
+        "Its examples were one-sided",
+        "It is in a bad mood",
+        "Its screen is too small"
+      ],
+      "correctIndex": 0,
+      "praise": "Great! AI copies its examples.",
+      "explanation": "If the examples leave some people out, the AI can treat them unfairly."
+    },
+    {
+      "question": "How do we check if an AI is fair?",
+      "options": [
+        "Count how often each group gets a yes",
+        "Ask the AI if it is fair",
+        "Make it run faster"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes! Counting shows the gap.",
+      "explanation": "We test the AI on lots of people and count the yeses for each group."
+    },
+    {
+      "question": "What does \"human in the loop\" mean?",
+      "options": [
+        "A person checks the AI and makes the final choice",
+        "A person rides a roller coaster",
+        "The AI makes every choice alone"
+      ],
+      "correctIndex": 0,
+      "praise": "Spot on! A person has the final say.",
+      "explanation": "Human in the loop means a person checks the AI's work and makes big choices."
+    },
+    {
+      "band": "12-14",
+      "question": "What is a check that compares how an AI treats different groups called?",
+      "options": [
+        "A fairness audit",
+        "A pixel test",
+        "Forward chaining"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly! That is a fairness audit.",
+      "explanation": "A fairness audit compares the yes rate for each group to spot unfair gaps."
+    }
+  ],
+  "teachBack": {
+    "prompt": "Chip asks: How can we stop an AI from being unfair? Pick the best answer for a friend.",
+    "options": [
+      "Count who it says yes to, and find out why if a group misses out.",
+      "Make the AI run faster.",
+      "Let the AI make every choice on its own."
+    ],
+    "correctIndex": 0,
+    "explanation": "Right! Counting shows a problem, and finding the cause helps fix it."
+  },
+  "recall": [
+    {
+      "fromLesson": "5-nlp",
+      "question": "How does a chat app build its answer?",
+      "options": [
+        "By guessing the next word, again and again",
+        "By copying a whole book",
+        "By asking a person"
+      ],
+      "correctIndex": 0,
+      "explanation": "A chat app guesses the next word, adds it, and guesses again."
+    }
+  ]
+}

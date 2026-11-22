@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img">
+  <style>
+    .s { display: none }
+    .s:target { display: inline }
+    .bub { fill: #FFFFFF; stroke: #475569; stroke-width: 1.5 }
+    .word { fill: #475569 }
+    .tok { fill: #DBEAFE; stroke: #1D4ED8; stroke-width: 2 }
+    .tbar { fill: #1D4ED8 }
+    .arrow { stroke: #334155; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round }
+    .pp { transform-box: fill-box; transform-origin: center }
+    .s:target .in { animation: show 0.8s ease-out 1 both }
+    .s:target .in2 { animation: show 0.8s ease-out 0.5s 1 both }
+    .s:target .split { animation: split 1s ease-out 1 both }
+    .s:target .pop { animation: pop 0.6s ease-out 0.9s 1 both }
+    .s:target .wave { animation: show 0.5s ease-out 1.2s 3 alternate both }
+    @keyframes show { from { opacity: 0 } to { opacity: 1 } }
+    @keyframes split { from { transform: scaleX(0.7); opacity: 0.2 } to { transform: none; opacity: 1 } }
+    @keyframes pop { 0% { transform: scale(0.4); opacity: 0 } 70% { transform: scale(1.15); opacity: 1 } 100% { transform: scale(1); opacity: 1 } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important } }
+  </style>
+  <defs>
+    <g id="bubble">
+      <rect class="bub" x="16" y="12" width="288" height="52" rx="12"/>
+      <path class="bub" d="M38 63 L32 76 L54 63"/><path d="M39.5 63.5 H52.5" stroke="#FFFFFF" stroke-width="2.5"/>
+    </g>
+    <!-- six tokens; each holds a bar standing for its word piece -->
+    <g id="toks">
+      <rect class="tok" x="43" y="26" width="30" height="24" rx="6"/><rect class="tok" x="79" y="26" width="44" height="24" rx="6"/>
+      <rect class="tok" x="129" y="26" width="22" height="24" rx="6"/><rect class="tok" x="157" y="26" width="38" height="24" rx="6"/>
+      <rect class="tok" x="201" y="26" width="30" height="24" rx="6"/><rect class="tok" x="237" y="26" width="40" height="24" rx="6"/>
+      <path d="M49 38 h18 M85 38 h32 M135 38 h10 M163 38 h26 M207 38 h18 M243 38 h28" stroke="#1D4ED8" stroke-width="5" stroke-linecap="round"/>
+    </g>
+    <g id="tick"><circle r="9" fill="#047857"/><path d="M-4 0 l3 3 l5 -6" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+  </defs>
+  <rect width="320" height="180" rx="16" fill="#FFFBEB"/>
+
+  <!-- 1: a sentence arrives as one line of text -->
+  <g id="s1" class="s">
+    <g class="in">
+      <use href="#bubble"/>
+      <path d="M47 38 h22 M83 38 h36 M133 38 h14 M161 38 h30 M205 38 h22 M241 38 h32" stroke="#475569" stroke-width="6" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- 2: the text is split into tokens -->
+  <g id="s2" class="s">
+    <use href="#bubble"/>
+    <g class="pp split"><use href="#toks"/></g>
+  </g>
+
+  <!-- 3: sentiment: positive face chosen over negative face -->
+  <g id="s3" class="s">
+    <use href="#bubble"/><use href="#toks"/>
+    <path class="arrow in" d="M160 70 V88 M153 81 l7 7 l7 -7"/>
+    <g class="in2">
+      <circle cx="120" cy="126" r="24" fill="#D1FAE5" stroke="#047857" stroke-width="2.5"/>
+      <circle cx="112" cy="120" r="3" fill="#047857"/><circle cx="128" cy="120" r="3" fill="#047857"/>
+      <path d="M109 131 q11 11 22 0" stroke="#047857" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="200" cy="126" r="24" fill="#F1F5F9" stroke="#94A3B8" stroke-width="2.5"/>
+      <circle cx="192" cy="120" r="3" fill="#64748B"/><circle cx="208" cy="120" r="3" fill="#64748B"/>
+      <path d="M189 138 q11 -11 22 0" stroke="#64748B" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </g>
+    <g class="pp pop"><circle cx="120" cy="126" r="30" fill="none" stroke="#047857" stroke-width="3"/><use href="#tick" x="144" y="104"/></g>
+  </g>
+
+  <!-- 4: entities: a person, a place and a date are picked out -->
+  <g id="s4" class="s">
+    <use href="#bubble"/><use href="#toks"/>
+    <g class="in">
+      <rect x="43" y="26" width="30" height="24" rx="6" fill="#EDE9FE" stroke="#6D28D9" stroke-width="2.5"/><path d="M49 38 h18" stroke="#6D28D9" stroke-width="5" stroke-linecap="round"/>
+      <rect x="157" y="26" width="38" height="24" rx="6" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2.5"/><path d="M163 38 h26" stroke="#B91C1C" stroke-width="5" stroke-linecap="round"/>
+      <rect x="237" y="26" width="40" height="24" rx="6" fill="#D1FAE5" stroke="#047857" stroke-width="2.5"/><path d="M243 38 h28" stroke="#047857" stroke-width="5" stroke-linecap="round"/>
+      <path class="arrow" d="M58 70 V90 M51 83 l7 7 l7 -7 M176 70 V90 M169 83 l7 7 l7 -7 M257 70 V90 M250 83 l7 7 l7 -7"/>
+    </g>
+    <g class="in2">
+      <circle cx="58" cy="128" r="24" fill="#EDE9FE" stroke="#6D28D9" stroke-width="2"/>
+      <circle cx="58" cy="120" r="7" fill="#6D28D9"/><path d="M45 141 a13 12 0 0 1 26 0 z" fill="#6D28D9"/>
+      <circle cx="176" cy="128" r="24" fill="#FEE2E2" stroke="#B91C1C" stroke-width="2"/>
+      <path d="M176 145 c-4 -8 -11 -13 -11 -20 a11 11 0 0 1 22 0 c0 7 -7 12 -11 20z" fill="#B91C1C"/><circle cx="176" cy="125" r="4.5" fill="#FFFFFF"/>
+      <circle cx="257" cy="128" r="24" fill="#D1FAE5" stroke="#047857" stroke-width="2"/>
+      <rect x="245" y="116" width="24" height="24" rx="3" fill="#FFFFFF" stroke="#047857" stroke-width="2"/><rect x="245" y="116" width="24" height="7" fill="#047857"/>
+      <path d="M250 129 h3 M256 129 h3 M262 129 h3 M250 135 h3 M256 135 h3" stroke="#047857" stroke-width="3"/>
+    </g>
+  </g>
+
+  <!-- 5: translation into another script, and speech out of a speaker -->
+  <g id="s5" class="s">
+    <use href="#bubble"/><use href="#toks"/>
+    <path class="arrow in" d="M110 70 L86 92 M86 83 v9 h9 M210 70 L234 92 M225 92 h9 v-9"/>
+    <g class="in2">
+      <rect x="24" y="100" width="124" height="48" rx="12" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2"/>
+      <path d="M36 128 q5 -10 10 0 t10 0 M64 128 q4 -9 8 0 t8 0 t8 0 M98 128 q5 -10 10 0 M114 128 q4 -9 8 0 t8 0" stroke="#1D4ED8" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M36 118 h18 M98 118 h10" stroke="#1D4ED8" stroke-width="3" stroke-linecap="round"/>
+      <path d="M212 116 h10 l14 -12 v40 l-14 -12 h-10 z" fill="#334155"/>
+    </g>
+    <path class="wave" d="M246 114 q8 10 0 20 M256 106 q14 18 0 36 M266 98 q20 26 0 52" stroke="#334155" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>

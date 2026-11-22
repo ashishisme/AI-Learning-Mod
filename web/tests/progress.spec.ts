@@ -14,15 +14,12 @@ test.describe('AC-22 Local Progress Persistence & Privacy', () => {
     })
 
     const mockLessons = {
-      commitSha: '1234567890123456789012345678901234567890',
       lessons: [
         {
           id: 'lesson-a',
           module: 'Module 1',
           title: 'Lesson A',
           order: 0,
-          path: 'lessons/01-A/README.md',
-          commitSha: '1234567890123456789012345678901234567890',
         },
       ],
     }

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" width="240" height="140" role="img">
+  <style>
+    .c { animation: wave 2.7s ease-in-out infinite; }
+    .c2 { animation-delay: .45s; } .c3 { animation-delay: .9s; }
+    @keyframes wave { 0%, 60%, 100% { opacity: .35; } 20%, 40% { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } .c { opacity: 1; } }
+  </style>
+  <rect x="2" y="2" width="236" height="136" rx="18" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="2"/>
+  <!-- connections between the three layers -->
+  <g stroke="#C7D2FE" stroke-width="2">
+    <path d="M52 34 L120 26 M52 34 L120 58 M52 34 L120 90 M52 34 L120 114"/>
+    <path d="M52 70 L120 26 M52 70 L120 58 M52 70 L120 90 M52 70 L120 114"/>
+    <path d="M52 106 L120 26 M52 106 L120 58 M52 106 L120 90 M52 106 L120 114"/>
+    <path d="M120 26 L188 50 M120 58 L188 50 M120 90 L188 50 M120 114 L188 50"/>
+    <path d="M120 26 L188 90 M120 58 L188 90 M120 90 L188 90 M120 114 L188 90"/>
+  </g>
+  <!-- layer 1 -->
+  <g class="c" fill="#F59E0B" stroke="#B45309" stroke-width="3">
+    <circle cx="52" cy="34" r="12"/><circle cx="52" cy="70" r="12"/><circle cx="52" cy="106" r="12"/>
+  </g>
+  <!-- layer 2 -->
+  <g class="c c2" fill="#818CF8" stroke="#4338CA" stroke-width="3">
+    <circle cx="120" cy="26" r="11"/><circle cx="120" cy="58" r="11"/><circle cx="120" cy="90" r="11"/><circle cx="120" cy="114" r="11"/>
+  </g>
+  <!-- layer 3 -->
+  <g class="c c3" fill="#10B981" stroke="#059669" stroke-width="3">
+    <circle cx="188" cy="50" r="13"/><circle cx="188" cy="90" r="13"/>
+  </g>
+  <!-- highlights -->
+  <g fill="#FFFFFF" opacity=".6">
+    <circle cx="48" cy="30" r="3.5"/><circle cx="48" cy="66" r="3.5"/><circle cx="48" cy="102" r="3.5"/>
+    <circle cx="116" cy="22" r="3"/><circle cx="116" cy="54" r="3"/><circle cx="116" cy="86" r="3"/><circle cx="116" cy="110" r="3"/>
+    <circle cx="184" cy="46" r="4"/><circle cx="184" cy="86" r="4"/>
+  </g>
+  <!-- layer bands -->
+  <g fill="none" stroke="#818CF8" stroke-width="2" stroke-dasharray="4 5" opacity=".7">
+    <rect x="34" y="16" width="36" height="108" rx="14"/><rect x="102" y="10" width="36" height="120" rx="14"/><rect x="170" y="30" width="36" height="80" rx="14"/>
+  </g>
+</svg>

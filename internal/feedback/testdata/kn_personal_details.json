@@ -1,0 +1,142 @@
+[
+  {
+    "text": "ನನ್ನ ನಂಬರ್ 9876543210",
+    "kind": "phone"
+  },
+  {
+    "text": "ನನ್ನ ನಂಬರ್ ೯೮೭೬೫೪೩೨೧೦",
+    "kind": "phone"
+  },
+  {
+    "text": "ಕರೆ ಮಾಡಿ 98765 43210",
+    "kind": "phone"
+  },
+  {
+    "text": "ಫೋನ್: ೯೮೭೬೫ ೪೩೨೧೦",
+    "kind": "phone"
+  },
+  {
+    "text": "nanna number 9876543210 ge call maadi",
+    "kind": "phone"
+  },
+  {
+    "text": "ಒಂಬತ್ತು ಎಂಟು ಏಳು ಆರು ಐದು ನಾಲ್ಕು ಮೂರು ಎರಡು ಒಂದು ಸೊನ್ನೆ",
+    "kind": "phone"
+  },
+  {
+    "text": "ನನ್ನ ಇಮೇಲ್ asha@gmail.com",
+    "kind": "email"
+  },
+  {
+    "text": "asha ಅಟ್ gmail ಡಾಟ್ ಕಾಮ್",
+    "kind": "email"
+  },
+  {
+    "text": "ಆಶಾ ಅಟ್ ಜಿಮೇಲ್ ಡಾಟ್ ಕಾಮ್ ಗೆ ಬರೆಯಿರಿ",
+    "kind": "email"
+  },
+  {
+    "text": "nanna email asha.k@yahoo.in",
+    "kind": "email"
+  },
+  {
+    "text": "ನನ್ನ ವಿಳಾಸ ಬೆಂಗಳೂರು",
+    "kind": "address"
+  },
+  {
+    "text": "ನಮ್ಮ ಮನೆಯ ವಿಳಾಸ ಜಯನಗರ",
+    "kind": "address"
+  },
+  {
+    "text": "ಮನೆ ನಂ. 27, ಎಂ ಜಿ ರಸ್ತೆ",
+    "kind": "address"
+  },
+  {
+    "text": "45 ಶಾಂತಿ ನಗರ",
+    "kind": "address"
+  },
+  {
+    "text": "3ನೇ ಕ್ರಾಸ್, ಮಲ್ಲೇಶ್ವರಂ",
+    "kind": "address"
+  },
+  {
+    "text": "ಪಿನ್ ಕೋಡ್ 560001",
+    "kind": "address"
+  },
+  {
+    "text": "ಪಿನ್ ಕೋಡ್ ೫೬೦೦೦೧",
+    "kind": "address"
+  },
+  {
+    "text": "nanna vilasa jayanagar",
+    "kind": "address"
+  },
+  {
+    "text": "mane number 15 alli iddini",
+    "kind": "address"
+  },
+  {
+    "text": "12 ಬಸವನಗುಡಿ ಮುಖ್ಯ ರಸ್ತೆ",
+    "kind": "address"
+  },
+  {
+    "text": "ನನ್ನ ಆಧಾರ್ 1234 5678 9012",
+    "kind": "id_number"
+  },
+  {
+    "text": "ಆಧಾರ್ ಸಂಖ್ಯೆ ೧೨೩೪ ೫೬೭೮ ೯೦೧೨",
+    "kind": "id_number"
+  },
+  {
+    "text": "ಪ್ಯಾನ್ ABCDE1234F",
+    "kind": "id_number"
+  },
+  {
+    "text": "ನನ್ನ ಹುಟ್ಟಿದ ದಿನ 12 ಮಾರ್ಚ್ 2014",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "ನನ್ನ ಜನ್ಮದಿನ ೫ ಜೂನ್",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "ನನ್ನ ಹುಟ್ಟುಹಬ್ಬ 12/03/2014",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "ನಾನು 2014 ರಲ್ಲಿ ಹುಟ್ಟಿದೆ",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "nanna birthday 5 june 2013",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "nanna huttida dina 12 march",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "ನನ್ನ ಇನ್‌ಸ್ಟಾ ಫಾಲೋ ಮಾಡಿ",
+    "kind": "link"
+  },
+  {
+    "text": "ವಾಟ್ಸಾಪ್ ನಲ್ಲಿ ಮೆಸೇಜ್ ಮಾಡಿ",
+    "kind": "link"
+  },
+  {
+    "text": "ನನ್ನ ಯೂಟ್ಯೂಬ್ ನೋಡಿ",
+    "kind": "link"
+  },
+  {
+    "text": "nanna insta follow maadi",
+    "kind": "link"
+  },
+  {
+    "text": "whatsapp nalli message maadi",
+    "kind": "link"
+  },
+  {
+    "text": "www.example.com ನೋಡಿ",
+    "kind": "link"
+  }
+]

@@ -1,0 +1,107 @@
+{
+  "lessonId": "1-intro",
+  "mode": "junior",
+  "title": "Teaching Robots How to Think 🤖",
+  "readingTimeMinutes": 6,
+  "mascot": {
+    "name": "Chip",
+    "avatar": "🤖",
+    "greeting": "Hey there, Future Explorer! I'm Chip. Ever wonder how computers can spot your dog in a photo or beat grown-ups at chess? Let's crack the code together!"
+  },
+  "sections": [
+    {
+      "id": "what-is-ai",
+      "heading": "1. What Exactly is Artificial Intelligence?",
+      "chipQuote": "Computers used to be like super-fast calculators that only did exactly what you told them. AI gives them eyes, ears, and the ability to learn from practice!",
+      "analogy": {
+        "metaphorName": "The Martian Puppy",
+        "description": "Imagine a puppy arrives from Mars. It has never seen a cat before! If you just hand it a giant book of math, it won't understand. But if you show it 100 friendly cats and say 'Cat!', the puppy starts recognizing cats everywhere. That's how AI learns!"
+      },
+      "bodyMarkdown": "Regular computer programs follow strict recipes called **algorithms**. If you type `5 + 5`, it gives you `10`. Simple, right?\n\n**Artificial Intelligence (AI)** is different. Instead of following one rigid recipe, AI looks at thousands of examples, finds clues on its own, and gets smarter the more it practices—just like you practicing a video game!",
+      "jargonBuster": [
+        {
+          "term": "Artificial",
+          "simpleExplanation": "Made by humans, not found in nature."
+        },
+        {
+          "term": "Algorithm",
+          "simpleExplanation": "A step-by-step recipe that tells a computer what to do."
+        }
+      ]
+    },
+    {
+      "id": "weak-vs-strong-ai",
+      "heading": "2. Superhero AI vs Real-World AI",
+      "chipQuote": "Movies show shiny robots that can do everything from cooking pancakes to saving the galaxy. But real AI today is actually a master of just ONE single chore!",
+      "analogy": {
+        "metaphorName": "The Chess Wizard Who Can't Tie His Shoes",
+        "description": "Imagine a genius who is the undisputed world champion at chess, but has no idea how to ride a bike, pet a dog, or tie shoelaces. That is what today's AI is like!"
+      },
+      "bodyMarkdown": "Scientists divide AI into two big categories:\n\n* **Narrow AI (Weak AI)**: Super-focused tools built for a single job. Siri understands your voice, YouTube suggests your favorite videos, and photo filters detect smiles. But Siri can't drive a car!\n* **General AI (AGI or Strong AI)**: A computer that could think, feel, and learn *anything* a human can do. This only exists in sci-fi movies like *WALL-E* or *Star Wars*—no one has built it yet!",
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Narrow AI (Real Today) vs General AI (Sci-Fi Movies)",
+        "content": "graph TD\n    AI[\"Types of AI\"]\n    AI --> Narrow[\"Narrow AI (Real Today) 🛠️\"]\n    AI --> General[\"General AI (Sci-Fi) 🚀\"]\n    Narrow --> Ex1[\"🎮 Chess Champions\"]\n    Narrow --> Ex2[\"📱 Face Unlock\"]\n    Narrow --> Ex3[\"🎵 Music Recommendations\"]\n    General --> Movie[\"🤖 Human-like thinking across all subjects (Not yet invented!)\"]"
+      }
+    },
+    {
+      "id": "turing-test",
+      "heading": "3. The Curtain Guessing Game (The Turing Test)",
+      "chipQuote": "Back in 1950, a brilliant British mathematician named Alan Turing asked: 'Can a machine trick a human into thinking it's another person?'",
+      "analogy": {
+        "metaphorName": "Texting Behind a Velvet Curtain",
+        "description": "Imagine you are in a quiet room with a keyboard. Behind a thick curtain are two pen pals: one is a real human, and the other is a computer. You send messages to both. If you can't tell which one is the machine, the computer passes the test!"
+      },
+      "bodyMarkdown": "This experiment is called **The Turing Test**. Today, modern chatbots are getting so clever with conversational language that they can sound eerily human—but are they really *thinking*, or are they just great at predicting words?",
+      "interactiveWidget": {
+        "type": "turing-guess-game",
+        "title": "🎮 Mini-Game: Can You Spot the Bot?",
+        "instruction": "Read the conversation below and pick which participant is the AI!",
+        "scenario": {
+          "userPrompt": "What is the best thing about rainy days?",
+          "terminalA": "I love the smell of damp grass and curling up with hot cocoa while listening to raindrops on the window.",
+          "terminalB": "Precipitation provides critical replenishment to municipal reservoirs and enhances soil saturation for agricultural yields.",
+          "correctAnswer": "Terminal B",
+          "explanation": "Terminal B sounds like a textbook encyclopedia! Real humans usually talk about feelings, warmth, and cozy snacks."
+        }
+      }
+    },
+    {
+      "id": "top-down-vs-bottom-up",
+      "heading": "4. How Do We Teach Machines? (Two Secret Paths)",
+      "chipQuote": "There are two famous ways scientists teach AI: writing an impossible rulebook, or letting the computer learn from clues!",
+      "analogy": {
+        "metaphorName": "The 10,000-Page Cat Rulebook vs. The Photo Album",
+        "description": "Path 1: You try to write down rules for a cat: 'Pointy ears, whiskers, 4 legs.' But what if the cat is sleeping in a box? Or has one ear tucked? Your rules break! Path 2: Just show the computer 1,000 photos of cats in every goofy pose, and let it figure out what makes a cat a cat!"
+      },
+      "bodyMarkdown": "In computer science, these two methods are known as:\n\n1. **Top-Down (Symbolic AI)**: Humans write every single rule manually. Great for math, terrible for recognizing messy real-world objects.\n2. **Bottom-Up (Machine Learning)**: Humans give data, and the machine figures out the patterns on its own!",
+      "diagram": {
+        "type": "mermaid",
+        "caption": "The Two Ways to Build AI",
+        "content": "flowchart LR\n    subgraph TopDown [\"Path 1: Top-Down (Rule-Based)\"]\n        R1[\"Human writes 1,000 rules 📝\"] --> R2[\"Computer checks rules 🔎\"] --> R3[\"Breaks on surprises ❌\"]\n    end\n    subgraph BottomUp [\"Path 2: Bottom-Up (Machine Learning)\"]\n        D1[\"Provide 1,000 photos 📸\"] --> D2[\"Computer spots patterns 🧠\"] --> D3[\"Recognizes new cats! ✅\"]\n    end"
+      }
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "Which of these is an example of Narrow AI that we use right now?",
+      "options": [
+        "A robot that feels happy and writes its own homework for fun",
+        "An app that unlocks your phone when it sees your face",
+        "A machine that can do every human job in the world"
+      ],
+      "correctIndex": 1,
+      "praise": "Awesome job, explorer! Face unlock is a champion at one specific job—that's Narrow AI!"
+    },
+    {
+      "question": "In the Turing Test, what is the human judge trying to figure out?",
+      "options": [
+        "How fast the computer's fan is spinning",
+        "Which chatting partner is human and which is a computer",
+        "Who can solve math equations faster"
+      ],
+      "correctIndex": 1,
+      "praise": "Spot on! The Turing Test is all about seeing if a machine can chat like a real person!"
+    }
+  ]
+}

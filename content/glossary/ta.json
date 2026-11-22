@@ -1,0 +1,656 @@
+{
+  "language": "ta",
+  "note": "Draft by Claude, 2026-11-19 (SPEC-015 T026). Approved by the owner (beta) on 2026-11-19, to be reviewed live by users. Show the Tamil term followed by the English in brackets at its first use in each section, as for Hindi and Kannada. 57 terms added by the term alignment on 2026-11-19, reconfirmed by the owner (beta) on 2026-11-19.",
+  "terms": [
+    {
+      "en": "artificial intelligence",
+      "target": "செயற்கை நுண்ணறிவு",
+      "note": "Abbreviation ஏஐ (AI) is fine after first use."
+    },
+    {
+      "en": "machine learning",
+      "target": "இயந்திரக் கற்றல்",
+      "note": ""
+    },
+    {
+      "en": "deep learning",
+      "target": "ஆழ்ந்த கற்றல்",
+      "note": ""
+    },
+    {
+      "en": "neural network",
+      "target": "நியூரல் நெட்வொர்க்",
+      "note": "Transliterated, as commonly used; நரம்பியல் வலையமைப்பு is the formal word."
+    },
+    {
+      "en": "neuron",
+      "target": "நியூரான்",
+      "note": "Transliterate; நரம்பணு is the biology word."
+    },
+    {
+      "en": "perceptron",
+      "target": "பெர்செப்ட்ரான்",
+      "note": "Transliterate; no common Tamil word."
+    },
+    {
+      "en": "algorithm",
+      "target": "அல்காரிதம்",
+      "note": "படிமுறை is the formal word."
+    },
+    {
+      "en": "data",
+      "target": "தரவு",
+      "note": ""
+    },
+    {
+      "en": "dataset",
+      "target": "தரவுத்தொகுப்பு",
+      "note": ""
+    },
+    {
+      "en": "training",
+      "target": "பயிற்சி",
+      "note": ""
+    },
+    {
+      "en": "model",
+      "target": "மாதிரி",
+      "note": ""
+    },
+    {
+      "en": "prediction",
+      "target": "கணிப்பு",
+      "note": ""
+    },
+    {
+      "en": "weight",
+      "target": "எடை",
+      "note": ""
+    },
+    {
+      "en": "bias",
+      "target": "பாரபட்சம்",
+      "note": "The social meaning (fairness). For the number added inside a neuron, use பயாஸ் (see \"bias (in a neuron)\")."
+    },
+    {
+      "en": "bias (in a neuron)",
+      "target": "பயாஸ்",
+      "note": "Transliterated, as Kannada does; பாரபட்சம் would read as prejudice here."
+    },
+    {
+      "en": "convolution",
+      "target": "கன்வல்யூஷன்",
+      "note": "Transliterate."
+    },
+    {
+      "en": "filter",
+      "target": "ஃபில்டர்",
+      "note": "வடிகட்டி is also understood."
+    },
+    {
+      "en": "pixel",
+      "target": "பிக்சல்",
+      "note": ""
+    },
+    {
+      "en": "computer vision",
+      "target": "கணினிப் பார்வை",
+      "note": ""
+    },
+    {
+      "en": "natural language processing",
+      "target": "இயற்கை மொழிச் செயலாக்கம்",
+      "note": ""
+    },
+    {
+      "en": "token",
+      "target": "டோக்கன்",
+      "note": ""
+    },
+    {
+      "en": "embedding",
+      "target": "எம்பெடிங்",
+      "note": ""
+    },
+    {
+      "en": "vector",
+      "target": "வெக்டர்",
+      "note": "திசையன் is the school maths word."
+    },
+    {
+      "en": "expert system",
+      "target": "நிபுணர் அமைப்பு",
+      "note": ""
+    },
+    {
+      "en": "rule",
+      "target": "விதி",
+      "note": ""
+    },
+    {
+      "en": "knowledge base",
+      "target": "அறிவுத் தளம்",
+      "note": ""
+    },
+    {
+      "en": "symbolic AI",
+      "target": "குறியீட்டு ஏஐ",
+      "note": ""
+    },
+    {
+      "en": "Turing test",
+      "target": "டூரிங் சோதனை",
+      "note": ""
+    },
+    {
+      "en": "fairness",
+      "target": "நியாயத்தன்மை",
+      "note": ""
+    },
+    {
+      "en": "responsible AI",
+      "target": "பொறுப்பான ஏஐ",
+      "note": ""
+    },
+    {
+      "en": "quiz",
+      "target": "வினாடி வினா",
+      "note": ""
+    },
+    {
+      "en": "weighted sum",
+      "target": "எடையிட்ட கூட்டுத்தொகை",
+      "note": ""
+    },
+    {
+      "en": "layer",
+      "target": "அடுக்கு",
+      "note": ""
+    },
+    {
+      "en": "pattern",
+      "target": "பேட்டர்ன்",
+      "note": "Transliterated, as commonly used; வடிவ ஒழுங்கு is the formal phrase."
+    },
+    {
+      "en": "feature",
+      "target": "அம்சம்",
+      "note": ""
+    },
+    {
+      "en": "feature map",
+      "target": "அம்ச வரைபடம்",
+      "note": ""
+    },
+    {
+      "en": "attention",
+      "target": "கவனம்",
+      "note": "The mechanism; கவன முறை when it needs to be explicit."
+    },
+    {
+      "en": "self-attention",
+      "target": "சுய கவனம்",
+      "note": ""
+    },
+    {
+      "en": "fire (a neuron)",
+      "target": "தூண்டப்படு",
+      "note": "e.g. நியூரான் தூண்டப்படுகிறது."
+    },
+    {
+      "en": "inference engine",
+      "target": "அனுமான இயந்திரம்",
+      "note": ""
+    },
+    {
+      "en": "working memory",
+      "target": "செயல் நினைவகம்",
+      "note": ""
+    },
+    {
+      "en": "inheritance",
+      "target": "மரபுரிமை",
+      "note": ""
+    },
+    {
+      "en": "fairness audit",
+      "target": "நியாயத்தன்மைத் தணிக்கை",
+      "note": ""
+    },
+    {
+      "en": "audit",
+      "target": "தணிக்கை",
+      "note": ""
+    },
+    {
+      "en": "four-fifths rule",
+      "target": "ஐந்தில் நான்கு விதி",
+      "note": ""
+    },
+    {
+      "en": "human oversight",
+      "target": "மனித மேற்பார்வை",
+      "note": ""
+    },
+    {
+      "en": "dot product",
+      "target": "புள்ளிப் பெருக்கல்",
+      "note": "The school maths term."
+    },
+    {
+      "en": "forward chaining",
+      "target": "முன்னோக்கு தர்க்கம்",
+      "note": ""
+    },
+    {
+      "en": "backward chaining",
+      "target": "பின்னோக்கு தர்க்கம்",
+      "note": ""
+    },
+    {
+      "en": "fact",
+      "target": "உண்மை",
+      "note": "A fact stored in a knowledge base; plural உண்மைகள்."
+    },
+    {
+      "en": "sensor",
+      "target": "சென்சார்",
+      "note": "உணரி is the formal word."
+    },
+    {
+      "en": "ontology",
+      "target": "ஆன்டாலஜி",
+      "note": ""
+    },
+    {
+      "en": "knowledge graph",
+      "target": "அறிவு வரைபடம்",
+      "note": ""
+    },
+    {
+      "en": "narrow AI",
+      "target": "குறுகிய ஏஐ",
+      "note": ""
+    },
+    {
+      "en": "general AI",
+      "target": "பொது ஏஐ",
+      "note": ""
+    },
+    {
+      "en": "decision boundary",
+      "target": "முடிவு எல்லை",
+      "note": ""
+    },
+    {
+      "en": "label",
+      "target": "லேபிள்",
+      "note": "குறிச்சொல் is the formal word."
+    },
+    {
+      "en": "parameter",
+      "target": "அளவுரு",
+      "note": ""
+    },
+    {
+      "en": "input",
+      "target": "உள்ளீடு",
+      "note": "Output is வெளியீடு."
+    },
+    {
+      "en": "activation function",
+      "target": "செயல்படுத்தும் சார்பு",
+      "note": ""
+    },
+    {
+      "en": "learning rate",
+      "target": "கற்றல் வீதம்",
+      "note": ""
+    },
+    {
+      "en": "backpropagation",
+      "target": "பேக்ப்ரொபகேஷன்",
+      "note": "Transliterate."
+    },
+    {
+      "en": "training data",
+      "target": "பயிற்சித் தரவு",
+      "note": ""
+    },
+    {
+      "en": "edge (in an image)",
+      "target": "விளிம்பு",
+      "note": ""
+    },
+    {
+      "en": "grid",
+      "target": "கட்டம்",
+      "note": ""
+    },
+    {
+      "en": "transformer",
+      "target": "டிரான்ஸ்ஃபார்மர்",
+      "note": ""
+    },
+    {
+      "en": "language model",
+      "target": "மொழி மாதிரி",
+      "note": ""
+    },
+    {
+      "en": "large language model",
+      "target": "பெரிய மொழி மாதிரி",
+      "note": ""
+    },
+    {
+      "en": "hallucination",
+      "target": "மாயத்தோற்றம்",
+      "note": "When an AI states something false with confidence."
+    },
+    {
+      "en": "selection rate",
+      "target": "தேர்வு விகிதம்",
+      "note": ""
+    },
+    {
+      "en": "disparate impact ratio",
+      "target": "சமமற்ற தாக்க விகிதம்",
+      "note": ""
+    },
+    {
+      "en": "human in the loop",
+      "target": "முடிவில் மனிதர்",
+      "note": ""
+    },
+    {
+      "en": "transparency",
+      "target": "வெளிப்படைத்தன்மை",
+      "note": ""
+    },
+    {
+      "en": "program / programmer",
+      "target": "புரோகிராம் / புரோகிராமர்",
+      "note": "Aligned 2026-11-19; நிரல் was replaced everywhere."
+    },
+    {
+      "en": "software",
+      "target": "மென்பொருள்",
+      "note": ""
+    },
+    {
+      "en": "chatbot / chat assistant",
+      "target": "சாட்பாட் / சாட் உதவியாளர்",
+      "note": ""
+    },
+    {
+      "en": "AI winter",
+      "target": "ஏஐ குளிர்காலம்",
+      "note": ""
+    },
+    {
+      "en": "rule-based AI",
+      "target": "விதி அடிப்படையிலான ஏஐ",
+      "note": ""
+    },
+    {
+      "en": "if-then rule",
+      "target": "‘இப்படி என்றால்’ விதி",
+      "note": "As in the interface."
+    },
+    {
+      "en": "production rule",
+      "target": "உற்பத்தி விதி",
+      "note": "As in the interface."
+    },
+    {
+      "en": "fire (a rule)",
+      "target": "இயங்கு",
+      "note": "Rules இயங்குகின்றன; neurons தூண்டப்படுகின்றன."
+    },
+    {
+      "en": "knowledge representation",
+      "target": "அறிவுப் பிரதிநிதித்துவம்",
+      "note": ""
+    },
+    {
+      "en": "semantic network",
+      "target": "சொற்பொருள் வலையமைப்பு",
+      "note": ""
+    },
+    {
+      "en": "sub-goal",
+      "target": "துணை இலக்கு",
+      "note": ""
+    },
+    {
+      "en": "decision tree",
+      "target": "முடிவு மரம்",
+      "note": ""
+    },
+    {
+      "en": "triple",
+      "target": "மும்மை",
+      "note": "டிரிபிள் is the alternative."
+    },
+    {
+      "en": "supervised learning",
+      "target": "மேற்பார்வைக் கற்றல்",
+      "note": ""
+    },
+    {
+      "en": "labelled data",
+      "target": "லேபிள் இடப்பட்ட தரவு",
+      "note": ""
+    },
+    {
+      "en": "test data",
+      "target": "சோதனைத் தரவு",
+      "note": ""
+    },
+    {
+      "en": "accuracy",
+      "target": "துல்லியம்",
+      "note": ""
+    },
+    {
+      "en": "loss",
+      "target": "இழப்பு",
+      "note": ""
+    },
+    {
+      "en": "error",
+      "target": "பிழை",
+      "note": ""
+    },
+    {
+      "en": "classification",
+      "target": "வகைப்படுத்தல்",
+      "note": ""
+    },
+    {
+      "en": "regression",
+      "target": "ரிக்ரெஷன்",
+      "note": "Transliterated, as Kannada."
+    },
+    {
+      "en": "overfitting",
+      "target": "ஓவர்ஃபிட்டிங்",
+      "note": ""
+    },
+    {
+      "en": "epoch",
+      "target": "எபோக்",
+      "note": ""
+    },
+    {
+      "en": "hidden layer",
+      "target": "மறை அடுக்கு",
+      "note": ""
+    },
+    {
+      "en": "gradient descent",
+      "target": "கிரேடியன்ட் டிசென்ட்",
+      "note": ""
+    },
+    {
+      "en": "step function",
+      "target": "படிச் சார்பு",
+      "note": ""
+    },
+    {
+      "en": "linearly separable",
+      "target": "நேர்கோட்டால் பிரிக்கக்கூடிய",
+      "note": ""
+    },
+    {
+      "en": "probability",
+      "target": "நிகழ்தகவு",
+      "note": ""
+    },
+    {
+      "en": "convolutional neural network (CNN)",
+      "target": "கன்வல்யூஷனல் நியூரல் நெட்வொர்க் (சிஎன்என்)",
+      "note": ""
+    },
+    {
+      "en": "kernel",
+      "target": "கெர்னல்",
+      "note": ""
+    },
+    {
+      "en": "channel",
+      "target": "சேனல்",
+      "note": ""
+    },
+    {
+      "en": "stride",
+      "target": "ஸ்ட்ரைடு",
+      "note": ""
+    },
+    {
+      "en": "padding",
+      "target": "பேடிங்",
+      "note": ""
+    },
+    {
+      "en": "pooling",
+      "target": "பூலிங்",
+      "note": ""
+    },
+    {
+      "en": "image classification",
+      "target": "படத்தை வகைப்படுத்துதல்",
+      "note": ""
+    },
+    {
+      "en": "object detection",
+      "target": "பொருள் கண்டறிதல்",
+      "note": ""
+    },
+    {
+      "en": "optical character recognition (OCR)",
+      "target": "ஒளியியல் எழுத்து அறிதல்",
+      "note": "Aligned 2026-11-19."
+    },
+    {
+      "en": "tokenisation",
+      "target": "டோக்கனாக்கம்",
+      "note": ""
+    },
+    {
+      "en": "vocabulary",
+      "target": "சொற்களஞ்சியம்",
+      "note": ""
+    },
+    {
+      "en": "bag of words",
+      "target": "சொற்பை",
+      "note": ""
+    },
+    {
+      "en": "cosine similarity",
+      "target": "கொசைன் ஒற்றுமை",
+      "note": ""
+    },
+    {
+      "en": "context window",
+      "target": "சூழல் சாளரம்",
+      "note": "The sliding window in images is ஜன்னல், a different idea."
+    },
+    {
+      "en": "pre-training / fine-tuning",
+      "target": "முன்பயிற்சி / நுட்பமான சீரமைப்பு",
+      "note": ""
+    },
+    {
+      "en": "sentiment analysis",
+      "target": "உணர்வுப் பகுப்பாய்வு",
+      "note": ""
+    },
+    {
+      "en": "machine translation",
+      "target": "இயந்திர மொழிபெயர்ப்பு",
+      "note": ""
+    },
+    {
+      "en": "algorithmic bias",
+      "target": "அல்காரிதப் பாரபட்சம்",
+      "note": "Aligned 2026-11-19, as in the interface."
+    },
+    {
+      "en": "proxy (variable)",
+      "target": "ப்ராக்ஸி (மாறி)",
+      "note": ""
+    },
+    {
+      "en": "feedback loop",
+      "target": "பின்னூட்டச் சுழற்சி",
+      "note": ""
+    },
+    {
+      "en": "demographic parity",
+      "target": "மக்கள்தொகைச் சமநிலை",
+      "note": ""
+    },
+    {
+      "en": "true positive rate",
+      "target": "உண்மை நேர்மறை விகிதம்",
+      "note": ""
+    },
+    {
+      "en": "calibration",
+      "target": "அளவுத்திருத்தம்",
+      "note": ""
+    },
+    {
+      "en": "black box",
+      "target": "கருப்புப் பெட்டி",
+      "note": ""
+    },
+    {
+      "en": "explainability",
+      "target": "விளக்கத்தன்மை",
+      "note": ""
+    },
+    {
+      "en": "accountability",
+      "target": "பொறுப்புக்கூறல்",
+      "note": ""
+    },
+    {
+      "en": "model card",
+      "target": "மாதிரி அட்டை",
+      "note": ""
+    },
+    {
+      "en": "privacy",
+      "target": "தனியுரிமை",
+      "note": ""
+    },
+    {
+      "en": "counterfactual explanation",
+      "target": "மாற்று நிலை விளக்கம்",
+      "note": "Coined; the weakest choice, watch user feedback."
+    }
+  ]
+}

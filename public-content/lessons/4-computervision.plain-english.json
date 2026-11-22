@@ -1,0 +1,191 @@
+{
+  "lessonId": "4-computervision",
+  "mode": "plain-english",
+  "origin": "own",
+  "title": "How Computers See, in Plain English 👁️",
+  "readingTimeMinutes": 6,
+  "intro": "Cameras are everywhere, and more and more of them are paired with AI. This lesson explains how a computer turns a photo into something it can recognise.",
+  "sections": [
+    {
+      "id": "digital-mosaic",
+      "heading": "1. A Photo Is a Grid of Numbers",
+      "analogy": {
+        "metaphorName": "The Tiled Floor",
+        "description": "Stand close to a tiled floor and you see individual tiles. Step back and you see the pattern. A digital photo is a floor of tiny tiles, and a computer only ever sees the tiles."
+      },
+      "bodyMarkdown": "A digital image is made of **pixels**, tiny squares arranged in a grid. Each pixel stores its colour as numbers, usually three: how much red, green and blue it contains.\n\nSo to a computer, a photo is not a cat or a street. It is a large table of numbers. A phone photo has millions of pixels. Computer vision is about getting from that table of numbers to a useful answer, such as \"this is a cat\" or \"there is a person crossing\".",
+      "jargonBuster": [
+        {
+          "term": "Pixel",
+          "simpleExplanation": "One tiny square in a digital image. Its colour is stored as numbers."
+        },
+        {
+          "term": "Computer vision",
+          "simpleExplanation": "The field of AI that gets computers to understand images and video."
+        }
+      ],
+      "diagram": {
+        "type": "stepper",
+        "caption": "From a photo to numbers",
+        "alt": "Three steps: a photo, the photo seen as a grid of pixels, and each pixel stored as numbers for red, green and blue.",
+        "content": "",
+        "steps": [
+          "A photo: what you see.",
+          "Zoom in: a grid of tiny coloured squares called pixels.",
+          "Each pixel is stored as three numbers: red, green and blue."
+        ]
+      },
+      "realWorld": "Every photo you take, every video call and every scanned document is stored as a grid of pixel numbers."
+    },
+    {
+      "id": "convolution-filters",
+      "heading": "2. Finding Edges with Sliding Filters",
+      "analogy": {
+        "metaphorName": "Reading with a Card",
+        "description": "Some people read a page by sliding a card down it, one line at a time. A vision system scans an image with a small window in a similar way, looking for one kind of pattern."
+      },
+      "bodyMarkdown": "To find shapes, a vision system uses small **filters**, typically three by three pixels. A filter slides across the image, one position at a time. At each stop it compares the pixels underneath with the pattern it is looking for, such as a vertical edge, and records how strong the match is.\n\nThe result is a new grid showing where that pattern appears. This sliding-and-matching operation is called **convolution**. Different filters pick out different things: vertical edges, horizontal edges, corners or textures.",
+      "jargonBuster": [
+        {
+          "term": "Filter",
+          "simpleExplanation": "A small grid of numbers that slides over an image to detect one kind of pattern, such as an edge."
+        },
+        {
+          "term": "Convolution",
+          "simpleExplanation": "Sliding a filter across an image and recording how strongly it matches at each position."
+        }
+      ],
+      "realWorld": "Document scanners use edge-finding to straighten pages. Photo editing apps use similar filters to sharpen or blur.",
+      "interactiveWidget": {
+        "type": "convolution-sim",
+        "title": "🔍 Try It: The Filter Lab",
+        "instruction": "Pick a drawing and a filter. Watch the filter slide across the image and see what it highlights.",
+        "goal": "Choose a filter that reveals the outline of the shape.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you pick a filter: what should an edge filter highlight?",
+        "hints": [
+          "Edge filters respond where dark meets light.",
+          "Compare the edge filter with the blur filter."
+        ],
+        "successMessage": "That outline is the first thing a vision network learns to find.",
+        "allowFreePlay": true
+      },
+      "diagram": {
+        "type": "clip",
+        "clip": "plain-image-feature-scan",
+        "media": "video",
+        "caption": "Scanning surface grids with sliding pattern filters",
+        "alt": "An industrial inspection camera sliding a 3x3 convolution window across component pixels to detect surface defects and fractures.",
+        "steps": [
+          "An industrial sensor captures manufactured parts as a grid of pixel intensity values.",
+          "A compact three-by-three filter slides systematically across the image coordinate grid.",
+          "The filter computes local contrast matches, highlighting sharp boundaries where materials change.",
+          "Combined edge detections assemble into structural outlines of cracks and surface fissures.",
+          "The automated pipeline screens thousands of parts per hour, routing anomalies for engineering review."
+        ]
+      }
+    },
+    {
+      "id": "cnn-hierarchy",
+      "heading": "3. From Edges to Objects",
+      "analogy": {
+        "metaphorName": "Assembling a Jigsaw",
+        "description": "You start a jigsaw with edge pieces, then group pieces into areas like sky or a face, and finally see the whole picture. Vision networks build up understanding in the same order."
+      },
+      "bodyMarkdown": "A **convolutional neural network (CNN)** stacks many layers of filters. Nobody designs the filters by hand; the network learns them from labelled photos.\n\nThe early layers end up detecting simple edges and colour patches. Middle layers combine those into parts, such as eyes, wheels or leaves. The final layers combine parts into whole objects and give an answer, often with a confidence score: \"cat, 94%\".\n\nThis layered approach is why vision AI improved so dramatically once large labelled photo collections became available.",
+      "jargonBuster": [
+        {
+          "term": "Convolutional neural network (CNN)",
+          "simpleExplanation": "A neural network made of layers of learned filters, used mainly for images."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "What each layer finds",
+        "content": "graph LR\n    P[\"Photo\"] --> E[\"Early layers: edges and colours\"]\n    E --> M[\"Middle layers: parts like eyes or wheels\"]\n    M --> O[\"Final layers: whole objects\"]\n    O --> A[\"Answer: cat, 94%\"]",
+        "alt": "A photo passes through early layers that find edges and colours, middle layers that find parts like eyes or wheels, and final layers that find whole objects, giving an answer such as cat, 94 percent."
+      },
+      "realWorld": "Photo apps that group pictures by person, and shopping apps that find a product from a picture, use CNNs or their successors."
+    },
+    {
+      "id": "practical-impact",
+      "heading": "4. Where Vision AI Is Used, and Where It Fails",
+      "analogy": {
+        "metaphorName": "A Tireless Inspector",
+        "description": "A camera on a production line can check every single item, all day, without getting bored. But it only knows what it was trained to look for."
+      },
+      "bodyMarkdown": "Vision AI unlocks phones, reads number plates, helps cars keep in lane, spots defects on production lines and helps doctors review scans.\n\nIt also has blind spots. A system trained mostly on daytime photos may struggle at night. One trained on too narrow a range of faces may work less well for some people. Small changes a person would ignore, like an odd sticker on a road sign, can sometimes confuse it. That is why high-stakes uses keep a person in the loop and test across varied conditions.",
+      "jargonBuster": [
+        {
+          "term": "Training data",
+          "simpleExplanation": "The examples a model learns from. Its gaps become the model's blind spots."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Uses and limits",
+        "content": "graph TD\n    V[\"Vision AI\"] --> U1[\"Face unlock\"]\n    V --> U2[\"Lane assist\"]\n    V --> U3[\"Defect checks\"]\n    V --> U4[\"Scan review\"]\n    V --> L[\"Limits: unfamiliar conditions, narrow training data\"]",
+        "alt": "Vision AI is used for face unlock, lane assist, defect checks and scan review, and is limited by unfamiliar conditions and narrow training data."
+      },
+      "realWorld": "Phone face unlock, supermarket self-checkout cameras, car lane assist and hospital scan reviews."
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "How does a computer store a photo?",
+      "options": [
+        "As a grid of pixels, each stored as numbers",
+        "As a written description",
+        "As a single number"
+      ],
+      "correctIndex": 0,
+      "praise": "Right. A photo is a table of numbers.",
+      "explanation": "Each pixel's colour is stored as numbers, usually red, green and blue."
+    },
+    {
+      "question": "What does a filter do as it slides across an image?",
+      "options": [
+        "Records where a particular pattern, like an edge, appears",
+        "Deletes the background",
+        "Adds colour"
+      ],
+      "correctIndex": 0,
+      "praise": "Yes. That is convolution.",
+      "explanation": "A filter compares each patch with its pattern and records how strong the match is."
+    },
+    {
+      "question": "Why might a vision system work less well for some people or situations?",
+      "options": [
+        "Its training data did not cover them well",
+        "Cameras are always faulty",
+        "It was switched off"
+      ],
+      "correctIndex": 0,
+      "praise": "Exactly. Gaps in the training data become blind spots.",
+      "explanation": "A model only knows what it was trained on. Gaps in that data become its weaknesses."
+    }
+  ],
+  "teachBack": {
+    "prompt": "How would you explain computer vision to a colleague?",
+    "options": [
+      "It turns images into numbers and uses learned filters to find edges, then parts, then objects.",
+      "It sees pictures exactly the way people do.",
+      "It looks up every photo in a database."
+    ],
+    "correctIndex": 0,
+    "explanation": "That's it. Numbers, then edges, then parts, then objects."
+  },
+  "recall": [
+    {
+      "fromLesson": "3-neuralnetworks",
+      "question": "What does a weight do in an artificial neuron?",
+      "options": [
+        "Sets how much one input counts",
+        "Stores the answer",
+        "Makes the computer faster"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each input's weight sets how strongly it influences the decision."
+    }
+  ]
+}

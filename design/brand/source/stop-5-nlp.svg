@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" fill="none">
+  <defs>
+    <linearGradient id="bgGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F0FDF4"/>
+      <stop offset="100%" stop-color="#DCFCE7"/>
+    </linearGradient>
+    <linearGradient id="bubbleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F8FAFC"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="144" height="144" rx="28" fill="url(#bgGrad5)" stroke="#BBF7D0" stroke-width="2"/>
+
+  <!-- Conversational Speech Bubble -->
+  <path d="M 32 44 Q 32 32 46 32 L 114 32 Q 128 32 128 44 L 128 92 Q 128 104 114 104 L 76 104 L 54 122 L 58 104 L 46 104 Q 32 104 32 92 Z" fill="url(#bubbleGrad)" stroke="#10B981" stroke-width="2.5"/>
+
+  <!-- Word Meaning Bars Inside Bubble -->
+  <rect x="48" y="48" width="48" height="6" rx="3" fill="#3B82F6"/>
+  <rect x="48" y="60" width="64" height="6" rx="3" fill="#64748B"/>
+  <rect x="48" y="72" width="38" height="6" rx="3" fill="#F59E0B"/>
+  <rect x="48" y="84" width="54" height="6" rx="3" fill="#10B981"/>
+
+  <!-- Folded Paper Word Airplane Floating -->
+  <g transform="translate(94, 66) rotate(15)">
+    <polygon points="0,0 28,12 8,18" fill="#38BDF8" stroke="#0284C7" stroke-width="1.5"/>
+    <polygon points="8,18 28,12 2,24" fill="#0284C7"/>
+  </g>
+</svg>

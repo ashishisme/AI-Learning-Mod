@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img">
+  <style>
+    .s { display: none }
+    .s:target { display: inline }
+    .s:target .move { animation: grow 1s ease-out 1 both }
+    @keyframes grow { from { transform: scale(0.6) } to { transform: none } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important } }
+  </style>
+  <rect width="320" height="180" rx="16" fill="#FFFBEB"/>
+  <g id="s1" class="s"><circle class="move" cx="80" cy="90" r="30" fill="#1D4ED8"/><text x="80" y="160" text-anchor="middle" font-size="18" fill="#1E293B">1</text></g>
+  <g id="s2" class="s"><circle class="move" cx="140" cy="90" r="30" fill="#1D4ED8"/><text x="140" y="160" text-anchor="middle" font-size="18" fill="#1E293B">2</text></g>
+  <g id="s3" class="s"><circle class="move" cx="200" cy="90" r="30" fill="#1D4ED8"/><text x="200" y="160" text-anchor="middle" font-size="18" fill="#1E293B">3</text></g>
+  <g id="s4" class="s"><circle class="move" cx="260" cy="90" r="30" fill="#047857"/><text x="260" y="160" text-anchor="middle" font-size="18" fill="#1E293B">4</text></g>
+</svg>

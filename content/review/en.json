@@ -1,0 +1,230 @@
+{
+  "language": "en",
+  "entries": [
+    {
+      "path": "notebooks/1-intro.ipynb",
+      "kind": "notebook",
+      "sourceHash": "68937759aa7d6059e045d4432ee59b850ab04f825e561b090bd3e397af0c4e1e",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-14"
+    },
+    {
+      "path": "notebooks/2-symbolic.ipynb",
+      "kind": "notebook",
+      "sourceHash": "b7866319f00066fdfe8660752501c90033451e8789277a1c303509c1e6a6bfaf",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-14"
+    },
+    {
+      "path": "notebooks/3-neuralnetworks.ipynb",
+      "kind": "notebook",
+      "sourceHash": "6576dc55685700a419f2a1c3110ebc056e6c1f577848162a9113dd04b3c85f02",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-14"
+    },
+    {
+      "path": "notebooks/4-computervision.ipynb",
+      "kind": "notebook",
+      "sourceHash": "7e644a091d568f0d0ca7e3c1e602e8d2462c3150a664da6a08c63046d2a7f6b2",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-14"
+    },
+    {
+      "path": "notebooks/5-nlp.ipynb",
+      "kind": "notebook",
+      "sourceHash": "f039fb588b63999bf11a746b2fa52262f07f2d0331c9af1baf58728aeb02656e",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-14"
+    },
+    {
+      "path": "notebooks/7-ethics.ipynb",
+      "kind": "notebook",
+      "sourceHash": "40250ef36d7410022b6c743dd0afcd8b555b5ef7f706715da8868ef8c0d8bb2b",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-14"
+    },
+    {
+      "path": "public-content/lessons/1-intro.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "4c91a8229dd3d99276b671e35d4687790e2994dc2c1e68e7b309912dc8e2d766",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-21"
+    },
+    {
+      "path": "public-content/lessons/1-intro.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "e327d9c0f0b333366fd2c9f571ea32622ea28d582e4a253b372e09a2a65ceaef",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-21"
+    },
+    {
+      "path": "public-content/lessons/1-intro.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "bebaefe54a965bc266463460078676cf3e3899a9f9eacb41be2559254d78647d",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-18"
+    },
+    {
+      "path": "public-content/lessons/2-symbolic.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "280e69e4fb6af1b5f3807518f7306e6063fc2b8cc3e915b2a99d3aff90fd7b74",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-21"
+    },
+    {
+      "path": "public-content/lessons/2-symbolic.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "7599f181d20d01a740ad4f39ade98dbf6a5d4fcfa79de7b33a3d2fe9914214f1",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-18"
+    },
+    {
+      "path": "public-content/lessons/2-symbolic.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "8404f1235b540582c733a3fd42f6bbb8ecc1f3d439685664f755ae05ef88ade0",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-18"
+    },
+    {
+      "path": "public-content/lessons/3-neuralnetworks.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "0fd2274511ab9b9d87cf22936799d4db5f4983d281bb5dac4016f42630f71905",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-18"
+    },
+    {
+      "path": "public-content/lessons/3-neuralnetworks.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "181bb861eb922e7b99482f4dd02cdce9eacdaaf9275166adbaf3febefdcb3bd0",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-21"
+    },
+    {
+      "path": "public-content/lessons/3-neuralnetworks.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "f30cf007fa1e3a4d256d9d6898a57ce2409cb17fce50a6d432c6ea28cdf2627b",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-18"
+    },
+    {
+      "path": "public-content/lessons/4-computervision.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "d7e4df62d6fe878038134328f92d6c928e03daca07e2180288dbe109af70ba34",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-21"
+    },
+    {
+      "path": "public-content/lessons/4-computervision.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "15dd339564cb809edddcaa7247e594831879eb4a6ea7988d951f4729c855b188",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-21"
+    },
+    {
+      "path": "public-content/lessons/4-computervision.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "335aaa258747b9e1c6c40272bffaf9560573bc55c76f65373f751f934ed32309",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-18"
+    },
+    {
+      "path": "public-content/lessons/5-nlp.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "fc02a1506ab25f4e05bd753ab4b8ec10d22ad34fbc28defea09ff3d021d4f904",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-21"
+    },
+    {
+      "path": "public-content/lessons/5-nlp.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "71276555704963c283c779c3de08e2b4e59ad7fb77aa137afd54d89610ea62b6",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-21"
+    },
+    {
+      "path": "public-content/lessons/5-nlp.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "988311538ffb8da36c8ba6a96386fba9edcd7ae7459c3e47d46c880eed5a0d3c",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-18"
+    },
+    {
+      "path": "public-content/lessons/7-ethics.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "805d22feaeaaa19c0c018aba92eaabb2beb374fb9038b916b6b2206242f2881e",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-21"
+    },
+    {
+      "path": "public-content/lessons/7-ethics.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "080d81892fa41ab8f7fe5b914cdc2390e53a0e2fbf32c971492ae1110e87a7dd",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-21"
+    },
+    {
+      "path": "public-content/lessons/7-ethics.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "3c6d7d4b635a2e3b687594e65bf76a2b162354f30ff87ffa8b6b1d1eded4d818",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-18"
+    },
+    {
+      "path": "web/src/data/quizzes/en.json",
+      "kind": "quiz",
+      "sourceHash": "0e7e43243c91363b91dfdec6f603ceeb993d2a17395a44c5d24f7e303c8aeffa",
+      "translationHash": "",
+      "status": "approved",
+      "reviewer": "owner",
+      "date": "2026-11-14"
+    }
+  ]
+}

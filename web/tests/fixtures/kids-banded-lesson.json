@@ -1,0 +1,51 @@
+{
+  "lessonId": "3-neuralnetworks",
+  "mode": "junior",
+  "bands": true,
+  "title": "Brain Switches",
+  "mascot": { "name": "Chip", "avatar": "🤖", "greeting": "Hi! Let's meet a tiny switch." },
+  "recap": [
+    "A neuron is a tiny yes/no switch.",
+    "It listens to clues and adds them up.",
+    "Lots of switches together can spot a cat."
+  ],
+  "sections": [
+    {
+      "id": "switch",
+      "heading": "A tiny yes/no switch",
+      "bigIdea": "A neuron is a tiny switch that says yes or no.",
+      "bodyMarkdown": "Think of a **neuron** as a light switch. It listens to clues. If enough clues say yes, it turns on.",
+      "teen": {
+        "add": "Each clue has a **weight**: how much the switch cares about it.",
+        "jargonBuster": [{ "term": "weight", "simpleExplanation": "How much one clue counts." }]
+      },
+      "jargonBuster": [{ "term": "neuron", "simpleExplanation": "A tiny switch that says yes or no.", "visual": "neuron-switch" }],
+      "more": { "title": "Who thought of this?", "bodyMarkdown": "Scientists built the first one in the 1950s." },
+      "checkIn": { "question": "What does a neuron say?", "options": ["Yes or no", "A whole story"], "correctIndex": 0, "praise": "Nice one!", "explanation": "Just yes or no!" },
+      "diagram": { "type": "stepper", "caption": "How a switch decides", "alt": "Three steps: clues come in, they add up, the switch turns on.", "steps": ["Clues come in.", "The switch adds them up.", "Enough yeses? It turns on!"] }
+    },
+    {
+      "id": "team",
+      "heading": "Switches work as a team",
+      "bigIdea": "Many switches together can spot a cat.",
+      "bodyMarkdown": "One switch is simple. A big **team** of switches can spot ears, whiskers and tails.",
+      "teen": { "body": "TEEN-ONLY: in a network, each layer of switches passes its answers to the next layer." },
+      "jargonBuster": [{ "term": "team", "simpleExplanation": "Lots of switches working together." }],
+      "diagram": { "type": "stepper", "caption": "A team", "alt": "Switches in rows.", "steps": ["Row one.", "Row two."] },
+      "interactiveWidget": {
+        "type": "perceptron-sim",
+        "title": "Try a switch",
+        "instruction": "Move the clues.",
+        "goal": "See how clues turn a switch on.",
+        "scaffold": "standard",
+        "hints": ["Chip's hint: try turning up one clue."],
+        "scenario": { "userPrompt": "", "terminalA": "", "terminalB": "", "correctAnswer": "", "explanation": "" }
+      }
+    }
+  ],
+  "teachBack": { "prompt": "Tell Chip the big idea!", "options": ["A neuron is a yes/no switch", "A neuron is a snack"], "correctIndex": 0, "explanation": "Yes!" },
+  "miniQuiz": [
+    { "question": "A neuron is like a…", "options": ["switch", "sandwich"], "correctIndex": 0 },
+    { "band": "12-14", "question": "TEEN-QUESTION: what does a weight change?", "options": ["How much a clue counts", "The colour"], "correctIndex": 0 }
+  ]
+}

@@ -1,0 +1,656 @@
+{
+  "language": "mr",
+  "note": "Draft by Claude, 2026-11-22 (SPEC-018 T009), for owner (beta) review. Show the Marathi term followed by the English in brackets at its first use in each section, as for Hindi, Kannada and Tamil.",
+  "terms": [
+    {
+      "en": "artificial intelligence",
+      "target": "कृत्रिम बुद्धिमत्ता",
+      "note": "Short form एआय (AI) is fine after first use."
+    },
+    {
+      "en": "machine learning",
+      "target": "मशीन लर्निंग",
+      "note": "Commonly used as is; यंत्र शिक्षण is the formal phrase."
+    },
+    {
+      "en": "deep learning",
+      "target": "डीप लर्निंग",
+      "note": ""
+    },
+    {
+      "en": "neural network",
+      "target": "न्यूरल नेटवर्क",
+      "note": "Transliterated, as commonly used."
+    },
+    {
+      "en": "neuron",
+      "target": "न्यूरॉन",
+      "note": "Transliterate; चेतापेशी is the biology word."
+    },
+    {
+      "en": "perceptron",
+      "target": "पर्सेप्ट्रॉन",
+      "note": "Transliterate; no common Marathi word."
+    },
+    {
+      "en": "algorithm",
+      "target": "अल्गोरिदम",
+      "note": "Transliterate; कार्यपद्धती is too vague."
+    },
+    {
+      "en": "data",
+      "target": "डेटा",
+      "note": "माहिती is the everyday word; डेटा for the technical sense."
+    },
+    {
+      "en": "dataset",
+      "target": "डेटासेट",
+      "note": ""
+    },
+    {
+      "en": "training",
+      "target": "प्रशिक्षण",
+      "note": "Of a model."
+    },
+    {
+      "en": "model",
+      "target": "मॉडेल",
+      "note": ""
+    },
+    {
+      "en": "prediction",
+      "target": "अंदाज",
+      "note": "भाकीत is also understood."
+    },
+    {
+      "en": "weight",
+      "target": "वजन",
+      "note": "The number on an input; explain once that it is not body weight."
+    },
+    {
+      "en": "bias",
+      "target": "पक्षपात",
+      "note": "The social meaning (fairness). For the number added inside a neuron, use बायस (see \"bias (in a neuron)\")."
+    },
+    {
+      "en": "bias (in a neuron)",
+      "target": "बायस",
+      "note": "Transliterated, as Kannada and Tamil; पक्षपात would read as prejudice here."
+    },
+    {
+      "en": "convolution",
+      "target": "कन्व्होल्यूशन",
+      "note": "Transliterate."
+    },
+    {
+      "en": "filter",
+      "target": "फिल्टर",
+      "note": "गाळणी is the everyday word."
+    },
+    {
+      "en": "pixel",
+      "target": "पिक्सेल",
+      "note": ""
+    },
+    {
+      "en": "computer vision",
+      "target": "संगणकीय दृष्टी",
+      "note": "कॉम्प्युटर व्हिजन is also said."
+    },
+    {
+      "en": "natural language processing",
+      "target": "नैसर्गिक भाषा प्रक्रिया",
+      "note": ""
+    },
+    {
+      "en": "token",
+      "target": "टोकन",
+      "note": ""
+    },
+    {
+      "en": "embedding",
+      "target": "एम्बेडिंग",
+      "note": "Transliterate."
+    },
+    {
+      "en": "vector",
+      "target": "व्हेक्टर",
+      "note": "सदिश is the school maths word."
+    },
+    {
+      "en": "expert system",
+      "target": "तज्ज्ञ प्रणाली",
+      "note": ""
+    },
+    {
+      "en": "rule",
+      "target": "नियम",
+      "note": ""
+    },
+    {
+      "en": "knowledge base",
+      "target": "ज्ञानसंग्रह",
+      "note": "Not ज्ञानकोश, which means encyclopedia."
+    },
+    {
+      "en": "symbolic AI",
+      "target": "प्रतीकात्मक एआय",
+      "note": ""
+    },
+    {
+      "en": "Turing test",
+      "target": "ट्युरिंग चाचणी",
+      "note": ""
+    },
+    {
+      "en": "fairness",
+      "target": "निष्पक्षता",
+      "note": "न्याय्यता is also used."
+    },
+    {
+      "en": "responsible AI",
+      "target": "जबाबदार एआय",
+      "note": ""
+    },
+    {
+      "en": "quiz",
+      "target": "प्रश्नमंजुषा",
+      "note": "Kids know it from school; क्विझ is fine on short buttons."
+    },
+    {
+      "en": "weighted sum",
+      "target": "भारित बेरीज",
+      "note": "As in भारित सरासरी (weighted average) from school."
+    },
+    {
+      "en": "layer",
+      "target": "थर",
+      "note": ""
+    },
+    {
+      "en": "pattern",
+      "target": "पॅटर्न",
+      "note": "Transliterated, as commonly used; आकृतिबंध is the formal word."
+    },
+    {
+      "en": "feature",
+      "target": "वैशिष्ट्य",
+      "note": ""
+    },
+    {
+      "en": "feature map",
+      "target": "वैशिष्ट्य नकाशा",
+      "note": ""
+    },
+    {
+      "en": "attention",
+      "target": "लक्ष",
+      "note": "The mechanism; लक्ष देण्याची पद्धत when it needs to be explicit."
+    },
+    {
+      "en": "self-attention",
+      "target": "स्व-लक्ष",
+      "note": ""
+    },
+    {
+      "en": "fire (a neuron)",
+      "target": "सक्रिय होणे",
+      "note": "e.g. न्यूरॉन सक्रिय होतो."
+    },
+    {
+      "en": "inference engine",
+      "target": "अनुमान इंजिन",
+      "note": ""
+    },
+    {
+      "en": "working memory",
+      "target": "कार्यरत स्मृती",
+      "note": ""
+    },
+    {
+      "en": "inheritance",
+      "target": "वारसा",
+      "note": ""
+    },
+    {
+      "en": "fairness audit",
+      "target": "निष्पक्षता तपासणी",
+      "note": ""
+    },
+    {
+      "en": "audit",
+      "target": "तपासणी",
+      "note": "लेखापरीक्षण is the accounting word."
+    },
+    {
+      "en": "four-fifths rule",
+      "target": "पाचपैकी चार नियम",
+      "note": ""
+    },
+    {
+      "en": "human oversight",
+      "target": "मानवी देखरेख",
+      "note": ""
+    },
+    {
+      "en": "dot product",
+      "target": "बिंदू गुणाकार",
+      "note": "The school textbook may say अदिश गुणाकार (scalar product); check."
+    },
+    {
+      "en": "forward chaining",
+      "target": "पुढे जाणारी तर्कसाखळी",
+      "note": "Plain phrase; no settled Marathi term."
+    },
+    {
+      "en": "backward chaining",
+      "target": "मागे जाणारी तर्कसाखळी",
+      "note": "Plain phrase; no settled Marathi term."
+    },
+    {
+      "en": "fact",
+      "target": "तथ्य",
+      "note": "A fact stored in a knowledge base; plural तथ्ये."
+    },
+    {
+      "en": "sensor",
+      "target": "सेन्सर",
+      "note": "संवेदक is the formal word."
+    },
+    {
+      "en": "ontology",
+      "target": "ऑन्टॉलॉजी",
+      "note": "Transliterate."
+    },
+    {
+      "en": "knowledge graph",
+      "target": "ज्ञान आलेख",
+      "note": ""
+    },
+    {
+      "en": "narrow AI",
+      "target": "मर्यादित एआय",
+      "note": "संकुचित would read as narrow-minded."
+    },
+    {
+      "en": "general AI",
+      "target": "व्यापक एआय",
+      "note": "सामान्य would read as ordinary."
+    },
+    {
+      "en": "decision boundary",
+      "target": "निर्णय सीमा",
+      "note": ""
+    },
+    {
+      "en": "label",
+      "target": "लेबल",
+      "note": "खूणचिठ्ठी is the formal word."
+    },
+    {
+      "en": "parameter",
+      "target": "पॅरामीटर",
+      "note": "Transliterated; प्राचल is the textbook word, rarely said."
+    },
+    {
+      "en": "input",
+      "target": "इनपुट",
+      "note": "Output is आउटपुट; आदान / प्रदान are formal and rarely said."
+    },
+    {
+      "en": "activation function",
+      "target": "सक्रियण फलन",
+      "note": "फलन is the school maths word for function."
+    },
+    {
+      "en": "learning rate",
+      "target": "शिकण्याचा दर",
+      "note": ""
+    },
+    {
+      "en": "backpropagation",
+      "target": "बॅकप्रोपगेशन",
+      "note": "Transliterate."
+    },
+    {
+      "en": "training data",
+      "target": "प्रशिक्षण डेटा",
+      "note": ""
+    },
+    {
+      "en": "edge (in an image)",
+      "target": "कडा",
+      "note": ""
+    },
+    {
+      "en": "grid",
+      "target": "जाळी",
+      "note": "ग्रिड is also said."
+    },
+    {
+      "en": "transformer",
+      "target": "ट्रान्सफॉर्मर",
+      "note": ""
+    },
+    {
+      "en": "language model",
+      "target": "भाषा मॉडेल",
+      "note": ""
+    },
+    {
+      "en": "large language model",
+      "target": "मोठे भाषा मॉडेल",
+      "note": "Short form एलएलएम (LLM) after first use."
+    },
+    {
+      "en": "hallucination",
+      "target": "भ्रम",
+      "note": "When an AI states something false with confidence."
+    },
+    {
+      "en": "selection rate",
+      "target": "निवड दर",
+      "note": ""
+    },
+    {
+      "en": "disparate impact ratio",
+      "target": "विषम परिणाम गुणोत्तर",
+      "note": ""
+    },
+    {
+      "en": "human in the loop",
+      "target": "प्रक्रियेत माणूस",
+      "note": "Literally 'a person in the process'."
+    },
+    {
+      "en": "transparency",
+      "target": "पारदर्शकता",
+      "note": ""
+    },
+    {
+      "en": "program / programmer",
+      "target": "प्रोग्राम / प्रोग्रामर",
+      "note": "Transliterated, as Tamil."
+    },
+    {
+      "en": "software",
+      "target": "सॉफ्टवेअर",
+      "note": "आज्ञावली is the formal word, rarely said."
+    },
+    {
+      "en": "chatbot / chat assistant",
+      "target": "चॅटबॉट / चॅट सहाय्यक",
+      "note": ""
+    },
+    {
+      "en": "AI winter",
+      "target": "एआय हिवाळा",
+      "note": ""
+    },
+    {
+      "en": "rule-based AI",
+      "target": "नियमाधारित एआय",
+      "note": ""
+    },
+    {
+      "en": "if-then rule",
+      "target": "‘जर-तर’ नियम",
+      "note": "Match the interface."
+    },
+    {
+      "en": "production rule",
+      "target": "उत्पादन नियम",
+      "note": "Literal; match the interface."
+    },
+    {
+      "en": "fire (a rule)",
+      "target": "लागू होणे",
+      "note": "Rules लागू होतात; neurons सक्रिय होतात."
+    },
+    {
+      "en": "knowledge representation",
+      "target": "ज्ञानाची मांडणी",
+      "note": "Plainer than ज्ञान प्रतिनिधित्व."
+    },
+    {
+      "en": "semantic network",
+      "target": "अर्थाधारित जाळे",
+      "note": ""
+    },
+    {
+      "en": "sub-goal",
+      "target": "उपध्येय",
+      "note": ""
+    },
+    {
+      "en": "decision tree",
+      "target": "निर्णय वृक्ष",
+      "note": ""
+    },
+    {
+      "en": "triple",
+      "target": "त्रिकूट",
+      "note": "ट्रिपल is the alternative."
+    },
+    {
+      "en": "supervised learning",
+      "target": "पर्यवेक्षित शिक्षण",
+      "note": "सुपरवाइज्ड लर्निंग is also said."
+    },
+    {
+      "en": "labelled data",
+      "target": "लेबल केलेला डेटा",
+      "note": ""
+    },
+    {
+      "en": "test data",
+      "target": "चाचणी डेटा",
+      "note": ""
+    },
+    {
+      "en": "accuracy",
+      "target": "अचूकता",
+      "note": ""
+    },
+    {
+      "en": "loss",
+      "target": "तोटा",
+      "note": "How wrong the model is during training."
+    },
+    {
+      "en": "error",
+      "target": "चूक",
+      "note": "त्रुटी is the formal word."
+    },
+    {
+      "en": "classification",
+      "target": "वर्गीकरण",
+      "note": ""
+    },
+    {
+      "en": "regression",
+      "target": "रिग्रेशन",
+      "note": "Transliterated, as Kannada and Tamil."
+    },
+    {
+      "en": "overfitting",
+      "target": "ओव्हरफिटिंग",
+      "note": ""
+    },
+    {
+      "en": "epoch",
+      "target": "इपॉक",
+      "note": ""
+    },
+    {
+      "en": "hidden layer",
+      "target": "लपलेला थर",
+      "note": ""
+    },
+    {
+      "en": "gradient descent",
+      "target": "ग्रेडियंट डिसेंट",
+      "note": "Transliterate."
+    },
+    {
+      "en": "step function",
+      "target": "पायरी फलन",
+      "note": ""
+    },
+    {
+      "en": "linearly separable",
+      "target": "रेषेने विभागता येणारे",
+      "note": ""
+    },
+    {
+      "en": "probability",
+      "target": "संभाव्यता",
+      "note": ""
+    },
+    {
+      "en": "convolutional neural network (CNN)",
+      "target": "कन्व्होल्यूशनल न्यूरल नेटवर्क (सीएनएन)",
+      "note": ""
+    },
+    {
+      "en": "kernel",
+      "target": "कर्नल",
+      "note": ""
+    },
+    {
+      "en": "channel",
+      "target": "चॅनेल",
+      "note": ""
+    },
+    {
+      "en": "stride",
+      "target": "स्ट्राइड",
+      "note": ""
+    },
+    {
+      "en": "padding",
+      "target": "पॅडिंग",
+      "note": ""
+    },
+    {
+      "en": "pooling",
+      "target": "पूलिंग",
+      "note": ""
+    },
+    {
+      "en": "image classification",
+      "target": "प्रतिमा वर्गीकरण",
+      "note": ""
+    },
+    {
+      "en": "object detection",
+      "target": "वस्तू ओळख",
+      "note": ""
+    },
+    {
+      "en": "optical character recognition (OCR)",
+      "target": "प्रकाशीय अक्षर ओळख",
+      "note": "ओसीआर (OCR) is fine after first use."
+    },
+    {
+      "en": "tokenisation",
+      "target": "टोकनीकरण",
+      "note": ""
+    },
+    {
+      "en": "vocabulary",
+      "target": "शब्दसंग्रह",
+      "note": ""
+    },
+    {
+      "en": "bag of words",
+      "target": "शब्दांची पिशवी",
+      "note": ""
+    },
+    {
+      "en": "cosine similarity",
+      "target": "कोसाइन साम्य",
+      "note": ""
+    },
+    {
+      "en": "context window",
+      "target": "संदर्भ खिडकी",
+      "note": "The sliding window in images is a different idea."
+    },
+    {
+      "en": "pre-training / fine-tuning",
+      "target": "पूर्व-प्रशिक्षण / सूक्ष्म समायोजन",
+      "note": "फाइन-ट्यूनिंग is also said."
+    },
+    {
+      "en": "sentiment analysis",
+      "target": "भावना विश्लेषण",
+      "note": ""
+    },
+    {
+      "en": "machine translation",
+      "target": "यांत्रिक भाषांतर",
+      "note": ""
+    },
+    {
+      "en": "algorithmic bias",
+      "target": "अल्गोरिदमिक पक्षपात",
+      "note": ""
+    },
+    {
+      "en": "proxy (variable)",
+      "target": "प्रॉक्सी (चल)",
+      "note": "चल is the school maths word for variable."
+    },
+    {
+      "en": "feedback loop",
+      "target": "अभिप्राय चक्र",
+      "note": ""
+    },
+    {
+      "en": "demographic parity",
+      "target": "लोकसंख्याशास्त्रीय समानता",
+      "note": "Heavy; गटांमधील समानता is a plainer option."
+    },
+    {
+      "en": "true positive rate",
+      "target": "खरा सकारात्मक दर",
+      "note": ""
+    },
+    {
+      "en": "calibration",
+      "target": "अंशांकन",
+      "note": "Physics textbook word; जुळवणी is plainer."
+    },
+    {
+      "en": "black box",
+      "target": "काळी पेटी",
+      "note": "ब्लॅक बॉक्स is also said."
+    },
+    {
+      "en": "explainability",
+      "target": "स्पष्टीकरणक्षमता",
+      "note": ""
+    },
+    {
+      "en": "accountability",
+      "target": "उत्तरदायित्व",
+      "note": "जबाबदारी is the everyday word."
+    },
+    {
+      "en": "model card",
+      "target": "मॉडेल कार्ड",
+      "note": ""
+    },
+    {
+      "en": "privacy",
+      "target": "गोपनीयता",
+      "note": "खाजगीपणा is plainer."
+    },
+    {
+      "en": "counterfactual explanation",
+      "target": "‘असे झाले असते तर’ स्पष्टीकरण",
+      "note": "Coined; the weakest choice, watch user feedback."
+    }
+  ]
+}

@@ -2,6 +2,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -37,5 +38,32 @@ func TestAC34_ConfigTest(t *testing.T) {
 
 	if resp.ActiveModel != "llama3.2:1b" {
 		t.Errorf("expected activeModel llama3.2:1b, got %q", resp.ActiveModel)
+	}
+}
+
+// Opt-in TLS skip for self-signed AI endpoints.
+func TestConfigTestInsecureTLSOptIn(t *testing.T) {
+	srv := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"id":"x","object":"chat.completion","choices":[{"index":0,"message":{"role":"assistant","content":"pong"},"finish_reason":"stop"}]}`))
+	}))
+	defer srv.Close()
+
+	call := func(insecure bool) ConfigTestResponse {
+		body, _ := json.Marshal(ConfigTestRequest{BaseURL: srv.URL + "/v1", Model: "m", APIKey: "k", InsecureTLS: insecure})
+		rec := httptest.NewRecorder()
+		ConfigTestHandler(rec, httptest.NewRequest(http.MethodPost, "/api/config/test", bytes.NewReader(body)))
+		var out ConfigTestResponse
+		if err := json.Unmarshal(rec.Body.Bytes(), &out); err != nil {
+			t.Fatalf("bad response: %v", err)
+		}
+		return out
+	}
+
+	if r := call(false); r.OK {
+		t.Fatal("self-signed endpoint must be rejected by default")
+	}
+	if r := call(true); !r.OK {
+		t.Fatalf("insecureTls=true should connect, got error: %s", r.Error)
 	}
 }

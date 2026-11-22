@@ -1,0 +1,208 @@
+{
+  "lessonId": "2-symbolic",
+  "mode": "plain-english",
+  "origin": "own",
+  "title": "Rule-Based AI and Expert Systems 📜",
+  "readingTimeMinutes": 7,
+  "intro": "Before machine learning took over, AI meant writing knowledge down as rules. That approach still runs inside many systems you use. Here is how it works, and why it is still useful.",
+  "sections": [
+    {
+      "id": "symbolic-foundations",
+      "heading": "1. Writing Knowledge Down",
+      "analogy": {
+        "metaphorName": "The Office Procedures Manual",
+        "description": "Every workplace has written procedures: if a customer asks for a refund within 30 days, approve it. Rule-based AI turns that kind of written knowledge into something a computer can follow."
+      },
+      "bodyMarkdown": "**Symbolic AI** represents knowledge with symbols a person can read: facts like \"a penguin is a bird\" and rules like \"if a bird cannot fly, do not suggest flying as a way to escape\". The computer combines them to reach conclusions.\n\nHow you write knowledge down matters. Simple rules work for narrow tasks. For richer subjects, people use structures that link concepts together, so the computer can follow the connections. Either way, every piece of knowledge was put there by someone, which makes the system transparent but laborious to build.",
+      "jargonBuster": [
+        {
+          "term": "Symbolic AI",
+          "simpleExplanation": "AI that works with knowledge written as readable symbols, facts and rules."
+        },
+        {
+          "term": "Knowledge representation",
+          "simpleExplanation": "The way knowledge is written down so a computer can use it."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Facts plus rules give conclusions",
+        "content": "graph LR\n    F[\"Fact: a penguin is a bird\"] --> C[\"Combine\"]\n    F2[\"Fact: penguins cannot fly\"] --> C\n    R[\"Rule: if a bird cannot fly, it escapes on foot or by swimming\"] --> C\n    C --> A[\"Conclusion: a penguin escapes by swimming\"]",
+        "alt": "Two facts, a penguin is a bird and penguins cannot fly, plus a rule about birds that cannot fly, are combined to reach the conclusion that a penguin escapes by swimming."
+      },
+      "realWorld": "Loan pre-checks, insurance quote forms and tax calculators all run on written rules."
+    },
+    {
+      "id": "expert-system-architecture",
+      "heading": "2. Inside an Expert System",
+      "analogy": {
+        "metaphorName": "The Helpdesk Flowchart",
+        "description": "A good IT helpdesk has a binder of fixes and a technician who asks questions until one fix matches. An expert system is that binder and that technician, in software."
+      },
+      "bodyMarkdown": "An **expert system** captures the know-how of specialists, such as engineers or doctors, so others can use it. It has two main parts.\n\nThe **knowledge base** stores the rules. The **inference engine** looks at the current facts, finds rules whose conditions are met and applies them. Each conclusion becomes a new fact, which may trigger further rules, until it reaches an answer.\n\nBecause every step uses a written rule, the system can always show its reasoning: \"I recommended this because rules 3 and 7 applied.\"",
+      "jargonBuster": [
+        {
+          "term": "Expert system",
+          "simpleExplanation": "Software that gives specialist advice by applying rules collected from experts."
+        },
+        {
+          "term": "Knowledge base",
+          "simpleExplanation": "The collection of facts and rules an expert system uses."
+        },
+        {
+          "term": "Inference engine",
+          "simpleExplanation": "The part that checks the facts against the rules and decides which rules apply."
+        }
+      ],
+      "diagram": {
+        "type": "clip",
+        "clip": "plain-decision-tree",
+        "media": "video",
+        "caption": "How a decision tree filters applications step by step",
+        "alt": "A deterministic loan decision tree routing applicants through income and employment checks to transparent, audited conclusions.",
+        "steps": [
+          "The evaluation begins with a primary question: is applicant income above the threshold?",
+          "Lower-income applicants route to a second check evaluating employment stability over time.",
+          "Higher-income applicants route to a debt-to-income ratio check to evaluate repayment capacity.",
+          "Each branch terminates in a deterministic outcome: approve, conditional review, or decline.",
+          "A complete audit trail logs the exact rule sequence that produced the final decision."
+        ]
+      },
+      "realWorld": "Equipment fault-finding guides, airline crew scheduling checks and some medical triage tools use this design."
+    },
+    {
+      "id": "forward-backward",
+      "heading": "3. Working Forward or Backward",
+      "analogy": {
+        "metaphorName": "Detective vs Checklist",
+        "description": "A detective starts from the clues and sees where they lead. Someone checking a theory starts from the suspect and looks for the clues that would prove it. Expert systems can reason both ways."
+      },
+      "bodyMarkdown": "**Forward chaining** starts from the facts you have and keeps applying rules to see what follows. It suits monitoring: \"the battery is low and it is night, so…\".\n\n**Backward chaining** starts from a possible answer and works back, asking only the questions needed to confirm or rule it out. It suits diagnosis: \"could it be a flat battery? Then I need to know whether the lights work.\"\n\nBackward chaining often asks fewer questions, because it ignores anything irrelevant to the answer it is testing.",
+      "jargonBuster": [
+        {
+          "term": "Forward chaining",
+          "simpleExplanation": "Reasoning from known facts towards whatever conclusions they lead to."
+        },
+        {
+          "term": "Backward chaining",
+          "simpleExplanation": "Reasoning from a possible answer back to the facts needed to confirm it."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "Two directions of reasoning",
+        "content": "flowchart LR\n    subgraph FW [\"Forward chaining\"]\n        F1[\"Facts\"] --> F2[\"Apply rules\"] --> F3[\"Conclusions\"]\n    end\n    subgraph BW [\"Backward chaining\"]\n        B1[\"Possible answer\"] --> B2[\"Which facts would prove it?\"] --> B3[\"Ask only for those\"]\n    end",
+        "alt": "Forward chaining goes from facts, through rules, to conclusions. Backward chaining starts from a possible answer, works out which facts would prove it, and asks only for those."
+      },
+      "realWorld": "A car's dashboard warning system works forward from sensor readings. A troubleshooting wizard that asks you targeted questions often works backward."
+    },
+    {
+      "id": "ontologies",
+      "heading": "4. Maps of Meaning: Ontologies and Knowledge Graphs",
+      "analogy": {
+        "metaphorName": "The Family Tree",
+        "description": "A family tree lets you work out that your mother's sister's son is your cousin, even though nobody wrote \"cousin\" on the chart. Linked knowledge lets computers make the same kind of deductions."
+      },
+      "bodyMarkdown": "An **ontology** is a structured description of a subject: what kinds of things exist, and how they relate. For example, a dog is a mammal, a mammal is an animal, and every animal eats.\n\nFrom that, a computer can deduce that a dog eats, without anyone writing it down. Large collections of linked facts like this are called **knowledge graphs**. Search engines use them to answer questions like \"how tall is the Eiffel Tower?\" directly, instead of just listing pages.",
+      "jargonBuster": [
+        {
+          "term": "Ontology",
+          "simpleExplanation": "A structured description of the kinds of things in a subject and how they relate."
+        },
+        {
+          "term": "Knowledge graph",
+          "simpleExplanation": "A large network of linked facts that a computer can search and reason over."
+        }
+      ],
+      "diagram": {
+        "type": "mermaid",
+        "caption": "A tiny ontology",
+        "content": "graph TD\n    Animal[\"Animal: eats\"] --> Mammal[\"Mammal\"]\n    Mammal --> Dog[\"Dog\"]\n    Mammal --> Cat[\"Cat\"]\n    Dog -.->|deduced| Eats[\"A dog eats\"]",
+        "alt": "Animal, which eats, has the subtype mammal, which has the subtypes dog and cat. From the links, the computer deduces that a dog eats."
+      },
+      "realWorld": "The fact panel beside search results, product catalogues that group items sensibly and medical coding systems all rely on ontologies."
+    },
+    {
+      "id": "interactive-diagnostic-sim",
+      "heading": "5. Try It: Diagnose a Mars Rover",
+      "analogy": {
+        "metaphorName": "Remote Mechanic",
+        "description": "A rover on Mars is minutes of signal delay away from any engineer. It needs its own rule book to react in time."
+      },
+      "bodyMarkdown": "This simulation is a small expert system. Its sensors report facts: battery level, day or night, whether the solar panels are dusty, and whether the antenna is aimed at the relay satellite.\n\nChange the facts and watch which rules fire. The rover's decision always comes from a rule you can point to, which is exactly the transparency that makes rule-based systems attractive for safety-critical work.",
+      "realWorld": "Spacecraft, industrial machinery and medical devices often use rule-based safety logic because every decision can be traced and checked.",
+      "interactiveWidget": {
+        "type": "expert-system-sim",
+        "title": "🚀 Try It: The Mars Rover Expert System",
+        "goal": "Set the sensor facts that lead to each of the rover's decisions.",
+        "scaffold": "standard",
+        "predictionPrompt": "Before you change anything: which rule do you expect to fire if the battery is low at night?",
+        "hints": [
+          "A rule fires only when all of its conditions are true.",
+          "Change one fact at a time and watch the rules."
+        ],
+        "successMessage": "That is forward chaining: facts in, matching rules fire, a traceable decision out.",
+        "allowFreePlay": true,
+        "instruction": "Change the sensor facts. Watch which rules fire and what the rover decides."
+      }
+    }
+  ],
+  "miniQuiz": [
+    {
+      "question": "What are the two main parts of an expert system?",
+      "options": [
+        "A knowledge base and an inference engine",
+        "A camera and a database",
+        "A keyboard and a screen"
+      ],
+      "correctIndex": 0,
+      "praise": "Correct. Rules in one part, reasoning in the other.",
+      "explanation": "The knowledge base stores the rules; the inference engine decides which rules apply to the current facts."
+    },
+    {
+      "question": "Why are rule-based systems popular for safety-critical work?",
+      "options": [
+        "They are always cheaper",
+        "Every decision can be traced to a written rule",
+        "They learn by themselves"
+      ],
+      "correctIndex": 1,
+      "praise": "Yes. Traceability is their strength.",
+      "explanation": "Because each decision comes from a written rule, it can be checked and explained."
+    },
+    {
+      "question": "Which approach starts from a possible answer and asks only the questions needed to confirm it?",
+      "options": [
+        "Forward chaining",
+        "Backward chaining",
+        "Machine learning"
+      ],
+      "correctIndex": 1,
+      "praise": "Right. Backward chaining works back from the answer.",
+      "explanation": "Backward chaining starts from a candidate answer and looks for the facts that would prove or rule it out."
+    }
+  ],
+  "teachBack": {
+    "prompt": "How would you explain an expert system to a colleague?",
+    "options": [
+      "Software that applies experts' written rules to the facts and can show which rules it used.",
+      "Software that learns from millions of examples.",
+      "A chat assistant that knows everything."
+    ],
+    "correctIndex": 0,
+    "explanation": "Exactly. Expert rules, applied to facts, with traceable reasoning."
+  },
+  "recall": [
+    {
+      "fromLesson": "1-intro",
+      "question": "What makes most modern AI different from ordinary software?",
+      "options": [
+        "It learns patterns from examples",
+        "It runs on special computers",
+        "It never needs data"
+      ],
+      "correctIndex": 0,
+      "explanation": "Most modern AI learns patterns from examples rather than only following written rules."
+    }
+  ]
+}

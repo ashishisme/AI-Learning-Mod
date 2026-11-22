@@ -1,0 +1,366 @@
+{
+  "language": "kn",
+  "note": "Draft by Claude, 2026-11-18 (SPEC-015 T015). Confirmed by the owner (beta) on 2026-11-18, as drafted. Show the Kannada term followed by the English in brackets at its first use in each section, as for Hindi.",
+  "terms": [
+    {
+      "en": "artificial intelligence",
+      "target": "ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ",
+      "note": "Abbreviation ಎಐ (AI) is fine after first use."
+    },
+    {
+      "en": "machine learning",
+      "target": "ಯಂತ್ರ ಕಲಿಕೆ",
+      "note": "ಮಷೀನ್ ಲರ್ನಿಂಗ್ is also heard; the lessons use ಯಂತ್ರ ಕಲಿಕೆ."
+    },
+    {
+      "en": "deep learning",
+      "target": "ಆಳವಾದ ಕಲಿಕೆ",
+      "note": ""
+    },
+    {
+      "en": "neural network",
+      "target": "ನ್ಯೂರಲ್ ನೆಟ್‌ವರ್ಕ್",
+      "note": "Transliterated, as commonly used."
+    },
+    {
+      "en": "neuron",
+      "target": "ನ್ಯೂರಾನ್",
+      "note": "Transliterate; ನರಕೋಶ is the biology word."
+    },
+    {
+      "en": "perceptron",
+      "target": "ಪರ್ಸೆಪ್ಟ್ರಾನ್",
+      "note": "Transliterate; no common Kannada word."
+    },
+    {
+      "en": "algorithm",
+      "target": "ಅಲ್ಗಾರಿದಮ್",
+      "note": "ಕ್ರಮಾವಳಿ is the formal word."
+    },
+    {
+      "en": "data",
+      "target": "ದತ್ತಾಂಶ",
+      "note": "ಡೇಟಾ is also understood."
+    },
+    {
+      "en": "dataset",
+      "target": "ದತ್ತಾಂಶ ಸಂಗ್ರಹ",
+      "note": ""
+    },
+    {
+      "en": "training",
+      "target": "ತರಬೇತಿ",
+      "note": "Of a model."
+    },
+    {
+      "en": "model",
+      "target": "ಮಾದರಿ",
+      "note": ""
+    },
+    {
+      "en": "prediction",
+      "target": "ಮುನ್ಸೂಚನೆ",
+      "note": ""
+    },
+    {
+      "en": "weight",
+      "target": "ತೂಕ",
+      "note": "Of a neuron connection."
+    },
+    {
+      "en": "bias",
+      "target": "ಪಕ್ಷಪಾತ",
+      "note": "In the ethics sense. For the neuron term use ಬಯಾಸ್ (bias)."
+    },
+    {
+      "en": "convolution",
+      "target": "ಕನ್ವಲ್ಯೂಷನ್",
+      "note": "Transliterate."
+    },
+    {
+      "en": "filter",
+      "target": "ಫಿಲ್ಟರ್",
+      "note": ""
+    },
+    {
+      "en": "pixel",
+      "target": "ಪಿಕ್ಸೆಲ್",
+      "note": ""
+    },
+    {
+      "en": "computer vision",
+      "target": "ಕಂಪ್ಯೂಟರ್ ದೃಷ್ಟಿ",
+      "note": ""
+    },
+    {
+      "en": "natural language processing",
+      "target": "ನೈಸರ್ಗಿಕ ಭಾಷಾ ಸಂಸ್ಕರಣೆ",
+      "note": "Short form ಎನ್‌ಎಲ್‌ಪಿ (NLP)."
+    },
+    {
+      "en": "token",
+      "target": "ಟೋಕನ್",
+      "note": ""
+    },
+    {
+      "en": "embedding",
+      "target": "ಎಂಬೆಡಿಂಗ್",
+      "note": "Transliterate."
+    },
+    {
+      "en": "vector",
+      "target": "ವೆಕ್ಟರ್",
+      "note": "Owner chose ವೆಕ್ಟರ್ over the school-maths word ಸದಿಶ (2026-11-18)."
+    },
+    {
+      "en": "expert system",
+      "target": "ತಜ್ಞ ವ್ಯವಸ್ಥೆ",
+      "note": ""
+    },
+    {
+      "en": "rule",
+      "target": "ನಿಯಮ",
+      "note": ""
+    },
+    {
+      "en": "knowledge base",
+      "target": "ಜ್ಞಾನ ಭಂಡಾರ",
+      "note": ""
+    },
+    {
+      "en": "symbolic AI",
+      "target": "ಸಾಂಕೇತಿಕ ಎಐ",
+      "note": ""
+    },
+    {
+      "en": "Turing test",
+      "target": "ಟ್ಯೂರಿಂಗ್ ಪರೀಕ್ಷೆ",
+      "note": ""
+    },
+    {
+      "en": "fairness",
+      "target": "ನ್ಯಾಯಸಮ್ಮತತೆ",
+      "note": ""
+    },
+    {
+      "en": "responsible AI",
+      "target": "ಜವಾಬ್ದಾರಿಯುತ ಎಐ",
+      "note": ""
+    },
+    {
+      "en": "quiz",
+      "target": "ರಸಪ್ರಶ್ನೆ",
+      "note": "Owner chose ರಸಪ್ರಶ್ನೆ (2026-11-18)."
+    },
+    {
+      "en": "weighted sum",
+      "target": "ತೂಕದ ಮೊತ್ತ",
+      "note": ""
+    },
+    {
+      "en": "layer",
+      "target": "ಪದರ",
+      "note": "Of a neural network; plural ಪದರಗಳು."
+    },
+    {
+      "en": "pattern",
+      "target": "ಪ್ಯಾಟರ್ನ್",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. Avoids ಮಾದರಿ (model). ವಿನ್ಯಾಸ stays for \"design\" and \"architecture\"."
+    },
+    {
+      "en": "feature",
+      "target": "ವೈಶಿಷ್ಟ್ಯ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. A machine-learning input. Feature space is ವೈಶಿಷ್ಟ್ಯಗಳ ಜಾಗ. ಲಕ್ಷಣ stays for \"symptom\"; ಗುಣಲಕ್ಷಣ is \"attribute\"."
+    },
+    {
+      "en": "feature map",
+      "target": "ವೈಶಿಷ್ಟ್ಯ ನಕ್ಷೆ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. As in the convolution widget."
+    },
+    {
+      "en": "attention",
+      "target": "ಅಟೆನ್ಷನ್",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. The transformer mechanism only. Everyday ಗಮನ (\"pay attention\") is unchanged, as is the Kids caption ಗಮನದ ಬೆಳಕು."
+    },
+    {
+      "en": "self-attention",
+      "target": "ಸೆಲ್ಫ್-ಅಟೆನ್ಷನ್",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. Spelled with ಷ, not ಶ."
+    },
+    {
+      "en": "fire (a neuron)",
+      "target": "ಫೈರ್ ಆಗು",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. Kids text says ಆನ್ ಆಗು (switch on), as the interface does."
+    },
+    {
+      "en": "inference engine",
+      "target": "ತೀರ್ಮಾನ ಯಂತ್ರ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. As in the interface. ಅನುಮಾನ avoided, since it means doubt."
+    },
+    {
+      "en": "working memory",
+      "target": "ಕಾರ್ಯ ಸ್ಮರಣೆ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. As in the interface."
+    },
+    {
+      "en": "inheritance",
+      "target": "ಆನುವಂಶಿಕತೆ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. In an ontology. \"Inherits\" is ಆನುವಂಶಿಕವಾಗಿ ಪಡೆಯು."
+    },
+    {
+      "en": "fairness audit",
+      "target": "ನ್ಯಾಯಸಮ್ಮತತೆಯ ಪರಿಶೀಲನೆ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. Matches the interface's ನ್ಯಾಯ ಪರಿಶೀಲಕ."
+    },
+    {
+      "en": "audit",
+      "target": "ಪರಿಶೀಲನೆ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. 2-symbolic keeps ಆಡಿಟ್ for \"audit trail\"."
+    },
+    {
+      "en": "four-fifths rule",
+      "target": "ಐದರಲ್ಲಿ ನಾಲ್ಕರ ನಿಯಮ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "human oversight",
+      "target": "ಮನುಷ್ಯರ ಮೇಲ್ವಿಚಾರಣೆ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. Unrelated to supervised learning (ಮೇಲ್ವಿಚಾರಣೆಯ ಕಲಿಕೆ)."
+    },
+    {
+      "en": "dot product",
+      "target": "ಡಾಟ್ ಗುಣಲಬ್ಧ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "forward chaining",
+      "target": "ಮುಂದಕ್ಕೆ ಸಾಗುವ ತರ್ಕ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "backward chaining",
+      "target": "ಹಿಂದಕ್ಕೆ ಸಾಗುವ ತರ್ಕ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "fact",
+      "target": "ಸಂಗತಿ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. The rover widget in the interface says ಸತ್ಯಗಳು (\"truths\"); changing it needs owner re-approval of the interface."
+    },
+    {
+      "en": "sensor",
+      "target": "ಸೆನ್ಸರ್",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. The interface says ಸಂವೇದಕ."
+    },
+    {
+      "en": "ontology",
+      "target": "ಆಂಟಾಲಜಿ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. Transliterated."
+    },
+    {
+      "en": "knowledge graph",
+      "target": "ನಾಲೆಡ್ಜ್ ಗ್ರಾಫ್",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. Transliterated."
+    },
+    {
+      "en": "narrow AI",
+      "target": "ಸೀಮಿತ ಎಐ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "general AI",
+      "target": "ಸಾಮಾನ್ಯ ಎಐ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "decision boundary",
+      "target": "ತೀರ್ಮಾನದ ಗಡಿರೇಖೆ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. ಗಡಿರೇಖೆ alone is fine once the meaning is clear."
+    },
+    {
+      "en": "label",
+      "target": "ಲೇಬಲ್",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "parameter",
+      "target": "ಪ್ಯಾರಾಮೀಟರ್",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "input",
+      "target": "ಇನ್‌ಪುಟ್",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. The interface says ಒಳಹರಿವು in the rover widget."
+    },
+    {
+      "en": "activation function",
+      "target": "ಆಕ್ಟಿವೇಶನ್ ಫಂಕ್ಷನ್",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. The interface's perceptron widget says ಸಕ್ರಿಯತೆಯ ಅಂಕ for \"activation score\"."
+    },
+    {
+      "en": "learning rate",
+      "target": "ಕಲಿಕೆಯ ದರ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "backpropagation",
+      "target": "ಬ್ಯಾಕ್‌ಪ್ರೊಪಗೇಶನ್",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "training data",
+      "target": "ತರಬೇತಿ ದತ್ತಾಂಶ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "edge (in an image)",
+      "target": "ಅಂಚು",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "grid",
+      "target": "ಜಾಲರಿ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "transformer",
+      "target": "ಟ್ರಾನ್ಸ್‌ಫಾರ್ಮರ್",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. The model design; ವಿನ್ಯಾಸ is used for \"design\" around it."
+    },
+    {
+      "en": "language model",
+      "target": "ಭಾಷಾ ಮಾದರಿ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "large language model",
+      "target": "ದೊಡ್ಡ ಭಾಷಾ ಮಾದರಿ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    },
+    {
+      "en": "hallucination",
+      "target": "ಭ್ರಮೆ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. ಎಐ ಭ್ರಮೆ (in the quizzes) is also fine."
+    },
+    {
+      "en": "selection rate",
+      "target": "ಆಯ್ಕೆ ದರ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. As in the interface."
+    },
+    {
+      "en": "disparate impact ratio",
+      "target": "ಅಸಮಾನ ಪರಿಣಾಮದ ಅನುಪಾತ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. As in the interface."
+    },
+    {
+      "en": "human in the loop",
+      "target": "ನಿರ್ಧಾರದಲ್ಲಿ ಮನುಷ್ಯ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19. Literally \"a person in the decision\"."
+    },
+    {
+      "en": "transparency",
+      "target": "ಪಾರದರ್ಶಕತೆ",
+      "note": "Added 2026-11-19 in the term alignment pass; reconfirmed by the owner (beta) on 2026-11-19."
+    }
+  ]
+}

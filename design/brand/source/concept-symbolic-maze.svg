@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none">
+  <!-- If-Then Maze Path Concept -->
+  <rect x="10" y="10" width="80" height="80" rx="16" fill="#FFFBEB" stroke="#FDE68A" stroke-width="2"/>
+  <!-- Branching Road -->
+  <path d="M 50 82 L 50 56" stroke="#D97706" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 50 56 Q 30 54 28 32" stroke="#3B82F6" stroke-width="5" stroke-linecap="round"/>
+  <path d="M 50 56 Q 70 54 72 32" stroke="#10B981" stroke-width="5" stroke-linecap="round"/>
+  <!-- Checkpoints -->
+  <circle cx="28" cy="28" r="8" fill="#3B82F6"/>
+  <circle cx="72" cy="28" r="8" fill="#10B981"/>
+  <!-- Star on True Path -->
+  <path d="M 72 24 L 73.5 27.5 L 77 28 L 74.5 30.5 L 75 34 L 72 32 L 69 34 L 69.5 30.5 L 67 28 L 70.5 27.5 Z" fill="#FFFFFF"/>
+</svg>

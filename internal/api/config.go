@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"ai-foundations-coach/internal/netopt"
 	openai "github.com/sashabaranov/go-openai"
 )
 
@@ -17,6 +18,8 @@ type ConfigTestRequest struct {
 	BaseURL string `json:"baseUrl"`
 	Model   string `json:"model"`
 	APIKey  string `json:"apiKey"`
+	// InsecureTLS skips certificate verification for this test only (self-signed endpoints).
+	InsecureTLS bool `json:"insecureTls"`
 }
 
 type ConfigTestResponse struct {
@@ -59,6 +62,10 @@ func ConfigTestHandler(w http.ResponseWriter, r *http.Request) {
 
 	cfg := openai.DefaultConfig(apiKey)
 	cfg.BaseURL = baseURL
+	insecure := req.InsecureTLS || netopt.EnvInsecure()
+	if insecure {
+		cfg.HTTPClient = netopt.HTTPClient(0, true)
+	}
 
 	client := openai.NewClientWithConfig(cfg)
 	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
@@ -87,7 +94,7 @@ func ConfigTestHandler(w http.ResponseWriter, r *http.Request) {
 			tagsURL = strings.TrimRight(baseURL, "/") + "/api/tags"
 		}
 		if reqTag, tagErr := http.NewRequestWithContext(ctx, http.MethodGet, tagsURL, nil); tagErr == nil {
-			httpClient := &http.Client{Timeout: 3 * time.Second}
+			httpClient := netopt.HTTPClient(3*time.Second, insecure)
 			if respTag, errResp := httpClient.Do(reqTag); errResp == nil {
 				defer respTag.Body.Close()
 				var tagResult struct {

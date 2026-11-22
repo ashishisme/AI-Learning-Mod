@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" width="320" height="180" role="img">
+  <rect x="2" y="2" width="316" height="176" rx="20" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="2"/>
+  <!-- apple and lemon waiting on a belt -->
+  <rect x="18" y="104" width="96" height="12" rx="6" fill="#94A3B8"/>
+  <g fill="#E2E8F0"><circle cx="30" cy="110" r="3"/><circle cx="66" cy="110" r="3"/><circle cx="102" cy="110" r="3"/></g>
+  <circle cx="44" cy="84" r="18" fill="#F43F5E" stroke="#BE123C" stroke-width="3"/>
+  <path d="M44 66 q2 -8 8 -10" stroke="#78350F" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M48 62 q10 -6 14 2 q-8 4 -14 -2z" fill="#10B981"/>
+  <ellipse cx="90" cy="88" rx="20" ry="14" fill="#FDE68A" stroke="#F59E0B" stroke-width="3"/>
+  <path d="M70 88 l-5 0 M110 88 l5 0" stroke="#F59E0B" stroke-width="3" stroke-linecap="round"/>
+  <!-- the neuron in the middle decides -->
+  <path d="M114 110 C130 110 132 90 146 90" stroke="#818CF8" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <circle cx="166" cy="90" r="22" fill="#A7F3D0" stroke="#10B981" stroke-width="4"/>
+  <circle cx="166" cy="90" r="8" fill="#059669"/>
+  <!-- two paths out -->
+  <path d="M186 80 C210 66 222 54 240 50" stroke="#F43F5E" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M186 100 C210 114 222 126 240 130" stroke="#F59E0B" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <!-- the apple box and the lemon box -->
+  <rect x="240" y="26" width="62" height="46" rx="10" fill="#FFE4E6" stroke="#F43F5E" stroke-width="3"/>
+  <circle cx="271" cy="49" r="11" fill="#F43F5E"/>
+  <path d="M271 38 q2 -5 6 -6" stroke="#78350F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <rect x="240" y="108" width="62" height="46" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="3"/>
+  <ellipse cx="271" cy="131" rx="13" ry="9" fill="#FDE68A" stroke="#F59E0B" stroke-width="2"/>
+  <!-- sliders: the weights you will move -->
+  <g stroke="#C7D2FE" stroke-width="5" stroke-linecap="round"><path d="M136 140 h60 M136 158 h60"/></g>
+  <circle cx="178" cy="140" r="7" fill="#6366F1"/><circle cx="150" cy="158" r="7" fill="#818CF8"/>
+</svg>

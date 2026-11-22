@@ -1,0 +1,11 @@
+{
+  "note": "SPEC-009 R10: one narration text rule, checked by internal/narration/text_test.go and web/tests/narration-hi.spec.ts so recordings say what the screen shows.",
+  "sections": [
+    { "heading": "What is AI?", "chipQuote": "", "body": "AI learns from **data**.", "chipSays": "Chip says: ", "want": "What is AI?. AI learns from data." },
+    { "heading": "एआई क्या है", "chipQuote": "मैं सीखता हूँ", "body": "पहला वाक्य। दूसरा वाक्य।", "chipSays": "चिप कहता है: ", "want": "एआई क्या है. चिप कहता है: मैं सीखता हूँ. पहला वाक्य। दूसरा वाक्य।" },
+    { "heading": "Links", "chipQuote": "", "body": "See [the docs](https://example.org/a) and `code`.", "chipSays": "Chip says: ", "want": "Links. See the docs and code." },
+    { "heading": "Lists", "chipQuote": "", "body": "1.   First\n2.  Second\n> quoted", "chipSays": "Chip says: ", "want": "Lists. 1. First\n2. Second\n quoted" },
+    { "heading": "Tags", "chipQuote": "", "body": "A <b>bold</b> idea, then more.", "chipSays": "Chip says: ", "want": "Tags. A bold idea, then more." },
+    { "heading": "Heading # marks", "chipQuote": "Hi!", "body": "## Sub\n~~gone~~ text", "chipSays": "Chip says: ", "want": "Heading  marks. Chip says: Hi!.  Sub\ngone text" }
+  ]
+}

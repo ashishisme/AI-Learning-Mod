@@ -28,6 +28,9 @@ type RateLimiter struct {
 	limit   int
 	window  time.Duration
 	maxSize int
+	// trustedHops is the number of reverse proxies in front of the server that append to
+	// X-Forwarded-For. Zero means the header is ignored and the peer address is used.
+	trustedHops int
 }
 
 func NewRateLimiter(limit int, window time.Duration) *RateLimiter {
@@ -84,6 +87,39 @@ func (rl *RateLimiter) Allow(host string) bool {
 	return true
 }
 
+// SetTrustedProxyHops tells the limiter how many trusted proxies sit in front of the server,
+// so that visitors behind a cloud front end are counted individually (not as one address).
+func (rl *RateLimiter) SetTrustedProxyHops(n int) {
+	rl.mu.Lock()
+	defer rl.mu.Unlock()
+	if n < 0 {
+		n = 0
+	}
+	rl.trustedHops = n
+}
+
+// clientHost identifies the caller. With N trusted proxies, each appends the address it
+// received the request from, so the real client is the Nth entry from the right; anything
+// to its left is client-supplied and cannot be trusted.
+func clientHost(r *http.Request, trustedHops int) string {
+	if trustedHops > 0 {
+		var parts []string
+		for _, v := range r.Header.Values("X-Forwarded-For") {
+			for _, p := range strings.Split(v, ",") {
+				if p = strings.TrimSpace(p); p != "" {
+					parts = append(parts, p)
+				}
+			}
+		}
+		if len(parts) >= trustedHops {
+			if ip := net.ParseIP(parts[len(parts)-trustedHops]); ip != nil {
+				return ip.String()
+			}
+		}
+	}
+	return extractHost(r)
+}
+
 func extractHost(r *http.Request) string {
 	remote := r.RemoteAddr
 	host, _, err := net.SplitHostPort(remote)
@@ -95,13 +131,17 @@ func extractHost(r *http.Request) string {
 
 func (rl *RateLimiter) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		host := extractHost(r)
+		rl.mu.Lock()
+		hops := rl.trustedHops
+		rl.mu.Unlock()
+		host := clientHost(r, hops)
 		if !rl.Allow(host) {
 			w.Header().Set("Retry-After", strconv.Itoa(RateLimitRetryAfter))
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusTooManyRequests)
 			_ = json.NewEncoder(w).Encode(map[string]string{
 				"error": "rate limit exceeded",
+				"code":  "rate_limited",
 			})
 			return
 		}
