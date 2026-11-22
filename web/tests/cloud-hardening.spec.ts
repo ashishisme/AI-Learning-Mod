@@ -153,6 +153,10 @@ test.describe('Adaptive lessons', () => {
   })
 
   test('switching narration to another section does not replay or stop the new track', async ({ page }) => {
+    // Exercise the device-voice path even when local English recordings are present.
+    await page.route('**/api/audio/en/manifest.json', (route) =>
+      route.fulfill({ json: { language: 'en', tracks: {} } }),
+    )
     await page.addInitScript(() => {
       const w = window as any
       const queued: any[] = []

@@ -138,7 +138,11 @@ test.describe('English foundation (B1)', () => {
         return
       }
       expect(baseline[name], `no baseline for ${name}; record it with UPDATE_I18N_BASELINE=1`).toBeDefined()
-      expect(text).toBe(baseline[name])
+      // The Settings help prints this site's origin; keep the baseline valid on isolated test ports.
+      const expected = name === 'settings-hosted-local'
+        ? baseline[name].replaceAll('http://localhost:3000', new URL(page.url()).origin)
+        : baseline[name]
+      expect(text).toBe(expected)
     })
   }
 
