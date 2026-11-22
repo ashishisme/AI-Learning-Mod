@@ -1,0 +1,10 @@
+{
+  "lessons": [
+    { "id": "1-intro", "module": "intro", "title": "कृत्रिम बुद्धिमत्ता", "order": 0 },
+    { "id": "2-symbolic", "module": "symbolic", "title": "ज्ञानाची मांडणी आणि तज्ज्ञ प्रणाली", "order": 1 },
+    { "id": "3-neuralnetworks", "module": "neuralnetworks", "title": "न्यूरल नेटवर्क", "order": 2 },
+    { "id": "4-computervision", "module": "computervision", "title": "संगणकीय दृष्टी", "order": 3 },
+    { "id": "5-nlp", "module": "nlp", "title": "नैसर्गिक भाषा प्रक्रिया", "order": 4 },
+    { "id": "7-ethics", "module": "ethics", "title": "जबाबदार एआय", "order": 5 }
+  ]
+}
