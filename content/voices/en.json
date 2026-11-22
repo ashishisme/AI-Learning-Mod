@@ -1,0 +1,9 @@
+{
+  "language": "en",
+  "note": "Chosen by the owner after the listening test on 2026-11-22 (SPEC-017 T007): the same Chirp3-HD voices as hi, kn and ta, in US English. Chirp3-HD voices accept no pitch other than 0.",
+  "personas": {
+    "chip": { "voice": "en-US-Chirp3-HD-Kore", "speakingRate": 1.0, "pitch": 0 },
+    "nova": { "voice": "en-US-Chirp3-HD-Aoede", "speakingRate": 1.0, "pitch": 0 },
+    "alan": { "voice": "en-US-Chirp3-HD-Charon", "speakingRate": 1.0, "pitch": 0 }
+  }
+}

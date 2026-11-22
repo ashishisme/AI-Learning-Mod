@@ -241,3 +241,19 @@ func TestVerifyEnglishOwnerApproval(t *testing.T) {
 		t.Fatalf("want stale, exit %d\n%s", code, out)
 	}
 }
+
+// SPEC-017 FR-005: English recordings are checked, but missing or stale ones only warn.
+func TestVerifyEnglishRecordingsOnlyWarn(t *testing.T) {
+	root, dir := langRepo(t, "approved")
+	writeFile(t, filepath.Join(root, "content", "voices", "en.json"), `{"language":"en","personas":{"chip":{"voice":"en-US-Chirp3-HD-Kore","speakingRate":1,"pitch":0},"nova":{"voice":"en-US-Chirp3-HD-Aoede","speakingRate":1,"pitch":0},"alan":{"voice":"en-US-Chirp3-HD-Charon","speakingRate":1,"pitch":0}}}`)
+	code, out := runVerify(dir)
+	if code != 0 || !strings.Contains(out, "warning: en audio: no recordings yet") {
+		t.Errorf("English without recordings: exit %d\n%s", code, out)
+	}
+	// With a manifest that is out of date, the problems are still warnings.
+	writeFile(t, filepath.Join(narration.AudioDir(root, "en"), "manifest.json"), `{"language":"en","tracks":{"global/chip-mascot-greeting":{"hash":"old","files":{"chip":"global/x-chip.mp3"}}}}`)
+	code, out = runVerify(dir)
+	if code != 0 || !strings.Contains(out, "warning: en audio") {
+		t.Errorf("stale English recordings: exit %d\n%s", code, out)
+	}
+}

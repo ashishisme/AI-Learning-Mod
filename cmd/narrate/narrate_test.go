@@ -232,3 +232,40 @@ func TestShortSentences(t *testing.T) {
 		t.Fatalf("words changed:\n%q\n%q", long, got)
 	}
 }
+
+// SPEC-017: English is recorded from public-content/lessons in en-US, and -prune drops out-of-date
+// entries so a release never serves old audio for new text.
+func TestNarrateRecordsEnglishAndPrunesStaleEntries(t *testing.T) {
+	root := repo(t, "पहला वाक्य।")
+	for p, body := range map[string]string{
+		"content/voices/en.json":                   `{"language":"en","personas":{"chip":{"voice":"en-US-Chirp3-HD-Kore","speakingRate":1,"pitch":0},"nova":{"voice":"en-US-Chirp3-HD-Aoede","speakingRate":1,"pitch":0},"alan":{"voice":"en-US-Chirp3-HD-Charon","speakingRate":1,"pitch":0}}}`,
+		"public-content/lessons/1-intro.junior.json": `{"lessonId":"1-intro","mode":"junior","sections":[{"id":"what","heading":"What","bodyMarkdown":"First sentence."}]}`,
+	} {
+		f := filepath.Join(root, filepath.FromSlash(p))
+		_ = os.MkdirAll(filepath.Dir(f), 0o755)
+		if err := os.WriteFile(f, []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	fake := &fakeTTS{}
+	srv := fake.server(t)
+	if code, out := runNarrate(t, root, srv, "-lang", "en"); code != 0 {
+		t.Fatalf("record English: exit %d\n%s", code, out)
+	}
+	if lang := fake.requests[0]["voice"].(map[string]any)["languageCode"]; lang != "en-US" {
+		t.Errorf("languageCode %v", lang)
+	}
+	if code, out := runNarrate(t, root, nil, "-lang", "en", "-prune"); code != 0 || !strings.Contains(out, "pruned 0") {
+		t.Errorf("prune when current: exit %d\n%s", code, out)
+	}
+	lesson := filepath.Join(root, "public-content/lessons/1-intro.junior.json")
+	b, _ := os.ReadFile(lesson)
+	_ = os.WriteFile(lesson, []byte(strings.Replace(string(b), "First", "New", 1)), 0o644)
+	if code, out := runNarrate(t, root, nil, "-lang", "en", "-prune"); code != 0 || !strings.Contains(out, "pruned 3") {
+		t.Errorf("prune after an edit: exit %d\n%s", code, out)
+	}
+	raw, _ := os.ReadFile(filepath.Join(root, "public-content/audio/en/manifest.json"))
+	if strings.Contains(string(raw), "section-what") || !strings.Contains(string(raw), "chip-mascot-greeting") {
+		t.Errorf("manifest after prune:\n%s", raw)
+	}
+}

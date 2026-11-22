@@ -89,7 +89,7 @@ func Tracks(root, code string) ([]Track, error) {
 	}
 	add("global/chip-mascot-greeting", ui["adaptive.chipGreeting"])
 	for _, mode := range modesInUse {
-		files, err := filepath.Glob(filepath.Join(root, "public-content", "lang", code, "lessons", "*."+mode+".json"))
+		files, err := filepath.Glob(filepath.Join(LessonsDir(root, code), "*."+mode+".json"))
 		if err != nil {
 			return nil, err
 		}
@@ -158,4 +158,13 @@ func CoreBody(bigIdea, body string) string {
 		return body
 	}
 	return bigIdea + "\n\n" + body
+}
+
+// LessonsDir is where a language's lesson files live: English at public-content/lessons, the others under
+// public-content/lang/<code>/lessons (SPEC-017: English is recorded too).
+func LessonsDir(root, code string) string {
+	if code == "en" {
+		return filepath.Join(root, "public-content", "lessons")
+	}
+	return filepath.Join(root, "public-content", "lang", code, "lessons")
 }

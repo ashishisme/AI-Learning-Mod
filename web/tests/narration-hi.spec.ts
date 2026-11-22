@@ -179,3 +179,38 @@ test.describe('Hindi recorded narration (B4 step B)', () => {
     }
   })
 })
+
+// SPEC-017 (AC-91): English is recorded too. A listed recording plays; a track not listed (never
+// recorded, or pruned as out of date at build) falls back to the English device voice.
+test.describe('English recorded narration (SPEC-017)', () => {
+  async function englishKids(page: Page) {
+    await page.addInitScript(() => localStorage.setItem('ai-foundations-audience-mode', JSON.stringify({ state: { mode: 'junior' }, version: 0 })))
+    await page.goto('/lesson/1-intro')
+  }
+
+  test('an English section plays its recording in the chosen persona', async ({ page }) => {
+    await fakeSpeech(page, [{ name: 'Samantha', lang: 'en-US' }])
+    await stubPlayer(page)
+    const key = `1-intro/junior/section-${firstSectionId()}`
+    await page.route('**/api/audio/en/manifest.json', (r) =>
+      r.fulfill({ json: { language: 'en', tracks: { [key]: { chip: { file: `${key}-chip.mp3`, hash: 'h', bytes: 1 } } } } }))
+    await page.route('**/api/audio/en/**/*.mp3', () => {})
+    await englishKids(page)
+    await readFirstSection(page, en)
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __played: string[] }).__played)).toEqual([
+      expect.stringMatching(new RegExp(`/api/audio/en/${key}-chip\\.mp3$`)),
+    ])
+    expect(await spoken(page)).toEqual([])
+  })
+
+  test('an English section with no listed recording uses the English device voice', async ({ page }) => {
+    await fakeSpeech(page, [{ name: 'Samantha', lang: 'en-US' }])
+    await stubPlayer(page)
+    await page.route('**/api/audio/en/manifest.json', (r) => r.fulfill({ json: { language: 'en', tracks: {} } }))
+    await englishKids(page)
+    await readFirstSection(page, en)
+    await expect.poll(async () => (await spoken(page)).length).toBeGreaterThan(0)
+    expect((await spoken(page)).every((u) => u.voice === 'Samantha')).toBe(true)
+    expect(await page.evaluate(() => (window as unknown as { __played: string[] }).__played)).toEqual([])
+  })
+})

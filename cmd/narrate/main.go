@@ -50,6 +50,7 @@ func run(root string, args []string, getenv func(string) string, stdout, stderr 
 	check := fs.Bool("check", false, "report missing or out-of-date recordings; make no request")
 	dryRun := fs.Bool("dry-run", false, "list what would be recorded and the characters billed; make no request")
 	sample := fs.String("sample", "", "listening test: record the greeting with this voice to narration-sample-<voice>.mp3 and stop")
+	prune := fs.Bool("prune", false, "drop manifest entries whose text or voice changed since recording, so they are not served; make no request (SPEC-017)")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
@@ -64,9 +65,16 @@ func run(root string, args []string, getenv func(string) string, stdout, stderr 
 			speechLang = l.SpeechLang
 		}
 	}
+	if *lang == i18n.English.Code { // SPEC-017: English is recorded in US English voices
+		speechLang = "en-US"
+	}
 	if speechLang == "" {
 		fmt.Fprintf(stderr, "-lang %q is not a language in public-content/languages.json\n", *lang)
 		return 2
+	}
+
+	if *prune {
+		return pruneStale(root, *lang, stdout, stderr)
 	}
 
 	if *check {
@@ -436,4 +444,56 @@ func lastIndexAny(s string, seps []string) int {
 		}
 	}
 	return best
+}
+
+// pruneStale removes manifest entries that no longer match their track's text or voice, so a release
+// never serves old audio for new text: the app then uses the device voice for that track until it is
+// recorded again (SPEC-017 FR-004, FR-005). It changes nothing when every entry is current.
+func pruneStale(root, code string, stdout, stderr io.Writer) int {
+	m, err := narration.LoadManifest(root, code)
+	if err != nil {
+		fmt.Fprintln(stderr, err)
+		return 2
+	}
+	if len(m.Tracks) == 0 {
+		fmt.Fprintf(stdout, "%s: no recordings, nothing to prune\n", code)
+		return 0
+	}
+	tracks, err := narration.Tracks(root, code)
+	if err != nil {
+		fmt.Fprintln(stderr, err)
+		return 2
+	}
+	voices, err := narration.Voices(root, code)
+	if err != nil {
+		fmt.Fprintln(stderr, err)
+		return 2
+	}
+	want := map[string]map[string]string{} // key -> persona -> hash
+	for _, t := range tracks {
+		want[t.Key] = map[string]string{}
+		for persona, v := range voices {
+			want[t.Key][persona] = narration.Hash(v, t.Text)
+		}
+	}
+	removed := 0
+	for key, byPersona := range m.Tracks {
+		for persona, rec := range byPersona {
+			if want[key][persona] != rec.Hash {
+				delete(byPersona, persona)
+				removed++
+			}
+		}
+		if len(byPersona) == 0 {
+			delete(m.Tracks, key)
+		}
+	}
+	if removed > 0 {
+		if err := save(narration.AudioDir(root, code), m); err != nil {
+			fmt.Fprintln(stderr, err)
+			return 2
+		}
+	}
+	fmt.Fprintf(stdout, "%s: pruned %d out-of-date recording(s)\n", code, removed)
+	return 0
 }

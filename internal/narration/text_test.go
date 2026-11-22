@@ -167,3 +167,33 @@ func TestTracksIncludeClipSteps(t *testing.T) {
 		t.Error("a track past the last step")
 	}
 }
+
+// SPEC-017 FR-002: English tracks come from public-content/lessons and use the same keys as a fully
+// translated language, so the app finds an English recording under the key it already uses.
+func TestEnglishTracksMatchTheTranslatedKeys(t *testing.T) {
+	root := filepath.Join("..", "..")
+	en, err := Tracks(root, "en")
+	if err != nil {
+		t.Fatal(err)
+	}
+	hi, err := Tracks(root, "hi")
+	if err != nil {
+		t.Fatal(err)
+	}
+	keys := func(ts []Track) map[string]bool {
+		m := map[string]bool{}
+		for _, x := range ts {
+			m[x.Key] = true
+		}
+		return m
+	}
+	ek, hk := keys(en), keys(hi)
+	if len(en) < 250 { // 277 tracks in 2026-11; each is recorded in three voices
+		t.Fatalf("only %d English tracks", len(en))
+	}
+	for k := range hk {
+		if !ek[k] {
+			t.Errorf("Hindi has %s but English does not", k)
+		}
+	}
+}

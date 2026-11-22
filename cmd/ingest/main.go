@@ -116,6 +116,21 @@ func verify(contentDir string, out io.Writer, checkAudio bool) int {
 			code = 1
 		}
 	}
+	// SPEC-017 FR-005: English is recorded too, but a missing or stale English recording only warns: that
+	// track uses the device voice until it is recorded again. English has no entry in the language list.
+	if _, err := os.Stat(filepath.Join(root, "content", "voices", "en.json")); checkAudio && err == nil {
+		if m, err := narration.LoadManifest(root, "en"); err == nil && len(m.Tracks) == 0 {
+			fmt.Fprintln(out, "warning: en audio: no recordings yet")
+		} else {
+			problems, err := narration.Check(root, "en")
+			if err != nil {
+				problems = []narration.Problem{{Key: "audio", Reason: err.Error()}}
+			}
+			for _, line := range narration.Summary(problems, 20) {
+				fmt.Fprintf(out, "warning: en audio %s\n", line)
+			}
+		}
+	}
 	if code == 0 {
 		slog.Info("Content check passed", "contentDir", contentDir)
 	}

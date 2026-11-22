@@ -100,7 +100,7 @@ func (e *authEnv) activate(t *testing.T, c *http.Client) creds {
 
 func TestSignedOutVisitorSeesNothingButTheOpenRoutes(t *testing.T) {
 	e := newAuthEnv(t)
-	for _, p := range []string{"/api/lessons", "/api/lessons/lesson-1"} {
+	for _, p := range []string{"/api/lessons", "/api/lessons/lesson-1", "/api/audio/en/manifest.json", "/api/audio/hi/manifest.json"} { // SPEC-017 FR-003: recordings, English included, are behind the gate
 		resp, body := e.get(t, e.client, p)
 		if resp.StatusCode != 401 || !strings.Contains(body, `"code":"signin_required"`) || strings.Contains(body, "Lesson 1") {
 			t.Errorf("%s: %d %s", p, resp.StatusCode, body)

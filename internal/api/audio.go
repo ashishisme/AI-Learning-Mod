@@ -23,7 +23,8 @@ var audioPathRe = regexp.MustCompile(`^(?:[a-z0-9-]+/){1,2}[a-z0-9-]+\.mp3$|^man
 func audioHandler(contentDir string, langs *i18n.Set) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		code, rest := r.PathValue("lang"), r.PathValue("path")
-		if _, ok := langs.Lookup(code); !ok || code == i18n.English.Code || !audioPathRe.MatchString(rest) {
+		// SPEC-017: English is always offered, so its recordings are served too.
+		if _, ok := langs.Lookup(code); (!ok && code != i18n.English.Code) || !audioPathRe.MatchString(rest) {
 			http.NotFound(w, r)
 			return
 		}

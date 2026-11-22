@@ -35,6 +35,9 @@ COPY design/brand/asset-register.json ./design/brand/asset-register.json
 COPY web/public/brand ./web/public/brand
 # SPEC-013 FR-008: the English approval gate hashes our notebooks. Build stage only, never the runtime image.
 COPY notebooks ./notebooks
+# SPEC-017: English recordings only warn when stale, so drop out-of-date entries before packaging. A
+# release then never plays old audio for new text; that track uses the device voice until re-recorded.
+RUN go run ./cmd/narrate -lang en -prune
 RUN CONTENT_DIR=public-content go run ./cmd/ingest -verify
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=$TARGETARCH go build -trimpath -ldflags="-w -s" -o /app/server ./cmd/server
 
@@ -52,8 +55,9 @@ RUN addgroup -g 10001 -S appgroup && \
 COPY --from=frontend-builder --chown=appuser:appgroup /app/web/dist ./web/dist
 COPY --from=backend-builder --chown=appuser:appgroup /app/server ./server
 
-# The lessons, committed with the code (NFR-LIC-03).
-COPY --chown=appuser:appgroup public-content ./public-content
+# The lessons, committed with the code (NFR-LIC-03), and the recordings, from the build stage so the
+# English manifest is the pruned one (SPEC-017).
+COPY --from=backend-builder --chown=appuser:appgroup /app/public-content ./public-content
 
 # NFR-OPS-04: Remove package managers from production container
 RUN rm -rf /sbin/apk /etc/apk /lib/apk

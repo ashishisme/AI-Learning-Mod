@@ -1,6 +1,7 @@
 // SPEC: SPEC-009 FR-012, FR-013, research R11
 // Recorded narration: each language's manifest is fetched once, and a track's file is found by its key
-// ("<lessonId>/<mode>/<trackId>" or "global/<trackId>") and persona. English has no recordings.
+// ("<lessonId>/<mode>/<trackId>" or "global/<trackId>") and persona. English is recorded too (SPEC-017); a release
+// ships only current English entries, so a listed recording always matches the text on screen.
 import { speechService, VOICE_PERSONAS } from './speechService'
 import type { VoicePersonaId } from '../store'
 
@@ -11,7 +12,7 @@ interface Manifest {
 const manifests = new Map<string, Promise<Manifest | null>>()
 
 export async function recordingFor(code: string, key: string, persona: string): Promise<string | null> {
-  if (code === 'en' || !/^[a-z]{2,3}$/.test(code)) return null
+  if (!/^[a-z]{2,3}$/.test(code)) return null
   let loading = manifests.get(code)
   if (!loading) {
     loading = fetch(`/api/audio/${code}/manifest.json`)
@@ -55,7 +56,7 @@ export function speakTrack(o: SpeakTrackOptions): void {
       onError: o.onError,
     })
   const code = o.speechLang.toLowerCase().split('-')[0]
-  if (!o.trackKey || code === 'en') {
+  if (!o.trackKey) {
     onDevice()
     return
   }

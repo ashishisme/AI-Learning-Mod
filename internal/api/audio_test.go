@@ -64,13 +64,44 @@ func TestAudioIsServedForApprovedLanguagesOnly(t *testing.T) {
 			"/api/audio/hi/1-intro/junior/section-what-chip.json",
 			"/api/audio/hi/1-intro/junior/Section-What-chip.mp3",
 			"/api/audio/hi/a/b/c/d.mp3",
-			"/api/audio/en/manifest.json",
 			"/api/audio/xx/manifest.json",
 			"/api/audio/hi/1-intro/junior/missing-chip.mp3",
 		} {
 			if rec := get(bad); rec.Code == http.StatusOK || rec.Code == http.StatusPartialContent {
 				t.Errorf("%s: %d %s", bad, rec.Code, rec.Body.String())
 			}
+		}
+	}
+}
+
+// SPEC-017 FR-003: English recordings are served (English is always offered), with the same path checks.
+func TestEnglishAudioIsServed(t *testing.T) {
+	dir := langContent(t, "hidden") // no other language offered: English still is
+	for p, body := range map[string]string{
+		"audio/en/manifest.json":                        `{"language":"en","tracks":{}}`,
+		"audio/en/1-intro/junior/section-what-chip.mp3": "ID3-en",
+		"lessons/1-intro.json":                          `{"id":"1-intro"}`,
+	} {
+		f := filepath.Join(dir, filepath.FromSlash(p))
+		_ = os.MkdirAll(filepath.Dir(f), 0o755)
+		if err := os.WriteFile(f, []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	router := NewRouter(RouterConfig{ContentDir: dir})
+	get := func(path string) int {
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, path, nil))
+		return rec.Code
+	}
+	for _, ok := range []string{"/api/audio/en/manifest.json", "/api/audio/en/1-intro/junior/section-what-chip.mp3"} {
+		if c := get(ok); c != http.StatusOK {
+			t.Errorf("%s: %d", ok, c)
+		}
+	}
+	for _, bad := range []string{"/api/audio/en/../lessons/1-intro.json", "/api/audio/en/%2e%2e/lessons/1-intro.json", "/api/audio/en/1-intro/junior/missing-chip.mp3"} {
+		if c := get(bad); c == http.StatusOK {
+			t.Errorf("%s: %d", bad, c)
 		}
 	}
 }
