@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | ID | SPEC-001 |
-| Version | 2.21.0 |
+| Version | 2.23.0 |
 | Status | Active implementation |
 | Owner | (your name) |
 | Lessons | Written for this course and committed in `public-content/` (FR-CNT-12, NFR-LIC-03; SPEC-013 closed 2026-11-14, v0.10.0) |
@@ -324,7 +324,7 @@ in feedback, or logged.
 its own visual layer under `[data-journey="junior"]`:
 - clay-style cards (20 px corners, 3 px borders, a soft double shadow);
 - a blue, amber and pink palette meeting FR-UI-15's contrast in both themes;
-- self-hosted Baloo 2 and Comic Neue for Latin text, with Noto Sans Devanagari for Hindi (amended 2.18.0, SPEC-015 FR-009: Baloo Tamma 2 and Baloo Thambi 2 for Kannada and Tamil Kids text, Noto Sans Kannada and Noto Sans Tamil elsewhere; each script's font is fetched only when that script is on screen);
+- self-hosted Baloo 2 and Comic Neue for Latin text, with Noto Sans Devanagari for Hindi (amended 2.18.0, SPEC-015 FR-009: Baloo Tamma 2 and Baloo Thambi 2 for Kannada and Tamil Kids text, Noto Sans Kannada and Noto Sans Tamil elsewhere; each script's font is fetched only when that script is on screen; amended 2.23.0, SPEC-018: Marathi uses the Hindi fonts, Noto Sans Devanagari in every journey including Kids, and Telugu adds Noto Sans Telugu and, for Kids, Baloo Tammudu 2);
 - celebratory feedback that never relies on colour or motion alone.
 
 **FR-UI-18.** Added 2.9.0 (SPEC-011). In the Kids journey the home page shall be "Chip's Trail":
@@ -503,7 +503,9 @@ Amended 2.18.0 (SPEC-015 FR-011, FR-012). The same categories are caught in ever
 common romanised form: Hindi (Devanagari, Hinglish), Kannada (Kannada script, Kanglish) and Tamil (Tamil script,
 Tanglish). Before matching, the digits of every Indian script are folded to ASCII, and the zero-width joiner and
 non-joiner (U+200D, U+200C) are dropped. Each language has its own feedback rejection, safety replies and
-"couldn't find that" reply.
+"couldn't find that" reply. Amended 2.23.0 (SPEC-018): Marathi (Devanagari, with its own words such
+as माझा नंबर and पत्ता) and Telugu (Telugu script, romanised Telugu) are added the same way; the Marathi rules must not
+refuse clean Hindi text, nor the Hindi rules clean Marathi text.
 
 **FR-I18N-06.** Added 2.5.0 (SPEC-009, build B3). When more than one language is approved, the
 header and Settings shall offer a language switcher listing each language by its own name, with a
@@ -521,11 +523,16 @@ session gate. A recording is identified by the hash of its voice, voice settings
 again only when one of them changes, and `ingest -verify` fails the build for an approved language
 with any recording missing or out of date. Narration text is built by one rule shared by the app and
 the recorder. The recording credential is a short-lived token on the owner's machine, never stored.
+Amended 2.22.0 (SPEC-017, owner decisions 2026-11-22): English is recorded too, in en-US voices for every
+journey, and served at `/api/audio/en/…`. A missing or out-of-date English recording is a warning in
+`ingest -verify`, never a failure; that track uses the device voice until it is recorded again.
 
 **FR-I18N-08.** Added 2.6.0 (SPEC-009, build B4). Without a recording, narration uses a device voice in
 the language of the text on screen (English for content that fell back to English). A text is never
 read by a voice of another language: when the device has none, nothing is spoken and the learner is
-told that narration in their language is not available on this device. English narration is unchanged.
+told that narration in their language is not available on this device. Amended 2.22.0 (SPEC-017): English
+text uses its English recording when one is listed; a release lists only current English recordings
+(stale ones are pruned at build), so a recording always matches the text on screen.
 
 **FR-I18N-09.** Added 2.7.0 (SPEC-009, build B5). `POST /api/tutor` and `POST /api/tutor/prepare` accept
 an optional `lang`. For an approved language other than English the tutor reads that language's
