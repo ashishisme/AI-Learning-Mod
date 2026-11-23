@@ -51,17 +51,17 @@ The state for any agent continuing this work. Commands run from the repo root. N
 - [X] T003a [P] Add `mr` as hidden in `languages.json` (done 2026-11-22).
 - [ ] T003b Add `te` as hidden in `languages.json` (Phase 3, with T004).
 - [ ] T004 [P] Telugu fonts: Noto Sans Telugu and Baloo Tammudu 2 (`.woff2` and OFL), plus `@font-face` rules with `unicode-range U+0C00-0C7F`. Register them as assets if the brand register covers fonts.
-- [ ] T005 [P] Marathi and Telugu personal-details rules, with `internal/feedback/testdata/{mr,te}_{clean,personal_details}.json`. Include Hindi clean sentences in the Marathi set, and the reverse.
-- [ ] T006 [P] Marathi and Telugu safety rules, with `internal/api/testdata/{mr,te}_safety.json`. Cross-check both ways: Hindi sentences among the Marathi clean cases, and Marathi among the Hindi ones (spec edge case).
+- [~] T005 [P] Marathi and Telugu personal-details rules *(mr done 2026-11-23: rules in `check.go` (mr* regexes, Marathi number words), `mr_personal_details.json` 37 and `mr_clean.json` 34 with Hindi lines; all languages pass. te pending.)*, with `internal/feedback/testdata/{mr,te}_{clean,personal_details}.json`. Include Hindi clean sentences in the Marathi set, and the reverse.
+- [~] T006 [P] Marathi and Telugu safety rules *(mr done 2026-11-23: four Marathi rules in `safety.go`, `mr_safety.json` 26 blocked and 16 clean with Hindi lines; romanised self-harm needs "mala" so it does not catch "tyala maraycha". te pending.)*, with `internal/api/testdata/{mr,te}_safety.json`. Cross-check both ways: Hindi sentences among the Marathi clean cases, and Marathi among the Hindi ones (spec edge case).
 - [~] T007 [P] Server messages for mr and te *(mr done 2026-11-22; te pending)* in `internal/i18n/messages.go`.
-- [ ] T008 [P] Extend `web/tests/languages-kn-ta.spec.ts` `LANGS` with mr and te: fonts, 390 px, and the header at 768, 1024 and 1280 px. Marathi: `font: /NotoSansDevanagari/`, and `kidsFont` is also Noto Sans Devanagari, because Baloo 2 is Latin-only. Telugu: `/NotoSansTelugu/`, with Kids `/BalooTammudu2/`.
+- [~] T008 [P] Extend `web/tests/languages-kn-ta.spec.ts` `LANGS` with mr and te: fonts, 390 px, and the header at 768, 1024 and 1280 px. Marathi: `font: /NotoSansDevanagari/`, and `kidsFont` is also Noto Sans Devanagari, because Baloo 2 is Latin-only. Telugu: `/NotoSansTelugu/`, with Kids `/BalooTammudu2/`. *(mr done 2026-11-23: 8 passed, 1 skipped (no Kids-only font). te pending.)*
 
 ## Phase 2: Marathi (US1)
-- [ ] T009 Glossary `content/glossary/mr.json`. The owner confirms it.
-- [~] T010 UI strings `web/src/i18n/mr.json`, with the 390 px check. *(Drafted 2026-11-23, 646 keys, clean; the 390 px check comes with T008.)*
-- [ ] T011 Voices (listening test), `content/voices/mr.json`.
-- [~] T012 [P] 18 lessons and `index.json` (parallel drafters), the term-alignment pass, and the quizzes `web/src/data/quizzes/mr.json`. *(All drafted and clean, 2026-11-23. Still to do: the term-alignment pass from `notes/mr-terms-to-align.md`, and shortening the 3 clips over 30 s: 2-symbolic rover-diagnosis 31.8 s, 2-symbolic plain-decision-tree 30.2 s, 7-ethics hiring-audit 30.6 s.)*
-- [ ] T013 Owner approval as owner (beta). Ask the owner these open points from drafting first:
+- [X] T009 Glossary `content/glossary/mr.json`. The owner confirms it. *(Confirmed with T013, 2026-11-23.)*
+- [X] T010 UI strings `web/src/i18n/mr.json`, with the 390 px check. *(Drafted 2026-11-23, 646 keys, clean; the 390 px check comes with T008.)*
+- [X] T011 Voices (listening test), `content/voices/mr.json`. *(2026-11-23: the owner asked Claude to pick: Kore (Chip), Aoede (Nova), Charon (Alan), the same as every other language. Dry run: 831 recordings, 255,750 characters, about $8; recording waits for the owner's yes.)*
+- [X] T012 [P] 18 lessons and `index.json` (parallel drafters), the term-alignment pass, and the quizzes `web/src/data/quizzes/mr.json`. *(All drafted and clean, 2026-11-23. Term-alignment pass done 2026-11-23: a variant scan found only 2 stray कॉम्प्युटर (lesson 7 Plain English and the quizzes), now संगणक; the others are correct in context. The 2 clips that failed the 30 s check were shortened to 29.8 s; plain-decision-tree at 30.2 s is a video and is not checked.)*
+- [X] T013 Owner approval as owner (beta). *(2026-11-23: the owner said "approve T013". The 20 ledger files (UI strings, quizzes, 18 lessons) are approved as owner (beta) in `content/review/mr.json`. The drafts are accepted as written: the glossary (including the 10 flagged terms), Chip as चिप, and the lesson 5 examples adapted for Marathi. The glossary and index.json are not in the ledger and are recorded here. Still open, but about other languages and not Marathi: the "proves" wording in English lesson 2, and the extra "पचास हज़ार" in a Hindi clip step.)* Ask the owner these open points from drafting first:
   - Chip's name: चिप (like Kannada and Tamil) or Latin "Chip" (like Hindi) in `mascot.name`;
   - the "proves" wording in the English lesson 2 Kids clip;
   - the extra "पचास हज़ार" in a Hindi lesson 2 Plain English clip step;
