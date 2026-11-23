@@ -10,6 +10,7 @@ const LANGS: Lang[] = [
   { code: 'ta', name: 'தமிழ்', speechLang: 'ta-IN', english: 'Tamil', font: /NotoSansTamil/, kidsFont: /BalooThambi2/, others: /NotoSans(Kannada|Devanagari)|BalooTamma/ },
   // SPEC-018: Marathi uses Noto Sans Devanagari in every journey, Kids included (Baloo 2 is Latin-only), so it has no Kids-only font.
   { code: 'mr', name: 'मराठी', speechLang: 'mr-IN', english: 'Marathi', font: /NotoSansDevanagari/, kidsFont: null, others: /NotoSans(Kannada|Tamil)|BalooT/ },
+  { code: 'te', name: 'తెలుగు', speechLang: 'te-IN', english: 'Telugu', font: /NotoSansTelugu/, kidsFont: /BalooTammudu2/, others: /NotoSans(Kannada|Tamil|Devanagari)|BalooT(amma2|hambi)/ },
 ]
 const uiFile = (code: string) => join(process.cwd(), 'src', 'i18n', `${code}.json`)
 const lessonFile = (code: string, id: string, mode: string) => join(process.cwd(), '..', 'public-content', 'lang', code, 'lessons', `${id}.${mode}.json`)
