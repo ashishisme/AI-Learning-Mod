@@ -4,6 +4,6 @@
     { "code": "kn", "name": "ಕನ್ನಡ", "speechLang": "kn-IN", "status": "approved", "beta": true },
     { "code": "ta", "name": "தமிழ்", "speechLang": "ta-IN", "status": "approved", "beta": true },
     { "code": "mr", "name": "मराठी", "speechLang": "mr-IN", "status": "approved", "beta": true },
-    { "code": "te", "name": "తెలుగు", "speechLang": "te-IN", "status": "hidden" }
+    { "code": "te", "name": "తెలుగు", "speechLang": "te-IN", "status": "approved", "beta": true }
   ]
 }

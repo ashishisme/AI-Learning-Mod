@@ -59,7 +59,7 @@
       "path": "public-content/lang/te/lessons/3-neuralnetworks.detailed.json",
       "kind": "adaptive",
       "sourceHash": "0fd2274511ab9b9d87cf22936799d4db5f4983d281bb5dac4016f42630f71905",
-      "translationHash": "adab8943ee59ee22c2b83a8f6c7b90e223dbae4a0ebe4aa3dc2533cb2401c4a3",
+      "translationHash": "e0e3d52533961e16f4a3dc1207d1cb66842dab39f013563a2b3d825bf1116dd3",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-23"
@@ -113,7 +113,7 @@
       "path": "public-content/lang/te/lessons/5-nlp.detailed.json",
       "kind": "adaptive",
       "sourceHash": "fc02a1506ab25f4e05bd753ab4b8ec10d22ad34fbc28defea09ff3d021d4f904",
-      "translationHash": "4186c1cb42a271b0d1237084a468d720209b3d929a491a898b7a4f0fd3beb7f2",
+      "translationHash": "a4050be4d9a585302a63953d175ea27ce062263b1ba409e370948afd845247e6",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-23"
@@ -176,7 +176,7 @@
       "path": "web/src/i18n/te.json",
       "kind": "ui",
       "sourceHash": "8e0f34632aa11d29e14be0883b29df14d385b0750f13c9db29845a0e4e16ff96",
-      "translationHash": "542aac95d4c80bf9c33c1f11f924307cb6e6207f5c810e6ebe178a0888df03e4",
+      "translationHash": "2efe96e4fb6822a28c26789f01b82ba852ed7a8af8c37785767218af2d74f47d",
       "status": "approved",
       "reviewer": "owner (beta)",
       "date": "2026-11-23"

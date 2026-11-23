@@ -562,7 +562,7 @@
   "widget.perceptron.sugar": "🍬 చక్కెర: {n}",
   "widget.perceptron.sweetSide": "తీపి ఆపిల్ (≥ 0)",
   "widget.perceptron.threshold": "థ్రెషోల్డ్ = 0",
-  "widget.perceptron.title": "ఒకే న్యూరాన్ పండ్ల సార్టర్",
+  "widget.perceptron.title": "ఒకే న్యూరాన్ పండ్ల వర్గీకరణ యంత్రం",
   "widget.perceptron.w1": "🍬 స్పార్కీకి చక్కెర ఎంత ఇష్టం? (వెయిట్ w₁):",
   "widget.perceptron.w2": "⚽ స్పార్కీకి గుండ్రదనం ఎంత ఇష్టం? (వెయిట్ w₂):",
   "widget.perceptron.weights": "వెయిట్‌లు (w) & బయాస్ (b)",

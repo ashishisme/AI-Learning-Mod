@@ -45,11 +45,13 @@ var (
 	datePart = `(?:\d{1,2}(?:st|nd|rd|th)?[\s/\-.]+(?:\d{1,2}|` + monthName + `)(?:[\s/\-.,]+\d{2,4})?|` + monthName + `\s+\d{1,2}(?:st|nd|rd|th)?(?:[\s,]+\d{2,4})?|\d{4}[\-/.]\d{1,2}[\-/.]\d{1,2})`
 	dobRe    = regexp.MustCompile(`\b(?:my birthday|my birth\s?date|my date of birth|date of birth|my dob|dob|born on|i was born)\b(?:\s*(?:is|was|:|-|on|in))*\s*(?:` + datePart + `|\d{4}\b)`)
 
-	digitTokenRe = regexp.MustCompile(`[a-z]+|\d+|\p{Devanagari}+|\p{Kannada}+|\p{Tamil}+`)
+	digitTokenRe = regexp.MustCompile(`[a-z]+|\d+|\p{Devanagari}+|\p{Kannada}+|\p{Tamil}+|\p{Telugu}+`)
 
 	numberWords = map[string]int{"zero": 1, "oh": 1, "one": 1, "two": 1, "three": 1, "four": 1, "five": 1, "six": 1, "seven": 1, "eight": 1, "nine": 1,
 		// Hindi and Hinglish. "do" (two) is left out: it is also an English word.
 		"दोन": 1, "पाच": 1, "सहा": 1, "नऊ": 1, // Marathi (SPEC-018); the rest are shared with Hindi
+		// Telugu (SPEC-018)
+		"సున్నా": 1, "ఒకటి": 1, "రెండు": 1, "మూడు": 1, "నాలుగు": 1, "ఐదు": 1, "ఆరు": 1, "ఏడు": 1, "ఎనిమిది": 1, "తొమ్మిది": 1,
 		"शून्य": 1, "एक": 1, "दो": 1, "तीन": 1, "चार": 1, "पांच": 1, "छह": 1, "छः": 1, "सात": 1, "आठ": 1, "नौ": 1,
 		"shunya": 1, "ek": 1, "teen": 1, "chaar": 1, "char": 1, "paanch": 1, "panch": 1, "chhe": 1, "chhah": 1, "saat": 1, "aath": 1, "nau": 1,
 		// Kannada and Tamil (SPEC-015 FR-011)
@@ -250,6 +252,28 @@ func onlyDigits(s string) string {
 	return b.String()
 }
 
+// Telugu rules (SPEC-018, FR-I18N-05 amended 2.23.0). Telugu words take their endings directly (వీధిలో, 2012లో),
+// so most rules match the start of a word. ZWNJ is dropped before matching, so app names are written without it.
+const (
+	teMonth = `(?:జనవరి|ఫిబ్రవరి|మార్చి|ఏప్రిల్|మే|జూన్|జూలై|జులై|ఆగస్టు|ఆగస్ట్|సెప్టెంబర్|సెప్టెంబరు|అక్టోబర్|అక్టోబరు|నవంబర్|నవంబరు|డిసెంబర్|డిసెంబరు)`
+	teDate  = `(?:\d{1,2}[\s/\-.]+(?:\d{1,2}|` + teMonth + `|` + monthName + `)(?:[\s/\-.,]+\d{2,4})?|` + teMonth + `\s+\d{1,2}|\d{4})`
+	teApps  = `(?:ఇన్స్టా(?:గ్రామ్)?|స్నాప్(?:చాట్)?|టెలిగ్రామ్|వాట్సాప్|వాట్సప్|ఫేస్బుక్|యూట్యూబ్|యుట్యూబ్)`
+	teMy    = `(?:నా|మా|నాది|మాది)`
+	teMyLat = `(?:naa|maa)`
+)
+
+var (
+	teEmailRe    = regexp.MustCompile(hiStart + `\S+\s+(?:ఎట్|ఎట్ ది రేట్|ఎట్దరేట్)\s+\S+\s+డాట్\s+(?:కామ్|ఇన్|ఆర్గ్|నెట్|com|in|org|net)` + hiEnd)
+	teLinkRe     = regexp.MustCompile(hiStart + `(?:` + teMy + `\s+` + teApps + `|` + teApps + `\s*లో\s+(?:నన్ను\s+)?(?:ఫాలో|యాడ్|మెసేజ్|చేర్చ))|\b` + teMyLat + `\s+` + enApps + `\b`)
+	tePremisesRe = regexp.MustCompile(hiStart + `(?:ఇంటి|ఇల్లు|ఫ్లాట్|ప్లాట్|డోర్)\s*(?:నం\.?|నంబర్|నెంబర్|సంఖ్య)\s*[:\-]?\s*\d+`)
+	tePostcodeRe = regexp.MustCompile(hiStart + `(?:పిన్\s?కోడ్|పిన్)\s*[:\-]?\s*\d{6}\b`)
+	teStatedAddr = regexp.MustCompile(hiStart + `(?:నా|మా)\s+(?:ఇంటి\s+)?(?:చిరునామా|అడ్రస్)|\b` + teMyLat + `\s+(?:inti\s+)?(?:address|chirunama)\b`)
+	teStreetRe   = regexp.MustCompile(`\d+[\p{Telugu}a-z]*(?:[\s,/\-]+[\p{Telugu}a-z.']+){1,2}[\s,]+(?:రోడ్డు|రోడ్|వీధి|నగర్|కాలనీ|బజార్|పేట|road|nagar|colony|veedhi)`)
+	teDobRe      = regexp.MustCompile(hiStart + `నా\s+(?:పుట్టిన\s?రోజు|జన్మ\s?దినం|జన్మ\s?తేదీ|పుట్టిన\s?తేదీ|బర్త్\s?డే)(?:\s*(?::|-))*\s*` + teDate + `|` +
+		hiStart + `నేను\s+` + teDate + `\s*(?:న|లో|నాడు)?\s+పుట్ట|` +
+		`\b` + teMyLat + `\s+(?:birthday|bday|dob|puttina\s?roju)\b(?:\s*(?:is|:|-))*\s*(?:` + datePart + `|\d{4}\b)`)
+)
+
 // Check reports the kind of the first personal detail found. It uses deterministic rules only and
 // is not perfect: a name written in plain words passes here and is left to the AI auditor. The
 // matched text is never returned or logged.
@@ -257,16 +281,17 @@ func Check(message string) (kind string, found bool) {
 	s := normalizeForCheck(message)
 	squeezed := strings.Join(strings.Fields(s), "") // "a . b @ g m a i l . c o m"
 	switch {
-	case emailRe.MatchString(s), emailRe.MatchString(squeezed), spokenEmailRe.MatchString(s), hiEmailRe.MatchString(s), knTaEmailRe.MatchString(s), mrEmailRe.MatchString(s):
+	case emailRe.MatchString(s), emailRe.MatchString(squeezed), spokenEmailRe.MatchString(s), hiEmailRe.MatchString(s), knTaEmailRe.MatchString(s), mrEmailRe.MatchString(s), teEmailRe.MatchString(s):
 		return KindEmail, true
-	case dobRe.MatchString(s), hiDobRe.MatchString(s), knTaDobRe.MatchString(s), mrDobRe.MatchString(s):
+	case dobRe.MatchString(s), hiDobRe.MatchString(s), knTaDobRe.MatchString(s), mrDobRe.MatchString(s), teDobRe.MatchString(s):
 		return KindDateOfBirth, true
-	case linkRe.MatchString(s), handleRe.MatchString(s), hiLinkRe.MatchString(s), knTaLinkRe.MatchString(s), mrLinkRe.MatchString(s):
+	case linkRe.MatchString(s), handleRe.MatchString(s), hiLinkRe.MatchString(s), knTaLinkRe.MatchString(s), mrLinkRe.MatchString(s), teLinkRe.MatchString(s):
 		return KindLink, true
 	case streetRe.MatchString(s), premisesRe.MatchString(s), postcodeRe.MatchString(s), statedAddr.MatchString(s),
 		hiPremisesRe.MatchString(s), hiPostcodeRe.MatchString(s), hiStatedAddr.MatchString(s), hiStreetRe.MatchString(s),
 		knTaPremisesRe.MatchString(s), knTaPostcodeRe.MatchString(s), knTaStatedAddr.MatchString(s), knTaStreetRe.MatchString(s),
-		mrPremisesRe.MatchString(s), mrStatedAddr.MatchString(s), mrStreetRe.MatchString(s):
+		mrPremisesRe.MatchString(s), mrStatedAddr.MatchString(s), mrStreetRe.MatchString(s),
+		tePremisesRe.MatchString(s), tePostcodeRe.MatchString(s), teStatedAddr.MatchString(s), teStreetRe.MatchString(s):
 		return KindAddress, true
 	case panRe.MatchString(s):
 		return KindIDNumber, true

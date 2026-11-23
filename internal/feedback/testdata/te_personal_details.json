@@ -1,0 +1,154 @@
+[
+  {
+    "text": "నా నంబర్ 9876543210",
+    "kind": "phone"
+  },
+  {
+    "text": "నా నంబర్ ౯౮౭౬౫౪౩౨౧౦",
+    "kind": "phone"
+  },
+  {
+    "text": "నాకు 98765 43210 కి ఫోన్ చేయండి",
+    "kind": "phone"
+  },
+  {
+    "text": "ఫోన్: ౯౮౭౬౫ ౪౩౨౧౦",
+    "kind": "phone"
+  },
+  {
+    "text": "naa number 9876543210",
+    "kind": "phone"
+  },
+  {
+    "text": "తొమ్మిది ఎనిమిది ఏడు ఆరు ఐదు నాలుగు మూడు రెండు ఒకటి సున్నా",
+    "kind": "phone"
+  },
+  {
+    "text": "నా మొబైల్ 98765-43210",
+    "kind": "phone"
+  },
+  {
+    "text": "+91 98765 43210 కి కాల్ చేయండి",
+    "kind": "phone"
+  },
+  {
+    "text": "98765‌43210 నా నంబర్",
+    "kind": "phone"
+  },
+  {
+    "text": "నా ఈమెయిల్ anita@gmail.com",
+    "kind": "email"
+  },
+  {
+    "text": "ANITA.RAO@GMAIL.COM కి రాయండి",
+    "kind": "email"
+  },
+  {
+    "text": "anita ఎట్ gmail డాట్ కామ్",
+    "kind": "email"
+  },
+  {
+    "text": "ravi ఎట్ ది రేట్ yahoo డాట్ ఇన్",
+    "kind": "email"
+  },
+  {
+    "text": "anita at gmail dot com",
+    "kind": "email"
+  },
+  {
+    "text": "నా చిరునామా చెబుతాను",
+    "kind": "address"
+  },
+  {
+    "text": "మా ఇంటి అడ్రస్ ఇదే",
+    "kind": "address"
+  },
+  {
+    "text": "ఇంటి నంబర్ 42",
+    "kind": "address"
+  },
+  {
+    "text": "ఫ్లాట్ నం. 304, రెండో అంతస్తు",
+    "kind": "address"
+  },
+  {
+    "text": "పిన్ కోడ్ 500034",
+    "kind": "address"
+  },
+  {
+    "text": "12 గాంధీ రోడ్డు దగ్గర ఉంటాం",
+    "kind": "address"
+  },
+  {
+    "text": "8 వెంకటేశ్వర కాలనీ, హైదరాబాద్",
+    "kind": "address"
+  },
+  {
+    "text": "naa address cheptanu",
+    "kind": "address"
+  },
+  {
+    "text": "i live at 5 MG road",
+    "kind": "address"
+  },
+  {
+    "text": "నా పాన్ ABCDE1234F",
+    "kind": "id_number"
+  },
+  {
+    "text": "pan: abcde1234f",
+    "kind": "id_number"
+  },
+  {
+    "text": "నా ఆధార్ 1234 5678 9012",
+    "kind": "id_number"
+  },
+  {
+    "text": "ఆధార్ ౧౨౩౪౫౬౭౮౯౦౧౨",
+    "kind": "id_number"
+  },
+  {
+    "text": "నా పుట్టినరోజు 12 మార్చి 2013",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "నా పుట్టిన తేదీ 12/03/2013",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "నేను 2012లో పుట్టాను",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "నా జన్మదినం జనవరి 5",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "naa birthday 12 march 2013",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "my dob is 05/06/2012",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "నా ఇన్స్టా ravi_123",
+    "kind": "link"
+  },
+  {
+    "text": "నా ఇన్‌స్టాగ్రామ్ చూడండి",
+    "kind": "link"
+  },
+  {
+    "text": "వాట్సాప్ లో నన్ను యాడ్ చేయండి",
+    "kind": "link"
+  },
+  {
+    "text": "naa insta ravi.k",
+    "kind": "link"
+  },
+  {
+    "text": "https://example.com/ravi",
+    "kind": "link"
+  }
+]

@@ -55,6 +55,11 @@ var safetyRules = []struct {
 	{SafetyExplicit, scriptRule(`अश्लील|नग्न|सेक्स (?:व्हिडिओ|व्हिडीओ|फोटो|चित्र)|ashlil|nagna`)},
 	{SafetyViolence, scriptRule(`(?:बॉम्ब|बाँब|स्फोटक|शस्त्र|बंदूक) (?:कसा |कसं |कशी |घरी )?(?:बनवा|तयार कर)|(?:त्याला|तिला|त्यांना|एखाद्याला|कोणाला) (?:कसं |कसा |कशी )?मारायच|मारायचं कसं|bomb (?:kasa )?banv|(?:tyala|tila|konala) (?:kasa )?maraych`)},
 	{SafetyPersonalPII, scriptRule(`(?:माझा|आमचा|माझ्या|आमच्या) (?:घरचा )?पत्ता|(?:माझा|माझे) (?:फोन|मोबाईल) (?:नंबर|क्रमांक)|(?:माझा|माझे) पासवर्ड|(?:maza|majha|amcha) (?:gharcha )?(?:patta|address)|(?:maza|majha) password`)},
+	// Telugu and romanised Telugu (SPEC-018, FR-I18N-05 amended 2.23.0). ZWNJ is dropped before matching.
+	{SafetySelfHarm, scriptRule(`చనిపోవాల|చచ్చిపోవాల|ఆత్మహత్య|నన్ను నేను (?:గాయపర|చంపుకో|హాని)|(?:బతకాలని|బ్రతకాలని) లేదు|(?:బతకడంలో|బ్రతకడంలో) (?:ఏ )?అర్థం లేదు|chanipovala|chachipovala|aatmahatya|atmahatya|(?:bathakalani|brathakalani) ledu`)},
+	{SafetyExplicit, scriptRule(`అశ్లీల|నగ్న|సెక్స్ (?:వీడియో|ఫోటో|చిత్ర)|ashleela|nagna`)},
+	{SafetyViolence, scriptRule(`(?:బాంబు|బాంబ్|పేలుడు పదార్థం) (?:ఎలా |ఇంట్లో )?(?:తయారు|చేయాల|చేయడం)|తుపాకీ (?:ఎక్కడ |ఎలా )?కొన|(?:వాడిని|ఆమెను|వాళ్లను|వాళ్ళను|ఎవరినైనా|ఒకరిని|నిన్ను) (?:ఎలా )?చంప|bomb (?:ela )?(?:tayaru|cheyal)|(?:vaadini|aamenu|vallanu|evarinaina) (?:ela )?champ`)},
+	{SafetyPersonalPII, scriptRule(`(?:నా|మా) (?:ఇంటి )?(?:చిరునామా|అడ్రస్)|నా (?:ఫోన్|మొబైల్) (?:నంబర్|నెంబర్)|నా (?:నంబర్|నెంబర్) \d|నా పాస్వర్డ్|(?:naa|maa) (?:inti )?(?:address|chirunama)|naa (?:phone|mobile) (?:number|nambar)|naa password`)},
 }
 
 // scriptRule compiles a rule for an Indian script and its romanised form (Hindi, Kannada, Tamil). RE2's \b is
