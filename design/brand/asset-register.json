@@ -1597,25 +1597,25 @@
       "id": "clip-plain-transformer-context-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/plain-transformer-context.webm",
-          "sha256": "7bc49a72e4eb8056f8804099b92b2c50f05393a6421f47b8d03a6fcd4756489a"
+          "sha256": "f85a8b685073e07ca13d970bb0423cb2b792cdea6e4a71d0e4522beea20c28b7"
         },
         {
           "path": "videos/plain-transformer-context.mp4",
-          "sha256": "e426f0f399559ad2ff2ac37d9cec5a6b231ac981bf3d412a1bd21dce16f00468"
+          "sha256": "1cb9d463aa96440d0c8267972f24c3d0985db376ab6cbbbb9e180c4d769cc57f"
         },
         {
           "path": "videos/plain-transformer-context-poster.jpg",
-          "sha256": "755d59145ebe5837858893b141c3700b98fd77968242c12b40a27bfcf4a6078d"
+          "sha256": "b169e0877f015094cf40d9b8f29bb2edf5a7b90520df0c5706adb2d08eefe94e"
         }
       ],
-      "purpose": "plain english lesson 5 60fps concept clip: contract clause contextual attention routing semantic connections across keywords",
+      "purpose": "Plain English lesson 5 clip, calm adult style: attention links resolve an ambiguous word",
       "sourceMaster": "design/brand/source/videos/plain-transformer-context.webm",
-      "sourceSha256": "7bc49a72e4eb8056f8804099b92b2c50f05393a6421f47b8d03a6fcd4756489a",
+      "sourceSha256": "f85a8b685073e07ca13d970bb0423cb2b792cdea6e4a71d0e4522beea20c28b7",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],

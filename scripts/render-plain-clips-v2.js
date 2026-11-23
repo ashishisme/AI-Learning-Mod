@@ -385,11 +385,93 @@ function renderPlainImageFeatureScanFrame(ctx, f, totalFrames, W, H, FPS) {
   }
 }
 
+// Lesson 5: a clause split into word chips, attention links, and context telling two meanings apart.
+function renderPlainTransformerContextFrame(ctx, f, totalFrames, W, H, FPS) {
+  const t = f / FPS
+  pBg(ctx, W, H)
+  const wrench = (x, y, col) => { ctx.save(); ctx.translate(x, y); ctx.rotate(-0.7); ctx.fillStyle = col; ctx.fillRect(-2.5, -2, 5, 16); ctx.beginPath(); ctx.arc(0, -6, 7, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#FFFFFF'; ctx.fillRect(-2.5, -14, 5, 8); ctx.restore() }
+  const coin = (x, y, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.stroke() }
+  const rowOf = (widths, y) => { const gap = 12, tot = widths.reduce((a, b) => a + b, 0) + gap * (widths.length - 1); let x = (W - tot) / 2; return widths.map((w) => { const c = { x: x + w / 2, y, w }; x += w + gap; return c }) }
+  const A = rowOf([54, 72, 40, 92, 60, 46, 84], 150), FOCUS = 3
+  const B = rowOf([64, 44, 92, 70, 52, 80], 300), FB = 2
+  const relA = { 1: 0.9, 5: 0.7, 0: 0.25, 6: 0.2 }, relB = { 3: 0.9, 5: 0.75, 1: 0.2 }
+  // step 1: the contract page, one line lifts off and splits into chips
+  const page = 1 - sm((t - 3.0) / 0.5)
+  if (page > 0) {
+    ctx.save(); ctx.globalAlpha = page; pPanel(ctx, 250, 30, 300, 230)
+    for (let i = 0; i < 8; i++) { ctx.fillStyle = i === 3 ? C.navy : C.line; ctx.fillRect(280, 60 + i * 24, i % 3 === 2 ? 180 : 240, 8) }
+    ctx.restore()
+  }
+  const split = sm((t - 1.2) / 1.8)
+  const chip = (c, k, fill, a = 1) => {
+    ctx.save(); ctx.globalAlpha = a
+    ctx.fillStyle = fill; ctx.strokeStyle = k === 'focus' ? C.warn : C.line; ctx.lineWidth = k === 'focus' ? 3 : 1.5
+    ctx.beginPath(); ctx.roundRect(c.x - c.w / 2, c.y - 17, c.w, 34, 17); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = k === 'focus' ? C.warn : C.muted; ctx.fillRect(c.x - c.w / 2 + 14, c.y - 3, c.w - 28, 6)
+    ctx.restore()
+  }
+  const vec = sm((t - 13.1) / 0.7)
+  const drawRow = (R, F, rel, tint, a0) => {
+    R.forEach((c, i) => {
+      const lineY = 60 + 3 * 24 + 4, fromX = 280 + (i + 0.5) * (240 / R.length)
+      const x = R === A ? lerp(fromX, c.x, split) : c.x, y = R === A ? lerp(lineY, c.y, split) : c.y
+      const w = R === A ? lerp(240 / R.length, c.w, split) : c.w
+      const r = rel[i] || 0
+      const fill = r > 0.5 && tint.on > 0 ? `rgba(${tint.rgb},${0.18 * tint.on})` : '#FFFFFF'
+      chip({ x, y, w }, i === F ? 'focus' : '', fill, a0)
+      if (vec > 0) { ctx.save(); ctx.globalAlpha = a0 * vec; for (let k = 0; k < 4; k++) { const h = 6 + 16 * rnd(i * 7 + k + (R === A ? 0 : 50)); ctx.fillStyle = [C.navy, C.good, C.warn, C.bad][k]; ctx.fillRect(x - 14 + k * 8, y - 26 - h, 6, h) } ctx.restore() }
+    })
+  }
+  // step 2: a scanning glow spreads from the focus word
+  const scan = t > 3.6 && t < 6.8 ? (t - 3.6) / 3.2 : -1
+  if (scan >= 0) {
+    const fx = A[FOCUS].x, reach = 360 * sm(scan * 1.3), a = 1 - sm((scan - 0.75) / 0.25)
+    const g = ctx.createRadialGradient(fx, 150, 0, fx, 150, Math.max(1, reach))
+    g.addColorStop(0, 'rgba(233,162,59,0)'); g.addColorStop(0.85, `rgba(233,162,59,${0.22 * a})`); g.addColorStop(1, 'rgba(233,162,59,0)')
+    ctx.fillStyle = g; ctx.fillRect(0, 90, W, 120)
+  }
+  // step 3: weighted links above the row
+  const links = (R, F, rel, col, t0, up) => {
+    for (const [i, wgt] of Object.entries(rel)) {
+      const u = sm((t - t0 - i * 0.12) / 0.7)
+      if (u <= 0) continue
+      const a = R[F], b = R[i], hgt = 40 + Math.abs(a.x - b.x) * 0.25
+      ctx.strokeStyle = col; ctx.globalAlpha = 0.35 + 0.65 * wgt; ctx.lineWidth = 1.5 + 7 * wgt; ctx.lineCap = 'round'
+      ctx.beginPath()
+      for (let s = 0; s <= u; s += 0.02) { const x = lerp(a.x, b.x, s), y = a.y + up * (17 + Math.sin(s * Math.PI) * hgt); s === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y) }
+      ctx.stroke(); ctx.globalAlpha = 1
+    }
+  }
+  const tA = { on: sm((t - 7.6) / 0.6), rgb: '42,157,143' }, tB = { on: sm((t - 11.0) / 0.6), rgb: '38,70,83' }
+  links(A, FOCUS, relA, C.good, 6.6, -1)
+  drawRow(A, FOCUS, relA, tA, split > 0 ? 1 : 0)
+  // step 4: a second clause; the same word links elsewhere and means something else
+  const bA = sm((t - 9.9) / 0.6)
+  if (bA > 0) { links(B, FB, relB, C.navy, 10.3, 1); drawRow(B, FB, relB, tB, bA) }
+  const mean = sm((t - 11.6) / 0.5)
+  if (mean > 0) {
+    ctx.save(); ctx.globalAlpha = mean
+    ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = C.good; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(A[FOCUS].x, 190, 18, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); wrench(A[FOCUS].x, 192, C.good)
+    ctx.strokeStyle = C.navy; ctx.beginPath(); ctx.arc(B[FB].x, 226, 18, 0, Math.PI * 2); ctx.fillStyle = '#FFFFFF'; ctx.fill(); ctx.stroke(); coin(B[FB].x, 226, C.navy)
+    ctx.restore()
+  }
+  // step 5: a magnifier searches the enriched clauses and finds the maintenance one
+  const mg = sm((t - 13.8) / 1.4)
+  if (mg > 0) {
+    const x = lerp(820, A[FOCUS].x + 30, mg), y = lerp(330, 120, mg)
+    ctx.strokeStyle = C.ink; ctx.lineWidth = 6; ctx.lineCap = 'round'
+    ctx.beginPath(); ctx.moveTo(x + 18, y + 18); ctx.lineTo(x + 40, y + 40); ctx.stroke()
+    ctx.lineWidth = 4; ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.beginPath(); ctx.arc(x, y, 24, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+    pMark(ctx, A[0].x - 50, 150, 'ok', sm((t - 15.1) / 0.4))
+  }
+}
+
 const SCENES = [
   { name: 'plain-rules-vs-learning', fn: renderPlainRulesVsLearningFrame, poster: 12.5 },
   { name: 'plain-decision-tree', fn: renderPlainDecisionTreeFrame, poster: 11.8 },
   { name: 'plain-linear-classifier', fn: renderPlainLinearClassifierFrame, poster: 8.4 },
-  { name: 'plain-image-feature-scan', fn: renderPlainImageFeatureScanFrame, poster: 7.0 }]
+  { name: 'plain-image-feature-scan', fn: renderPlainImageFeatureScanFrame, poster: 7.0 },
+  { name: 'plain-transformer-context', fn: renderPlainTransformerContextFrame, poster: 12.4 }]
 const STILLS = [2.2, 5.8, 8.6, 12.3, 15.6]
 
 async function main() {
