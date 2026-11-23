@@ -1009,25 +1009,25 @@
       "id": "clip-forward-chaining-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/forward-chaining.webm",
-          "sha256": "ed9f6fc93faaa628d6f3151d23e8d644f7f19b0976e113ab483956eabd8d05c6"
+          "sha256": "2f286001febf6efb5686a4e5148c94d5ac59d0af429bd6e6b2158045786654f2"
         },
         {
           "path": "videos/forward-chaining.mp4",
-          "sha256": "2edb5e4d67ecb6302c4c612c432724e138f0d15ac0f63ddf1f5b5e8daf39b990"
+          "sha256": "aea3dd305eb25e56e776525a3484ed503c3d10ed7f7acd493092fd3dff8397f4"
         },
         {
           "path": "videos/forward-chaining-poster.jpg",
-          "sha256": "c3ba3fe06f3b4c6c639749847645e34f989cd791bb751de5dc3e81e59f11742b"
+          "sha256": "3781d48817cb633a8b84a2310140a48fdccf4c660c8ca9bce9a2708f83eddb77"
         }
       ],
-      "purpose": "lesson 2 60fps concept clip: forward chaining deduction cascade through knowledge graph",
+      "purpose": "Detailed lesson 2 clip, illustrated: the rover's corkboard of facts and rule machines",
       "sourceMaster": "design/brand/source/videos/forward-chaining.webm",
-      "sourceSha256": "ed9f6fc93faaa628d6f3151d23e8d644f7f19b0976e113ab483956eabd8d05c6",
+      "sourceSha256": "2f286001febf6efb5686a4e5148c94d5ac59d0af429bd6e6b2158045786654f2",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],

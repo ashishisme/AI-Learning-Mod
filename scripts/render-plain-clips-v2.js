@@ -664,6 +664,125 @@ function renderTuringTestFrame(ctx, f, totalFrames, W, H, FPS) {
   }
 }
 
+// Detailed lesson 2: forward chaining inside the Mars rover. Facts on a corkboard feed rule machines.
+function renderForwardChainingFrame(ctx, f, totalFrames, W, H, FPS) {
+  const t = f / FPS
+  const INK = '#2B2F3A', RED = '#C0392B'
+  // ---------- icons ----------
+  const icon = (k, x, y, s = 1) => {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.lineCap = 'round'; ctx.lineJoin = 'round'
+    if (k === 'dust') { ctx.strokeStyle = '#A0522D'; ctx.lineWidth = 3; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(-4 + i * 4, -4 + i * 5, 6 + i * 2, Math.PI * 0.1, Math.PI * 1.3); ctx.stroke() } }
+    if (k === 'plow' || k === 'dirty' || k === 'shake') {
+      if (k === 'shake') ctx.rotate(-0.3)
+      ctx.fillStyle = '#2E5E8C'; ctx.fillRect(-14, -9, 28, 18); ctx.strokeStyle = '#9EC3E6'; ctx.lineWidth = 1.2
+      for (let i = 1; i < 3; i++) { ctx.beginPath(); ctx.moveTo(-14 + i * 9.3, -9); ctx.lineTo(-14 + i * 9.3, 9); ctx.stroke() } ctx.beginPath(); ctx.moveTo(-14, 0); ctx.lineTo(14, 0); ctx.stroke()
+      if (k === 'plow') { ctx.strokeStyle = RED; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(18, -6); ctx.lineTo(18, 8); ctx.moveTo(14, 4); ctx.lineTo(18, 8); ctx.lineTo(22, 4); ctx.stroke() }
+      if (k === 'dirty') { ctx.fillStyle = '#A0522D'; for (const [a, b, r] of [[-8, -3, 3.5], [3, 4, 3], [9, -5, 2.5], [-2, 5, 2]]) { ctx.beginPath(); ctx.arc(a, b, r, 0, Math.PI * 2); ctx.fill() } }
+      if (k === 'shake') { ctx.strokeStyle = INK; ctx.lineWidth = 2; for (const d of [-1, 1]) { ctx.beginPath(); ctx.moveTo(d * 19, -6); ctx.lineTo(d * 22, 0); ctx.lineTo(d * 19, 6); ctx.stroke() } }
+    }
+    if (k === 'batt') { ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.strokeRect(-13, -8, 24, 16); ctx.fillStyle = INK; ctx.fillRect(11, -3, 4, 6); ctx.fillStyle = RED; ctx.fillRect(-10, -5, 6, 10) }
+    if (k === 'wheel') { ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI * 2); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI * 2); ctx.stroke() }
+    if (k === 'rock') { ctx.fillStyle = '#8D6E63'; ctx.beginPath(); ctx.moveTo(-12, 8); ctx.lineTo(-8, -6); ctx.lineTo(4, -9); ctx.lineTo(12, 8); ctx.closePath(); ctx.fill() }
+    if (k === 'cold') { ctx.strokeStyle = '#3A7CA5'; ctx.lineWidth = 2.5; for (let i = 0; i < 3; i++) { ctx.beginPath(); const a = i * Math.PI / 3; ctx.moveTo(Math.cos(a) * -11, Math.sin(a) * -11); ctx.lineTo(Math.cos(a) * 11, Math.sin(a) * 11); ctx.stroke() } }
+    if (k === 'night') { ctx.fillStyle = '#4A4E8C'; ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#EDE3D3'; ctx.beginPath(); ctx.arc(5, -4, 9, 0, Math.PI * 2); ctx.fill() }
+    ctx.restore()
+  }
+  const card = (k, x, y, a = 1, tilt = 0, pin = true) => {
+    if (a <= 0) return
+    ctx.save(); ctx.globalAlpha = a; ctx.translate(x, y); ctx.rotate(tilt)
+    ctx.fillStyle = 'rgba(0,0,0,0.15)'; ctx.fillRect(-25, -18, 52, 40)
+    ctx.fillStyle = '#FFFDF5'; ctx.fillRect(-27, -21, 52, 40); icon(k, -1, 0, 1)
+    if (pin) { ctx.fillStyle = RED; ctx.beginPath(); ctx.arc(-1, -18, 4, 0, Math.PI * 2); ctx.fill() }
+    ctx.restore()
+  }
+  // ---------- Mars window ----------
+  const sky = ctx.createLinearGradient(0, 0, 0, 300); sky.addColorStop(0, '#E8A27C'); sky.addColorStop(1, '#F3CBA5')
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, 340, H)
+  ctx.fillStyle = '#FFF3D6'; ctx.beginPath(); ctx.arc(270, 70, 16, 0, Math.PI * 2); ctx.fill()
+  ctx.fillStyle = '#C8724A'; ctx.beginPath(); ctx.moveTo(0, 250); ctx.lineTo(70, 210); ctx.lineTo(140, 240); ctx.lineTo(220, 200); ctx.lineTo(340, 245); ctx.lineTo(340, H); ctx.lineTo(0, H); ctx.fill()
+  ctx.fillStyle = '#B5603C'; ctx.fillRect(0, 300, 340, H)
+  // dust storm drifting in, cleared at the end
+  const storm = sm(t / 1.5) * (1 - 0.7 * sm((t - 13.6) / 1.2))
+  ctx.fillStyle = `rgba(160,82,45,${0.22 * storm})`; ctx.fillRect(0, 0, 340, H)
+  ctx.strokeStyle = `rgba(120,60,30,${0.5 * storm})`; ctx.lineWidth = 2
+  ctx.lineCap = 'round'; for (let i = 0; i < 18; i++) { const x = ((i * 71 + t * (90 + (i % 4) * 25)) % 440) - 60, y = 30 + (i * 41) % 260; ctx.lineWidth = 1.5 + (i % 3); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 30 + (i % 5) * 8, y + 3); ctx.stroke() }
+  // rover
+  const shake = t > 13.4 && t < 15 ? Math.sin(t * 50) * 3 : 0
+  ctx.save(); ctx.translate(150, 300)
+  ctx.fillStyle = '#ECEFF1'; ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.roundRect(-55, -40, 110, 34, 6); ctx.fill(); ctx.stroke()
+  for (const x of [-42, 0, 42]) { ctx.fillStyle = '#37474F'; ctx.beginPath(); ctx.arc(x, 4, 13, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#90A4AE'; ctx.beginPath(); ctx.arc(x, 4, 5, 0, Math.PI * 2); ctx.fill() }
+  ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(30, -40); ctx.lineTo(30, -70); ctx.stroke()
+  ctx.fillStyle = '#ECEFF1'; ctx.beginPath(); ctx.roundRect(18, -86, 26, 16, 4); ctx.fill(); ctx.stroke(); ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(37, -78, 4, 0, Math.PI * 2); ctx.fill()
+  // solar panel on a hinge, tilting and shaking in step 5
+  const tilt = -0.15 - 0.45 * sm((t - 13.2) / 0.5)
+  ctx.save(); ctx.translate(-20, -42 + shake); ctx.rotate(tilt + shake * 0.02)
+  ctx.fillStyle = '#2E5E8C'; ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.fillRect(-60, -10, 80, 10); ctx.strokeRect(-60, -10, 80, 10)
+  const dirt = 1 - sm((t - 13.6) / 1.2)
+  ctx.fillStyle = `rgba(160,82,45,${0.85 * dirt * sm(t / 2)})`; for (let i = 0; i < 7; i++) { ctx.beginPath(); ctx.arc(-54 + i * 11, -5 + (i % 2) * 2, 3.5, 0, Math.PI * 2); ctx.fill() }
+  ctx.restore()
+  if (t > 13.6 && t < 15.6) { ctx.fillStyle = 'rgba(160,82,45,0.7)'; for (let i = 0; i < 8; i++) { const u = ((t - 13.6) * 1.5 + i * 0.13) % 1; ctx.beginPath(); ctx.arc(-70 + i * 9, -40 + u * 50, 2.5, 0, Math.PI * 2); ctx.fill() } }
+  ctx.restore()
+  // battery gauge on the rover side
+  const charge = 0.2 + 0.7 * sm((t - 14.4) / 1.2)
+  ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.strokeRect(120, 330, 40, 18); ctx.fillStyle = charge > 0.5 ? '#2A9D8F' : RED; ctx.fillRect(123, 333, 34 * charge, 12)
+  // window frame
+  ctx.strokeStyle = '#5E4E42'; ctx.lineWidth = 14; ctx.strokeRect(7, 7, 326, H - 14)
+  // ---------- the rover's mind: workshop wall ----------
+  ctx.fillStyle = '#E9E2D6'; ctx.fillRect(340, 0, 460, H)
+  ctx.fillStyle = 'rgba(255,255,255,0.3)'; for (let y = 20; y < H; y += 40) ctx.fillRect(340, y, 460, 2)
+  // corkboard
+  ctx.fillStyle = '#7A5A3C'; ctx.fillRect(372, 22, 236, 196); ctx.fillStyle = '#C9A06B'; ctx.fillRect(380, 30, 220, 180)
+  ctx.fillStyle = 'rgba(120,80,40,0.25)'; for (let i = 0; i < 60; i++) { ctx.fillRect(382 + rnd(i) * 214, 32 + rnd(i + 9) * 174, 2, 2) }
+  const slot = { dust: [420, 78], plow: [490, 78], batt: [560, 78], dirty: [440, 160], shake: [540, 160] }
+  // machines
+  const M = [{ x: 400, in: ['dust', 'plow'], fire: 7.0 }, { x: 500, in: ['wheel', 'rock'] }, { x: 600, in: ['cold', 'night'] }, { x: 700, in: ['dirty', 'batt'], fire: 10.4 }]
+  const MY = 330
+  const known = (k) => ({ dust: 0.9, plow: 1.6, batt: 2.3, dirty: 8.6, shake: 12.0 }[k])
+  const scanX = t > 3.6 && t < 6.6 ? lerp(380, 760, (t - 3.6) / 3.0) : -999
+  for (const [i, m] of M.entries()) {
+    const firing = m.fire && t > m.fire && t < m.fire + 1.6
+    ctx.fillStyle = '#7D8B96'; ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.roundRect(m.x - 42, MY - 40, 84, 80, 8); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = '#5B6772'; ctx.fillRect(m.x - 10, MY + 40, 20, 26)
+    // rule number as dots
+    for (let d = 0; d <= i; d++) { ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(m.x - 30 + d * 8, MY + 30, 2.5, 0, Math.PI * 2); ctx.fill() }
+    // gear
+    ctx.save(); ctx.translate(m.x, MY + 6); ctx.rotate(firing ? (t - m.fire) * 8 : 0); ctx.fillStyle = '#B0BEC5'
+    for (let k = 0; k < 8; k++) { ctx.rotate(Math.PI / 4); ctx.fillRect(-3, -15, 6, 7) } ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#7D8B96'; ctx.beginPath(); ctx.arc(0, 0, 4, 0, Math.PI * 2); ctx.fill(); ctx.restore()
+    // sockets: lit when the scan has passed and the fact is on the board
+    m.in.forEach((k, j) => {
+      const sx = m.x - 20 + j * 40, sy = MY - 58
+      const have = known(k) !== undefined && t > known(k) + 0.8
+      const matched = have && (t > 4 + i * 0.75 || (m.fire && t > m.fire - 0.6))
+      ctx.fillStyle = matched ? '#FFF3C4' : '#F4F1EA'; ctx.strokeStyle = matched ? '#E9A23B' : INK; ctx.lineWidth = matched ? 3 : 2
+      ctx.beginPath(); ctx.roundRect(sx - 18, sy - 14, 36, 28, 5); ctx.fill(); ctx.stroke()
+      ctx.globalAlpha = matched ? 1 : 0.45; icon(k, sx, sy, 0.7); ctx.globalAlpha = 1
+      ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(sx, sy + 14); ctx.lineTo(sx, MY - 40); ctx.stroke()
+    })
+    if (m.fire && t > m.fire && t < m.fire + 0.6) { ctx.fillStyle = `rgba(233,162,59,${0.5 * (1 - (t - m.fire) / 0.6)})`; ctx.beginPath(); ctx.arc(m.x, MY, 60, 0, Math.PI * 2); ctx.fill() }
+  }
+  // scanning lamp
+  if (scanX > 0) { ctx.fillStyle = 'rgba(255,240,180,0.45)'; ctx.beginPath(); ctx.moveTo(scanX - 6, 232); ctx.lineTo(scanX + 6, 232); ctx.lineTo(scanX + 40, 300); ctx.lineTo(scanX - 40, 300); ctx.closePath(); ctx.fill()
+    ctx.fillStyle = INK; ctx.beginPath(); ctx.roundRect(scanX - 12, 226, 24, 10, 3); ctx.fill() }
+  // facts arriving from the sensors (from the window) and from the machines
+  const arrive = (k, t0, from) => {
+    const [x, y] = slot[k], u = sm((t - t0) / 0.8)
+    if (u <= 0) return
+    card(k, lerp(from[0], x, u), lerp(from[1], y, u) - Math.sin(u * Math.PI) * 30, 1, (1 - u) * 0.6 + (k.length % 2 ? 0.05 : -0.05), u >= 1)
+  }
+  arrive('dust', known('dust'), [200, 200]); arrive('plow', known('plow'), [120, 250]); arrive('batt', known('batt'), [140, 340])
+  arrive('dirty', known('dirty') - 0.6, [400, MY + 60]); arrive('shake', known('shake') - 0.6, [700, MY + 60])
+  // the explanation trail: red thread from the facts through the rules to the goal
+  const trail = sm((t - 13.0) / 2.0)
+  if (trail > 0) {
+    const path = [slot.dust, [400, MY - 58], slot.plow, [400, MY - 58], slot.dirty, [700, MY - 58], slot.batt, [700, MY - 58], slot.shake]
+    const segs = path.length - 1, upto = trail * segs
+    ctx.strokeStyle = RED; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(path[0][0], path[0][1] - 18)
+    for (let i = 0; i < segs && i < upto; i++) { const v = Math.min(1, upto - i); const a = path[i], b = path[i + 1]; ctx.lineTo(lerp(a[0], b[0], v), lerp(a[1] - 18, b[1] - 18, v)) }
+    ctx.stroke()
+  }
+  if (t > 12.4) pMark(ctx, 572, 136, 'ok', sm((t - 12.4) / 0.4))
+}
+
 const SCENES = [
   { name: 'plain-rules-vs-learning', fn: renderPlainRulesVsLearningFrame, poster: 12.5 },
   { name: 'plain-decision-tree', fn: renderPlainDecisionTreeFrame, poster: 11.8 },
@@ -671,7 +790,8 @@ const SCENES = [
   { name: 'plain-image-feature-scan', fn: renderPlainImageFeatureScanFrame, poster: 7.0 },
   { name: 'plain-transformer-context', fn: renderPlainTransformerContextFrame, poster: 12.4 },
   { name: 'plain-disparate-impact-audit', fn: renderPlainDisparateImpactAuditFrame, poster: 8.4 },
-  { name: 'turing-test', fn: renderTuringTestFrame, poster: 7.6 }]
+  { name: 'turing-test', fn: renderTuringTestFrame, poster: 7.6 },
+  { name: 'forward-chaining', fn: renderForwardChainingFrame, poster: 11.0 }]
 const STILLS = [2.2, 5.8, 8.6, 12.3, 15.6]
 
 async function main() {
