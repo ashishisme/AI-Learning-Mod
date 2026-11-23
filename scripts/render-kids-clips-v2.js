@@ -247,26 +247,201 @@ function renderChipFruitSorterFrame(ctx, f, totalFrames, W, H, FPS, easeOutBack)
   }
 }
 
-const SCENES = [{ name: 'chip-fruit-sorter', fn: renderChipFruitSorterFrame, poster: 1.75 }]
+// ---------- shared helpers for the v2 scenes (injected next to drawChipAvatar) ----------
+function kSmooth(v) { v = Math.max(0, Math.min(1, v)); return v * v * (3 - 2 * v) }
+function kBadge(ctx, x, y, ok, s) {
+  if (s <= 0) return
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s)
+  ctx.fillStyle = ok ? '#16A34A' : '#DC2626'; ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 4
+  ctx.beginPath(); ctx.arc(0, 0, 24, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+  ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath()
+  if (ok) { ctx.moveTo(-10, 1); ctx.lineTo(-3, 9); ctx.lineTo(11, -8) } else { ctx.moveTo(-9, -9); ctx.lineTo(9, 9); ctx.moveTo(9, -9); ctx.lineTo(-9, 9) }
+  ctx.stroke(); ctx.restore()
+}
+function kConfetti(ctx, u, W, H) {
+  const colors = ['#E53935', '#FDD835', '#43A047', '#1E88E5', '#8E24AA']
+  for (let i = 0; i < 46; i++) {
+    const x0 = (i * 97) % W, sp = 120 + (i * 37) % 90, y = -20 + u * sp + ((i * 53) % 60)
+    if (y > H) continue
+    ctx.save(); ctx.translate(x0 + Math.sin(u * 3 + i) * 12, y); ctx.rotate(u * 4 + i)
+    ctx.fillStyle = colors[i % colors.length]; ctx.fillRect(-5, -3, 10, 6); ctx.restore()
+  }
+}
+function kRoom(ctx, W, H) {
+  ctx.fillStyle = '#FFF3E0'; ctx.fillRect(0, 0, W, H)
+  ctx.fillStyle = '#FFE0B2'; for (let x = 0; x < W; x += 40) ctx.fillRect(x, 0, 20, 372)
+  ctx.fillStyle = '#A1887F'; ctx.fillRect(0, 372, W, H - 372)
+  ctx.fillStyle = '#8D6E63'; for (let x = 0; x < W; x += 90) ctx.fillRect(x, 372, 3, H - 372)
+  ctx.fillStyle = '#6D4C41'; ctx.fillRect(0, 368, W, 6)
+}
+function kBubble(ctx, x, y, s, draw) {
+  if (s <= 0) return
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s)
+  ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = '#1F2937'; ctx.lineWidth = 2.5
+  ctx.beginPath(); ctx.ellipse(0, 0, 34, 28, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+  ctx.beginPath(); ctx.arc(-26, 30, 6, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+  draw(); ctx.restore()
+}
+
+// Lesson 1 Kids: Chip learns what a dog is. Cues 0, 3.5, 6.5, 9.8, 13.0.
+function renderChipDogLearningFrame(ctx, f, totalFrames, W, H, FPS, easeOutBack) {
+  const t = f / FPS
+  const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v))
+  const INK = '#1F2937'
+  // Traits in the dog's own coordinates (facing right, body centre at 0,0).
+  const TRAITS = [{ x: 0, y: 26 }, { x: 64, y: -17 }, { x: -50, y: -26 }] // legs, nose, tail
+  const drawDog = (x, y, s, o) => {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s * (o.flip ? -1 : 1), s)
+    ctx.lineJoin = 'round'
+    ctx.strokeStyle = o.body; ctx.lineWidth = 7; ctx.lineCap = 'round' // tail
+    ctx.beginPath(); ctx.moveTo(-36, -6); ctx.quadraticCurveTo(-52, -12, -52, -32 + Math.sin(t * 8 + o.seed) * 4); ctx.stroke()
+    ctx.fillStyle = o.leg || o.body; ctx.strokeStyle = INK; ctx.lineWidth = 2
+    for (const lx of [-28, -15, 13, 26]) { ctx.beginPath(); ctx.roundRect(lx - 4, 6, 9, 30 * (o.legs || 1), 4); ctx.fill(); ctx.stroke() }
+    ctx.fillStyle = o.body; ctx.lineWidth = 2.5
+    if (o.fluffy) { for (let i = 0; i < 10; i++) { const a = (i / 10) * Math.PI * 2; ctx.beginPath(); ctx.arc(Math.cos(a) * 32, Math.sin(a) * 13, 11, 0, Math.PI * 2); ctx.fill() } }
+    ctx.beginPath(); ctx.ellipse(0, 0, 40, 18, 0, 0, Math.PI * 2); ctx.fill(); if (!o.fluffy) ctx.stroke()
+    if (o.spots) { ctx.fillStyle = INK; for (const [sx, sy, r] of [[-15, -5, 6], [8, 4, 5], [20, -8, 4], [-25, 6, 4]]) { ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI * 2); ctx.fill() } }
+    ctx.fillStyle = o.body; ctx.strokeStyle = INK
+    ctx.beginPath(); ctx.arc(40, -20, 17, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+    ctx.beginPath(); ctx.ellipse(55, -13, 12, 8, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = o.ear; ctx.beginPath(); ctx.ellipse(31, -24, 7, 14, 0.35, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(45, -25, 2.8, 0, Math.PI * 2); ctx.fill()
+    ctx.beginPath(); ctx.arc(64, -17, 5, 0, Math.PI * 2); ctx.fill()
+    ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(62.5, -18.5, 1.6, 0, Math.PI * 2); ctx.fill()
+    ctx.restore()
+  }
+  const photo = (x, y, w, h, bg, dog, glow) => {
+    ctx.save()
+    if (glow) { ctx.shadowColor = glow; ctx.shadowBlur = 22 }
+    ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = INK; ctx.lineWidth = 3
+    ctx.beginPath(); ctx.roundRect(x, y, w, h, 8); ctx.fill(); ctx.stroke()
+    ctx.restore()
+    ctx.fillStyle = bg; ctx.beginPath(); ctx.roundRect(x + 8, y + 8, w - 16, h - 16, 4); ctx.fill()
+    const s = Math.min(w, h) / 130 * dog.size
+    const cx = x + w / 2 - 6 * s, cy = y + h / 2 + 4 * s
+    ctx.save(); ctx.beginPath(); ctx.rect(x + 8, y + 8, w - 16, h - 16); ctx.clip()
+    drawDog(cx, cy, s, dog); ctx.restore()
+    return { cx, cy, s, flip: dog.flip }
+  }
+  const ring = (x, y, r, a) => {
+    if (a <= 0) return
+    ctx.save(); ctx.globalAlpha = a; ctx.strokeStyle = '#F59E0B'; ctx.lineWidth = 4
+    ctx.beginPath(); ctx.arc(x, y, r + Math.sin(t * 8) * 2, 0, Math.PI * 2); ctx.stroke(); ctx.restore()
+  }
+  const traitAt = (p, i) => ({ x: p.cx + TRAITS[i].x * p.s * (p.flip ? -1 : 1), y: p.cy + TRAITS[i].y * p.s })
+
+  kRoom(ctx, W, H)
+
+  const DOGS = [
+    { body: '#C68642', ear: '#8D5524', seed: 0, size: 1.0, bg: '#BBDEFB' }, // the first photo
+    { body: '#795548', ear: '#4E342E', seed: 1, size: 1.0, legs: 1.15, bg: '#C8E6C9' }, // big
+    { body: '#FFCC80', ear: '#E65100', seed: 2, size: 0.7, legs: 0.6, bg: '#F8BBD0' }, // small
+    { body: '#FFFFFF', ear: '#BDBDBD', seed: 3, size: 0.95, fluffy: true, bg: '#D1C4E9' }, // soft
+  ]
+  const NEW = { body: '#E0E0E0', ear: '#616161', seed: 4, size: 1.0, spots: true, flip: false, bg: '#FFF59D' }
+
+  // Gallery slots (photo 1 starts big in the middle, then joins the gallery).
+  const SLOT = [[210, 38], [365, 38], [210, 178], [365, 178]]
+  const SW = 140, SH = 120
+  const g = kSmooth((t - 3.5) / 0.6) // photo 1 shrinking into its slot
+  const placed = []
+  {
+    const x = 300 + (SLOT[0][0] - 300) * g, y = 70 + (SLOT[0][1] - 70) * g
+    const w = 200 + (SW - 200) * g, h = 170 + (SH - 170) * g
+    const s = easeOutBack(clamp((t - 0.2) / 0.5))
+    if (s > 0) { ctx.save(); ctx.translate(x + w / 2, y + h / 2); ctx.scale(s, s); ctx.translate(-(x + w / 2), -(y + h / 2)); placed.push(photo(x, y, w, h, DOGS[0].bg, DOGS[0])); ctx.restore() }
+  }
+  for (let i = 1; i < 4; i++) {
+    const t0 = 4.1 + (i - 1) * 0.55
+    const s = easeOutBack(clamp((t - t0) / 0.45))
+    if (s <= 0) continue
+    const [x, y] = SLOT[i]
+    ctx.save(); ctx.translate(x + SW / 2, y + SH / 2); ctx.scale(s, s); ctx.translate(-(x + SW / 2), -(y + SH / 2))
+    placed.push(photo(x, y, SW, SH, DOGS[i].bg, DOGS[i])); ctx.restore()
+  }
+
+  // Step 3: the shared traits light up on every dog, and the checklist fills in.
+  const traitStart = [6.7, 7.6, 8.5]
+  const PANEL = { x: 540, y: 300 }
+  const icon = (i, x, y) => {
+    ctx.save(); ctx.translate(x, y); ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineCap = 'round'
+    if (i === 0) { ctx.lineWidth = 5; for (const lx of [-12, -4, 4, 12]) { ctx.beginPath(); ctx.moveTo(lx, -10); ctx.lineTo(lx, 12); ctx.stroke() } ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(-15, -10); ctx.lineTo(15, -10); ctx.stroke() }
+    if (i === 1) { ctx.beginPath(); ctx.ellipse(0, 0, 12, 9, 0, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(-4, -3, 3, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#29B6F6'; ctx.beginPath(); ctx.moveTo(10, 8); ctx.quadraticCurveTo(15, 16, 10, 18); ctx.quadraticCurveTo(5, 16, 10, 8); ctx.fill() }
+    if (i === 2) { ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(-12, 10); ctx.quadraticCurveTo(10, 8, 8, -14); ctx.stroke() }
+    ctx.restore()
+  }
+  if (t >= 6.5) {
+    const a = kSmooth((t - 6.5) / 0.4)
+    ctx.save(); ctx.globalAlpha = a
+    ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = INK; ctx.lineWidth = 3
+    ctx.beginPath(); ctx.roundRect(PANEL.x, PANEL.y, 220, 60, 14); ctx.fill(); ctx.stroke()
+    ctx.restore()
+    for (let i = 0; i < 3; i++) {
+      const s = easeOutBack(clamp((t - traitStart[i]) / 0.4))
+      if (s <= 0) continue
+      const x = PANEL.x + 40 + i * 70, y = PANEL.y + 30
+      const lit = t >= 9.8 && t < 13 ? (t > 10.8 + i * 0.7 ? 1 : 0) : 0
+      ctx.save(); ctx.translate(x, y); ctx.scale(s, s)
+      ctx.fillStyle = lit ? '#FFE082' : '#FFF8E1'; ctx.strokeStyle = '#F59E0B'; ctx.lineWidth = 3
+      ctx.beginPath(); ctx.arc(0, 0, 24, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.restore()
+      icon(i, x, y)
+      for (const p of placed) { const q = traitAt(p, i); if (t < 9.8) ring(q.x, q.y, i === 0 ? 20 * p.s : 12 * p.s, kSmooth((t - traitStart[i]) / 0.3) * (1 - kSmooth((t - 9.5) / 0.3))) }
+    }
+  }
+
+  // Step 4: a new photo comes in; Chip scans it for the three traits.
+  if (t >= 9.8) {
+    const slide = kSmooth((t - 9.8) / 0.6)
+    const x = 820 + (555 - 820) * slide, y = 48
+    const done = t >= 13
+    const p = photo(x, y, 210, 175, NEW.bg, NEW, done ? '#22C55E' : null)
+    if (!done && t > 10.4) { // scan line
+      const u = ((t - 10.4) % 1.2) / 1.2
+      ctx.fillStyle = 'rgba(14,165,233,0.35)'; ctx.fillRect(x + 8, y + 8 + u * 159, 194, 6)
+    }
+    for (let i = 0; i < 3; i++) { const q = traitAt(p, i); if (t > 10.8 + i * 0.7) ring(q.x, q.y, i === 0 ? 20 * p.s : 12 * p.s, 1) }
+    // the question mark, then the tick
+    if (!done) {
+      const s = easeOutBack(clamp((t - 10.2) / 0.4))
+      if (s > 0) { ctx.save(); ctx.translate(x + 200, y + 6); ctx.scale(s, s); ctx.fillStyle = '#F59E0B'; ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(0, 0, 24, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#FFFFFF'; ctx.font = '800 30px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', 0, 2); ctx.restore() }
+    } else kBadge(ctx, x + 200, y + 6, true, easeOutBack(clamp((t - 13) / 0.4)))
+  }
+
+  // Chip, with a thought bubble showing a dog in step 1 and in the finale.
+  const pose = t >= 13 ? 'cheer' : t >= 6.5 && t < 9.8 ? 'point' : 'wave'
+  drawChipAvatar(ctx, 95, 270, 1.15, pose, t)
+  const bubbleOn = (t > 0.8 && t < 3.4) || t > 13.2
+  if (bubbleOn) {
+    const s = easeOutBack(clamp((t > 13 ? t - 13.2 : t - 0.8) / 0.35))
+    kBubble(ctx, 120, 150, s, () => drawDog(-2, 4, 0.36, { body: '#C68642', ear: '#8D5524', seed: 0 }))
+  }
+  if (t >= 13.2) kConfetti(ctx, t - 13.2, W, H)
+}
+
+const HELPERS = [kSmooth, kBadge, kConfetti, kRoom, kBubble].map(String).join('\n')
+const SCENES = [
+  { name: 'chip-dog-learning', fn: renderChipDogLearningFrame, poster: 5.4 },
+  { name: 'chip-fruit-sorter', fn: renderChipFruitSorterFrame, poster: 1.75 }]
 const STILLS = [1.75, 5.5, 7.8, 12.3, 15.4] // one moment in each cue
 
 async function main() {
   const stillsIdx = process.argv.indexOf('--stills')
   const stillsDir = stillsIdx > 0 ? path.resolve(process.argv[stillsIdx + 1]) : null
   const browser = await chromium.launch()
-  for (const scene of SCENES) {
+  const only = process.argv.find((a) => a.startsWith('--only='))?.slice(7)
+  for (const scene of SCENES.filter((s) => !only || s.name === only)) {
     const page = await browser.newPage()
-    const result = await page.evaluate(async ({ fn, chipFn, stills, posterAt }) => {
+    const result = await page.evaluate(async ({ fn, chipFn, helpers, stills, posterAt }) => {
       const W = 800, H = 450, FPS = 60, TOTAL = 16 * FPS
       const easeOutBack = (t) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2) }
-      const renderFrame = new Function('ctx', 'f', 'totalFrames', 'W', 'H', 'FPS', 'easeOutBack', `const drawChipAvatar = ${chipFn};\nreturn (${fn})(ctx, f, totalFrames, W, H, FPS, easeOutBack);`)
+      const renderFrame = new Function('ctx', 'f', 'totalFrames', 'W', 'H', 'FPS', 'easeOutBack', `const drawChipAvatar = ${chipFn};\n${helpers}\nreturn (${fn})(ctx, f, totalFrames, W, H, FPS, easeOutBack);`)
       const canvas = document.createElement('canvas'); canvas.width = W; canvas.height = H
       const ctx = canvas.getContext('2d')
       if (stills) return { stills: stills.map((s) => { renderFrame(ctx, Math.round(s * FPS), TOTAL, W, H, FPS, easeOutBack); return canvas.toDataURL('image/png') }) }
       const stream = canvas.captureStream(FPS)
       const rec = (mime, bps) => { const r = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: bps }); const c = []; r.ondataavailable = (e) => e.data.size && c.push(e.data); r.start(100); return { r, c, mime } }
-      const recs = [rec('video/webm;codecs=vp9', 340_000)]
-      if (MediaRecorder.isTypeSupported('video/mp4;codecs=avc1')) recs.push(rec('video/mp4;codecs=avc1', 340_000))
+      const recs = [rec('video/webm;codecs=vp9', 310_000)]
+      if (MediaRecorder.isTypeSupported('video/mp4;codecs=avc1')) recs.push(rec('video/mp4;codecs=avc1', 310_000))
       let poster = null
       for (let f = 0; f < TOTAL; f++) {
         renderFrame(ctx, f, TOTAL, W, H, FPS, easeOutBack)
@@ -276,7 +451,7 @@ async function main() {
       const out = {}
       for (const { r, c, mime } of recs) { await new Promise((res) => { r.onstop = res; r.stop() }); out[mime.startsWith('video/webm') ? 'webm' : 'mp4'] = Array.from(new Uint8Array(await new Blob(c).arrayBuffer())) }
       return { ...out, poster }
-    }, { fn: scene.fn.toString(), chipFn, stills: stillsDir ? STILLS : null, posterAt: scene.poster })
+    }, { fn: scene.fn.toString(), chipFn, helpers: HELPERS, stills: stillsDir ? STILLS : null, posterAt: scene.poster })
     await page.close()
     if (stillsDir) {
       fs.mkdirSync(stillsDir, { recursive: true })

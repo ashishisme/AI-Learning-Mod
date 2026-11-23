@@ -1177,25 +1177,25 @@
       "id": "clip-chip-dog-learning-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/chip-dog-learning.webm",
-          "sha256": "8fb4cc8e480507b10a19d5233fe13bdc773c56cd8c31f632d1bf12d76557d70d"
+          "sha256": "41b2289347fa0131ed1bb02b9b5b9ff10f20a7d6f1552120e4531770a3589444"
         },
         {
           "path": "videos/chip-dog-learning.mp4",
-          "sha256": "541d61f03894612ac4e665afbff715f99e6b43c544800aab6198f2b4c93dac85"
+          "sha256": "324bda383a3949b8f87b837d71417c966e7d574573dedfe051c1975354510001"
         },
         {
           "path": "videos/chip-dog-learning-poster.jpg",
-          "sha256": "1ac3f5387c26d655db4b64ae1610589eaf8d3d0a5c21e8fbbd9378fa6dd1d3d9"
+          "sha256": "2c16aa93bb140e729cd962e97a6c46b4462b7e19eeae43219b393cbb49770ba9"
         }
       ],
-      "purpose": "kids lesson 1 60fps concept clip: chip looking at puppy photos finding shared traits",
+      "purpose": "kids lesson 1 60fps concept clip: Chip sees dog photos, finds shared legs, nose and tail, and recognises a new spotted dog",
       "sourceMaster": "design/brand/source/videos/chip-dog-learning.webm",
-      "sourceSha256": "8fb4cc8e480507b10a19d5233fe13bdc773c56cd8c31f632d1bf12d76557d70d",
+      "sourceSha256": "41b2289347fa0131ed1bb02b9b5b9ff10f20a7d6f1552120e4531770a3589444",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],
