@@ -1555,25 +1555,25 @@
       "id": "clip-plain-image-feature-scan-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/plain-image-feature-scan.webm",
-          "sha256": "322a38f1fd0e06469529dfbc66fa7491153fec8bd4c33085818ee502f0360196"
+          "sha256": "faac435054c01fe37d565236977e5773806f3ed1151a69145467c8531eea31a4"
         },
         {
           "path": "videos/plain-image-feature-scan.mp4",
-          "sha256": "8a5c3a0b2e9b8f0a3a6f50011d00e2a00b03dbda48aaa884b14b51e90f0f3d60"
+          "sha256": "b1ea636edc3a6e18330523d5f7d84af0468b3c1453cb2b5946860a459b080bf6"
         },
         {
           "path": "videos/plain-image-feature-scan-poster.jpg",
-          "sha256": "acc41da957746981d9a26e15499887239ea1c80d142353305d1467f93abc4543"
+          "sha256": "c0a892dbea40cc3e6bef702e80cbd68f6b1cc965ab028413d1e0b2b5eba1548a"
         }
       ],
-      "purpose": "plain english lesson 4 60fps concept clip: industrial defect inspection scanner scanning pixel grid and finding edge features",
+      "purpose": "Plain English lesson 4 clip, calm adult style: sliding filter finds a crack",
       "sourceMaster": "design/brand/source/videos/plain-image-feature-scan.webm",
-      "sourceSha256": "322a38f1fd0e06469529dfbc66fa7491153fec8bd4c33085818ee502f0360196",
+      "sourceSha256": "faac435054c01fe37d565236977e5773806f3ed1151a69145467c8531eea31a4",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],

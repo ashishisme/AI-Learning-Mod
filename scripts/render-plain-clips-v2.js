@@ -309,10 +309,87 @@ function renderPlainLinearClassifierFrame(ctx, f, totalFrames, W, H, FPS) {
   if (team > 0) { ctx.save(); ctx.globalAlpha = team; pPerson(ctx, 730, 330, 1, C.navy); pPerson(ctx, 760, 345, 0.8, C.good); ctx.restore() }
 }
 
+// Lesson 4: a camera's pixel grid, a sliding 3x3 filter, edges that outline a crack, then screening on a line.
+function renderPlainImageFeatureScanFrame(ctx, f, totalFrames, W, H, FPS) {
+  const t = f / FPS
+  pBg(ctx, W, H)
+  const COLS = 12, ROWS = 9, CS = 24
+  const G1 = { x: 60, y: 76 }, G2 = { x: 452, y: 76 }
+  const crackRow = (c) => 1.2 + c * 0.55 + 0.6 * Math.sin(c * 1.3)
+  const isCrack = (r, c) => Math.abs(r - crackRow(c)) < 0.55
+  const val = (r, c) => isCrack(r, c) ? 70 : 165 + Math.floor(rnd(r * 13 + c) * 40)
+  const dim = 1 - 0.65 * sm((t - 13.0) / 0.6)
+  ctx.save(); ctx.globalAlpha = dim
+  pPanel(ctx, 40, 30, 330, 290); pPanel(ctx, 432, 30, 330, 290)
+  // camera above the part, flash at 0.8 s
+  ctx.fillStyle = C.navy; ctx.beginPath(); ctx.roundRect(186, 40, 48, 26, 5); ctx.fill()
+  ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(210, 53, 8, 0, Math.PI * 2); ctx.fill()
+  const flash = Math.max(0, 1 - Math.abs(t - 0.9) / 0.3)
+  // the part: a smooth plate that turns into pixels
+  const pix = sm((t - 1.5) / 1.5)
+  for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+    const x = G1.x + c * CS, y = G1.y + r * CS
+    const v = Math.round(lerp(isCrack(r, c) ? 120 : 185, val(r, c), pix))
+    ctx.fillStyle = `rgb(${v},${v + 4},${v + 10})`; ctx.fillRect(x, y, CS, CS)
+    if (pix > 0) { ctx.strokeStyle = `rgba(255,255,255,${0.7 * pix})`; ctx.lineWidth = 1; ctx.strokeRect(x, y, CS, CS) }
+  }
+  if (flash > 0) { ctx.fillStyle = `rgba(255,255,255,${0.8 * flash})`; ctx.fillRect(G1.x, G1.y, COLS * CS, ROWS * CS) }
+  // feature map frame (right)
+  ctx.fillStyle = C.soft; ctx.fillRect(G2.x, G2.y, COLS * CS, ROWS * CS)
+  // scan: 3x3 window over (ROWS-2) x (COLS-2) positions, 3.6 s .. 9.4 s
+  const NP = (ROWS - 2) * (COLS - 2)
+  const scanned = Math.floor(clamp((t - 3.6) / 5.8) * NP)
+  const strength = (r, c) => { let k = 0; for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) if (isCrack(r + i, c + j)) k++; return isCrack(r + 1, c + 1) ? 1 : k > 0 ? 0.15 : 0 }
+  for (let n = 0; n < scanned; n++) {
+    const r = Math.floor(n / (COLS - 2)), c = n % (COLS - 2), s = strength(r, c)
+    const x = G2.x + (c + 1) * CS, y = G2.y + (r + 1) * CS
+    ctx.fillStyle = s > 0.5 ? C.warn : s > 0 ? '#F6EBD9' : '#FFFFFF'; ctx.fillRect(x + 1, y + 1, CS - 2, CS - 2)
+  }
+  if (t > 3.6 && scanned < NP) {
+    const r = Math.floor(scanned / (COLS - 2)), c = scanned % (COLS - 2)
+    ctx.strokeStyle = C.navy; ctx.lineWidth = 3
+    ctx.strokeRect(G1.x + c * CS, G1.y + r * CS, CS * 3, CS * 3)
+    ctx.strokeStyle = C.warn; ctx.strokeRect(G2.x + (c + 1) * CS, G2.y + (r + 1) * CS, CS, CS)
+    ctx.strokeStyle = 'rgba(38,70,83,0.35)'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]); ctx.beginPath()
+    ctx.moveTo(G1.x + (c + 3) * CS, G1.y + (r + 1.5) * CS); ctx.lineTo(G2.x + (c + 1) * CS, G2.y + (r + 1.5) * CS); ctx.stroke(); ctx.setLineDash([])
+  }
+  // step 4: the edges join into the crack outline, drawn on both grids
+  const out = sm((t - 9.9) / 2.4)
+  if (out > 0) for (const G of [G1, G2]) {
+    ctx.strokeStyle = C.bad; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.beginPath()
+    const end = 0.5 + (COLS - 1) * out
+    for (let c = 0.5; c <= end; c += 0.25) { const x = G.x + c * CS, y = G.y + (crackRow(c - 0.5) + 0.5) * CS; c === 0.5 ? ctx.moveTo(x, y) : ctx.lineTo(x, y) }
+    ctx.stroke()
+  }
+  ctx.restore()
+  // step 5: parts on a line; the cracked one is routed to an engineer
+  const line = sm((t - 13.0) / 0.6)
+  if (line > 0) {
+    ctx.save(); ctx.globalAlpha = line
+    ctx.fillStyle = '#5B6675'; ctx.fillRect(0, 360, 640, 12)
+    for (let x = (t * 80) % 40; x < 640; x += 40) { ctx.fillStyle = '#8A94A6'; ctx.beginPath(); ctx.arc(x, 378, 5, 0, Math.PI * 2); ctx.fill() }
+    ctx.fillStyle = C.navy; ctx.beginPath(); ctx.roundRect(379, 296, 44, 24, 5); ctx.fill(); ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(401, 308, 7, 0, Math.PI * 2); ctx.fill()
+    ctx.fillStyle = C.soft; ctx.strokeStyle = C.line; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect(660, 380, 110, 50, 8); ctx.fill(); ctx.stroke()
+    pPerson(ctx, 740, 372, 0.8, C.warn)
+    for (let i = 0; i < 6; i++) {
+      const x0 = -60 + ((t - 13) * 150 + i * 120)
+      const bad = i === 2
+      let x = x0, y = 342
+      if (bad && x0 > 600) { const u = clamp((x0 - 600) / 80); x = 600 + 80 * u; y = 342 + 55 * sm(u) }
+      if (x < -50 || x > 700) continue
+      ctx.fillStyle = '#B8C0CC'; ctx.strokeStyle = C.navy; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect(x - 22, y - 14, 44, 28, 4); ctx.fill(); ctx.stroke()
+      if (bad) { ctx.strokeStyle = C.bad; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(x - 14, y - 8); ctx.lineTo(x - 2, y + 2); ctx.lineTo(x + 4, y - 3); ctx.lineTo(x + 14, y + 9); ctx.stroke() }
+      if (x0 > 400) pMark(ctx, x, y - 26, bad ? 'q' : 'ok', sm((x0 - 400) / 30) * 0.8)
+    }
+    ctx.restore()
+  }
+}
+
 const SCENES = [
   { name: 'plain-rules-vs-learning', fn: renderPlainRulesVsLearningFrame, poster: 12.5 },
   { name: 'plain-decision-tree', fn: renderPlainDecisionTreeFrame, poster: 11.8 },
-  { name: 'plain-linear-classifier', fn: renderPlainLinearClassifierFrame, poster: 8.4 }]
+  { name: 'plain-linear-classifier', fn: renderPlainLinearClassifierFrame, poster: 8.4 },
+  { name: 'plain-image-feature-scan', fn: renderPlainImageFeatureScanFrame, poster: 7.0 }]
 const STILLS = [2.2, 5.8, 8.6, 12.3, 15.6]
 
 async function main() {
