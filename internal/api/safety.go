@@ -49,6 +49,12 @@ var safetyRules = []struct {
 	{SafetyExplicit, scriptRule(`ஆபாச|நிர்வாண|செக்ஸ் (?:வீடியோ|படம்|போட்டோ)|aabaasa|abasa|nirvaana (?:padam|photo)`)},
 	{SafetyViolence, scriptRule(`வெடிகுண்டு (?:எப்படி |வீட்டில் )?(?:செய்|தயாரி)|(?:அவனை|அவளை|அவர்களை|ஒருவரை|யாரையாவது|எல்லோரையும்|உன்னை)(?:க்|ப்)? (?:எப்படிக் |எப்படி )?கொல்|துப்பாக்கி (?:எங்கே |எப்படி )?வாங்க|bomb (?:eppadi |veetla )?(?:seivathu|seiyarathu|thayarippathu)|(?:avana|avala|avangala|oruvarai|yaarayavathu) (?:eppadi )?kol`)},
 	{SafetyPersonalPII, scriptRule(`(?:என்|என்னுடைய|எங்கள்|எங்க) (?:வீட்டு )?முகவரி|(?:என்|என்னுடைய) (?:போன்|தொலைபேசி|மொபைல்) (?:நம்பர்|எண்)|(?:என்|என்னுடைய) (?:நம்பர்|எண்) \d|(?:என்|என்னுடைய) (?:கடவுச்சொல்|பாஸ்வேர்ட்)|en (?:veettu )?(?:address|mugavari)|en (?:phone|mobile) (?:number|no|nambar)|en (?:number|nambar) \d|en password`)},
+	// Marathi and romanised Marathi (SPEC-018, FR-I18N-05 amended 2.23.0). Devanagari like Hindi, so these must not
+	// catch clean Hindi questions (testdata/mr_safety.json carries Hindi clean lines, hi_safety.json the reverse).
+	{SafetySelfHarm, scriptRule(`मरायच|मरावंसं|मरावसं|आत्महत्या|स्वतःला (?:इजा|मारून|संपव|दुखाप)|जगायच(?:ं|े) नाही|जगण्यात (?:काही )?अर्थ नाही|mala (?:marayach|maraych|maravas)|aatmahatya|atmahatya|swatahla (?:sampav|maar)`)},
+	{SafetyExplicit, scriptRule(`अश्लील|नग्न|सेक्स (?:व्हिडिओ|व्हिडीओ|फोटो|चित्र)|ashlil|nagna`)},
+	{SafetyViolence, scriptRule(`(?:बॉम्ब|बाँब|स्फोटक|शस्त्र|बंदूक) (?:कसा |कसं |कशी |घरी )?(?:बनवा|तयार कर)|(?:त्याला|तिला|त्यांना|एखाद्याला|कोणाला) (?:कसं |कसा |कशी )?मारायच|मारायचं कसं|bomb (?:kasa )?banv|(?:tyala|tila|konala) (?:kasa )?maraych`)},
+	{SafetyPersonalPII, scriptRule(`(?:माझा|आमचा|माझ्या|आमच्या) (?:घरचा )?पत्ता|(?:माझा|माझे) (?:फोन|मोबाईल) (?:नंबर|क्रमांक)|(?:माझा|माझे) पासवर्ड|(?:maza|majha|amcha) (?:gharcha )?(?:patta|address)|(?:maza|majha) password`)},
 }
 
 // scriptRule compiles a rule for an Indian script and its romanised form (Hindi, Kannada, Tamil). RE2's \b is

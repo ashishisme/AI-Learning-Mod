@@ -49,6 +49,7 @@ var (
 
 	numberWords = map[string]int{"zero": 1, "oh": 1, "one": 1, "two": 1, "three": 1, "four": 1, "five": 1, "six": 1, "seven": 1, "eight": 1, "nine": 1,
 		// Hindi and Hinglish. "do" (two) is left out: it is also an English word.
+		"दोन": 1, "पाच": 1, "सहा": 1, "नऊ": 1, // Marathi (SPEC-018); the rest are shared with Hindi
 		"शून्य": 1, "एक": 1, "दो": 1, "तीन": 1, "चार": 1, "पांच": 1, "छह": 1, "छः": 1, "सात": 1, "आठ": 1, "नौ": 1,
 		"shunya": 1, "ek": 1, "teen": 1, "chaar": 1, "char": 1, "paanch": 1, "panch": 1, "chhe": 1, "chhah": 1, "saat": 1, "aath": 1, "nau": 1,
 		// Kannada and Tamil (SPEC-015 FR-011)
@@ -256,18 +257,50 @@ func Check(message string) (kind string, found bool) {
 	s := normalizeForCheck(message)
 	squeezed := strings.Join(strings.Fields(s), "") // "a . b @ g m a i l . c o m"
 	switch {
-	case emailRe.MatchString(s), emailRe.MatchString(squeezed), spokenEmailRe.MatchString(s), hiEmailRe.MatchString(s), knTaEmailRe.MatchString(s):
+	case emailRe.MatchString(s), emailRe.MatchString(squeezed), spokenEmailRe.MatchString(s), hiEmailRe.MatchString(s), knTaEmailRe.MatchString(s), mrEmailRe.MatchString(s):
 		return KindEmail, true
-	case dobRe.MatchString(s), hiDobRe.MatchString(s), knTaDobRe.MatchString(s):
+	case dobRe.MatchString(s), hiDobRe.MatchString(s), knTaDobRe.MatchString(s), mrDobRe.MatchString(s):
 		return KindDateOfBirth, true
-	case linkRe.MatchString(s), handleRe.MatchString(s), hiLinkRe.MatchString(s), knTaLinkRe.MatchString(s):
+	case linkRe.MatchString(s), handleRe.MatchString(s), hiLinkRe.MatchString(s), knTaLinkRe.MatchString(s), mrLinkRe.MatchString(s):
 		return KindLink, true
 	case streetRe.MatchString(s), premisesRe.MatchString(s), postcodeRe.MatchString(s), statedAddr.MatchString(s),
 		hiPremisesRe.MatchString(s), hiPostcodeRe.MatchString(s), hiStatedAddr.MatchString(s), hiStreetRe.MatchString(s),
-		knTaPremisesRe.MatchString(s), knTaPostcodeRe.MatchString(s), knTaStatedAddr.MatchString(s), knTaStreetRe.MatchString(s):
+		knTaPremisesRe.MatchString(s), knTaPostcodeRe.MatchString(s), knTaStatedAddr.MatchString(s), knTaStreetRe.MatchString(s),
+		mrPremisesRe.MatchString(s), mrStatedAddr.MatchString(s), mrStreetRe.MatchString(s):
 		return KindAddress, true
 	case panRe.MatchString(s):
 		return KindIDNumber, true
 	}
 	return digitRunKind(s)
 }
+
+// Marathi rules (SPEC-018, FR-I18N-05 amended 2.23.0). Marathi is written in Devanagari like Hindi, so these use the
+// same hiStart/hiEnd boundaries, but the words differ: माझा/माझी/माझे ("my"), पत्ता ("address"), वाढदिवस ("birthday"),
+// क्रमांक ("number"), and English loanwords spelled with ॲ (also typed अॅ). A bare पत्ता also means "trace"
+// ("पत्ता लागला"), so an address needs an owner word (माझा, आमचा, घरचा).
+const (
+	mrMonth = `(?:जानेवारी|फेब्रुवारी|मार्च|एप्रिल|मे|जून|जुलै|ऑगस्ट|सप्टेंबर|ऑक्टोबर|नोव्हेंबर|डिसेंबर)`
+	mrDate  = `(?:\d{1,2}[\s/\-.]+(?:\d{1,2}|` + mrMonth + `|` + monthName + `)(?:[\s/\-.,]+\d{2,4})?|` + mrMonth + `\s+\d{1,2}|\d{4})`
+	mrApps  = `(?:इन्स्टा(?:ग्राम)?|स्नॅप(?:चॅट)?|टेलिग्राम|व्हॉट्सॲप|व्हॉट्सअॅप|व्हाट्सअॅप|व्हॉट्सअप|व्हॉट्सअ‍ॅप|फेसबुक|यूट्यूब|युट्युब|युट्यूब)`
+	mrMy    = `(?:माझा|माझी|माझे|माझ्या|आमचा|आमची|आमचे|आमच्या)`
+	mrMyLat = `(?:maza|majha|mazi|majhi|maze|majhe|amcha|amchi)`
+)
+
+var (
+	// "anita ॲट gmail डॉट कॉम"
+	mrEmailRe = regexp.MustCompile(hiStart + `\S+\s+(?:ॲट|अॅट|अट)\s+\S+\s+(?:डॉट|डोट)\s+(?:कॉम|इन|ऑर्ग|नेट|com|in|org|net)` + hiEnd)
+	// "माझा इन्स्टा", "व्हॉट्सॲपवर मला मेसेज करा", "maza insta"
+	mrLinkRe = regexp.MustCompile(hiStart + `(?:` + mrMy + `\s+` + mrApps + `|` + mrApps + `\s*(?:वर|ला)\s+(?:मला\s+)?(?:फॉलो|ॲड|अॅड|मेसेज|जोडा))|` +
+		`\b` + mrMyLat + `\s+` + enApps + `\b`)
+	// "घर क्रमांक 45", "फ्लॅट नं. 702", "प्लॉट क्र. 7"
+	mrPremisesRe = regexp.MustCompile(hiStart + `(?:घर|फ्लॅट|प्लॉट|सदनिका|खोली)\s*(?:क्रमांक|क्र\.?|नं\.?|नंबर)\s*[:\-]?\s*\d+`)
+	// "माझा पत्ता", "आमचा पत्ता", "माझ्या घरचा पत्ता", "maza patta"
+	mrStatedAddr = regexp.MustCompile(hiStart + mrMy + `\s+(?:घरचा\s+)?पत्ता` + hiEnd + `|\b` + mrMyLat + `\s+(?:gharcha\s+)?(?:patta|pata|address)\b`)
+	// "12 लक्ष्मी रोड", "7 गणेश पेठ", "5 shaniwar peth": a number, up to two words, then a street word.
+	mrStreetRe = regexp.MustCompile(`\d+[a-z]?(?:[\s,/\-]+[\p{Devanagari}a-z.']+){1,2}[\s,]*(?:रोड|रस्ता|मार्ग|नगर|कॉलनी|पेठ|गल्ली|सोसायटी|चौक|वाडी|peth|road|nagar|galli)(?:$|[\s\p{P}])`)
+	// "माझा वाढदिवस 12 मार्च", "माझी जन्मतारीख 12/03/2014", "माझा जन्म 2014 मध्ये", "मी 2013 साली जन्मलो", "maza vadhdivas 5 june".
+	// Someone else's birth ("ट्युरिंगचा जन्म 1912 मध्ये झाला") passes, as in the other languages.
+	mrDobRe = regexp.MustCompile(hiStart + `(?:माझा|माझी|माझे)\s+(?:वाढदिवस|जन्मदिवस|जन्मतारीख|जन्म\s?तारीख|जन्म)(?:\s*(?:आहे|हा|ही|:|-))*\s*` + mrDate + `|` +
+		hiStart + `मी\s+` + mrDate + `\s*(?:साली|मध्ये|ला|रोजी)?\s+जन्म` + `|` +
+		`\b` + mrMyLat + `\s+(?:vadhdivas|wadhdivas|birthday|bday|janmatarikh|dob)\b(?:\s*(?:ahe|is|:|-))*\s*(?:` + datePart + `|\d{4}\b)`)
+)

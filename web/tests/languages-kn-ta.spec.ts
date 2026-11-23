@@ -4,10 +4,12 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 const EN = { code: 'en', name: 'English', speechLang: 'en-US' }
-type Lang = { code: string; name: string; speechLang: string; english: string; font: RegExp; kidsFont: RegExp; others: RegExp }
+type Lang = { code: string; name: string; speechLang: string; english: string; font: RegExp; kidsFont: RegExp | null; others: RegExp }
 const LANGS: Lang[] = [
   { code: 'kn', name: 'ಕನ್ನಡ', speechLang: 'kn-IN', english: 'Kannada', font: /NotoSansKannada/, kidsFont: /BalooTamma2/, others: /NotoSans(Tamil|Devanagari)|BalooThambi/ },
   { code: 'ta', name: 'தமிழ்', speechLang: 'ta-IN', english: 'Tamil', font: /NotoSansTamil/, kidsFont: /BalooThambi2/, others: /NotoSans(Kannada|Devanagari)|BalooTamma/ },
+  // SPEC-018: Marathi uses Noto Sans Devanagari in every journey, Kids included (Baloo 2 is Latin-only), so it has no Kids-only font.
+  { code: 'mr', name: 'मराठी', speechLang: 'mr-IN', english: 'Marathi', font: /NotoSansDevanagari/, kidsFont: null, others: /NotoSans(Kannada|Tamil)|BalooT/ },
 ]
 const uiFile = (code: string) => join(process.cwd(), 'src', 'i18n', `${code}.json`)
 const lessonFile = (code: string, id: string, mode: string) => join(process.cwd(), '..', 'public-content', 'lang', code, 'lessons', `${id}.${mode}.json`)
@@ -84,11 +86,13 @@ for (const L of LANGS) test.describe(`${L.english} (SPEC-015)`, () => {
   // Analysis G3, FR-009: the Kids journey draws the script in its Baloo font; the adult journeys never fetch it.
   test(`a Kids lesson in ${L.english} uses its Baloo font, and a Plain English one does not`, async ({ browser }) => {
     test.skip(!existsSync(lessonFile(L.code, '1-intro', 'junior')), `needs the ${L.english} Kids lesson`)
+    test.skip(L.kidsFont === null, `${L.english} has no Kids-only font`)
+    const kidsFont = L.kidsFont as RegExp
     const kids = await browser.newPage()
     const kidsFonts = fontRequests(kids)
     await offer(L, kids)
     await openJourney(kids, 'junior')
-    await expect.poll(() => kidsFonts.some((u) => L.kidsFont.test(u))).toBe(true)
+    await expect.poll(() => kidsFonts.some((u) => kidsFont.test(u))).toBe(true)
     await kids.close()
 
     const plain = await browser.newPage()
@@ -96,7 +100,7 @@ for (const L of LANGS) test.describe(`${L.english} (SPEC-015)`, () => {
     await offer(L, plain)
     await openJourney(plain, 'plain-english')
     await plain.waitForTimeout(500)
-    expect(plainFonts.filter((u) => L.kidsFont.test(u))).toEqual([])
+    expect(plainFonts.filter((u) => kidsFont.test(u))).toEqual([])
     await plain.close()
   })
 

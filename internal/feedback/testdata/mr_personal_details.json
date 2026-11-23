@@ -1,0 +1,150 @@
+[
+  {
+    "text": "माझा नंबर 9876543210 आहे",
+    "kind": "phone"
+  },
+  {
+    "text": "माझा नंबर ९८७६५४३२१० आहे",
+    "kind": "phone"
+  },
+  {
+    "text": "मला 98765 43210 वर फोन करा",
+    "kind": "phone"
+  },
+  {
+    "text": "फोन: ९८७६५ ४३२१०",
+    "kind": "phone"
+  },
+  {
+    "text": "maza number 9876543210 ahe",
+    "kind": "phone"
+  },
+  {
+    "text": "नऊ आठ सात सहा पाच चार तीन दोन एक शून्य",
+    "kind": "phone"
+  },
+  {
+    "text": "माझा मोबाईल 98765-43210",
+    "kind": "phone"
+  },
+  {
+    "text": "+91 98765 43210 वर संपर्क करा",
+    "kind": "phone"
+  },
+  {
+    "text": "माझा ई-मेल anita@gmail.com आहे",
+    "kind": "email"
+  },
+  {
+    "text": "ANITA.K@GMAIL.COM वर लिहा",
+    "kind": "email"
+  },
+  {
+    "text": "anita ॲट gmail डॉट कॉम",
+    "kind": "email"
+  },
+  {
+    "text": "anita अॅट जीमेल डॉट कॉम",
+    "kind": "email"
+  },
+  {
+    "text": "majha email anita at gmail dot com",
+    "kind": "email"
+  },
+  {
+    "text": "माझा पत्ता: 12 शिवाजी नगर, पुणे",
+    "kind": "address"
+  },
+  {
+    "text": "घर क्रमांक 45, गल्ली 3",
+    "kind": "address"
+  },
+  {
+    "text": "फ्लॅट नं. 702, साई सोसायटी",
+    "kind": "address"
+  },
+  {
+    "text": "पिन कोड 411001",
+    "kind": "address"
+  },
+  {
+    "text": "आमचा पत्ता सांगतो",
+    "kind": "address"
+  },
+  {
+    "text": "माझ्या घरचा पत्ता लिहिला आहे",
+    "kind": "address"
+  },
+  {
+    "text": "12 लक्ष्मी रोड, कोल्हापूर",
+    "kind": "address"
+  },
+  {
+    "text": "maza patta 5 shaniwar peth",
+    "kind": "address"
+  },
+  {
+    "text": "7 गणेश पेठ, नाशिक",
+    "kind": "address"
+  },
+  {
+    "text": "आधार क्रमांक 1234 5678 9012",
+    "kind": "id_number"
+  },
+  {
+    "text": "माझा PAN ABCDE1234F आहे",
+    "kind": "id_number"
+  },
+  {
+    "text": "कार्ड नंबर 4111 1111 1111 1111",
+    "kind": "id_number"
+  },
+  {
+    "text": "123456789012 हा माझा आधार",
+    "kind": "id_number"
+  },
+  {
+    "text": "माझा वाढदिवस 12 मार्च 2014 ला आहे",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "माझी जन्मतारीख 12/03/2014",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "माझा जन्म 2014 मध्ये झाला",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "मी 2013 साली जन्मलो",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "maza vadhdivas 5 june 2013",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "माझा वाढदिवस 3 ऑगस्ट",
+    "kind": "date_of_birth"
+  },
+  {
+    "text": "माझा इन्स्टा anita_k99",
+    "kind": "link"
+  },
+  {
+    "text": "व्हॉट्सॲपवर मला मेसेज करा",
+    "kind": "link"
+  },
+  {
+    "text": "maza insta follow kara",
+    "kind": "link"
+  },
+  {
+    "text": "www.anita-site.com पाहा",
+    "kind": "link"
+  },
+  {
+    "text": "माझे यूट्यूब चॅनल बघा",
+    "kind": "link"
+  }
+]
