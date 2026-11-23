@@ -1,5 +1,5 @@
 // SPEC: FR-UI-28, FR-CNT-13 (SPEC-014 clips), visual pass 2026-11-23.
-// Plain English clips, second style: calm adult look (warm paper, muted palette, flat shapes), motion timed to the
+// Plain English and Detailed clips, second style: calm adult look (warm paper, muted palette, flat shapes), motion timed to the
 // lesson cues (0, 3.5, 6.5, 9.8, 13.0; 16 s) so each spoken step matches the screen. No words in the frame.
 //   node scripts/render-plain-clips-v2.js [--only=<name>] --stills <outDir>   one PNG per cue, for review
 //   node scripts/render-plain-clips-v2.js [--only=<name>]                     webm, mp4, poster to web/public and design/brand/source
@@ -546,13 +546,132 @@ function renderPlainDisparateImpactAuditFrame(ctx, f, totalFrames, W, H, FPS) {
   }
 }
 
+// Detailed lesson 1: the imitation game as a cutaway of three rooms. Notes travel as paper planes.
+function renderTuringTestFrame(ctx, f, totalFrames, W, H, FPS) {
+  const t = f / FPS
+  const INK = '#2B2F3A', SKIN = '#C68B59', SKIN2 = '#8D5B3A'
+  // ---------- rooms ----------
+  ctx.fillStyle = '#EDE3D3'; ctx.fillRect(0, 0, 300, H) // study
+  ctx.fillStyle = '#F4DCC6'; ctx.fillRect(320, 0, 480, 220) // human room (warm)
+  ctx.fillStyle = '#D9E3EA'; ctx.fillRect(320, 232, 480, 218) // machine room (cool)
+  // wallpaper stripes
+  ctx.fillStyle = 'rgba(255,255,255,0.25)'; for (let x = 0; x < 300; x += 28) ctx.fillRect(x, 0, 10, 330)
+  ctx.fillStyle = 'rgba(255,255,255,0.18)'; for (let x = 330; x < 800; x += 36) ctx.fillRect(x, 0, 14, 180)
+  // floors
+  ctx.fillStyle = '#B89B7A'; ctx.fillRect(0, 330, 300, 120); ctx.fillStyle = '#A8896A'; for (let x = 0; x < 300; x += 50) ctx.fillRect(x, 330, 2, 120)
+  ctx.fillStyle = '#C9A27E'; ctx.fillRect(320, 180, 480, 40); ctx.fillStyle = '#A9B7C2'; ctx.fillRect(320, 400, 480, 50)
+  // partition wall with two letter slots; the slab between the right rooms
+  ctx.fillStyle = '#7A6656'; ctx.fillRect(300, 0, 20, H); ctx.fillStyle = '#5E4E42'; ctx.fillRect(320, 220, 480, 12)
+  const slot = (y) => { ctx.fillStyle = '#3A2F28'; ctx.fillRect(300, y - 4, 20, 8); ctx.fillStyle = '#C9A227'; ctx.fillRect(298, y - 7, 24, 3) }
+  slot(120); slot(330)
+  // wall clocks: human time ticks steadily; the robot's clock appears when it starts faking pauses
+  const clock = (x, y, a) => { ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(x, y, 18, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+    ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.sin(a) * 13, y - Math.cos(a) * 13); ctx.moveTo(x, y); ctx.lineTo(x + 7, y); ctx.stroke() }
+  clock(420, 52, t * 0.9)
+  clock(420, 282, 9.9 < t ? (t - 9.9) * 0.9 : 0)
+  // ---------- the study: lamp, desk, evaluator ----------
+  const glow = ctx.createRadialGradient(200, 250, 10, 200, 250, 170); glow.addColorStop(0, 'rgba(255,214,140,0.55)'); glow.addColorStop(1, 'rgba(255,214,140,0)')
+  ctx.fillStyle = glow; ctx.fillRect(0, 80, 300, 300)
+  ctx.fillStyle = '#6B4B34'; ctx.fillRect(110, 290, 180, 14); ctx.fillRect(120, 304, 10, 60); ctx.fillRect(270, 304, 10, 60)
+  ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(250, 290); ctx.lineTo(240, 230); ctx.lineTo(205, 205); ctx.stroke()
+  ctx.fillStyle = '#2A9D8F'; ctx.beginPath(); ctx.moveTo(190, 196); ctx.lineTo(222, 206); ctx.lineTo(205, 226); ctx.closePath(); ctx.fill()
+  // trays on the desk, marked circle (top room) and square (bottom room)
+  const tray = (x, mark) => { ctx.fillStyle = '#8C6A4F'; ctx.fillRect(x - 22, 280, 44, 10); ctx.fillStyle = INK; mark === 'c' ? (ctx.beginPath(), ctx.arc(x, 285, 3.5, 0, Math.PI * 2), ctx.fill()) : ctx.fillRect(x - 3.5, 281.5, 7, 7) }
+  tray(170, 'c'); tray(225, 's')
+  // evaluator: seated, facing right; in step 5 raises both hands
+  const shrug = sm((t - 13.2) / 0.5)
+  ctx.fillStyle = '#4A3B30'; ctx.fillRect(40, 300, 60, 10); ctx.fillRect(46, 310, 8, 54); ctx.fillRect(86, 310, 8, 54); ctx.fillRect(40, 220, 10, 90)
+  ctx.fillStyle = '#264653'; ctx.beginPath(); ctx.roundRect(52, 232, 54, 72, 16); ctx.fill()
+  ctx.fillStyle = SKIN2; ctx.beginPath(); ctx.arc(84, 208, 20, 0, Math.PI * 2); ctx.fill()
+  ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(80, 200, 20, Math.PI * 1.05, Math.PI * 1.95); ctx.fill()
+  ctx.fillStyle = INK; ctx.fillRect(94, 206, 10, 3) // glasses hint
+  ctx.strokeStyle = '#264653'; ctx.lineWidth = 11; ctx.lineCap = 'round'
+  ctx.beginPath(); ctx.moveTo(98, 250); ctx.lineTo(lerp(140, 118, shrug), lerp(282, 200, shrug)); ctx.stroke()
+  ctx.beginPath(); ctx.moveTo(72, 250); ctx.lineTo(lerp(118, 60, shrug), lerp(285, 196, shrug)); ctx.stroke()
+  // ---------- human room: desk, typewriter, tea, person ----------
+  ctx.fillStyle = '#8A5A3C'; ctx.fillRect(480, 140, 170, 10); ctx.fillRect(490, 150, 8, 32); ctx.fillRect(632, 150, 8, 32)
+  ctx.fillStyle = '#3D4A52'; ctx.beginPath(); ctx.roundRect(510, 118, 64, 22, 4); ctx.fill(); ctx.fillStyle = '#FFFFFF'; ctx.fillRect(522, 98, 40, 22)
+  ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect(598, 126, 16, 14, 3); ctx.fill(); ctx.stroke()
+  const sip = t > 4.4 && t < 5.4 ? sm((t - 4.4) / 0.25) * (1 - sm((t - 5.15) / 0.25)) : 0
+  // steam
+  ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 2; for (let i = 0; i < 2; i++) { ctx.beginPath(); for (let k = 0; k < 14; k++) ctx.lineTo(603 + i * 6 + Math.sin(t * 3 + k * 0.6 + i) * 2, 122 - k) ; ctx.stroke() }
+  const think = t > 3.6 && t < 4.4 || (t > 5.4 && t < 6.0)
+  // person: chair, body, head (tilts while thinking)
+  ctx.fillStyle = '#6E4B36'; ctx.fillRect(670, 150, 50, 8); ctx.fillRect(712, 90, 8, 68)
+  ctx.fillStyle = '#C0504D'; ctx.beginPath(); ctx.roundRect(650, 96, 50, 60, 16); ctx.fill()
+  ctx.save(); ctx.translate(660, 76); ctx.rotate(think ? -0.18 : 0)
+  ctx.fillStyle = SKIN; ctx.beginPath(); ctx.arc(0, 0, 18, 0, Math.PI * 2); ctx.fill()
+  ctx.fillStyle = '#3B2A20'; ctx.beginPath(); ctx.arc(4, -4, 19, Math.PI * 1.1, Math.PI * 2.05); ctx.fill(); ctx.beginPath(); ctx.arc(14, 2, 9, 0, Math.PI * 2); ctx.fill()
+  ctx.restore()
+  ctx.strokeStyle = '#C0504D'; ctx.lineWidth = 10; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(656, 112)
+  if (think) ctx.lineTo(648, 92); else if (sip > 0) ctx.lineTo(lerp(612, 640, sip), lerp(132, 92, sip)); else ctx.lineTo(574 + Math.sin(t * 25) * (t > 1.8 && t < 3.6 || t > 6.0 && t < 6.4 ? 3 : 0), 116)
+  ctx.stroke()
+  if (sip > 0) { ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect(lerp(598, 628, sip), lerp(126, 84, sip), 16, 14, 3); ctx.fill(); ctx.stroke() }
+  if (think) { ctx.fillStyle = 'rgba(255,255,255,0.9)'; for (const [dx, dy, r] of [[-22, -30, 4], [-32, -44, 6], [-46, -62, 12]]) { ctx.beginPath(); ctx.arc(660 + dx, 76 + dy, r, 0, Math.PI * 2); ctx.fill() } }
+  // bin and crumpled paper
+  ctx.fillStyle = '#7C8B96'; ctx.beginPath(); ctx.moveTo(740, 150); ctx.lineTo(772, 150); ctx.lineTo(768, 182); ctx.lineTo(744, 182); ctx.closePath(); ctx.fill()
+  const ball = (t0, from, to) => { const u = (t - t0) / 0.6; if (u < 0) return; const v = clamp(u); const x = lerp(from[0], to[0], v), y = lerp(from[1], to[1], v) - Math.sin(v * Math.PI) * 50
+    if (u > 1) return; ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.beginPath(); for (let k = 0; k < 9; k++) { const a = k / 9 * Math.PI * 2, r = 8 + (k % 2) * 3; ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r) } ctx.closePath(); ctx.fill(); ctx.stroke() }
+  ball(5.5, [542, 96], [756, 150])
+  // ---------- machine room: robot, keyboard; in step 4 a cardigan and glasses ----------
+  ctx.fillStyle = '#5D6D7A'; ctx.fillRect(480, 360, 170, 10); ctx.fillRect(490, 370, 8, 32); ctx.fillRect(632, 370, 8, 32)
+  ctx.fillStyle = '#2F3B45'; ctx.beginPath(); ctx.roundRect(512, 348, 70, 12, 3); ctx.fill()
+  const dress = sm((t - 9.9) / 0.8)
+  ctx.fillStyle = '#9AA8B4'; ctx.beginPath(); ctx.roundRect(650, 318, 54, 64, 14); ctx.fill()
+  if (dress > 0) { ctx.save(); ctx.globalAlpha = dress; ctx.fillStyle = '#B5835A'; ctx.beginPath(); ctx.roundRect(648, 318 - 20 * (1 - dress), 58, 60, 14); ctx.fill(); ctx.fillStyle = '#F4EBDD'; ctx.fillRect(672, 320, 10, 56); ctx.restore() }
+  const bow = sm((t - 14.6) / 0.4) * (1 - sm((t - 15.5) / 0.3))
+  ctx.save(); ctx.translate(676, 296); ctx.rotate(-0.35 * bow)
+  ctx.fillStyle = '#7F8F9C'; ctx.beginPath(); ctx.roundRect(-24, -22, 48, 40, 10); ctx.fill()
+  ctx.fillStyle = '#1F2A33'; ctx.beginPath(); ctx.roundRect(-18, -15, 36, 22, 6); ctx.fill()
+  const lookClock = t > 10.8 && t < 12.0
+  ctx.fillStyle = '#7FE3D5'; const ex = lookClock ? -6 : -3; ctx.fillRect(-11 + ex, -8, 6, 6); ctx.fillRect(5 + ex, -8, 6, 6)
+  ctx.fillStyle = '#7F8F9C'; ctx.fillRect(-2, -32, 4, 10); ctx.beginPath(); ctx.arc(0, -34, 4, 0, Math.PI * 2); ctx.fill()
+  if (dress > 0) { ctx.globalAlpha = dress; ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(-6, -5, 8, 0, Math.PI * 2); ctx.moveTo(18, -5); ctx.arc(10, -5, 8, 0, Math.PI * 2); ctx.stroke() }
+  ctx.restore()
+  // robot arm: blur-fast typing in step 3, slow in step 4
+  const fast = t > 6.6 && t < 7.0, slow = t > 12.0 && t < 12.6
+  ctx.strokeStyle = dress > 0.5 ? '#B5835A' : '#9AA8B4'; ctx.lineWidth = 9; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(656, 336)
+  ctx.lineTo(580 + (fast ? Math.sin(t * 90) * 6 : slow ? Math.sin(t * 20) * 3 : 0), 346); ctx.stroke()
+  ctx.fillStyle = '#7C8B96'; ctx.beginPath(); ctx.moveTo(740, 370); ctx.lineTo(772, 370); ctx.lineTo(768, 402); ctx.lineTo(744, 402); ctx.closePath(); ctx.fill()
+  ball(12.6, [600, 330], [756, 370])
+  // ---------- paper planes ----------
+  const plane = (x, y, dir, s = 1) => { ctx.save(); ctx.translate(x, y); ctx.scale(dir * s, s); ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = INK; ctx.lineWidth = 1.5
+    ctx.beginPath(); ctx.moveTo(14, 0); ctx.lineTo(-12, -9); ctx.lineTo(-6, 0); ctx.lineTo(-12, 8); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(14, 0); ctx.lineTo(-6, 0); ctx.stroke(); ctx.restore() }
+  const fly = (t0, dur, pts, dir) => { const u = (t - t0) / dur; if (u < 0 || u > 1) return; const n = pts.length - 1, k = Math.min(n - 1, Math.floor(u * n)), v = sm(u * n - k)
+    plane(lerp(pts[k][0], pts[k + 1][0], v), lerp(pts[k][1], pts[k + 1][1], v) - Math.sin(v * Math.PI) * 14, dir) }
+  // 1: the question goes to both rooms
+  fly(0.6, 1.4, [[230, 270], [310, 120], [520, 104]], 1)
+  fly(0.8, 1.4, [[230, 270], [310, 330], [530, 336]], 1)
+  // 2: the human's reply, after thinking and a crumpled draft
+  fly(6.0, 1.0, [[540, 104], [310, 120], [170, 274]], -1)
+  // 3: the robot's reply, immediately
+  fly(6.9, 0.45, [[560, 336], [310, 330], [225, 274]], -1)
+  // 4: the next reply, now with a fake pause and a fake crumple
+  fly(12.8, 1.0, [[560, 336], [310, 330], [225, 274]], -1)
+  // planes that landed wait in the trays
+  if (t > 7.0 && shrug <= 0) plane(170, 272, -1, 0.8)
+  if ((t > 7.35 && t < 12.8 || t > 13.8) && shrug <= 0) plane(225, 272, -1, 0.8)
+  // 5: the evaluator holds up two identical planes; a spotlight finds the robot, which bows
+  if (shrug > 0) {
+    plane(lerp(170, 118, shrug), lerp(272, 186, shrug), -1, 0.9); plane(lerp(225, 60, shrug), lerp(272, 182, shrug), -1, 0.9)
+    ctx.save(); ctx.globalAlpha = shrug; ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = INK; ctx.lineWidth = 2
+    ctx.beginPath(); ctx.ellipse(150, 120, 34, 26, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+    for (const [dx, dy, r] of [[-30, 32, 5], [-40, 46, 3]]) { ctx.beginPath(); ctx.arc(150 + dx, 120 + dy, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke() }
+    ctx.fillStyle = INK; ctx.font = '700 30px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', 150, 122); ctx.restore()
+    const spot = sm((t - 14.2) / 0.5)
+    if (spot > 0) { ctx.save(); ctx.fillStyle = `rgba(255,236,170,${0.35 * spot})`; ctx.beginPath(); ctx.moveTo(660, 232); ctx.lineTo(700, 232); ctx.lineTo(740, 400); ctx.lineTo(610, 400); ctx.closePath(); ctx.fill(); ctx.restore()
+      pMark(ctx, 740, 262, 'ok', sm((t - 15.0) / 0.4) * 1.3) }
+  }
+}
+
 const SCENES = [
   { name: 'plain-rules-vs-learning', fn: renderPlainRulesVsLearningFrame, poster: 12.5 },
   { name: 'plain-decision-tree', fn: renderPlainDecisionTreeFrame, poster: 11.8 },
   { name: 'plain-linear-classifier', fn: renderPlainLinearClassifierFrame, poster: 8.4 },
   { name: 'plain-image-feature-scan', fn: renderPlainImageFeatureScanFrame, poster: 7.0 },
   { name: 'plain-transformer-context', fn: renderPlainTransformerContextFrame, poster: 12.4 },
-  { name: 'plain-disparate-impact-audit', fn: renderPlainDisparateImpactAuditFrame, poster: 8.4 }]
+  { name: 'plain-disparate-impact-audit', fn: renderPlainDisparateImpactAuditFrame, poster: 8.4 },
+  { name: 'turing-test', fn: renderTuringTestFrame, poster: 7.6 }]
 const STILLS = [2.2, 5.8, 8.6, 12.3, 15.6]
 
 async function main() {

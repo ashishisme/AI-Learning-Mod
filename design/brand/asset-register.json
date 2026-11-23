@@ -967,25 +967,25 @@
       "id": "clip-turing-test-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/turing-test.webm",
-          "sha256": "4396a775ab521f4ca63854d3a69891f938918c1e762aa99e9a2173da1283f574"
+          "sha256": "d8644e453396f8611668d5187aea42315564ed454030969a427e3935b680172d"
         },
         {
           "path": "videos/turing-test.mp4",
-          "sha256": "9ebd7ce5b5c25e344f6f4d5226d21c3d32b976d05bdc686e7a74d9cc38a85d37"
+          "sha256": "3551f5d6b5b2b02300652a9811eb7a026531f915370c8f6b464c436a3f524acd"
         },
         {
           "path": "videos/turing-test-poster.jpg",
-          "sha256": "17a5b4d4575b57d0171e8df9f85f9e946fb02b2e0a3728949f79ac8ccda01da8"
+          "sha256": "27e41f7db7e96689d555f1b630ef093d82cf90350106ff5c4a9d348d3cc6a883"
         }
       ],
-      "purpose": "lesson 1 60fps concept clip: interrogator communicates with human and statistical AI with confidence gauge",
+      "purpose": "Detailed lesson 1 clip, illustrated cutaway: the imitation game with paper planes",
       "sourceMaster": "design/brand/source/videos/turing-test.webm",
-      "sourceSha256": "4396a775ab521f4ca63854d3a69891f938918c1e762aa99e9a2173da1283f574",
+      "sourceSha256": "d8644e453396f8611668d5187aea42315564ed454030969a427e3935b680172d",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],
