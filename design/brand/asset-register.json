@@ -1471,25 +1471,25 @@
       "id": "clip-plain-decision-tree-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/plain-decision-tree.webm",
-          "sha256": "4d19834c9079dd88f5260cd639482761a12d6dffaf4547b3c68fe4cd08819d39"
+          "sha256": "05e19067706335c7ad3f73ced485314c3adf5b7c7757d32d918a1e3f3dcca113"
         },
         {
           "path": "videos/plain-decision-tree.mp4",
-          "sha256": "b905efaea3f72a2d4e60f85a2ddbcc19a16224f00b929f64200ab1c8bf64dcfa"
+          "sha256": "8041ab1019c5cd7d15f211b255f47281f504279bbc515b03f9e9ccc09ded3926"
         },
         {
           "path": "videos/plain-decision-tree-poster.jpg",
-          "sha256": "090b5142c25e2275d7124f7b3e836d9c76181a1c711882cfa179565de756dfd3"
+          "sha256": "0e2b57d11867fec6f3cc54e236d2aa6587345ebf0950fd9cb3d90b6dc382c3c7"
         }
       ],
-      "purpose": "plain english lesson 2 60fps concept clip: branch loan decision tree filtering applications with deterministic rules",
+      "purpose": "Plain English lesson 2 clip, calm adult style: loan decision tree with audit trail",
       "sourceMaster": "design/brand/source/videos/plain-decision-tree.webm",
-      "sourceSha256": "4d19834c9079dd88f5260cd639482761a12d6dffaf4547b3c68fe4cd08819d39",
+      "sourceSha256": "05e19067706335c7ad3f73ced485314c3adf5b7c7757d32d918a1e3f3dcca113",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],

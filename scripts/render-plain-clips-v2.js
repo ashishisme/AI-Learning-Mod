@@ -171,8 +171,80 @@ function renderPlainRulesVsLearningFrame(ctx, f, totalFrames, W, H, FPS) {
   ctx.restore()
 }
 
+// Lesson 2: a loan decision tree, two applicants, and the audit trail of one route.
+function renderPlainDecisionTreeFrame(ctx, f, totalFrames, W, H, FPS) {
+  const t = f / FPS
+  pBg(ctx, W, H)
+  const N = { root: [400, 78], job: [220, 188], debt: [580, 188] }
+  const L = { decline: [120, 300], reviewA: [320, 300], approve: [480, 300], reviewB: [680, 300] }
+  const kinds = { decline: 'no', reviewA: 'q', approve: 'ok', reviewB: 'q' }
+  // route of applicant B (for the audit highlight)
+  const audit = sm((t - 13.1) / 0.8)
+  const edge = (a, b, hot, col = C.line) => {
+    ctx.strokeStyle = hot > 0 ? C.navy : col; ctx.lineWidth = hot > 0 ? 3 + 3 * hot : 3
+    ctx.beginPath(); ctx.moveTo(a[0], a[1] + 28); ctx.bezierCurveTo(a[0], a[1] + 60, b[0], b[1] - 60, b[0], b[1] - 28); ctx.stroke()
+  }
+  edge(N.root, N.job, 0); edge(N.root, N.debt, audit)
+  edge(N.job, L.decline, 0); edge(N.job, L.reviewA, 0); edge(N.debt, L.approve, audit); edge(N.debt, L.reviewB, 0)
+  const lit = (t0) => sm((t - t0) / 0.4)
+  const node = (p, icon, on) => {
+    const [x, y] = p
+    ctx.fillStyle = on > 0 ? '#FFFFFF' : C.panel; ctx.strokeStyle = on > 0 ? C.navy : C.line; ctx.lineWidth = 2 + on
+    if (on > 0) { ctx.fillStyle = 'rgba(38,70,83,0.08)'; ctx.beginPath(); ctx.roundRect(x - 48, y - 36, 96, 72, 18); ctx.fill() }
+    ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.roundRect(x - 40, y - 28, 80, 56, 12); ctx.fill(); ctx.stroke()
+    icon(x, y)
+  }
+  const coins = (x, y) => { ctx.fillStyle = C.good; for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.ellipse(x - 8, y + 12 - i * 6, 11, 4, 0, 0, Math.PI * 2); ctx.fill() } ctx.strokeStyle = C.navy; ctx.lineWidth = 2; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(x - 24, y - 4); ctx.lineTo(x + 24, y - 4); ctx.stroke(); ctx.setLineDash([]) }
+  const job = (x, y) => { ctx.fillStyle = C.navy; ctx.beginPath(); ctx.roundRect(x - 26, y - 8, 26, 20, 3); ctx.fill(); ctx.strokeStyle = C.navy; ctx.lineWidth = 2; ctx.strokeRect(x - 18, y - 13, 10, 5)
+    ctx.strokeStyle = C.muted; ctx.strokeRect(x + 4, y - 14, 22, 26); for (let i = 0; i < 6; i++) { ctx.fillStyle = i < 5 ? C.good : C.line; ctx.fillRect(x + 7 + (i % 3) * 6, y - 6 + Math.floor(i / 3) * 8, 4, 4) } }
+  const debt = (x, y) => { ctx.fillStyle = C.good; ctx.fillRect(x - 22, y - 12, 12, 26); ctx.fillStyle = C.bad; ctx.fillRect(x - 6, y + 2, 12, 12); ctx.strokeStyle = C.navy; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x + 12, y + 12); ctx.lineTo(x + 24, y - 12); ctx.stroke() }
+  node(N.root, coins, lit(0.3)); node(N.job, job, lit(4.4)); node(N.debt, debt, lit(7.4))
+  // leaves
+  for (const k of Object.keys(L)) {
+    const [x, y] = L[k]
+    const on = k === 'reviewA' || k === 'approve' ? lit(11.2) : lit(10.4) * 0.6
+    ctx.fillStyle = C.soft; ctx.strokeStyle = C.line; ctx.lineWidth = 1.5
+    ctx.beginPath(); ctx.roundRect(x - 34, y - 22, 68, 44, 22); ctx.fill(); ctx.stroke()
+    ctx.globalAlpha = 0.35 + 0.65 * on; pMark(ctx, x, y, kinds[k], 1.1); ctx.globalAlpha = 1
+  }
+  // applicants: a token with an income bar on top
+  const token = (x, y, col, inc) => {
+    ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = col; ctx.lineWidth = 3
+    ctx.beginPath(); ctx.arc(x, y, 17, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+    pPerson(ctx, x, y + 9, 0.45, col)
+    ctx.fillStyle = C.soft; ctx.fillRect(x - 18, y - 30, 36, 6); ctx.fillStyle = C.good; ctx.fillRect(x - 18, y - 30, 36 * inc, 6)
+  }
+  const path = (pts, u) => {
+    const n = pts.length - 1, k = Math.min(n - 1, Math.floor(u * n)), v = sm(u * n - k)
+    return [lerp(pts[k][0], pts[k + 1][0], v), lerp(pts[k][1], pts[k + 1][1], v)]
+  }
+  const at = (p, dx = 0) => [p[0] + dx, p[1] - 48]
+  // A: low income, comes in at 0.6, waits at root, goes to job check (3.6), then to review (10.0)
+  const posA = t < 0.6 ? null : t < 3.6 ? path([[300, -30], [320, 78]], clamp((t - 0.6) / 1.2)) : t < 10 ? path([[320, 78], at(N.job)], clamp((t - 3.6) / 1.4)) : path([at(N.job), [L.reviewA[0], L.reviewA[1] - 44]], clamp((t - 10) / 1.2))
+  // B: high income, arrives at 2.0, goes right at 6.6, then to approve (10.6)
+  const posB = t < 2.0 ? null : t < 6.6 ? path([[500, -30], [480, 78]], clamp((t - 2.0) / 1.2)) : t < 10.6 ? path([[480, 78], at(N.debt)], clamp((t - 6.6) / 1.4)) : path([at(N.debt), [L.approve[0], L.approve[1] - 44]], clamp((t - 10.6) / 1.2))
+  if (posA) token(posA[0], posA[1], C.warn, 0.3)
+  if (posB) token(posB[0], posB[1], C.navy, 0.85)
+  // audit trail: the steps of B's route, ticked one after another
+  const a = sm((t - 13.2) / 0.5)
+  if (a > 0) {
+    ctx.save(); ctx.globalAlpha = a
+    pPanel(ctx, 210, 362, 380, 64)
+    const icons = [coins, debt, (x, y) => pMark(ctx, x, y, 'ok', 1.4)]
+    icons.forEach((ic, i) => {
+      const s = sm((t - 13.6 - i * 0.55) / 0.35)
+      if (s <= 0) return
+      ctx.globalAlpha = a * s; const x = 270 + i * 130
+      ctx.save(); ctx.translate(x, 394); ctx.scale(0.75, 0.75); ic(0, 0); ctx.restore()
+      if (i < 2) { ctx.strokeStyle = C.muted; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x + 32, 394); ctx.lineTo(x + 96, 394); ctx.moveTo(x + 88, 388); ctx.lineTo(x + 96, 394); ctx.lineTo(x + 88, 400); ctx.stroke() }
+    })
+    ctx.restore()
+  }
+}
+
 const SCENES = [
-  { name: 'plain-rules-vs-learning', fn: renderPlainRulesVsLearningFrame, poster: 12.5 }]
+  { name: 'plain-rules-vs-learning', fn: renderPlainRulesVsLearningFrame, poster: 12.5 },
+  { name: 'plain-decision-tree', fn: renderPlainDecisionTreeFrame, poster: 11.8 }]
 const STILLS = [2.2, 5.8, 8.6, 12.3, 15.6]
 
 async function main() {
