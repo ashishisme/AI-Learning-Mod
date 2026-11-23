@@ -856,6 +856,89 @@ function renderPerceptronLearningFrame(ctx, f, totalFrames, W, H, FPS) {
   if (t > 13.1) all.forEach((o, i) => { const ok = (cr(o.p[0], o.p[1]) < 0) === o.a; pMark(ctx, o.p[0] + 16, o.p[1] - 16, ok ? 'ok' : 'no', 0.7 * sm((t - 13.1 - i * 0.08) / 0.3)) })
 }
 
+// Detailed lesson 4: convolution in a mosaic workshop. A 3x3 brass lens frame scans tiles; beads fill a 6x6 tray; a 2x2 sieve pools.
+function renderConvolutionScanFrame(ctx, f, totalFrames, W, H, FPS) {
+  const t = f / FPS
+  const INK = '#2B2F3A', DARK = '#2F4858', LIGHT = '#F2E8CF', BEAD = [233, 162, 59]
+  // ---------- workshop wall ----------
+  ctx.fillStyle = '#E6D9C3'; ctx.fillRect(0, 0, W, H)
+  ctx.fillStyle = 'rgba(255,255,255,0.25)'; for (let x = 0; x < W; x += 60) ctx.fillRect(x, 0, 2, H)
+  ctx.fillStyle = '#9C7A54'; ctx.fillRect(0, 300, W, 10); ctx.fillStyle = '#B89470'; ctx.fillRect(0, 310, W, H)
+  // ---------- the 8x8 mosaic on an easel ----------
+  const img = (r, c) => { const win = r >= 2 && r <= 3 && c >= 1 && c <= 2; return c < 4 && !win ? 0.15 : 0.92 }
+  const T = 26, MX = 40, MY = 50
+  ctx.fillStyle = '#7A5A3C'; ctx.beginPath(); ctx.moveTo(80, 270); ctx.lineTo(60, 300); ctx.lineTo(70, 300); ctx.lineTo(95, 270); ctx.fill(); ctx.beginPath(); ctx.moveTo(210, 270); ctx.lineTo(232, 300); ctx.lineTo(222, 300); ctx.lineTo(195, 270); ctx.fill()
+  ctx.fillStyle = '#7A5A3C'; ctx.fillRect(MX - 10, MY - 10, 8 * T + 20, 8 * T + 20); ctx.fillStyle = '#CFC4B0'; ctx.fillRect(MX, MY, 8 * T, 8 * T)
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+    const v = img(r, c), j = (rnd(r * 8 + c) - 0.5) * 0.08
+    ctx.fillStyle = v < 0.5 ? `hsl(200,30%,${26 + j * 100}%)` : `hsl(43,55%,${88 + j * 60}%)`
+    ctx.beginPath(); ctx.roundRect(MX + c * T + 1.5, MY + r * T + 1.5, T - 3, T - 3, 3); ctx.fill()
+  }
+  // brightness values appear on the tiles in step 1
+  const nums = sm((t - 1.2) / 0.6) * (1 - sm((t - 3.4) / 0.4))
+  if (nums > 0) { ctx.save(); ctx.globalAlpha = nums; ctx.font = '600 11px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+    for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) { const v = img(r, c); ctx.fillStyle = v < 0.5 ? '#E6EEF2' : '#6B5A3A'; ctx.fillText(v < 0.5 ? '0' : '9', MX + c * T + T / 2, MY + r * T + T / 2 + 1) } ctx.restore() }
+  // ---------- feature map: vertical-edge filter [-1 0 1] on each row, absolute value ----------
+  const act = []
+  let mx = 0
+  for (let r = 0; r < 6; r++) { act.push([]); for (let c = 0; c < 6; c++) { let s2 = 0; for (let i = 0; i < 3; i++) s2 += img(r + i, c + 2) - img(r + i, c); act[r].push(Math.abs(s2)); mx = Math.max(mx, Math.abs(s2)) } }
+  for (const row of act) for (let c = 0; c < 6; c++) row[c] /= mx
+  // tray 6x6
+  const FX = 300, FY = 76, B = 28
+  ctx.fillStyle = '#8B6440'; ctx.beginPath(); ctx.roundRect(FX - 10, FY - 10, 6 * B + 20, 6 * B + 20, 8); ctx.fill()
+  ctx.fillStyle = '#6E4E31'; for (let r = 0; r < 6; r++) for (let c = 0; c < 6; c++) { ctx.beginPath(); ctx.arc(FX + c * B + B / 2, FY + r * B + B / 2, 9, 0, Math.PI * 2); ctx.fill() }
+  const bead = (x, y, a, s = 1) => { const g = ctx.createRadialGradient(x - 3, y - 3, 1, x, y, 11 * s); const l = 0.25 + 0.75 * a
+    g.addColorStop(0, `rgba(255,250,230,${l})`); g.addColorStop(0.5, `rgba(${BEAD.join(',')},${0.15 + 0.85 * a})`); g.addColorStop(1, `rgba(120,80,30,${0.4 + 0.4 * a})`)
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 10 * s, 0, Math.PI * 2); ctx.fill()
+    if (a > 0.6) { ctx.fillStyle = `rgba(255,200,90,${0.25 * a})`; ctx.beginPath(); ctx.arc(x, y, 16 * s, 0, Math.PI * 2); ctx.fill() } }
+  const N = 36, scanT0 = 3.6, per = 6.0 / N
+  const cur = Math.floor((t - scanT0) / per)
+  for (let n = 0; n < N; n++) {
+    const r = Math.floor(n / 6), c = n % 6, u = (t - scanT0 - n * per) / per
+    if (u <= 0) continue
+    const x = FX + c * B + B / 2, y = FY + r * B + B / 2
+    if (u < 1) { const sx = MX + (c + 1.5) * T, sy = MY + (r + 1.5) * T, v = sm(u); bead(lerp(sx, x, v), lerp(sy, y, v) - Math.sin(v * Math.PI) * 30, act[r][c], 0.8) }
+    else bead(x, y, act[r][c])
+  }
+  // the brass lens frame over the mosaic
+  if (t > scanT0 - 0.4 && cur < N) {
+    const n = Math.max(0, cur), r = Math.floor(n / 6), c = n % 6
+    const x = MX + c * T, y = MY + r * T
+    ctx.strokeStyle = '#B8862E'; ctx.lineWidth = 5; ctx.strokeRect(x - 2, y - 2, 3 * T + 4, 3 * T + 4)
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) { ctx.strokeStyle = '#D9A94A'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x + (j + 0.5) * T, y + (i + 0.5) * T, 10, 0, Math.PI * 2); ctx.stroke()
+      ctx.fillStyle = j === 0 ? 'rgba(192,57,43,0.25)' : j === 2 ? 'rgba(42,157,143,0.25)' : 'rgba(255,255,255,0.12)'; ctx.fill() }
+    ctx.fillStyle = '#B8862E'; ctx.fillRect(x + 3 * T + 2, y + 1.5 * T - 3, 16, 6)
+  }
+  // ---------- pooling: a 2x2 sieve keeps the brightest bead ----------
+  const PX = 540, PY = 118, PB = 32
+  ctx.fillStyle = '#8B6440'; ctx.beginPath(); ctx.roundRect(PX - 10, PY - 10, 3 * PB + 20, 3 * PB + 20, 8); ctx.fill()
+  ctx.fillStyle = '#6E4E31'; for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) { ctx.beginPath(); ctx.arc(PX + c * PB + PB / 2, PY + r * PB + PB / 2, 11, 0, Math.PI * 2); ctx.fill() }
+  const poolT0 = 9.9, pper = 2.9 / 9
+  for (let b = 0; b < 9; b++) {
+    const br = Math.floor(b / 3), bc = b % 3, u = (t - poolT0 - b * pper) / pper
+    if (u <= 0) continue
+    let best = 0, bi = 0, bj = 0
+    for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) if (act[br * 2 + i][bc * 2 + j] >= best) { best = act[br * 2 + i][bc * 2 + j]; bi = i; bj = j }
+    const sx = FX + (bc * 2 + bj) * B + B / 2, sy = FY + (br * 2 + bi) * B + B / 2, tx = PX + bc * PB + PB / 2, ty = PY + br * PB + PB / 2
+    if (u < 1) {
+      ctx.strokeStyle = '#5E4E42'; ctx.lineWidth = 3; ctx.setLineDash([3, 3]); ctx.strokeRect(FX + bc * 2 * B, FY + br * 2 * B, 2 * B, 2 * B); ctx.setLineDash([])
+      const v = sm(u); bead(lerp(sx, tx, v), lerp(sy, ty, v) - Math.sin(v * Math.PI) * 26, best, 1.05)
+    } else bead(tx, ty, best, 1.1)
+  }
+  // ---------- step 5: stacked glass panes combine features ----------
+  const pane = (x, i, draw) => {
+    const a = sm((t - 13.1 - i * 0.7) / 0.5); if (a <= 0) return
+    ctx.save(); ctx.globalAlpha = a; ctx.translate(x, 380)
+    ctx.fillStyle = 'rgba(200,230,240,0.55)'; ctx.strokeStyle = '#5E7C8A'; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(-55, -45, 110, 90, 8); ctx.fill(); ctx.stroke()
+    ctx.strokeStyle = INK; ctx.lineWidth = 3.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; draw(); ctx.restore()
+    if (i > 0) { ctx.save(); ctx.globalAlpha = a; ctx.strokeStyle = '#B8862E'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x - 85, 380); ctx.lineTo(x - 62, 380); ctx.moveTo(x - 70, 373); ctx.lineTo(x - 62, 380); ctx.lineTo(x - 70, 387); ctx.stroke(); ctx.restore() }
+  }
+  pane(300, 0, () => { for (const x of [-30, -10, 10, 30]) { ctx.beginPath(); ctx.moveTo(x, -25); ctx.lineTo(x, 25); ctx.stroke() } })
+  pane(450, 1, () => { for (const [x, y, sx, sy] of [[-28, -20, 1, 1], [28, -20, -1, 1], [-28, 22, 1, -1], [28, 22, -1, -1]]) { ctx.beginPath(); ctx.moveTo(x + sx * 14, y); ctx.lineTo(x, y); ctx.lineTo(x, y + sy * 14); ctx.stroke() } })
+  pane(600, 2, () => { ctx.fillStyle = 'rgba(233,162,59,0.35)'; ctx.beginPath(); ctx.moveTo(-30, 28); ctx.lineTo(-30, -4); ctx.lineTo(0, -30); ctx.lineTo(30, -4); ctx.lineTo(30, 28); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.strokeRect(-8, 8, 16, 20) })
+  if (t > 15.0) pMark(ctx, 672, 336, 'ok', sm((t - 15.0) / 0.4) * 1.2)
+}
+
 const SCENES = [
   { name: 'plain-rules-vs-learning', fn: renderPlainRulesVsLearningFrame, poster: 12.5 },
   { name: 'plain-decision-tree', fn: renderPlainDecisionTreeFrame, poster: 11.8 },
@@ -865,7 +948,8 @@ const SCENES = [
   { name: 'plain-disparate-impact-audit', fn: renderPlainDisparateImpactAuditFrame, poster: 8.4 },
   { name: 'turing-test', fn: renderTuringTestFrame, poster: 7.6 },
   { name: 'forward-chaining', fn: renderForwardChainingFrame, poster: 11.0 },
-  { name: 'perceptron-learning', fn: renderPerceptronLearningFrame, poster: 5.2, bps: 225_000 }]
+  { name: 'perceptron-learning', fn: renderPerceptronLearningFrame, poster: 5.2, bps: 225_000 },
+  { name: 'convolution-scan', fn: renderConvolutionScanFrame, poster: 8.0 }]
 const STILLS = [2.2, 5.8, 8.6, 12.3, 15.6]
 
 async function main() {

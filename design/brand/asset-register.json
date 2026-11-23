@@ -1051,25 +1051,25 @@
       "id": "clip-convolution-scan-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/convolution-scan.webm",
-          "sha256": "a09140a05c9442b23f263fbf4eacb7ea2dc491973f0531a47d1171af55ba62c3"
+          "sha256": "b0409aa67b42c678cfa9dfe3ddaaf319190878ed3bd610e82db68516e11a4091"
         },
         {
           "path": "videos/convolution-scan.mp4",
-          "sha256": "305bba0c86b826d1f92c0c73a2b9aad235bcaa7963002b248fee4e460593ea6c"
+          "sha256": "545e0bb4fe7a73e395d322eb9229479d18dafef87f762e94ef4debe0c3ed18a7"
         },
         {
           "path": "videos/convolution-scan-poster.jpg",
-          "sha256": "f2d76ef4fcc512af324fefeba4560db79d3e964c92b08e24c1bbedfa56e1e676"
+          "sha256": "0215c9546acd0c2118002e6a5fbf0667bf664929b84d4304d2ad384f73fe9a63"
         }
       ],
-      "purpose": "lesson 4 60fps concept clip: 3x3 convolution sliding filter over 8x8 pixel grid with feature map activation and max pooling",
+      "purpose": "Detailed lesson 4 clip, illustrated: mosaic workshop, lens-frame filter, bead feature map, sieve pooling",
       "sourceMaster": "design/brand/source/videos/convolution-scan.webm",
-      "sourceSha256": "a09140a05c9442b23f263fbf4eacb7ea2dc491973f0531a47d1171af55ba62c3",
+      "sourceSha256": "b0409aa67b42c678cfa9dfe3ddaaf319190878ed3bd610e82db68516e11a4091",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],
