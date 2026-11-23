@@ -466,84 +466,121 @@ function renderPlainTransformerContextFrame(ctx, f, totalFrames, W, H, FPS) {
   }
 }
 
-// Lesson 7: selection rates for two groups, the four-fifths check, dropping a proxy, and the re-check.
+// Lesson 7: a hiring audit in an office lobby. Two queues pass a screening gate; marbles fill two glass jars.
 function renderPlainDisparateImpactAuditFrame(ctx, f, totalFrames, W, H, FPS) {
   const t = f / FPS
-  pBg(ctx, W, H)
-  const GA = C.good, GB = '#7B6CB3'
-  pPanel(ctx, 30, 30, 360, 390); pPanel(ctx, 410, 30, 360, 390)
-  // ---------- left: screening gate with three criteria ----------
-  const fix = sm((t - 10.0) / 0.8)
-  const chips = [
-    { x: 120, icon: 'cap' }, { x: 210, icon: 'pin', proxy: true }, { x: 300, icon: 'case' }]
-  ctx.fillStyle = C.soft; ctx.fillRect(50, 176, 320, 54)
-  for (const c of chips) {
-    const out = c.proxy ? fix : 0
-    if (out >= 1) continue
-    ctx.save(); ctx.globalAlpha = 1 - out; ctx.translate(c.x, 203 - 40 * out)
-    ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = c.proxy && t > 9.9 ? C.bad : C.navy; ctx.lineWidth = 2
-    ctx.beginPath(); ctx.roundRect(-34, -18, 68, 36, 10); ctx.fill(); ctx.stroke()
-    ctx.fillStyle = C.navy
-    if (c.icon === 'cap') { ctx.beginPath(); ctx.moveTo(-16, -2); ctx.lineTo(0, -10); ctx.lineTo(16, -2); ctx.lineTo(0, 6); ctx.closePath(); ctx.fill(); ctx.fillRect(-8, 0, 16, 8) }
-    if (c.icon === 'case') { ctx.beginPath(); ctx.roundRect(-14, -6, 28, 18, 3); ctx.fill(); ctx.strokeStyle = C.navy; ctx.lineWidth = 2; ctx.strokeRect(-6, -11, 12, 5) }
-    if (c.icon === 'pin') { ctx.fillStyle = C.muted; ctx.beginPath(); ctx.arc(0, -4, 8, Math.PI, 0); ctx.lineTo(0, 12); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(0, -4, 3, 0, Math.PI * 2); ctx.fill() }
-    if (c.proxy && t > 9.9) { ctx.strokeStyle = C.bad; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-26, 12); ctx.lineTo(26, -12); ctx.stroke() }
+  const INK = '#2B2F3A', GA = '#2A9D8F', GB = '#7B6CB3', SKIN = ['#C68B59', '#8D5B3A', '#E0B48A']
+  // ---------- lobby ----------
+  ctx.fillStyle = '#EEE7DA'; ctx.fillRect(0, 0, W, H)
+  ctx.fillStyle = '#D8CDBB'; ctx.fillRect(0, 330, W, 120)
+  ctx.fillStyle = 'rgba(255,255,255,0.35)'; for (let x = 0; x < W; x += 80) { ctx.beginPath(); ctx.moveTo(x, 330); ctx.lineTo(x - 60, 450); ctx.lineTo(x - 50, 450); ctx.lineTo(x + 10, 330); ctx.fill() }
+  ctx.fillStyle = '#C9BBA4'; ctx.fillRect(0, 320, W, 10)
+  // plant and window
+  ctx.fillStyle = '#CFE3E8'; ctx.fillRect(40, 40, 120, 90); ctx.strokeStyle = '#9C8A70'; ctx.lineWidth = 5; ctx.strokeRect(40, 40, 120, 90); ctx.beginPath(); ctx.moveTo(100, 40); ctx.lineTo(100, 130); ctx.stroke()
+  // lane floor strips
+  ctx.fillStyle = 'rgba(42,157,143,0.10)'; ctx.fillRect(0, 196, 360, 26); ctx.fillStyle = 'rgba(123,108,179,0.10)'; ctx.fillRect(0, 300, 360, 26)
+  // ---------- the screening gate ----------
+  const GX = 360
+  const open = sm((t - 10.0) / 0.4) * (1 - sm((t - 11.4) / 0.4))
+  ctx.fillStyle = '#5B6772'; ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.roundRect(GX - 22, 140, 44, 200, 8); ctx.fill(); ctx.stroke()
+  // the gate's criteria cogs in a panel on top
+  ctx.fillStyle = '#E9E2D6'; ctx.beginPath(); ctx.roundRect(GX - 70, 64, 140, 66, 10); ctx.fill(); ctx.stroke()
+  const cog = (x, y, kind, a = 1, spin = 0) => {
+    ctx.save(); ctx.globalAlpha = a; ctx.translate(x, y); ctx.save(); ctx.rotate(spin); ctx.fillStyle = '#B8862E'; for (let k = 0; k < 8; k++) { ctx.rotate(Math.PI / 4); ctx.fillRect(-3, -19, 6, 7) } ctx.beginPath(); ctx.arc(0, 0, 14, 0, Math.PI * 2); ctx.fill(); ctx.restore()
+    ctx.fillStyle = INK
+    if (kind === 'cap') { ctx.beginPath(); ctx.moveTo(-9, -1); ctx.lineTo(0, -6); ctx.lineTo(9, -1); ctx.lineTo(0, 4); ctx.closePath(); ctx.fill(); ctx.fillRect(-4, 1, 8, 5) }
+    if (kind === 'case') { ctx.fillRect(-8, -3, 16, 10); ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.strokeRect(-3.5, -6, 7, 3) }
+    if (kind === 'pin') { ctx.fillStyle = '#C0392B'; ctx.beginPath(); ctx.arc(0, -3, 5, Math.PI, 0); ctx.lineTo(0, 7); ctx.closePath(); ctx.fill() }
     ctx.restore()
   }
-  // candidates: ten per group; selected ones rise above the gate
-  const rateA = 0.6, rateB = lerp(0.3, 0.5, sm((t - 11.0) / 1.4))
-  const grow = sm((t - 0.6) / 2.6)
-  const person = (x, y, col, on) => { ctx.save(); ctx.globalAlpha = on ? 1 : 0.35; pPerson(ctx, x, y, 0.55, col); ctx.restore() }
-  for (const [g, col, rate, x0] of [[0, GA, rateA, 62], [1, GB, rateB, 222]]) {
-    const n = Math.round(10 * rate * grow * 10) / 10
-    for (let i = 0; i < 10; i++) {
-      const k = Math.floor(n + 1e-6), sel = i < k, slot = sel ? i : i - k
-      const cx = x0 + (slot % 5) * 26, row = Math.floor(slot / 5)
-      const y = sel ? 100 + row * 34 : 300 + row * 34
-      person(cx + 8, y, col, sel)
+  const spin = t * 1.5
+  cog(GX - 42, 97, 'cap', 1, spin); cog(GX + 42, 97, 'case', 1, -spin)
+  // the pin cog is pulled out in step 4 and dropped in a bin
+  const pull = sm((t - 10.5) / 0.9)
+  const pinX = lerp(GX, 470, pull), pinY = lerp(97, 300, pull) - Math.sin(pull * Math.PI) * 60
+  if (t < 9.9 || pull < 1) { cog(pinX, pinY, 'pin', 1, t < 10.5 ? spin : spin * 3) }
+  if (t > 9.9) { const a = sm((t - 9.9) / 0.4); ctx.save(); ctx.globalAlpha = a * (pull < 1 ? 1 : 0); ctx.strokeStyle = '#C0392B'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(pinX, pinY, 22, 0, Math.PI * 2); ctx.stroke(); ctx.restore() }
+  ctx.fillStyle = '#7C8B96'; ctx.beginPath(); ctx.moveTo(452, 296); ctx.lineTo(488, 296); ctx.lineTo(484, 330); ctx.lineTo(456, 330); ctx.closePath(); ctx.fill()
+  if (open > 0) { ctx.fillStyle = INK; ctx.save(); ctx.translate(GX - 70, 64); ctx.rotate(-1.2 * open); ctx.fillStyle = '#D5CBB8'; ctx.fillRect(0, -6, 140, 6); ctx.restore() }
+  // ---------- candidates walking up to the gate ----------
+  const person = (x, y, col, skin, a = 1, bob = 0) => {
+    ctx.save(); ctx.globalAlpha = a; ctx.translate(x, y + bob)
+    ctx.fillStyle = '#3D4A52'; ctx.fillRect(-7, -4, 5, 22); ctx.fillRect(2, -4, 5, 22)
+    ctx.fillStyle = '#E6E1D8'; ctx.beginPath(); ctx.roundRect(-11, -32, 22, 30, 8); ctx.fill()
+    ctx.fillStyle = col; ctx.fillRect(-11, -30, 22, 7); ctx.fillRect(4, -28, 5, 14)
+    ctx.fillStyle = skin; ctx.beginPath(); ctx.arc(0, -42, 9, 0, Math.PI * 2); ctx.fill()
+    ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(0, -45, 9, Math.PI, 0); ctx.fill()
+    ctx.restore()
+  }
+  // jar levels (selection rates)
+  const fill = sm(t / 3.4)
+  const rateA = 0.6 * fill, rateB = lerp(0.3 * fill, 0.5, sm((t - 11.4) / 1.6))
+  // each candidate: lane, start time, passes?
+  const walkers = []
+  for (let i = 0; i < 14; i++) {
+    for (const [lane, col] of [[0, GA], [1, GB]]) {
+      const t0 = -0.6 + i * 1.15 + lane * 0.5
+      const after = t0 + 1.6 > 11.0
+      const rate = lane === 0 ? 0.6 : after ? 0.5 : 0.3
+      const pass = rnd(i * 3 + lane * 17) < rate
+      walkers.push({ lane, col, t0, pass, skin: SKIN[(i + lane) % 3] })
     }
   }
-  // ---------- right: selection-rate bars and the four-fifths gauge ----------
-  const bars = sm((t - 3.6) / 1.0)
-  const BY = 250, BH = 180
-  const bar = (x, rate, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.roundRect(x, BY - BH * rate * bars, 56, BH * rate * bars, [6, 6, 0, 0]); ctx.fill() }
-  ctx.strokeStyle = C.muted; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(450, BY); ctx.lineTo(620, BY); ctx.stroke()
-  bar(470, rateA, GA); bar(550, rateB, GB)
-  pPerson(ctx, 498, BY + 30, 0.5, GA); pPerson(ctx, 578, BY + 30, 0.5, GB)
-  // step 2: the gap and an audit flag
-  const gap = sm((t - 5.0) / 0.5) * (1 - sm((t - 12.4) / 0.5))
-  if (gap > 0) {
-    ctx.save(); ctx.globalAlpha = gap; ctx.strokeStyle = C.warn; ctx.lineWidth = 2.5
-    const yA = BY - BH * rateA, yB = BY - BH * rateB
-    ctx.beginPath(); ctx.moveTo(612, yA); ctx.lineTo(622, yA); ctx.lineTo(622, yB); ctx.lineTo(612, yB); ctx.stroke()
-    pMark(ctx, 640, (yA + yB) / 2, 'q', 0.9 + 0.08 * Math.sin(t * 6)); ctx.restore()
+  for (const w of walkers) {
+    const u = t - w.t0; if (u < 0) continue
+    const y = w.lane === 0 ? 216 : 320
+    let x = lerp(-20, GX - 34, clamp(u / 1.6)), a = 1, yy = y
+    if (u > 1.6) {
+      const v = clamp((u - 1.6) / 1.0)
+      if (w.pass) { x = lerp(GX - 34, GX + 60, v); a = 1 - sm((v - 0.6) / 0.4) }
+      else { x = GX - 34 - 40 * v; yy = y + (w.lane === 0 ? -50 : 50) * v; a = 1 - v }
+      if (u > 1.6 && u < 2.0) { ctx.fillStyle = w.pass ? GA : '#C0392B'; ctx.beginPath(); ctx.arc(GX, w.lane === 0 ? 170 : 290, 7, 0, Math.PI * 2); ctx.fill() }
+    }
+    if (a > 0.02) person(x, yy, w.col, w.skin, a, u < 1.6 ? Math.abs(Math.sin(u * 9)) * -3 : 0)
+    if (w.pass && u > 2.0 && u < 2.8) { const v = sm((u - 2.0) / 0.8), jx = w.lane === 0 ? 580 : 700
+      const mx2 = lerp(GX + 50, jx, v), my2 = lerp(w.lane === 0 ? 190 : 290, 110, v) - Math.sin(v * Math.PI) * 70
+      ctx.fillStyle = w.col; ctx.beginPath(); ctx.arc(mx2, my2, 6, 0, Math.PI * 2); ctx.fill() }
   }
-  // step 3: dashed four-fifths line over group B
-  const ff = sm((t - 6.6) / 0.6)
-  if (ff > 0) {
-    ctx.save(); ctx.globalAlpha = ff; ctx.strokeStyle = C.ink; ctx.lineWidth = 2; ctx.setLineDash([6, 5])
-    const y = BY - BH * rateA * 0.8; ctx.beginPath(); ctx.moveTo(540, y); ctx.lineTo(616, y); ctx.stroke(); ctx.restore()
-  }
-  // the gauge: ratio B / A against the 0.8 mark
-  const gx = 690, gy = 330, gr = 44, ratio = rateB / rateA
-  if (ff > 0) {
-    ctx.save(); ctx.globalAlpha = ff
-    ctx.lineWidth = 12; ctx.strokeStyle = C.soft; ctx.beginPath(); ctx.arc(gx, gy, gr, Math.PI, 2 * Math.PI); ctx.stroke()
-    ctx.strokeStyle = ratio >= 0.8 ? C.good : C.bad; ctx.beginPath(); ctx.arc(gx, gy, gr, Math.PI, Math.PI + Math.PI * ratio * ff); ctx.stroke()
-    const m = Math.PI + Math.PI * 0.8; ctx.strokeStyle = C.ink; ctx.lineWidth = 3
-    ctx.beginPath(); ctx.moveTo(gx + Math.cos(m) * (gr - 12), gy + Math.sin(m) * (gr - 12)); ctx.lineTo(gx + Math.cos(m) * (gr + 12), gy + Math.sin(m) * (gr + 12)); ctx.stroke()
-    pMark(ctx, gx, gy - 8, ratio >= 0.8 ? 'ok' : 'no', t > 7.4 ? 1 : 0)
+  // ---------- jars on a shelf: marbles show each group's selection rate ----------
+  ctx.fillStyle = '#9C7A54'; ctx.fillRect(520, 300, 250, 12)
+  const jar = (x, rate, col) => {
+    const top = 100, bot = 296, h = bot - top
+    const lvl = bot - h * rate
+    ctx.save(); ctx.beginPath(); ctx.roundRect(x - 38, top, 76, h, [6, 6, 14, 14]); ctx.clip()
+    ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.fillRect(x - 38, top, 76, h)
+    for (let r = 0; r * 12 < h * rate; r++) for (let c = 0; c < 6; c++) { const yy = bot - 6 - r * 12, xx = x - 30 + c * 12 + (r % 2) * 6; if (yy < lvl) continue
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(xx, yy, 5.5, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.beginPath(); ctx.arc(xx - 2, yy - 2, 1.6, 0, Math.PI * 2); ctx.fill() }
     ctx.restore()
+    ctx.strokeStyle = '#7F98A3'; ctx.lineWidth = 3; ctx.beginPath(); ctx.roundRect(x - 38, top, 76, h, [6, 6, 14, 14]); ctx.stroke()
+    ctx.fillStyle = '#9C7A54'; ctx.fillRect(x - 42, top - 10, 84, 10)
+    return lvl
   }
-  // step 5: the audit log is signed off
-  const log = sm((t - 13.6) / 0.5)
-  if (log > 0) {
-    ctx.save(); ctx.globalAlpha = log; ctx.translate(500, 340)
-    ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = C.navy; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(-30, -36, 60, 74, 6); ctx.fill(); ctx.stroke()
-    ctx.fillStyle = C.navy; ctx.fillRect(-12, -42, 24, 10)
-    for (let i = 0; i < 3; i++) { ctx.fillStyle = C.line; ctx.fillRect(-18, -18 + i * 14, 36, 5) }
-    pMark(ctx, 22, 28, 'ok', sm((t - 14.2) / 0.4)); ctx.restore()
+  const lA = jar(580, rateA, GA), lB = jar(700, rateB, GB)
+  // ---------- the auditor ----------
+  const walkIn = sm((t - 3.6) / 1.2)
+  const AX = lerp(820, 640, walkIn), AY = 410
+  ctx.fillStyle = '#3D4A52'; ctx.fillRect(AX - 9, AY - 30, 7, 30); ctx.fillRect(AX + 2, AY - 30, 7, 30)
+  ctx.fillStyle = '#264653'; ctx.beginPath(); ctx.roundRect(AX - 16, AY - 74, 32, 46, 10); ctx.fill()
+  ctx.fillStyle = SKIN[1]; ctx.beginPath(); ctx.arc(AX, AY - 88, 13, 0, Math.PI * 2); ctx.fill()
+  ctx.fillStyle = '#D9D2C3'; ctx.beginPath(); ctx.arc(AX, AY - 92, 13, Math.PI * 1.05, Math.PI * 1.95); ctx.fill()
+  ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.fillRect(AX - 30, AY - 62, 22, 28); ctx.strokeRect(AX - 30, AY - 62, 22, 28)
+  ctx.fillStyle = '#B8862E'; ctx.fillRect(AX - 24, AY - 66, 10, 5)
+  // step 2: the auditor sees the gap
+  const gap = sm((t - 4.8) / 0.4) * (1 - sm((t - 6.8) / 0.4))
+  if (gap > 0) { ctx.save(); ctx.globalAlpha = gap; ctx.strokeStyle = '#E9A23B'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(624, lA); ctx.lineTo(656, lA); ctx.moveTo(640, lA); ctx.lineTo(640, lB); ctx.moveTo(624, lB); ctx.lineTo(656, lB); ctx.stroke(); ctx.restore(); pMark(ctx, AX + 4, AY - 122, 'q', gap) }
+  // step 3: a brass ring at four-fifths of the teal level
+  const ring = sm((t - 6.8) / 0.8)
+  if (ring > 0) {
+    const target = 296 - 196 * 0.6 * 0.8
+    const y = lerp(60, target, ring)
+    ctx.strokeStyle = '#B8862E'; ctx.lineWidth = 5; ctx.beginPath(); ctx.ellipse(700, y, 44, 7, 0, 0, Math.PI * 2); ctx.stroke()
+    ctx.strokeStyle = 'rgba(184,134,46,0.6)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.moveTo(620, y); ctx.lineTo(656, y); ctx.stroke(); ctx.setLineDash([])
+    if (ring >= 1) pMark(ctx, 754, target, lB <= target ? 'ok' : 'no', 1)
   }
+  // step 5: the auditor stamps the log
+  const stamp = t > 14.0 ? sm((t - 14.0) / 0.25) : 0
+  if (stamp > 0) { const bounce = t < 14.4 ? Math.sin((t - 14.0) / 0.4 * Math.PI) * 10 : 0
+    ctx.fillStyle = '#7A3E2B'; ctx.fillRect(AX - 26, AY - 80 - bounce, 14, 12); ctx.fillStyle = 'rgba(42,157,143,0.9)'; ctx.beginPath(); ctx.arc(AX - 19, AY - 48, 7 * stamp, 0, Math.PI * 2); ctx.fill() }
 }
 
 // Detailed lesson 1: the imitation game as a cutaway of three rooms. Notes travel as paper planes.

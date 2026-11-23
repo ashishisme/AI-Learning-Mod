@@ -1644,20 +1644,20 @@
       "releaseFiles": [
         {
           "path": "videos/plain-disparate-impact-audit.webm",
-          "sha256": "f89c9f8fdd1c9755c8be866185661a7512998d2504d38b030761f1f8995d5394"
+          "sha256": "326cde27c46fb7eec2e4b51e12c968b21d3dfb1db9682016d9872e9ab77137d8"
         },
         {
           "path": "videos/plain-disparate-impact-audit.mp4",
-          "sha256": "c8f80aefa21f594423972f7ca9006f2fa30fb81a43e9bcaaf20d61bc7f22fdd9"
+          "sha256": "a6c322e031ac6b7fec38aad4b91cbbd771dae4bf8c54db8292a6861b65c7c7ee"
         },
         {
           "path": "videos/plain-disparate-impact-audit-poster.jpg",
-          "sha256": "13feaf42eac9666c848b02b5008a4610fae81f4b5ec41b88aad6a917ec7b330b"
+          "sha256": "7f21aa74c7df342112dee4c8573f55044fbb02dc4b5a5a9798bb7b90373b8bd5"
         }
       ],
-      "purpose": "Plain English lesson 7 clip, calm adult style: four-fifths audit and proxy removal",
+      "purpose": "Plain English lesson 7 clip, illustrated: lobby queues, marble jars, four-fifths ring, proxy cog removed",
       "sourceMaster": "design/brand/source/videos/plain-disparate-impact-audit.webm",
-      "sourceSha256": "f89c9f8fdd1c9755c8be866185661a7512998d2504d38b030761f1f8995d5394",
+      "sourceSha256": "326cde27c46fb7eec2e4b51e12c968b21d3dfb1db9682016d9872e9ab77137d8",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],
