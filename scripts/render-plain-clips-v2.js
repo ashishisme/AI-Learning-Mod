@@ -1073,6 +1073,103 @@ function renderVectorAttentionFrame(ctx, f, totalFrames, W, H, FPS) {
   }
 }
 
+// Detailed lesson 7: calibration at a fairground. Two strike-the-bell towers, a balance scale, an inspector.
+function renderFairnessCalibrationFrame(ctx, f, totalFrames, W, H, FPS) {
+  const t = f / FPS
+  const INK = '#2B2F3A', GA = '#2A9D8F', GB = '#7B6CB3', GOLD = '#E9B949'
+  // ---------- evening fairground ----------
+  const sky = ctx.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, '#3B3F6B'); sky.addColorStop(0.7, '#E89A6B'); ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H)
+  ctx.fillStyle = '#2E2A45'; for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.moveTo(i * 150 - 20, 330); ctx.lineTo(i * 150 + 40, 270); ctx.lineTo(i * 150 + 100, 330); ctx.fill() }
+  for (let x = 0; x < W; x += 34) { ctx.fillStyle = `rgba(255,220,140,${0.5 + 0.5 * Math.sin(t * 3 + x)})`; ctx.beginPath(); ctx.arc(x + 10, 40 + Math.sin(x / 90) * 10, 3, 0, Math.PI * 2); ctx.fill() }
+  ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1; ctx.beginPath(); for (let x = 0; x < W; x += 6) ctx.lineTo(x + 10, 40 + Math.sin(x / 90) * 10); ctx.stroke()
+  ctx.fillStyle = '#6B5240'; ctx.fillRect(0, 380, W, 70); ctx.fillStyle = '#5A4434'; ctx.fillRect(0, 380, W, 6)
+  // ---------- thresholds (bell heights, 0..1 of the tower) ----------
+  const adj = sm((t - 10.2) / 1.4)
+  const cut = { A: lerp(0.6, 0.64, adj), B: lerp(0.6, 0.42, adj) }
+  const TOP = 90, BOT = 360, Hh = BOT - TOP
+  const yOf = (v) => BOT - Hh * v
+  const tower = (x, col, g) => {
+    ctx.fillStyle = '#F4EBDD'; ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.roundRect(x - 14, TOP - 10, 28, Hh + 10, 6); ctx.fill(); ctx.stroke()
+    for (let i = 1; i < 10; i++) { ctx.strokeStyle = 'rgba(43,47,58,0.35)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x - 14, yOf(i / 10)); ctx.lineTo(x - 6, yOf(i / 10)); ctx.stroke() }
+    ctx.fillStyle = col; ctx.fillRect(x - 3, TOP, 6, Hh)
+    ctx.fillStyle = '#8B6440'; ctx.beginPath(); ctx.roundRect(x - 40, BOT, 80, 22, 4); ctx.fill(); ctx.fillStyle = '#C0504D'; ctx.beginPath(); ctx.ellipse(x, BOT, 22, 6, 0, 0, Math.PI * 2); ctx.fill()
+    // the bell on its clamp
+    const by = yOf(cut[g])
+    ctx.fillStyle = '#5B6772'; ctx.fillRect(x - 20, by - 4, 40, 8)
+    ctx.fillStyle = GOLD; ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x + 20, by - 14); ctx.quadraticCurveTo(x + 22, by - 30, x + 34, by - 30); ctx.quadraticCurveTo(x + 46, by - 30, x + 48, by - 14); ctx.lineTo(x + 50, by - 8); ctx.lineTo(x + 18, by - 8); ctx.closePath(); ctx.fill(); ctx.stroke()
+    return by
+  }
+  const TA = 200, TB = 370
+  // the wrench turns both clamps in step 4
+  const byA = tower(TA, GA, 'A'), byB = tower(TB, GB, 'B')
+  // ---------- applicants strike; pucks rise to their score ----------
+  const person = (x, y, col, swing, mallet = true) => {
+    ctx.fillStyle = '#3D4A52'; ctx.fillRect(x - 7, y - 26, 5, 26); ctx.fillRect(x + 2, y - 26, 5, 26)
+    ctx.fillStyle = col; ctx.beginPath(); ctx.roundRect(x - 11, y - 56, 22, 32, 8); ctx.fill()
+    ctx.fillStyle = '#C68B59'; ctx.beginPath(); ctx.arc(x, y - 66, 9, 0, Math.PI * 2); ctx.fill()
+    if (mallet) { ctx.save(); ctx.translate(x + 6, y - 48); ctx.rotate(-0.3 + 2.0 * swing); ctx.fillStyle = '#8B6440'; ctx.fillRect(-2, -34, 4, 34); ctx.fillStyle = '#5B6772'; ctx.fillRect(-9, -40, 18, 10); ctx.restore() }
+  }
+  const flashes = []
+  for (const [g, x, col, mean, off] of [['A', TA, GA, 0.66, 0], ['B', TB, GB, 0.47, 0.35]]) {
+    const period = 1.1
+    const n = Math.floor((t - 0.6 - off) / period)
+    const ph = ((t - 0.6 - off) % period + period) % period
+    person(x - 52, 380, col, t < 0.6 + off ? 0 : sm(ph / 0.15) * (1 - sm((ph - 0.5) / 0.3)))
+    // queue behind
+    for (let q = 1; q < 3; q++) { ctx.save(); ctx.globalAlpha = 0.85; person(x - 52 - q * 30, 380, col, 0, false); ctx.restore() }
+    if (n >= 0 && t > 0.6 + off) {
+      const score = clamp(mean + (rnd(n * 7 + (g === 'A' ? 1 : 99)) - 0.5) * 0.55, 0.05, 0.98)
+      const launched = 0.6 + off + n * period
+      const c = cut[g]
+      const u = (t - launched - 0.12) / 0.55
+      if (u > 0 && u < 1.6) {
+        const v = u < 1 ? Math.sin(u * Math.PI / 2) : 1 - (u - 1) / 0.6
+        const top = Math.min(score, score >= c ? c : score)
+        const py = yOf(top * clamp(v))
+        ctx.fillStyle = col; ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(x - 11, py - 7, 22, 14, 4); ctx.fill(); ctx.stroke()
+        if (score >= c && u > 0.95 && u < 1.4) flashes.push([x + 34, yOf(c) - 20, 1 - (u - 0.95) / 0.45])
+      }
+    }
+  }
+  for (const [x, y, a] of flashes) { ctx.strokeStyle = `rgba(255,236,150,${a})`; ctx.lineWidth = 3; for (let k = 0; k < 8; k++) { const ang = k * Math.PI / 4; ctx.beginPath(); ctx.moveTo(x + Math.cos(ang) * 20, y + Math.sin(ang) * 20); ctx.lineTo(x + Math.cos(ang) * 34, y + Math.sin(ang) * 34); ctx.stroke() } }
+  // step 4: a wrench on each clamp
+  const wr = sm((t - 9.9) / 0.4) * (1 - sm((t - 11.8) / 0.4))
+  if (wr > 0) for (const [x, by] of [[TA, byA], [TB, byB]]) { ctx.save(); ctx.globalAlpha = wr; ctx.translate(x - 26, by); ctx.rotate(Math.sin(t * 8) * 0.3); ctx.fillStyle = '#9AA8B4'; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.fillRect(-36, -3, 30, 6); ctx.strokeRect(-36, -3, 30, 6); ctx.beginPath(); ctx.arc(-4, 0, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.restore() }
+  // ---------- balance scale with the ratio plaque ----------
+  const ratio = t < 12.0 ? 0.44 : lerp(0.44, 0.92, sm((t - 12.0) / 1.4))
+  const shown = sm((t - 6.6) / 0.6)
+  const tilt = 0.32 * (1 - ratio) * sm((t - 3.6) / 1.2)
+  const SX = 620, SY = 150
+  ctx.fillStyle = '#B8862E'; ctx.fillRect(SX - 5, SY, 10, 210); ctx.fillRect(SX - 40, 356, 80, 10)
+  ctx.save(); ctx.translate(SX, SY); ctx.rotate(-tilt)
+  ctx.fillStyle = '#B8862E'; ctx.fillRect(-110, -5, 220, 10)
+  for (const [side, col, rate] of [[-1, GA, 1], [1, GB, ratio]]) {
+    ctx.save(); ctx.translate(side * 100, 0); ctx.rotate(tilt)
+    ctx.strokeStyle = '#8D6420'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-26, 70); ctx.moveTo(0, 0); ctx.lineTo(26, 70); ctx.stroke()
+    ctx.fillStyle = '#C99A3C'; ctx.beginPath(); ctx.ellipse(0, 72, 34, 8, 0, 0, Math.PI * 2); ctx.fill()
+    const n = Math.round(7 * rate * sm((t - 2.0) / 1.5))
+    for (let i = 0; i < n; i++) { ctx.fillStyle = col; ctx.strokeStyle = INK; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.roundRect(-11 + (i % 2) * 4 - 2, 56 - i * 9, 22, 8, 3); ctx.fill(); ctx.stroke() }
+    ctx.restore()
+  }
+  ctx.restore()
+  if (shown > 0) {
+    ctx.save(); ctx.globalAlpha = shown; ctx.fillStyle = '#F4EBDD'; ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(SX - 46, 270, 92, 44, 8); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = ratio >= 0.8 ? '#1E7B70' : '#B03A2E'; ctx.font = '700 24px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(ratio.toFixed(2), SX, 293)
+    ctx.restore()
+    pMark(ctx, SX + 62, 292, ratio >= 0.8 ? 'ok' : 'no', 1)
+  }
+  // ---------- step 5: the inspector watches and signs off ----------
+  const insp = sm((t - 12.8) / 1.0)
+  if (insp > 0) {
+    const x = lerp(830, 740, insp)
+    ctx.fillStyle = '#3D4A52'; ctx.fillRect(x - 8, 352, 7, 28); ctx.fillRect(x + 2, 352, 7, 28)
+    ctx.fillStyle = '#264653'; ctx.beginPath(); ctx.roundRect(x - 15, 308, 30, 46, 10); ctx.fill()
+    ctx.fillStyle = '#8D5B3A'; ctx.beginPath(); ctx.arc(x, 296, 12, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#D9D2C3'; ctx.beginPath(); ctx.arc(x, 292, 12, Math.PI * 1.05, Math.PI * 1.95); ctx.fill()
+    ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.fillRect(x - 32, 318, 20, 26); ctx.strokeRect(x - 32, 318, 20, 26)
+    if (t > 14.6) { ctx.fillStyle = 'rgba(42,157,143,0.9)'; ctx.beginPath(); ctx.arc(x - 22, 331, 6 * sm((t - 14.6) / 0.25), 0, Math.PI * 2); ctx.fill() }
+  }
+}
+
 const SCENES = [
   { name: 'plain-rules-vs-learning', fn: renderPlainRulesVsLearningFrame, poster: 12.5 },
   { name: 'plain-decision-tree', fn: renderPlainDecisionTreeFrame, poster: 11.8 },
@@ -1084,7 +1181,8 @@ const SCENES = [
   { name: 'forward-chaining', fn: renderForwardChainingFrame, poster: 11.0 },
   { name: 'perceptron-learning', fn: renderPerceptronLearningFrame, poster: 5.2, bps: 225_000 },
   { name: 'convolution-scan', fn: renderConvolutionScanFrame, poster: 8.0 },
-  { name: 'vector-attention', fn: renderVectorAttentionFrame, poster: 6.4 }]
+  { name: 'vector-attention', fn: renderVectorAttentionFrame, poster: 6.4 },
+  { name: 'fairness-calibration', fn: renderFairnessCalibrationFrame, poster: 7.4 }]
 const STILLS = [2.2, 5.8, 8.6, 12.3, 15.6]
 
 async function main() {

@@ -1135,25 +1135,25 @@
       "id": "clip-fairness-calibration-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/fairness-calibration.webm",
-          "sha256": "1ef6428cef17f0ed7084fcd54c55d74807f90e2f350f12755f5e7fb87450b132"
+          "sha256": "a93584eb6463f274d199d22dd4dc13cc7f6e2584bce86a34ede0d411dc173345"
         },
         {
           "path": "videos/fairness-calibration.mp4",
-          "sha256": "c106b3db6c3a41a118d13e7ad4851241d9199cf9e1e2c91ec61426d477dff04a"
+          "sha256": "73aaaec4e1a6d96dc102993457eb8dcb4ddce19635f71ba3ce2f7ab20352621b"
         },
         {
           "path": "videos/fairness-calibration-poster.jpg",
-          "sha256": "93e5d766491630597085e6ce71f6a3347744d0c19fd7f12b2a0a51f4ea5f921d"
+          "sha256": "932af33e6a03f9a65da0c6bc50a9f830e4c394edd56e97b2f188171f94728f6a"
         }
       ],
-      "purpose": "lesson 7 60fps concept clip: disparate impact balance scale and group-calibrated decision threshold recalibration",
+      "purpose": "Detailed lesson 7 clip, illustrated: fairground bell towers, balance scale, calibrated thresholds, inspector",
       "sourceMaster": "design/brand/source/videos/fairness-calibration.webm",
-      "sourceSha256": "1ef6428cef17f0ed7084fcd54c55d74807f90e2f350f12755f5e7fb87450b132",
+      "sourceSha256": "a93584eb6463f274d199d22dd4dc13cc7f6e2584bce86a34ede0d411dc173345",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],
