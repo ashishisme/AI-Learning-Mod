@@ -1,0 +1,9 @@
+{
+  "language": "te",
+  "note": "Chosen 2026-11-23 (SPEC-018, owner approved the same defaults): the same Chirp3-HD voices as hi, kn, ta and en, so each persona sounds the same in every language. Chirp3-HD voices accept no pitch other than 0.",
+  "personas": {
+    "chip": { "voice": "te-IN-Chirp3-HD-Kore", "speakingRate": 1.0, "pitch": 0 },
+    "nova": { "voice": "te-IN-Chirp3-HD-Aoede", "speakingRate": 1.0, "pitch": 0 },
+    "alan": { "voice": "te-IN-Chirp3-HD-Charon", "speakingRate": 1.0, "pitch": 0 }
+  }
+}

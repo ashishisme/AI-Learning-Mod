@@ -1,0 +1,185 @@
+{
+  "language": "te",
+  "entries": [
+    {
+      "path": "public-content/lang/te/lessons/1-intro.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "4c91a8229dd3d99276b671e35d4687790e2994dc2c1e68e7b309912dc8e2d766",
+      "translationHash": "fb3f4d6eaa9e719f099030eff91af372d3307ae14cf270a5ee638f4cceb34fed",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/1-intro.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "e327d9c0f0b333366fd2c9f571ea32622ea28d582e4a253b372e09a2a65ceaef",
+      "translationHash": "27e85c3cbbd956f7ca54925c36ca5d5bcd1b2784a8e98dd5dbf3ecf1acfbd2ac",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/1-intro.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "bebaefe54a965bc266463460078676cf3e3899a9f9eacb41be2559254d78647d",
+      "translationHash": "92ee8aec2002fffcf06600e92173050f30746ec486bff2a1483ad796ed38dbaf",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/2-symbolic.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "280e69e4fb6af1b5f3807518f7306e6063fc2b8cc3e915b2a99d3aff90fd7b74",
+      "translationHash": "82daafe25bc2961b6a7a333f068ef162f1033d06627e19077e679f167b1b84dd",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/2-symbolic.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "7599f181d20d01a740ad4f39ade98dbf6a5d4fcfa79de7b33a3d2fe9914214f1",
+      "translationHash": "80b27605347ed92adc049f7f68bfbba0c2a7ae2904c8e624ef86e8fcd24855e7",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/2-symbolic.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "8404f1235b540582c733a3fd42f6bbb8ecc1f3d439685664f755ae05ef88ade0",
+      "translationHash": "85b41b374253db1f268b7b988152bd4a315febbf0502159db42110e339c0cf1a",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/3-neuralnetworks.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "0fd2274511ab9b9d87cf22936799d4db5f4983d281bb5dac4016f42630f71905",
+      "translationHash": "adab8943ee59ee22c2b83a8f6c7b90e223dbae4a0ebe4aa3dc2533cb2401c4a3",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/3-neuralnetworks.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "181bb861eb922e7b99482f4dd02cdce9eacdaaf9275166adbaf3febefdcb3bd0",
+      "translationHash": "6ac30a838cbb4b2d29dde4820b6cf4479228897bf8d3a533c9cbb45eaa5e25d6",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/3-neuralnetworks.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "f30cf007fa1e3a4d256d9d6898a57ce2409cb17fce50a6d432c6ea28cdf2627b",
+      "translationHash": "fa83ff74911599c372cb72e8e78f954bb9c1fc5e577ce4977098c13dd5d360f6",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/4-computervision.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "d7e4df62d6fe878038134328f92d6c928e03daca07e2180288dbe109af70ba34",
+      "translationHash": "41dbb32316c1e5f2e5ac659ee4e3748adcb2ab5582d183bc44213b3ca71459c9",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/4-computervision.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "15dd339564cb809edddcaa7247e594831879eb4a6ea7988d951f4729c855b188",
+      "translationHash": "832148c8e7f3b559edfb0be4528382193d85ca1b1a54d700fd8666b969bc77ae",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/4-computervision.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "335aaa258747b9e1c6c40272bffaf9560573bc55c76f65373f751f934ed32309",
+      "translationHash": "251c07066ac5233814fc9f00eea46286c4ba616a7a307efd7fe8a4f103594129",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/5-nlp.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "fc02a1506ab25f4e05bd753ab4b8ec10d22ad34fbc28defea09ff3d021d4f904",
+      "translationHash": "4186c1cb42a271b0d1237084a468d720209b3d929a491a898b7a4f0fd3beb7f2",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/5-nlp.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "71276555704963c283c779c3de08e2b4e59ad7fb77aa137afd54d89610ea62b6",
+      "translationHash": "b532b87620cdde1ed868b82dfa740a829ae17b895df2758e7d9fd684c3c2b29c",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/5-nlp.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "988311538ffb8da36c8ba6a96386fba9edcd7ae7459c3e47d46c880eed5a0d3c",
+      "translationHash": "ac6b60825e192ac569dc340937c72cf0fad2a18ebeef1e258de1703196c7e308",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/7-ethics.detailed.json",
+      "kind": "adaptive",
+      "sourceHash": "805d22feaeaaa19c0c018aba92eaabb2beb374fb9038b916b6b2206242f2881e",
+      "translationHash": "13e4f95d1e8db9b344a1bba2daf252995d73648da543f29292a9a4879ec68cae",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/7-ethics.junior.json",
+      "kind": "adaptive",
+      "sourceHash": "080d81892fa41ab8f7fe5b914cdc2390e53a0e2fbf32c971492ae1110e87a7dd",
+      "translationHash": "7d9e4cf39b8b06b04c73e5960ca38e87536e454b628e623da120d2912131db4b",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "public-content/lang/te/lessons/7-ethics.plain-english.json",
+      "kind": "adaptive",
+      "sourceHash": "3c6d7d4b635a2e3b687594e65bf76a2b162354f30ff87ffa8b6b1d1eded4d818",
+      "translationHash": "912fb6522ddd5dfea322cd2756ea8c5d23a4ebc1c9b10f5728c4b5505011ccc6",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "web/src/data/quizzes/te.json",
+      "kind": "quiz",
+      "sourceHash": "0e7e43243c91363b91dfdec6f603ceeb993d2a17395a44c5d24f7e303c8aeffa",
+      "translationHash": "a0d09c7d3c945120e7a9241606ba22f0fc49ed10f923cef3cc4f6df72121ca69",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    },
+    {
+      "path": "web/src/i18n/te.json",
+      "kind": "ui",
+      "sourceHash": "8e0f34632aa11d29e14be0883b29df14d385b0750f13c9db29845a0e4e16ff96",
+      "translationHash": "542aac95d4c80bf9c33c1f11f924307cb6e6207f5c810e6ebe178a0888df03e4",
+      "status": "approved",
+      "reviewer": "owner (beta)",
+      "date": "2026-11-23"
+    }
+  ]
+}
