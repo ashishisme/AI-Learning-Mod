@@ -1387,25 +1387,25 @@
       "id": "clip-chip-playground-scale-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/chip-playground-scale.webm",
-          "sha256": "84e6e29aa2c27d369963441aa7e351f134da0c616cdc348ea52a6ab65ad8efad"
+          "sha256": "7285b47c2214876a4de661a3b0a6e845e324168c9b5cc0c1c6db266c3f2f5511"
         },
         {
           "path": "videos/chip-playground-scale.mp4",
-          "sha256": "b90ebe983fcca1f7321f175515676924c5a3f84979ded12175b67ebf06f80228"
+          "sha256": "463f49bae0aece8b45aabdca383eda6cbbdb92f30413284683e1c8b96b11d4de"
         },
         {
           "path": "videos/chip-playground-scale-poster.jpg",
-          "sha256": "9ae344d3d0352e137a387a786f65706927bcf72e50ac98871e9673a66e116899"
+          "sha256": "f86ace7f4dc1b698b2ad89da2fc5a3aa21d2d78b6eae0068c858180dac20288e"
         }
       ],
-      "purpose": "kids lesson 7 60fps concept clip: playground see-saw balance scale with chip calibrating fair turns for all teams",
+      "purpose": "kids lesson 7 60fps concept clip: a gate lets only the blue team onto the swings and the scale tips; Chip fixes the gate, the orange team gets a turn, the scale levels",
       "sourceMaster": "design/brand/source/videos/chip-playground-scale.webm",
-      "sourceSha256": "84e6e29aa2c27d369963441aa7e351f134da0c616cdc348ea52a6ab65ad8efad",
+      "sourceSha256": "7285b47c2214876a4de661a3b0a6e845e324168c9b5cc0c1c6db266c3f2f5511",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],

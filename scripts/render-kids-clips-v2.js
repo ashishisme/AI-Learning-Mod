@@ -803,9 +803,118 @@ function renderChipWordBlocksFrame(ctx, f, totalFrames, W, H, FPS, easeOutBack) 
   }
   if (t >= 13.6) { kBubble(ctx, 118, 140, easeOutBack(clamp((t - 13.6) / 0.35)), () => puppy(0, 2, 1.2)); kConfetti(ctx, t - 13.6, W, H) }
 }
+// Lesson 7 Kids: a gate lets only one team onto the swings, the scale tips, Chip fixes the gate, the scale levels.
+// Cues 0, 3.5, 6.5, 9.8, 13.0.
+function renderChipPlaygroundScaleFrame(ctx, f, totalFrames, W, H, FPS, easeOutBack) {
+  const t = f / FPS
+  const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v))
+  const INK = '#1F2937'
+  const lerp = (a, b, u) => a + (b - a) * u
+  const TEAM = { blue: { shirt: '#1E88E5', lane: 300, pass: 3.9 }, orange: { shirt: '#FB8C00', lane: 372, pass: 10.3 } }
+  const GATE_X = 372
+  const SEAT = (i) => ({ x: 505 + i * 50, y: 268 })
+
+  const kid = (x, y, shirt, mood, s = 1, sitting = false) => {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.strokeStyle = INK; ctx.lineWidth = 2.2; ctx.lineCap = 'round'
+    if (!sitting) { ctx.beginPath(); ctx.moveTo(-5, -14); ctx.lineTo(-6, 0); ctx.moveTo(5, -14); ctx.lineTo(6, 0); ctx.lineWidth = 4; ctx.stroke() }
+    else { ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(-5, -12); ctx.lineTo(4, -8); ctx.lineTo(4, 4); ctx.moveTo(5, -12); ctx.lineTo(12, -8); ctx.lineTo(12, 4); ctx.stroke() }
+    ctx.lineWidth = 2.2; ctx.fillStyle = shirt; ctx.beginPath(); ctx.roundRect(-11, -36, 22, 24, 7); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = '#F2C29B'; ctx.beginPath(); ctx.arc(0, -47, 11, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = '#4E342E'; ctx.beginPath(); ctx.arc(0, -50, 11, Math.PI * 1.05, Math.PI * 1.95); ctx.closePath(); ctx.fill()
+    ctx.fillStyle = INK; for (const d of [-1, 1]) { ctx.beginPath(); ctx.arc(d * 4, -47, 1.5, 0, Math.PI * 2); ctx.fill() }
+    ctx.lineWidth = 2; ctx.beginPath(); if (mood === 'sad') ctx.arc(0, -38, 4, Math.PI + 0.3, -0.3); else ctx.arc(0, -43, 4, 0.3, Math.PI - 0.3); ctx.stroke()
+    ctx.restore()
+  }
+
+  // ---------- park ----------
+  const sky = ctx.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, '#8FD3F4'); sky.addColorStop(0.7, '#D8F1FB')
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H)
+  ctx.fillStyle = '#9CCC65'; ctx.beginPath(); ctx.ellipse(620, 300, 360, 90, 0, Math.PI, 0); ctx.fill()
+  ctx.fillStyle = '#7CB342'; ctx.fillRect(0, 280, W, H - 280)
+  ctx.fillStyle = '#D7CCC8'; for (const y of [TEAM.blue.lane - 6, TEAM.orange.lane - 6]) { ctx.beginPath(); ctx.roundRect(140, y, 220, 14, 7); ctx.fill() } // lanes
+
+  // ---------- counts: one ball per kid who went through ----------
+  const passT = (team, i) => (team === 'blue' ? TEAM.blue.pass + i * 0.6 : TEAM.orange.pass + i * 0.6)
+  const count = (team) => [0, 1, 2].reduce((n, i) => n + kSmooth((t - passT(team, i) - 0.5) / 0.3), 0)
+  const nb = count('blue'), no = count('orange')
+
+  // ---------- the balance scale ----------
+  const S = { x: 250, y: 70 }
+  const ang = clamp((no - nb) * 0.11, -0.33, 0.33) // more blue: the blue (left) side goes down
+  ctx.fillStyle = '#78909C'; ctx.strokeStyle = INK; ctx.lineWidth = 2.5
+  ctx.beginPath(); ctx.moveTo(S.x - 6, S.y); ctx.lineTo(S.x + 6, S.y); ctx.lineTo(S.x + 14, S.y + 120); ctx.lineTo(S.x - 14, S.y + 120); ctx.closePath(); ctx.fill(); ctx.stroke()
+  ctx.save(); ctx.translate(S.x, S.y); ctx.rotate(ang)
+  ctx.fillStyle = '#FFB300'; ctx.beginPath(); ctx.roundRect(-110, -6, 220, 12, 6); ctx.fill(); ctx.stroke(); ctx.restore()
+  for (const [team, d] of [['blue', -1], ['orange', 1]]) {
+    const ex = S.x + Math.cos(ang) * 104 * d, ey = S.y + Math.sin(ang) * 104 * d
+    ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(ex - 30, ey + 44); ctx.moveTo(ex, ey); ctx.lineTo(ex + 30, ey + 44); ctx.stroke()
+    ctx.fillStyle = '#ECEFF1'; ctx.beginPath(); ctx.ellipse(ex, ey + 46, 38, 9, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+    const n = team === 'blue' ? nb : no
+    for (let i = 0; i < 3; i++) { const a = clamp(n - i); if (a <= 0) continue; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = TEAM[team].shirt; ctx.beginPath(); ctx.arc(ex - 18 + i * 18, ey + 34 - (1 - a) * 20, 9, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.restore() }
+  }
+  ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(S.x, S.y, 6, 0, Math.PI * 2); ctx.fill()
+  const tipped = Math.abs(ang) > 0.15
+  if (t > 6.6 && t < 13) kBadge(ctx, S.x, S.y - 34, false, easeOutBack(clamp((t - 6.6) / 0.35)) * (1 - kSmooth((t - 12.6) / 0.3)))
+  if (t > 13.4) kBadge(ctx, S.x, S.y - 34, true, easeOutBack(clamp((t - 13.4) / 0.35)))
+
+  // ---------- swings ----------
+  ctx.strokeStyle = '#6D4C41'; ctx.lineWidth = 8; ctx.lineCap = 'round'
+  ctx.beginPath(); ctx.moveTo(480, 150); ctx.lineTo(790, 150); ctx.moveTo(490, 150); ctx.lineTo(465, 300); ctx.moveTo(780, 150); ctx.lineTo(800, 300); ctx.stroke()
+  const seated = {}
+  for (const team of ['blue', 'orange']) for (let i = 0; i < 3; i++) if (t >= passT(team, i) + 0.9) seated[team === 'blue' ? i * 2 : i * 2 + 1] = team
+  for (let i = 0; i < 6; i++) {
+    const sw = Math.sin(t * 3 + i) * (seated[i] ? 0.28 : 0.06)
+    const top = { x: SEAT(i).x, y: 150 }, L = 112
+    const sx = top.x + Math.sin(sw) * L, sy = top.y + Math.cos(sw) * L
+    ctx.strokeStyle = '#455A64'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(top.x - 10, top.y); ctx.lineTo(sx - 10, sy); ctx.moveTo(top.x + 10, top.y); ctx.lineTo(sx + 10, sy); ctx.stroke()
+    if (seated[i]) kid(sx, sy - 2, TEAM[seated[i]].shirt, 'happy', 0.9, true)
+    ctx.fillStyle = '#8D6E63'; ctx.strokeStyle = INK; ctx.beginPath(); ctx.roundRect(sx - 14, sy - 3, 28, 7, 3); ctx.fill(); ctx.stroke()
+  }
+
+  // ---------- the gate ----------
+  const fixed = kSmooth((t - 10.0) / 0.4) // Chip's fix: the orange barrier works too
+  const open = { blue: t > 3.6 && t < 6.2 ? 1 : t > 3.4 && t < 6.6 ? kSmooth((t - 3.4) / 0.2) * (1 - kSmooth((t - 6.2) / 0.4)) : 0, orange: t > 10.1 && t < 12.2 ? 1 : t > 9.9 && t < 12.6 ? kSmooth((t - 9.9) / 0.2) * (1 - kSmooth((t - 12.2) / 0.4)) : 0 }
+  ctx.fillStyle = '#607D8B'; ctx.strokeStyle = INK; ctx.lineWidth = 2.5
+  ctx.beginPath(); ctx.roundRect(GATE_X - 9, 230, 18, 160, 4); ctx.fill(); ctx.stroke()
+  ctx.beginPath(); ctx.roundRect(GATE_X - 22, 214, 44, 30, 6); ctx.fill(); ctx.stroke() // control box
+  for (const team of ['blue', 'orange']) {
+    const y = TEAM[team].lane - 34, a = -open[team] * Math.PI / 2
+    ctx.save(); ctx.translate(GATE_X, y); ctx.rotate(a); ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = INK; ctx.beginPath(); ctx.roundRect(0, -5, 104, 10, 4); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = '#E53935'; for (const x of [14, 50, 86]) ctx.fillRect(x, -5, 14, 10); ctx.restore()
+    const green = open[team] > 0.5
+    const flash = team === 'orange' && t > 6.6 && t < 9.9 && Math.floor(t * 4) % 2 === 0
+    ctx.fillStyle = green ? '#22C55E' : flash ? '#FCA5A5' : '#DC2626'; ctx.strokeStyle = INK
+    ctx.beginPath(); ctx.arc(GATE_X - 20, y, 8, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+  }
+  if (t > 9.8 && t < 10.9) { // the fix: a spinning gear on the control box
+    ctx.save(); ctx.translate(GATE_X, 229); ctx.rotate(t * 6); ctx.fillStyle = '#FFD54F'; ctx.strokeStyle = INK; ctx.lineWidth = 2
+    ctx.beginPath(); for (let k = 0; k < 16; k++) { const r = k % 2 ? 9 : 14; ctx.lineTo(Math.cos(k * Math.PI / 8) * r, Math.sin(k * Math.PI / 8) * r) } ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore()
+  }
+
+  // ---------- the two teams ----------
+  for (const team of ['blue', 'orange']) for (let i = 0; i < 3; i++) {
+    const lane = TEAM[team].lane, qx = 320 - i * 52
+    const arrive = kSmooth((t - 0.2 - i * 0.35 - (team === 'orange' ? 0.2 : 0)) / 1.4)
+    const p0 = passT(team, i), seatI = team === 'blue' ? i * 2 : i * 2 + 1
+    if (t >= p0 + 0.9) continue // on a swing now
+    let x = lerp(-40 - i * 40, qx, arrive), y = lane
+    if (t >= p0) { const u = kSmooth((t - p0) / 0.9); x = lerp(qx, SEAT(seatI).x, u); y = lerp(lane, SEAT(seatI).y + 20, u) - Math.sin(u * Math.PI) * 30 }
+    const waiting = team === 'orange' && t > 4.5 && t < 10.3
+    const bob = arrive < 1 ? Math.abs(Math.sin(t * 10)) * 3 : 0
+    kid(x, y - bob, TEAM[team].shirt, waiting ? 'sad' : 'happy')
+  }
+
+  // ---------- Chip ----------
+  const pose = t >= 13.4 ? 'cheer' : t > 6.5 && t < 11 ? 'point' : 'wave'
+  drawChipAvatar(ctx, 70, 200, 1.0, pose, t)
+  if (t > 6.6 && t < 9.8) kBubble(ctx, 95, 100, easeOutBack(clamp((t - 6.6) / 0.35)), () => { ctx.fillStyle = '#DC2626'; ctx.fillRect(-3, -14, 6, 17); ctx.beginPath(); ctx.arc(0, 10, 3.5, 0, Math.PI * 2); ctx.fill() })
+  if (t > 9.8 && t < 11) { ctx.strokeStyle = '#38BDF8'; ctx.lineWidth = 3; ctx.setLineDash([6, 6]); ctx.lineDashOffset = -t * 40; ctx.beginPath(); ctx.moveTo(108, 200); ctx.quadraticCurveTo(250, 170, GATE_X - 24, 229); ctx.stroke(); ctx.setLineDash([]) }
+  if (t >= 13.4) kConfetti(ctx, t - 13.4, W, H)
+}
 
 const HELPERS = [kSmooth, kBadge, kConfetti, kRoom, kBubble].map(String).join('\n')
 const SCENES = [
+  { name: 'chip-playground-scale', fn: renderChipPlaygroundScaleFrame, poster: 5.6 },
   { name: 'chip-word-blocks', fn: renderChipWordBlocksFrame, poster: 6.2, bps: 235_000 },
   { name: 'chip-magnifying-glass', fn: renderChipMagnifyingGlassFrame, poster: 5.0 },
   { name: 'chip-rule-robot', fn: renderChipRuleRobotFrame, poster: 8.2 },
