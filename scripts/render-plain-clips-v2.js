@@ -783,6 +783,79 @@ function renderForwardChainingFrame(ctx, f, totalFrames, W, H, FPS) {
   if (t > 12.4) pMark(ctx, 572, 136, 'ok', sm((t - 12.4) / 0.4))
 }
 
+// Detailed lesson 3: a perceptron at a market stall. A bamboo divider on a checked cloth, a brass scale for weights.
+function renderPerceptronLearningFrame(ctx, f, totalFrames, W, H, FPS) {
+  const t = f / FPS
+  const INK = '#2B2F3A'
+  // ---------- stall ----------
+  ctx.fillStyle = '#E9DCC6'; ctx.fillRect(0, 0, W, H)
+  ctx.fillStyle = '#8B5E3C'; ctx.fillRect(196, 60, 10, H); ctx.fillRect(0, 300, 200, 12)
+  // cloth with checks
+  ctx.fillStyle = '#FBF6EC'; ctx.fillRect(210, 84, 580, 350)
+  ctx.fillStyle = 'rgba(70,130,180,0.12)'; for (let x = 210; x < 790; x += 40) ctx.fillRect(x, 84, 20, 350); for (let y = 84; y < 434; y += 40) ctx.fillRect(210, y, 580, 20)
+  ctx.strokeStyle = '#D7C8AE'; ctx.lineWidth = 2; ctx.strokeRect(210, 84, 580, 350)
+  // awning
+  for (let i = 0; i < 12; i++) { ctx.fillStyle = i % 2 ? '#F7EBD8' : '#C8553D'; ctx.fillRect(i * 68, 0, 68, 52); ctx.beginPath(); ctx.arc(i * 68 + 34, 52, 34, 0, Math.PI); ctx.fill() }
+  // ---------- line states (pivot, angle), apple side = cross < 0 ----------
+  const S = [[490, 280, 0], [490, 250, 0.5], [490, 208, -0.42]]
+  const k1 = sm((t - 8.0) / 1.0), k2 = sm((t - 11.7) / 1.0)
+  const st = k2 > 0 ? S[1].map((v, i) => lerp(v, S[2][i], k2)) : S[0].map((v, i) => lerp(v, S[1][i], k1))
+  const cr = (x, y) => Math.cos(st[2]) * (y - st[1]) - Math.sin(st[2]) * (x - st[0])
+  // ---------- fruit ----------
+  const apples = [[584, 129], [367, 147], [481, 133], [442, 177], [423, 127], [521, 162], [305, 115], [380, 240]]
+  const lemons = [[483, 393], [253, 355], [395, 382], [504, 338], [599, 388], [308, 325], [381, 308], [420, 255]]
+  const apple = (x, y, r) => { ctx.fillStyle = '#D64535'; ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x, y - r * 0.7); ctx.bezierCurveTo(x + r * 0.9, y - r * 1.25, x + r * 1.35, y + r * 0.2, x, y + r); ctx.bezierCurveTo(x - r * 1.35, y + r * 0.2, x - r * 0.9, y - r * 1.25, x, y - r * 0.7); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = '#5E9E3A'; ctx.beginPath(); ctx.ellipse(x + r * 0.35, y - r * 1.0, r * 0.32, r * 0.14, -0.5, 0, Math.PI * 2); ctx.fill() }
+  const lemon = (x, y, r) => { ctx.fillStyle = '#F2CF3C'; ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x - r * 1.25, y); ctx.quadraticCurveTo(x - r, y - r * 0.95, x, y - r * 0.85); ctx.quadraticCurveTo(x + r, y - r * 0.95, x + r * 1.25, y); ctx.quadraticCurveTo(x + r, y + r * 0.95, x, y + r * 0.85); ctx.quadraticCurveTo(x - r, y + r * 0.95, x - r * 1.25, y); ctx.fill(); ctx.stroke() }
+  const drop = (i) => sm((t - 0.1 - i * 0.07) / 0.35)
+  const all = [...apples.map((p, i) => ({ p, a: true, i })), ...lemons.map((p, i) => ({ p, a: false, i: i + 8 }))]
+  const wrongL = t > 3.6 && t < 9.0, wrongA = t > 9.9 && t < 12.7
+  for (const o of all) {
+    const d = drop(o.i); if (d <= 0) continue
+    let [x, y] = o.p; y -= (1 - d) * 40
+    const star = (o.a && o.i === 7 && wrongA) || (!o.a && o.i === 15 && wrongL)
+    if (star) { x += Math.sin(t * 22) * 2.5; ctx.strokeStyle = '#C0392B'; ctx.lineWidth = 3; ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.arc(x, y, 26, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]) }
+    ctx.globalAlpha = d; (o.a ? apple : lemon)(x, y, 14); ctx.globalAlpha = 1
+    if (star) pMark(ctx, x + 22, y - 22, 'no', 0.9)
+  }
+  // ---------- bamboo divider, laid by a hand at the start ----------
+  const place = sm((t - 0.6) / 1.0)
+  ctx.save(); ctx.beginPath(); ctx.rect(210, 84, 580, 350); ctx.clip()
+  ctx.translate(st[0], st[1] - (1 - place) * 200); ctx.rotate(st[2])
+  ctx.fillStyle = '#C9A55C'; ctx.strokeStyle = '#7A5C24'; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(-340, -5, 680, 10, 5); ctx.fill(); ctx.stroke()
+  for (let x = -320; x < 340; x += 70) { ctx.strokeStyle = '#8D6E2F'; ctx.beginPath(); ctx.moveTo(x, -5); ctx.lineTo(x, 5); ctx.stroke() }
+  ctx.restore()
+  ctx.fillStyle = '#7A5C24'; ctx.beginPath(); ctx.arc(st[0], st[1] - (1 - place) * 200, 7, 0, Math.PI * 2); ctx.fill()
+  if (place < 1 || t < 2.0) { const a = 1 - sm((t - 1.6) / 0.4); ctx.save(); ctx.globalAlpha = a; ctx.strokeStyle = '#B07A52'; ctx.lineWidth = 16; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(560, -20); ctx.lineTo(560, st[1] - (1 - place) * 200 - 12); ctx.stroke(); ctx.restore() }
+  // ---------- brass scale on the shelf: two pans hold the two weights ----------
+  const wA = 3 - (t > 7.4 ? 1 : 0), wB = 2 + (t > 11.1 ? 1 : 0)
+  const beam = clamp((wB - wA) * 0.12 + (t > 7.4 && t < 7.9 ? 0.04 * Math.sin((t - 7.4) * 30) : 0), -0.3, 0.3)
+  ctx.save(); ctx.translate(100, 160)
+  ctx.fillStyle = '#B8862E'; ctx.fillRect(-4, 0, 8, 140); ctx.fillRect(-30, 136, 60, 8)
+  ctx.rotate(beam); ctx.fillRect(-80, -4, 160, 8)
+  for (const [side, n, ic] of [[-1, wA, 'red'], [1, wB, 'round']]) {
+    const px = side * 74
+    ctx.save(); ctx.translate(px, 0); ctx.rotate(-beam)
+    ctx.strokeStyle = '#8D6420'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-22, 60); ctx.moveTo(0, 0); ctx.lineTo(22, 60); ctx.stroke()
+    ctx.fillStyle = '#C99A3C'; ctx.beginPath(); ctx.ellipse(0, 62, 28, 7, 0, 0, Math.PI * 2); ctx.fill()
+    for (let i = 0; i < n; i++) { ctx.fillStyle = '#6D6F78'; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect(-11, 44 - i * 14, 22, 13, 3); ctx.fill(); ctx.stroke() }
+    // feature tag under the pan: redness or roundness
+    if (ic === 'red') { ctx.fillStyle = '#D64535'; ctx.beginPath(); ctx.moveTo(0, 74); ctx.quadraticCurveTo(10, 88, 0, 92); ctx.quadraticCurveTo(-10, 88, 0, 74); ctx.fill() }
+    else { ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(0, 84, 8, 0, Math.PI * 2); ctx.stroke() }
+    ctx.restore()
+  }
+  ctx.restore()
+  // weight leaving (step 3) and arriving (step 4)
+  const flyW = (t0, from, to) => { const u = sm((t - t0) / 0.7); if (u <= 0 || u >= 1) return; const x = lerp(from[0], to[0], u), y = lerp(from[1], to[1], u) - Math.sin(u * Math.PI) * 40; ctx.fillStyle = '#6D6F78'; ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect(x - 11, y - 6, 22, 13, 3); ctx.fill(); ctx.stroke() }
+  flyW(7.4, [26, 175], [20, 330]); flyW(10.4, [20, 330], [174, 190])
+  // error tokens fly from the wrong fruit to the scale
+  const token = (t0, from, txt, col) => { const u = sm((t - t0) / 0.8); if (u <= 0 || u >= 1) return; const x = lerp(from[0], 100, u), y = lerp(from[1], 150, u) - Math.sin(u * Math.PI) * 60
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, 18, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#FFFFFF'; ctx.font = '700 16px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x, y + 1) }
+  token(6.6, [420, 255], '−1', '#C0392B'); token(9.9, [380, 240], '+1', '#2A9D8F')
+  // ---------- step 5: every fruit is on its own side ----------
+  if (t > 13.1) all.forEach((o, i) => { const ok = (cr(o.p[0], o.p[1]) < 0) === o.a; pMark(ctx, o.p[0] + 16, o.p[1] - 16, ok ? 'ok' : 'no', 0.7 * sm((t - 13.1 - i * 0.08) / 0.3)) })
+}
+
 const SCENES = [
   { name: 'plain-rules-vs-learning', fn: renderPlainRulesVsLearningFrame, poster: 12.5 },
   { name: 'plain-decision-tree', fn: renderPlainDecisionTreeFrame, poster: 11.8 },
@@ -791,7 +864,8 @@ const SCENES = [
   { name: 'plain-transformer-context', fn: renderPlainTransformerContextFrame, poster: 12.4 },
   { name: 'plain-disparate-impact-audit', fn: renderPlainDisparateImpactAuditFrame, poster: 8.4 },
   { name: 'turing-test', fn: renderTuringTestFrame, poster: 7.6 },
-  { name: 'forward-chaining', fn: renderForwardChainingFrame, poster: 11.0 }]
+  { name: 'forward-chaining', fn: renderForwardChainingFrame, poster: 11.0 },
+  { name: 'perceptron-learning', fn: renderPerceptronLearningFrame, poster: 5.2, bps: 225_000 }]
 const STILLS = [2.2, 5.8, 8.6, 12.3, 15.6]
 
 async function main() {

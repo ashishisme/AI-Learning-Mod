@@ -925,25 +925,25 @@
       "id": "clip-perceptron-learning-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/perceptron-learning.webm",
-          "sha256": "e8fbbf59d76e37a9eb6935603d47ea2375c9114345a2a030a0a0a51c08806615"
+          "sha256": "30bddfa6289c5217cf3afbf6df7a1d77830d3fa69f7ffa87cea1e06b7cc937a7"
         },
         {
           "path": "videos/perceptron-learning.mp4",
-          "sha256": "10df1ae919bb77e4ee86a948ebf326b9f5c5a1281ca15c1f88fc4afccffa0f31"
+          "sha256": "75c4b6861610e0d83a4d04057b68ddfd217607c2b4a550d71c6ecff493c28c0e"
         },
         {
           "path": "videos/perceptron-learning-poster.jpg",
-          "sha256": "df8e73e0bc1cbf93aec903f00ea61749847feb625ce01e45cb36c47e106d69ee"
+          "sha256": "1bf9fcd3ffda8c5088d5666e40be5abe939e18921d948f422f888b2dd061c8d1"
         }
       ],
-      "purpose": "lesson 3 60fps fluid concept clip: dividing line rotates and tilts with shaded half-spaces as perceptron weights learn",
+      "purpose": "Detailed lesson 3 clip, illustrated: market-stall perceptron with a bamboo divider and brass weight scale",
       "sourceMaster": "design/brand/source/videos/perceptron-learning.webm",
-      "sourceSha256": "e8fbbf59d76e37a9eb6935603d47ea2375c9114345a2a030a0a0a51c08806615",
+      "sourceSha256": "30bddfa6289c5217cf3afbf6df7a1d77830d3fa69f7ffa87cea1e06b7cc937a7",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],
