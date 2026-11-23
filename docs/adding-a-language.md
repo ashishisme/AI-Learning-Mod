@@ -112,4 +112,12 @@ gcloud storage rsync --recursive public-content/audio gs://<narration bucket>/au
 - **The upload.** After recording, the owner runs the rsync. Then check the upload: `gcloud storage cat …/audio/<code>/manifest.json | shasum -a 256` must equal the local manifest's hash.
 - **Order of release.** Switch the language to `approved` only after the upload is checked, then run the gates, tag the release, and have the owner approve promote.
 
+## What Marathi and Telugu added (SPEC-018, 2026-11)
+
+- **Register.** After the Hindi आप fix, the owner chose the polite "you" in every journey, Kids included (तुम्ही, మీరు). Write this into the drafting brief before any drafting starts.
+- **Align names with the interface.** Widget and screen names in lessons must match the interface strings (`web/src/i18n/<code>.json`) word for word. Check this before recording; a fix afterwards means re-recording those tracks.
+- **Personal-details rules.** Telugu needed its number words, month names and a "my" pattern (నా, మా) in `internal/feedback/check.go`, and its script added to the digit-token pattern. Write apps without ZWNJ so both spellings match.
+- **Recording.** Telugu took 831 recordings; 54 failed on the rate limit and a rerun recorded them.
+- These were the last beta languages. Hindi, Kannada, Tamil, Marathi and Telugu are all live as beta.
+
 - **Fixing wording after launch:** follow [fixing-a-translation.md](fixing-a-translation.md) for learner reports.

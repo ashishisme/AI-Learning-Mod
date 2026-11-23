@@ -93,4 +93,4 @@ The state for any agent continuing this work. Commands run from the repo root. N
 - [X] T017–T024 The same as T009–T016, for `te`, with the same full gates in T024. First ask the owner the Telugu register and the font download (T004). Done 2026-11-23: voices Kore/Aoede/Charon, 831 recordings, 20 files approved as owner (beta), names aligned with the interface (పదాల నక్షత్ర మండలాలు, ఒకే న్యూరాన్ పండ్ల వర్గీకరణ యంత్రం), switched on as beta; gates green (Playwright 307 passed, 2 skipped). Release pending the owner's upload.
 
 ## Phase 4: Close
-- [ ] T025 Update `docs/adding-a-language.md`. Set the AC rows to PASS, close SPEC-018, and update memory: these are the last beta languages.
+- [X] T025 Update `docs/adding-a-language.md`. Set the AC rows to PASS, close SPEC-018, and update memory: these are the last beta languages.
