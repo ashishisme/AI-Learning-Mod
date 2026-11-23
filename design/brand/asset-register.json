@@ -1303,25 +1303,25 @@
       "id": "clip-chip-magnifying-glass-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/chip-magnifying-glass.webm",
-          "sha256": "2241d3d53c100b53f392884534533e236119843e859cfcb6ef7724efd61d482d"
+          "sha256": "f43b0f0acde03fc4ba1547e0d2a16bd3307b69a555f39ba0cbf03720f806be78"
         },
         {
           "path": "videos/chip-magnifying-glass.mp4",
-          "sha256": "bb89c7fd3e370885e324e7d3b8c765433b22de88730818bb945f165412f4aced"
+          "sha256": "ded02831c7f8ac0abd1e77b82740a01da6b1eb64314b282010b8460762799add"
         },
         {
           "path": "videos/chip-magnifying-glass-poster.jpg",
-          "sha256": "2d60819afc71eaa7eaf6fa6a021177404c94ec6db1dcdb8cabb239a7f73fbdf5"
+          "sha256": "724c299cd01df9536e9adaee7bd9aa1de6d4e81b54781d8384ed2df5c083cfd9"
         }
       ],
-      "purpose": "kids lesson 4 60fps concept clip: chip sliding magic magnifying lens over cat photo highlighting ears and whiskers",
+      "purpose": "kids lesson 4 60fps concept clip: a magic glass over a pixel-grid cat photo finds ears and whiskers, the shapes join into a cat face, 99% meter",
       "sourceMaster": "design/brand/source/videos/chip-magnifying-glass.webm",
-      "sourceSha256": "2241d3d53c100b53f392884534533e236119843e859cfcb6ef7724efd61d482d",
+      "sourceSha256": "f43b0f0acde03fc4ba1547e0d2a16bd3307b69a555f39ba0cbf03720f806be78",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],

@@ -529,9 +529,132 @@ function renderChipRuleRobotFrame(ctx, f, totalFrames, W, H, FPS, easeOutBack) {
   if (wonder) kBubble(ctx, 118, 150, easeOutBack(clamp(((t > 9 ? t - 10 : t - 3.7)) / 0.35)), () => { ctx.fillStyle = '#F59E0B'; ctx.font = '800 32px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', 0, 2) })
   if (t > 14.6) { kBubble(ctx, 118, 150, easeOutBack(clamp((t - 14.6) / 0.35)), () => icon.duck(0, 2, 1.1)); kConfetti(ctx, t - 14.6, W, H) }
 }
+// Lesson 4 Kids: Chip's magnifying glass finds ears and whiskers, then the shapes make a cat. Cues 0, 3.5, 6.5, 9.8, 13.0.
+function renderChipMagnifyingGlassFrame(ctx, f, totalFrames, W, H, FPS, easeOutBack) {
+  const t = f / FPS
+  const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v))
+  const INK = '#1F2937', GREEN = '#22C55E'
+  const lerp = (a, b, u) => a + (b - a) * u
+  const PH = { x: 215, y: 58, w: 270, h: 222 } // the photo on the board
+  const C = { x: 350, y: 178 } // cat face centre
+
+  const drawCat = (cx, cy, s, earsA, whiskA) => {
+    ctx.save(); ctx.translate(cx, cy); ctx.scale(s, s); ctx.lineJoin = 'round'
+    ctx.fillStyle = '#FFB74D'; ctx.strokeStyle = INK; ctx.lineWidth = 3
+    for (const d of [-1, 1]) { ctx.beginPath(); ctx.moveTo(d * 62, -18); ctx.lineTo(d * 52, -88); ctx.lineTo(d * 14, -58); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#F8BBD0'; ctx.beginPath(); ctx.moveTo(d * 52, -30); ctx.lineTo(d * 48, -74); ctx.lineTo(d * 26, -55); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#FFB74D' }
+    ctx.beginPath(); ctx.ellipse(0, 0, 72, 62, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = '#F57C00'; for (const sx of [-18, 0, 18]) { ctx.beginPath(); ctx.ellipse(sx, -50, 4, 9, 0, 0, Math.PI * 2); ctx.fill() }
+    for (const d of [-1, 1]) { ctx.fillStyle = '#AED581'; ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.ellipse(d * 26, -10, 12, 14, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = INK; ctx.beginPath(); ctx.ellipse(d * 26, -10, 4, 11, 0, 0, Math.PI * 2); ctx.fill() }
+    ctx.fillStyle = '#EC407A'; ctx.beginPath(); ctx.moveTo(-8, 10); ctx.lineTo(8, 10); ctx.lineTo(0, 19); ctx.closePath(); ctx.fill()
+    ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(0, 19); ctx.quadraticCurveTo(-8, 30, -16, 24); ctx.moveTo(0, 19); ctx.quadraticCurveTo(8, 30, 16, 24); ctx.stroke()
+    ctx.lineCap = 'round'
+    for (const d of [-1, 1]) for (const k of [-1, 0, 1]) { ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(d * 22, 18 + k * 7); ctx.lineTo(d * 78, 12 + k * 14); ctx.stroke() }
+    // green highlights
+    if (earsA > 0) { ctx.save(); ctx.globalAlpha = earsA; ctx.strokeStyle = GREEN; ctx.lineWidth = 7; ctx.shadowColor = GREEN; ctx.shadowBlur = 14; for (const d of [-1, 1]) { ctx.beginPath(); ctx.moveTo(d * 62, -18); ctx.lineTo(d * 52, -88); ctx.lineTo(d * 14, -58); ctx.closePath(); ctx.stroke() } ctx.restore() }
+    if (whiskA > 0) { ctx.save(); ctx.globalAlpha = whiskA; ctx.strokeStyle = GREEN; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.shadowColor = GREEN; ctx.shadowBlur = 12; for (const d of [-1, 1]) for (const k of [-1, 0, 1]) { ctx.beginPath(); ctx.moveTo(d * 22, 18 + k * 7); ctx.lineTo(d * 78, 12 + k * 14); ctx.stroke() } ctx.restore() }
+    ctx.restore()
+  }
+  const earsA = kSmooth((t - 6.8) / 0.4), whiskA = kSmooth((t - 8.4) / 0.4)
+  const photoContent = (grid) => {
+    ctx.fillStyle = '#B3E5FC'; ctx.fillRect(PH.x, PH.y, PH.w, PH.h)
+    ctx.fillStyle = '#81D4FA'; ctx.fillRect(PH.x, PH.y + PH.h - 40, PH.w, 40)
+    drawCat(C.x, C.y, 0.95, earsA, whiskA)
+    if (grid) { ctx.strokeStyle = 'rgba(31,41,55,0.18)'; ctx.lineWidth = 1; ctx.beginPath(); for (let x = PH.x; x <= PH.x + PH.w; x += 9) { ctx.moveTo(x, PH.y); ctx.lineTo(x, PH.y + PH.h) } for (let y = PH.y; y <= PH.y + PH.h; y += 9) { ctx.moveTo(PH.x, y); ctx.lineTo(PH.x + PH.w, y) } ctx.stroke() }
+  }
+
+  kRoom(ctx, W, H)
+  // easel and board
+  ctx.strokeStyle = '#6D4C41'; ctx.lineWidth = 9; ctx.lineCap = 'round'
+  ctx.beginPath(); ctx.moveTo(250, 300); ctx.lineTo(225, 395); ctx.moveTo(450, 300); ctx.lineTo(475, 395); ctx.stroke()
+  ctx.fillStyle = '#8D6E63'; ctx.strokeStyle = INK; ctx.lineWidth = 3
+  ctx.beginPath(); ctx.roundRect(PH.x - 16, PH.y - 16, PH.w + 32, PH.h + 32, 10); ctx.fill(); ctx.stroke()
+  const pop = easeOutBack(clamp((t - 0.2) / 0.5))
+  ctx.save(); ctx.translate(PH.x + PH.w / 2, PH.y + PH.h / 2); ctx.scale(pop, pop); ctx.translate(-(PH.x + PH.w / 2), -(PH.y + PH.h / 2))
+  ctx.save(); ctx.beginPath(); ctx.rect(PH.x, PH.y, PH.w, PH.h); ctx.clip(); photoContent(true); ctx.restore()
+  ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.strokeRect(PH.x, PH.y, PH.w, PH.h)
+  ctx.restore()
+
+  // ---------- the magic glass ----------
+  const KEYS = [[3.5, 150, 330], [4.1, 260, 240], [4.9, 300, 120], [5.7, 420, 210], [6.6, 305, 118], [7.9, 305, 118], [8.4, 288, 196], [9.6, 288, 196], [10.3, 150, 330]]
+  let gx = null, gy = null
+  if (t >= KEYS[0][0] && t <= KEYS[KEYS.length - 1][0]) {
+    for (let i = 0; i < KEYS.length - 1; i++) { const [t0, x0, y0] = KEYS[i], [t1, x1, y1] = KEYS[i + 1]; if (t >= t0 && t <= t1) { const u = kSmooth((t - t0) / (t1 - t0)); gx = lerp(x0, x1, u); gy = lerp(y0, y1, u) } }
+  }
+  const lensA = t < 3.9 ? kSmooth((t - 3.5) / 0.4) : t > 9.9 ? 1 - kSmooth((t - 9.9) / 0.4) : 1
+  if (gx !== null && lensA > 0) {
+    const R = 54
+    ctx.save(); ctx.globalAlpha = lensA
+    ctx.strokeStyle = '#5D4037'; ctx.lineWidth = 14; ctx.lineCap = 'round'
+    ctx.beginPath(); ctx.moveTo(gx - R * 0.72, gy + R * 0.72); ctx.lineTo(gx - R * 1.55, gy + R * 1.55); ctx.stroke()
+    ctx.save(); ctx.beginPath(); ctx.arc(gx, gy, R, 0, Math.PI * 2); ctx.clip()
+    ctx.fillStyle = '#FFFFFF'; ctx.fillRect(gx - R, gy - R, R * 2, R * 2)
+    ctx.translate(gx, gy); ctx.scale(2, 2); ctx.translate(-gx, -gy)
+    ctx.beginPath(); ctx.rect(PH.x, PH.y, PH.w, PH.h); ctx.clip(); photoContent(true)
+    ctx.restore()
+    ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.beginPath(); ctx.ellipse(gx - 18, gy - 22, 18, 9, -0.6, 0, Math.PI * 2); ctx.fill()
+    ctx.strokeStyle = '#FFB300'; ctx.lineWidth = 9; ctx.beginPath(); ctx.arc(gx, gy, R, 0, Math.PI * 2); ctx.stroke()
+    ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(gx, gy, R + 5, 0, Math.PI * 2); ctx.stroke()
+    // sparkles: it's a magic glass
+    for (let i = 0; i < 4; i++) { const a = t * 2 + i * Math.PI / 2; const sx = gx + Math.cos(a) * (R + 16), sy = gy + Math.sin(a) * (R + 16); ctx.fillStyle = '#FFD54F'; ctx.beginPath(); for (let k = 0; k < 8; k++) { const rr = k % 2 ? 2.5 : 7; ctx.lineTo(sx + Math.cos(k * Math.PI / 4) * rr, sy + Math.sin(k * Math.PI / 4) * rr) } ctx.closePath(); ctx.fill() }
+    ctx.restore()
+  }
+
+  // ---------- the shapes Chip found, and the cat they make ----------
+  const P = { x: 548, y: 58, w: 226, h: 222 }
+  if (t >= 6.9) {
+    const a = kSmooth((t - 6.9) / 0.4)
+    ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = INK; ctx.lineWidth = 3
+    ctx.beginPath(); ctx.roundRect(P.x, P.y, P.w, P.h, 16); ctx.fill(); ctx.stroke(); ctx.restore()
+    const mid = { x: P.x + P.w / 2, y: P.y + 120 }
+    const join = kSmooth((t - 10.2) / 1.3) // S4: the found shapes move into place
+    const earS = easeOutBack(clamp((t - 7.1) / 0.4)), whS = easeOutBack(clamp((t - 8.7) / 0.4))
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round'
+    // ears: start side by side at the top, end on the head
+    for (const d of [-1, 1]) {
+      if (earS <= 0) continue
+      const x = lerp(mid.x + d * 50, mid.x + d * 38, join), y = lerp(P.y + 60, mid.y - 36, join)
+      ctx.save(); ctx.translate(x, y); ctx.scale(earS * 0.55, earS * 0.55)
+      ctx.fillStyle = '#DCFCE7'; ctx.strokeStyle = GREEN; ctx.lineWidth = 7
+      ctx.beginPath(); ctx.moveTo(d * 24, 30); ctx.lineTo(d * 14, -40); ctx.lineTo(d * -24, -10); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore()
+    }
+    // whiskers
+    if (whS > 0) for (const d of [-1, 1]) {
+      const ox = lerp(mid.x + d * 54, mid.x + d * 14, join), oy = lerp(P.y + 160, mid.y + 12, join)
+      ctx.save(); ctx.translate(ox, oy); ctx.scale(whS, whS); ctx.strokeStyle = GREEN; ctx.lineWidth = 5
+      for (const k of [-1, 0, 1]) { ctx.beginPath(); ctx.moveTo(0, k * 6); ctx.lineTo(d * 42, k * 12 - 4); ctx.stroke() }
+      ctx.restore()
+    }
+    // the head outline, eyes and nose draw in as the shapes join
+    if (join > 0) {
+      ctx.strokeStyle = INK; ctx.lineWidth = 4
+      ctx.beginPath(); ctx.ellipse(mid.x, mid.y, 58, 48, 0, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * join); ctx.stroke()
+      const e = kSmooth((t - 11.4) / 0.4)
+      if (e > 0) { ctx.fillStyle = INK; ctx.globalAlpha = e; for (const d of [-1, 1]) { ctx.beginPath(); ctx.ellipse(mid.x + d * 20, mid.y - 8, 5, 9, 0, 0, Math.PI * 2); ctx.fill() } ctx.fillStyle = '#EC407A'; ctx.beginPath(); ctx.moveTo(mid.x - 7, mid.y + 6); ctx.lineTo(mid.x + 7, mid.y + 6); ctx.lineTo(mid.x, mid.y + 14); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1 }
+    }
+  }
+
+  // ---------- step 5: the screen says cat, 99% sure ----------
+  if (t >= 13) {
+    const u = kSmooth((t - 13.1) / 1.1)
+    const M = { x: P.x + 18, y: 318, w: P.w - 36, h: 30 }
+    ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = INK; ctx.lineWidth = 3
+    ctx.beginPath(); ctx.roundRect(P.x, 300, P.w, 66, 14); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = '#E5E7EB'; ctx.beginPath(); ctx.roundRect(M.x, M.y, M.w - 64, M.h, 8); ctx.fill()
+    ctx.fillStyle = GREEN; ctx.beginPath(); ctx.roundRect(M.x, M.y, (M.w - 64) * 0.99 * u, M.h, 8); ctx.fill()
+    ctx.fillStyle = INK; ctx.font = '800 22px system-ui, sans-serif'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'
+    ctx.fillText(Math.round(99 * u) + '%', P.x + P.w - 14, M.y + M.h / 2 + 1)
+    kBadge(ctx, P.x + P.w - 6, P.y + 6, true, easeOutBack(clamp((t - 14.3) / 0.35)))
+  }
+
+  // ---------- Chip ----------
+  const pose = t >= 14.3 ? 'cheer' : t >= 3.5 && t < 9.8 ? 'point' : 'wave'
+  drawChipAvatar(ctx, 90, 285, 1.15, pose, t)
+  if (t >= 14.3) { kBubble(ctx, 118, 165, easeOutBack(clamp((t - 14.3) / 0.35)), () => drawCat(0, 8, 0.24, 0, 0)); kConfetti(ctx, t - 14.3, W, H) }
+}
 
 const HELPERS = [kSmooth, kBadge, kConfetti, kRoom, kBubble].map(String).join('\n')
 const SCENES = [
+  { name: 'chip-magnifying-glass', fn: renderChipMagnifyingGlassFrame, poster: 5.0 },
   { name: 'chip-rule-robot', fn: renderChipRuleRobotFrame, poster: 8.2 },
   { name: 'chip-dog-learning', fn: renderChipDogLearningFrame, poster: 5.4 },
   { name: 'chip-fruit-sorter', fn: renderChipFruitSorterFrame, poster: 1.75 }]
