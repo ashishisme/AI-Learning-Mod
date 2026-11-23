@@ -1429,25 +1429,25 @@
       "id": "clip-plain-rules-vs-learning-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/plain-rules-vs-learning.webm",
-          "sha256": "6c8d7946d362a0e68b6baa2264f656e2460ea326bee3952bb5cc59ba4a12fb37"
+          "sha256": "e7cc5bd142ccc35f8bc2ab8d8f38282a7f42665004afc35b836c7176c289853b"
         },
         {
           "path": "videos/plain-rules-vs-learning.mp4",
-          "sha256": "a623ef72d9ee514d5cbe4219e9c15011bf8252fd5cbfb19a93a53d58c74ff737"
+          "sha256": "2a2ae16fe140497ba01f6745bac4d8cabea09763284452b633499307b75ae21b"
         },
         {
           "path": "videos/plain-rules-vs-learning-poster.jpg",
-          "sha256": "3fea2c3ef557fffa6e9321bdb8866da756ab630d9709f82a4b3534086f12a67b"
+          "sha256": "cc20b5ed9cf14b4f06ff506519ed6d51cb7e19a87bceec73657d43e06be6443f"
         }
       ],
-      "purpose": "plain english lesson 1 60fps concept clip: explicit rule checklist vs learning from patterns data pipeline",
+      "purpose": "Plain English lesson 1 clip, calm adult style: rules vs learning from records",
       "sourceMaster": "design/brand/source/videos/plain-rules-vs-learning.webm",
-      "sourceSha256": "6c8d7946d362a0e68b6baa2264f656e2460ea326bee3952bb5cc59ba4a12fb37",
+      "sourceSha256": "e7cc5bd142ccc35f8bc2ab8d8f38282a7f42665004afc35b836c7176c289853b",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],
