@@ -1261,25 +1261,25 @@
       "id": "clip-chip-fruit-sorter-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/chip-fruit-sorter.webm",
-          "sha256": "d4239814d0acaee30869c9b015400b4995196fb7fd8839431d85edd70504a636"
+          "sha256": "93c67388a903c119debbea02e251a69bf56a20c11e03195f1972d3b55ff41f01"
         },
         {
           "path": "videos/chip-fruit-sorter.mp4",
-          "sha256": "1b6d5e0186c4a7af5ba84a7b5ca992a1fc75b36e0a817e3ab5978e58703969ec"
+          "sha256": "6635c0e30cd49144d6dba6acd3100dbd86d81ae5e1c77bd087a3e8d16659f716"
         },
         {
           "path": "videos/chip-fruit-sorter-poster.jpg",
-          "sha256": "179c2b9b06c0745dc3f07ecaa79515890f02b391e91f1384014fbc9b48a9e365"
+          "sha256": "726d563fe859872233914710e353dfb1dbad18581ac7f08bb605f642376cd0b8"
         }
       ],
-      "purpose": "kids lesson 3 60fps concept clip: conveyor belt apple and lemon sorting with tilting wooden ramp",
+      "purpose": "kids lesson 3 60fps concept clip: hopper, belt and tilting ramp sort apples and lemons into crates; Chip turns a weight dial after each mistake",
       "sourceMaster": "design/brand/source/videos/chip-fruit-sorter.webm",
-      "sourceSha256": "d4239814d0acaee30869c9b015400b4995196fb7fd8839431d85edd70504a636",
+      "sourceSha256": "93c67388a903c119debbea02e251a69bf56a20c11e03195f1972d3b55ff41f01",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],
