@@ -976,6 +976,103 @@ function renderConvolutionScanFrame(ctx, f, totalFrames, W, H, FPS) {
   if (t > 15.0) pMark(ctx, 672, 336, 'ok', sm((t - 15.0) / 0.4) * 1.2)
 }
 
+// Detailed lesson 5: words as stars on a sky chart; vector arithmetic; a lantern sentence with attention light.
+function renderVectorAttentionFrame(ctx, f, totalFrames, W, H, FPS) {
+  const t = f / FPS
+  const GOLD = '#F2C14E', NIGHT = '#16213A'
+  const sky = ctx.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, '#0E1628'); sky.addColorStop(1, '#2B3A5C')
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H)
+  for (let i = 0; i < 90; i++) { const tw = 0.5 + 0.5 * Math.sin(t * 2 + i); ctx.fillStyle = `rgba(255,255,255,${0.25 + 0.5 * tw * rnd(i + 3)})`; ctx.fillRect(rnd(i) * W, rnd(i + 50) * 300, 1.6, 1.6) }
+  // star-chart grid
+  const grid = sm(t / 1.2)
+  ctx.strokeStyle = `rgba(160,190,230,${0.12 * grid})`; ctx.lineWidth = 1
+  for (let x = 140; x < 700; x += 60) { ctx.beginPath(); ctx.moveTo(x, 20); ctx.lineTo(x, 290); ctx.stroke() }
+  for (let y = 30; y < 300; y += 60) { ctx.beginPath(); ctx.moveTo(140, y); ctx.lineTo(680, y); ctx.stroke() }
+  // ---------- icons ----------
+  const head = (x, y, col, hair) => { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y - 4, 5.5, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.roundRect(x - 8, y + 2, 16, 9, [6, 6, 2, 2]); ctx.fill()
+    if (hair) { ctx.fillRect(x - 6.5, y - 6, 3, 10); ctx.fillRect(x + 3.5, y - 6, 3, 10) } }
+  const crown = (x, y, s = 1) => { ctx.fillStyle = GOLD; ctx.beginPath(); ctx.moveTo(x - 9 * s, y + 4 * s); ctx.lineTo(x - 9 * s, y - 5 * s); ctx.lineTo(x - 4.5 * s, y); ctx.lineTo(x, y - 7 * s); ctx.lineTo(x + 4.5 * s, y); ctx.lineTo(x + 9 * s, y - 5 * s); ctx.lineTo(x + 9 * s, y + 4 * s); ctx.closePath(); ctx.fill() }
+  const ICON = {
+    man: (x, y) => head(x, y + 1, '#1F2A44', false),
+    woman: (x, y) => head(x, y + 1, '#1F2A44', true),
+    king: (x, y) => { head(x, y + 4, '#1F2A44', false); crown(x, y - 8, 0.7) },
+    queen: (x, y) => { head(x, y + 4, '#1F2A44', true); crown(x, y - 8, 0.7) },
+    dog: (x, y) => { ctx.fillStyle = '#6B4226'; ctx.beginPath(); ctx.ellipse(x, y + 1, 9, 8, 0, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.ellipse(x - 8, y - 2, 3.5, 7, 0.4, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.ellipse(x + 8, y - 2, 3.5, 7, -0.4, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#1F2A44'; ctx.beginPath(); ctx.arc(x, y + 4, 2.2, 0, Math.PI * 2); ctx.fill() },
+    bone: (x, y) => { ctx.fillStyle = '#A88B62'; ctx.fillRect(x - 7, y - 2.5, 14, 5); for (const dx of [-8, 8]) for (const dy of [-3, 3]) { ctx.beginPath(); ctx.arc(x + dx, y + dy, 3.4, 0, Math.PI * 2); ctx.fill() } },
+    gift: (x, y) => { ctx.fillStyle = '#C0504D'; ctx.fillRect(x - 8, y - 5, 16, 13); ctx.fillStyle = GOLD; ctx.fillRect(x - 1.5, y - 5, 3, 13); ctx.fillRect(x - 8, y - 1, 16, 3) },
+  }
+  const star = (x, y, k, a, glow = 0) => {
+    if (a <= 0) return
+    ctx.save(); ctx.globalAlpha = a
+    const g = ctx.createRadialGradient(x, y, 2, x, y, 34 + glow * 14); g.addColorStop(0, `rgba(255,236,170,${0.55 + 0.4 * glow})`); g.addColorStop(1, 'rgba(255,236,170,0)')
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 34 + glow * 14, 0, Math.PI * 2); ctx.fill()
+    ctx.fillStyle = '#FFF6DC'; ctx.beginPath(); ctx.arc(x, y, 17, 0, Math.PI * 2); ctx.fill()
+    ICON[k](x, y); ctx.restore()
+  }
+  // ---------- step 1-2: constellation and the parallelogram ----------
+  const P = { man: [220, 220], king: [310, 90], woman: [450, 240], queen: [540, 110] }
+  const sky1 = 1 - 0.55 * sm((t - 6.8) / 0.6)
+  const arrow = (a, b, u, col, w = 3) => { if (u <= 0) return; const x = lerp(a[0], b[0], u), y = lerp(a[1], b[1], u); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round'
+    ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(x, y); ctx.stroke(); const ang = Math.atan2(b[1] - a[1], b[0] - a[0]); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 10 * Math.cos(ang - 0.45), y - 10 * Math.sin(ang - 0.45)); ctx.moveTo(x, y); ctx.lineTo(x - 10 * Math.cos(ang + 0.45), y - 10 * Math.sin(ang + 0.45)); ctx.stroke() }
+  const shrink = (a, b) => { const d = Math.hypot(b[0] - a[0], b[1] - a[1]); const k = (d - 22) / d; return [a[0] + (b[0] - a[0]) * (1 - k), a[1] + (b[1] - a[1]) * (1 - k)] }
+  const m2k = sm((t - 3.7) / 0.9), copy = sm((t - 4.9) / 0.6), w2q = sm((t - 5.5) / 0.8)
+  ctx.save(); ctx.globalAlpha = sky1
+  ctx.setLineDash([4, 6]); arrow(shrink(P.man, P.king), shrink(P.king, P.man), m2k, 'rgba(242,193,78,0.9)'); ctx.setLineDash([])
+  if (copy > 0) { const dx = (P.woman[0] - P.man[0]) * copy, dy = (P.woman[1] - P.man[1]) * copy; ctx.globalAlpha = sky1 * (1 - w2q); arrow(shrink(P.man, P.king).map((v, i) => v + [dx, dy][i]), shrink(P.king, P.man).map((v, i) => v + [dx, dy][i]), 1, 'rgba(242,193,78,0.6)'); ctx.globalAlpha = sky1 }
+  arrow(shrink(P.woman, P.queen), shrink(P.queen, P.woman), w2q, GOLD, 3.5)
+  const order = ['man', 'king', 'woman', 'queen']
+  order.forEach((k, i) => star(P[k][0], P[k][1], k, k === 'queen' ? sm((t - 6.0) / 0.4) : sm((t - 0.4 - i * 0.45) / 0.5), k === 'queen' ? sm((t - 6.0) / 0.5) * (1 - sm((t - 6.9) / 0.5)) : 0))
+  if (t < 6.0) { ctx.strokeStyle = 'rgba(255,246,220,0.6)'; ctx.setLineDash([3, 4]); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(P.queen[0], P.queen[1], 17, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]) }
+  ctx.restore()
+  // dog star waits in the sky for step 5
+  const DOG = [640, 200]
+  star(DOG[0], DOG[1], 'dog', sm((t - 7.0) / 0.6) * 0.9)
+  // ---------- observatory dome bottom-left ----------
+  ctx.fillStyle = '#0B1220'; ctx.beginPath(); ctx.moveTo(0, 450); ctx.lineTo(0, 360); ctx.arc(90, 380, 90, Math.PI, 0); ctx.lineTo(180, 450); ctx.fill()
+  ctx.fillStyle = '#26324A'; ctx.fillRect(84, 290, 12, 70); ctx.save(); ctx.translate(90, 330); ctx.rotate(-0.7); ctx.fillStyle = '#3A4A6A'; ctx.fillRect(-6, -60, 16, 70); ctx.restore()
+  // ---------- step 3: lantern sentence on a string ----------
+  const L = [['queen', 260], ['gift', 360], ['dog', 460], ['its', 560], ['bone', 660]]
+  const LY = 385, str = sm((t - 6.7) / 0.8)
+  if (str > 0) {
+    ctx.strokeStyle = 'rgba(230,210,170,0.7)'; ctx.lineWidth = 1.5; ctx.beginPath()
+    for (let x = 200; x <= lerp(200, 740, str); x += 10) { const y = 345 + Math.sin((x - 200) / 540 * Math.PI) * 14; x === 200 ? ctx.moveTo(x, y) : ctx.lineTo(x, y) } ctx.stroke()
+  }
+  const mix = sm((t - 13.1) / 1.0), rise = sm((t - 14.2) / 1.3)
+  L.forEach(([k, x], i) => {
+    const a = sm((t - 7.0 - i * 0.3) / 0.4); if (a <= 0) return
+    const sway = Math.sin(t * 1.6 + i) * 2
+    const yTop = 345 + Math.sin((x - 200) / 540 * Math.PI) * 14
+    let lx = x + sway, ly = LY
+    if (k === 'its' && rise > 0) { lx = lerp(lx, DOG[0] - 10, rise); ly = lerp(LY, DOG[1] + 60, rise) }
+    ctx.save(); ctx.globalAlpha = a
+    if (!(k === 'its' && rise > 0)) { ctx.strokeStyle = 'rgba(230,210,170,0.7)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, yTop); ctx.lineTo(lx, ly - 26); ctx.stroke() }
+    const glowA = k === 'its' ? 0.25 + 0.6 * mix : 0.55
+    const g = ctx.createRadialGradient(lx, ly, 4, lx, ly, 40); g.addColorStop(0, `rgba(255,190,110,${glowA})`); g.addColorStop(1, 'rgba(255,190,110,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(lx, ly, 40, 0, Math.PI * 2); ctx.fill()
+    ctx.fillStyle = k === 'its' ? `rgba(255,240,210,${0.35 + 0.65 * mix})` : '#FFE7B8'; ctx.strokeStyle = '#B5652B'; ctx.lineWidth = 2
+    ctx.beginPath(); ctx.ellipse(lx, ly, 22, 25, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = '#B5652B'; ctx.fillRect(lx - 9, ly - 29, 18, 5); ctx.fillRect(lx - 9, ly + 24, 18, 5)
+    if (k === 'its') {
+      if (mix < 1) { ctx.globalAlpha = a * (1 - mix); ctx.strokeStyle = '#B5652B'; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.arc(lx, ly, 10, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]) }
+      if (mix > 0) { ctx.globalAlpha = a * mix; ICON.dog(lx, ly); ctx.globalAlpha = a * mix * 0.6; ICON.bone(lx + 10, ly + 12) }
+    } else ICON[k](lx, ly)
+    ctx.restore()
+  })
+  // ---------- step 4: attention light from the blank lantern ----------
+  const att = { dog: 0.95, bone: 0.55, queen: 0.25, gift: 0.12 }
+  const show = sm((t - 9.9) / 0.6) * (1 - sm((t - 13.6) / 0.5))
+  if (show > 0) {
+    const sx = 560
+    for (const [k, x] of L) {
+      if (k === 'its') continue
+      const w = att[k], u = sm((t - 10.0 - (1 - w) * 1.2) / 0.8)
+      if (u <= 0) continue
+      const hgt = 40 + Math.abs(x - sx) * 0.35
+      ctx.strokeStyle = `rgba(255,214,120,${(0.25 + 0.75 * w) * show})`; ctx.lineWidth = 1.5 + 9 * w; ctx.lineCap = 'round'
+      ctx.beginPath(); for (let v = 0; v <= u; v += 0.02) { const xx = lerp(sx, x, v), yy = 356 - Math.sin(v * Math.PI) * hgt * 0.5; v === 0 ? ctx.moveTo(xx, yy) : ctx.lineTo(xx, yy) } ctx.stroke()
+    }
+  }
+}
+
 const SCENES = [
   { name: 'plain-rules-vs-learning', fn: renderPlainRulesVsLearningFrame, poster: 12.5 },
   { name: 'plain-decision-tree', fn: renderPlainDecisionTreeFrame, poster: 11.8 },
@@ -986,7 +1083,8 @@ const SCENES = [
   { name: 'turing-test', fn: renderTuringTestFrame, poster: 7.6 },
   { name: 'forward-chaining', fn: renderForwardChainingFrame, poster: 11.0 },
   { name: 'perceptron-learning', fn: renderPerceptronLearningFrame, poster: 5.2, bps: 225_000 },
-  { name: 'convolution-scan', fn: renderConvolutionScanFrame, poster: 8.0 }]
+  { name: 'convolution-scan', fn: renderConvolutionScanFrame, poster: 8.0 },
+  { name: 'vector-attention', fn: renderVectorAttentionFrame, poster: 6.4 }]
 const STILLS = [2.2, 5.8, 8.6, 12.3, 15.6]
 
 async function main() {

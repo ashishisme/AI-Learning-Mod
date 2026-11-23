@@ -1093,25 +1093,25 @@
       "id": "clip-vector-attention-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/vector-attention.webm",
-          "sha256": "5c8ae4bf4a4e3ac54906a5c6f49c5fc8891676371806541ee0cb2c75114ee313"
+          "sha256": "c7fbfc0d02e9b2772dedb4b06dd4137d0da36942f92fd950663005283ceb252a"
         },
         {
           "path": "videos/vector-attention.mp4",
-          "sha256": "2dc7e02305a5b0e5803ced9772a2342c1d61deb9c9bc1c491dfc3c9d47aed12f"
+          "sha256": "46ac4cb059e16ac8579eeabd8e22fb0e7fd72f493dc333f7d67e5533421392f3"
         },
         {
           "path": "videos/vector-attention-poster.jpg",
-          "sha256": "b0763c0553bc2973d1761393358f4e8d04d1c6afb1faf69948489a9ec15e0eaf"
+          "sha256": "0f86fd932d54b549237ce47938e92df67b9a37c37d407f91fcdaaf929322467f"
         }
       ],
-      "purpose": "lesson 5 60fps concept clip: vector arithmetic embedding space and transformer self-attention query-key resolution",
+      "purpose": "Detailed lesson 5 clip, illustrated: word stars, vector arithmetic, lantern sentence with attention light",
       "sourceMaster": "design/brand/source/videos/vector-attention.webm",
-      "sourceSha256": "5c8ae4bf4a4e3ac54906a5c6f49c5fc8891676371806541ee0cb2c75114ee313",
+      "sourceSha256": "c7fbfc0d02e9b2772dedb4b06dd4137d0da36942f92fd950663005283ceb252a",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],
