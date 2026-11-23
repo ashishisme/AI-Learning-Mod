@@ -1639,25 +1639,25 @@
       "id": "clip-plain-disparate-impact-audit-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/plain-disparate-impact-audit.webm",
-          "sha256": "b255276003a6fa5b2a39abea0c790bcea75869d173271ce15712ac5faf0e4062"
+          "sha256": "f89c9f8fdd1c9755c8be866185661a7512998d2504d38b030761f1f8995d5394"
         },
         {
           "path": "videos/plain-disparate-impact-audit.mp4",
-          "sha256": "b3871c89b3b66a8c67f03c38e161929fd3c885513bbf192b9d9d84e588f89737"
+          "sha256": "c8f80aefa21f594423972f7ca9006f2fa30fb81a43e9bcaaf20d61bc7f22fdd9"
         },
         {
           "path": "videos/plain-disparate-impact-audit-poster.jpg",
-          "sha256": "8a5d844e9f8abb5c1bdc479f0e5f243456a68e5557418cca29fdfd89d6494573"
+          "sha256": "13feaf42eac9666c848b02b5008a4610fae81f4b5ec41b88aad6a917ec7b330b"
         }
       ],
-      "purpose": "plain english lesson 7 60fps concept clip: hiring audit dashboard balancing demographic acceptance rates and equal opportunity",
+      "purpose": "Plain English lesson 7 clip, calm adult style: four-fifths audit and proxy removal",
       "sourceMaster": "design/brand/source/videos/plain-disparate-impact-audit.webm",
-      "sourceSha256": "b255276003a6fa5b2a39abea0c790bcea75869d173271ce15712ac5faf0e4062",
+      "sourceSha256": "f89c9f8fdd1c9755c8be866185661a7512998d2504d38b030761f1f8995d5394",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],

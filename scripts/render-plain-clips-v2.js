@@ -466,12 +466,93 @@ function renderPlainTransformerContextFrame(ctx, f, totalFrames, W, H, FPS) {
   }
 }
 
+// Lesson 7: selection rates for two groups, the four-fifths check, dropping a proxy, and the re-check.
+function renderPlainDisparateImpactAuditFrame(ctx, f, totalFrames, W, H, FPS) {
+  const t = f / FPS
+  pBg(ctx, W, H)
+  const GA = C.good, GB = '#7B6CB3'
+  pPanel(ctx, 30, 30, 360, 390); pPanel(ctx, 410, 30, 360, 390)
+  // ---------- left: screening gate with three criteria ----------
+  const fix = sm((t - 10.0) / 0.8)
+  const chips = [
+    { x: 120, icon: 'cap' }, { x: 210, icon: 'pin', proxy: true }, { x: 300, icon: 'case' }]
+  ctx.fillStyle = C.soft; ctx.fillRect(50, 176, 320, 54)
+  for (const c of chips) {
+    const out = c.proxy ? fix : 0
+    if (out >= 1) continue
+    ctx.save(); ctx.globalAlpha = 1 - out; ctx.translate(c.x, 203 - 40 * out)
+    ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = c.proxy && t > 9.9 ? C.bad : C.navy; ctx.lineWidth = 2
+    ctx.beginPath(); ctx.roundRect(-34, -18, 68, 36, 10); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = C.navy
+    if (c.icon === 'cap') { ctx.beginPath(); ctx.moveTo(-16, -2); ctx.lineTo(0, -10); ctx.lineTo(16, -2); ctx.lineTo(0, 6); ctx.closePath(); ctx.fill(); ctx.fillRect(-8, 0, 16, 8) }
+    if (c.icon === 'case') { ctx.beginPath(); ctx.roundRect(-14, -6, 28, 18, 3); ctx.fill(); ctx.strokeStyle = C.navy; ctx.lineWidth = 2; ctx.strokeRect(-6, -11, 12, 5) }
+    if (c.icon === 'pin') { ctx.fillStyle = C.muted; ctx.beginPath(); ctx.arc(0, -4, 8, Math.PI, 0); ctx.lineTo(0, 12); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(0, -4, 3, 0, Math.PI * 2); ctx.fill() }
+    if (c.proxy && t > 9.9) { ctx.strokeStyle = C.bad; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-26, 12); ctx.lineTo(26, -12); ctx.stroke() }
+    ctx.restore()
+  }
+  // candidates: ten per group; selected ones rise above the gate
+  const rateA = 0.6, rateB = lerp(0.3, 0.5, sm((t - 11.0) / 1.4))
+  const grow = sm((t - 0.6) / 2.6)
+  const person = (x, y, col, on) => { ctx.save(); ctx.globalAlpha = on ? 1 : 0.35; pPerson(ctx, x, y, 0.55, col); ctx.restore() }
+  for (const [g, col, rate, x0] of [[0, GA, rateA, 62], [1, GB, rateB, 222]]) {
+    const n = Math.round(10 * rate * grow * 10) / 10
+    for (let i = 0; i < 10; i++) {
+      const k = Math.floor(n + 1e-6), sel = i < k, slot = sel ? i : i - k
+      const cx = x0 + (slot % 5) * 26, row = Math.floor(slot / 5)
+      const y = sel ? 100 + row * 34 : 300 + row * 34
+      person(cx + 8, y, col, sel)
+    }
+  }
+  // ---------- right: selection-rate bars and the four-fifths gauge ----------
+  const bars = sm((t - 3.6) / 1.0)
+  const BY = 250, BH = 180
+  const bar = (x, rate, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.roundRect(x, BY - BH * rate * bars, 56, BH * rate * bars, [6, 6, 0, 0]); ctx.fill() }
+  ctx.strokeStyle = C.muted; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(450, BY); ctx.lineTo(620, BY); ctx.stroke()
+  bar(470, rateA, GA); bar(550, rateB, GB)
+  pPerson(ctx, 498, BY + 30, 0.5, GA); pPerson(ctx, 578, BY + 30, 0.5, GB)
+  // step 2: the gap and an audit flag
+  const gap = sm((t - 5.0) / 0.5) * (1 - sm((t - 12.4) / 0.5))
+  if (gap > 0) {
+    ctx.save(); ctx.globalAlpha = gap; ctx.strokeStyle = C.warn; ctx.lineWidth = 2.5
+    const yA = BY - BH * rateA, yB = BY - BH * rateB
+    ctx.beginPath(); ctx.moveTo(612, yA); ctx.lineTo(622, yA); ctx.lineTo(622, yB); ctx.lineTo(612, yB); ctx.stroke()
+    pMark(ctx, 640, (yA + yB) / 2, 'q', 0.9 + 0.08 * Math.sin(t * 6)); ctx.restore()
+  }
+  // step 3: dashed four-fifths line over group B
+  const ff = sm((t - 6.6) / 0.6)
+  if (ff > 0) {
+    ctx.save(); ctx.globalAlpha = ff; ctx.strokeStyle = C.ink; ctx.lineWidth = 2; ctx.setLineDash([6, 5])
+    const y = BY - BH * rateA * 0.8; ctx.beginPath(); ctx.moveTo(540, y); ctx.lineTo(616, y); ctx.stroke(); ctx.restore()
+  }
+  // the gauge: ratio B / A against the 0.8 mark
+  const gx = 690, gy = 330, gr = 44, ratio = rateB / rateA
+  if (ff > 0) {
+    ctx.save(); ctx.globalAlpha = ff
+    ctx.lineWidth = 12; ctx.strokeStyle = C.soft; ctx.beginPath(); ctx.arc(gx, gy, gr, Math.PI, 2 * Math.PI); ctx.stroke()
+    ctx.strokeStyle = ratio >= 0.8 ? C.good : C.bad; ctx.beginPath(); ctx.arc(gx, gy, gr, Math.PI, Math.PI + Math.PI * ratio * ff); ctx.stroke()
+    const m = Math.PI + Math.PI * 0.8; ctx.strokeStyle = C.ink; ctx.lineWidth = 3
+    ctx.beginPath(); ctx.moveTo(gx + Math.cos(m) * (gr - 12), gy + Math.sin(m) * (gr - 12)); ctx.lineTo(gx + Math.cos(m) * (gr + 12), gy + Math.sin(m) * (gr + 12)); ctx.stroke()
+    pMark(ctx, gx, gy - 8, ratio >= 0.8 ? 'ok' : 'no', t > 7.4 ? 1 : 0)
+    ctx.restore()
+  }
+  // step 5: the audit log is signed off
+  const log = sm((t - 13.6) / 0.5)
+  if (log > 0) {
+    ctx.save(); ctx.globalAlpha = log; ctx.translate(500, 340)
+    ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = C.navy; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(-30, -36, 60, 74, 6); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = C.navy; ctx.fillRect(-12, -42, 24, 10)
+    for (let i = 0; i < 3; i++) { ctx.fillStyle = C.line; ctx.fillRect(-18, -18 + i * 14, 36, 5) }
+    pMark(ctx, 22, 28, 'ok', sm((t - 14.2) / 0.4)); ctx.restore()
+  }
+}
+
 const SCENES = [
   { name: 'plain-rules-vs-learning', fn: renderPlainRulesVsLearningFrame, poster: 12.5 },
   { name: 'plain-decision-tree', fn: renderPlainDecisionTreeFrame, poster: 11.8 },
   { name: 'plain-linear-classifier', fn: renderPlainLinearClassifierFrame, poster: 8.4 },
   { name: 'plain-image-feature-scan', fn: renderPlainImageFeatureScanFrame, poster: 7.0 },
-  { name: 'plain-transformer-context', fn: renderPlainTransformerContextFrame, poster: 12.4 }]
+  { name: 'plain-transformer-context', fn: renderPlainTransformerContextFrame, poster: 12.4 },
+  { name: 'plain-disparate-impact-audit', fn: renderPlainDisparateImpactAuditFrame, poster: 8.4 }]
 const STILLS = [2.2, 5.8, 8.6, 12.3, 15.6]
 
 async function main() {
