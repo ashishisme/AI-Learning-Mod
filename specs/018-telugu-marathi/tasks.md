@@ -49,12 +49,12 @@ The state for any agent continuing this work. Commands run from the repo root. N
 ## Phase 1: Script support, both languages (spec amendment first)
 - [X] T002 `spec:` amend SPEC.md (FR-I18N-05 rules, FR-UI-17 fonts) and add the AC rows for mr and te. *(2026-11-23: SPEC.md 2.23.0 and AC-92/AC-93 are written; commit them first as a separate `spec:` commit, before any rule or test code. The Marathi server messages, part of T007, were added before this amendment and go in the commit after it.)*
 - [X] T003a [P] Add `mr` as hidden in `languages.json` (done 2026-11-22).
-- [ ] T003b Add `te` as hidden in `languages.json` (Phase 3, with T004).
-- [ ] T004 [P] Telugu fonts: Noto Sans Telugu and Baloo Tammudu 2 (`.woff2` and OFL), plus `@font-face` rules with `unicode-range U+0C00-0C7F`. Register them as assets if the brand register covers fonts.
+- [X] T003b Add `te` as hidden in `languages.json` (Phase 3, with T004). *(Done 2026-11-23.)*
+- [X] T004 [P] Telugu fonts: Noto Sans Telugu and Baloo Tammudu 2 (`.woff2` and OFL), plus `@font-face` rules with `unicode-range U+0C00-0C7F`. Register them as assets if the brand register covers fonts. *(2026-11-23, after the owner said "download the fonts": the Telugu subsets come from Google Fonts (the same source as the other fonts) and are checked as WOFF2: NotoSansTelugu-Variable.woff2 124 KB and BalooTammudu2-SemiBoldBold.woff2 89 KB. The OFL licences are beside them. `-face` covers U+0C00-0C7F, and both families are added to the font stacks. assetcheck passes; fonts are not brand assets.)*
 - [~] T005 [P] Marathi and Telugu personal-details rules *(mr done 2026-11-23: rules in `check.go` (mr* regexes, Marathi number words), `mr_personal_details.json` 37 and `mr_clean.json` 34 with Hindi lines; all languages pass. te pending.)*, with `internal/feedback/testdata/{mr,te}_{clean,personal_details}.json`. Include Hindi clean sentences in the Marathi set, and the reverse.
 - [~] T006 [P] Marathi and Telugu safety rules *(mr done 2026-11-23: four Marathi rules in `safety.go`, `mr_safety.json` 26 blocked and 16 clean with Hindi lines; romanised self-harm needs "mala" so it does not catch "tyala maraycha". te pending.)*, with `internal/api/testdata/{mr,te}_safety.json`. Cross-check both ways: Hindi sentences among the Marathi clean cases, and Marathi among the Hindi ones (spec edge case).
-- [~] T007 [P] Server messages for mr and te *(mr done 2026-11-22; te pending)* in `internal/i18n/messages.go`.
-- [~] T008 [P] Extend `web/tests/languages-kn-ta.spec.ts` `LANGS` with mr and te: fonts, 390 px, and the header at 768, 1024 and 1280 px. Marathi: `font: /NotoSansDevanagari/`, and `kidsFont` is also Noto Sans Devanagari, because Baloo 2 is Latin-only. Telugu: `/NotoSansTelugu/`, with Kids `/BalooTammudu2/`. *(mr done 2026-11-23: 8 passed, 1 skipped (no Kids-only font). te pending.)*
+- [X] T007 [P] Server messages for mr and te *(mr 2026-11-22, te 2026-11-23)* in `internal/i18n/messages.go`.
+- [X] T008 [P] Extend `web/tests/languages-kn-ta.spec.ts` `LANGS` with mr and te: fonts, 390 px, and the header at 768, 1024 and 1280 px. Marathi: `font: /NotoSansDevanagari/`, and `kidsFont` is also Noto Sans Devanagari, because Baloo 2 is Latin-only. Telugu: `/NotoSansTelugu/`, with Kids `/BalooTammudu2/`. *(mr and te done 2026-11-23: Telugu checks the Noto Sans Telugu font, Baloo Tammudu 2 on Kids pages only, 390 px, and the header at 768–1280 px.)*
 
 ## Phase 2: Marathi (US1)
 - [X] T009 Glossary `content/glossary/mr.json`. The owner confirms it. *(Confirmed with T013, 2026-11-23.)*
@@ -67,8 +67,8 @@ The state for any agent continuing this work. Commands run from the repo root. N
   - the extra "पचास हज़ार" in a Hindi lesson 2 Plain English clip step;
   - the 10 flagged glossary terms;
   - the lesson 5 examples adapted for Marathi.
-- [ ] T014 Dry run and its cost, then the owner's yes, then recording. Rerun until 0 failed.
-- [ ] T015 Owner rsync, then check the manifest hash.
+- [X] T014 Dry run and its cost, then the owner's yes, then recording. Rerun until 0 failed.
+- [X] T015 Owner rsync, then check the manifest hash.
 - [ ] T016 Switch `mr` to approved with beta, then run the gates:
   - `go vet ./...` and `go test ./...`;
   - `go run ./cmd/ingest -verify` with audio;
@@ -79,6 +79,17 @@ The state for any agent continuing this work. Commands run from the repo root. N
   Then release (tag on the owner's word, the owner approves promote) and check it live.
 
 ## Phase 3: Telugu (US2)
+- Started 2026-11-23 on branch `cloud-beta-3`.
+  - **Register:** మీరు everywhere, Kids included. Claude chose this to match the owner's Hindi and Marathi choices; the owner may revisit it.
+  - **Brief:** `translation-brief-te.md`. The drafters use the Sonnet `drafter` agent (`.claude/agents/drafter.md`).
+  - **Fonts (T004):** still need the owner's OK to download before Telugu is shown.
+  - **Drafts finished 2026-11-23:** the glossary (130 terms), `web/src/i18n/te.json` (646 keys), 18 lessons, quizzes and `index.json`. All clean, no clip over 30 s, and uncommitted.
+  - **Next:**
+    - Run a term-alignment pass. The lesson drafters wrote widget and UI names before te.json existed, so align them with te.json.
+    - Rules (T005, T006) and tests (T008) for Telugu.
+    - The fonts (T004), after the owner's OK.
+    - Owner approval, then voices, recording, upload and release.
+  - **For the owner:** the 10 glossary terms the drafter flagged, and the lesson 5 examples adapted for Telugu.
 - [ ] T017–T024 The same as T009–T016, for `te`, with the same full gates in T024. First ask the owner the Telugu register and the font download (T004).
 
 ## Phase 4: Close

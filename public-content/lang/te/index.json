@@ -1,0 +1,10 @@
+{
+  "lessons": [
+    { "id": "1-intro", "module": "intro", "title": "కృత్రిమ మేధ", "order": 0 },
+    { "id": "2-symbolic", "module": "symbolic", "title": "జ్ఞాన ప్రాతినిధ్యం, నిపుణ వ్యవస్థలు", "order": 1 },
+    { "id": "3-neuralnetworks", "module": "neuralnetworks", "title": "న్యూరల్ నెట్‌వర్క్‌లు", "order": 2 },
+    { "id": "4-computervision", "module": "computervision", "title": "కంప్యూటర్ విజన్", "order": 3 },
+    { "id": "5-nlp", "module": "nlp", "title": "సహజ భాషా ప్రాసెసింగ్", "order": 4 },
+    { "id": "7-ethics", "module": "ethics", "title": "బాధ్యతాయుత ఏఐ", "order": 5 }
+  ]
+}

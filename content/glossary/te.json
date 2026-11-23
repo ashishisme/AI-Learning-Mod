@@ -1,0 +1,656 @@
+{
+  "language": "te",
+  "note": "Draft by Claude, 2026-11-23 (SPEC-018 T017), for owner (beta) review. Show the Telugu term followed by the English in brackets at its first use in each section, as for the other languages.",
+  "terms": [
+    {
+      "en": "artificial intelligence",
+      "target": "కృత్రిమ మేధ",
+      "note": "Short form ఏఐ (AI) is fine after first use. కృత్రిమ మేధస్సు is the longer formal form."
+    },
+    {
+      "en": "machine learning",
+      "target": "మెషిన్ లెర్నింగ్",
+      "note": "Said as is in Telugu schools and offices; యంత్ర అభ్యసనం is the formal phrase."
+    },
+    {
+      "en": "deep learning",
+      "target": "డీప్ లెర్నింగ్",
+      "note": "Transliterated, as commonly used."
+    },
+    {
+      "en": "neural network",
+      "target": "న్యూరల్ నెట్‌వర్క్",
+      "note": "Transliterated, as commonly used; నాడీ జాలం is the formal word."
+    },
+    {
+      "en": "neuron",
+      "target": "న్యూరాన్",
+      "note": "Transliterate; నాడీకణం is the biology word."
+    },
+    {
+      "en": "perceptron",
+      "target": "పర్సెప్‌ట్రాన్",
+      "note": "Transliterate; no common Telugu word."
+    },
+    {
+      "en": "algorithm",
+      "target": "అల్గారిథమ్",
+      "note": "Transliterate; కలన విధానం is too formal."
+    },
+    {
+      "en": "data",
+      "target": "డేటా",
+      "note": "Everyday word; సమాచారం also means information in general."
+    },
+    {
+      "en": "dataset",
+      "target": "డేటాసెట్",
+      "note": "Transliterated; డేటా సమితి is the formal phrase."
+    },
+    {
+      "en": "training",
+      "target": "శిక్షణ",
+      "note": "Everyday word for training."
+    },
+    {
+      "en": "model",
+      "target": "మోడల్",
+      "note": "Transliterated, as commonly used; నమూనా is the formal word."
+    },
+    {
+      "en": "prediction",
+      "target": "అంచనా",
+      "note": "Everyday word; ఊహ is also heard."
+    },
+    {
+      "en": "weight",
+      "target": "వెయిట్",
+      "note": "Transliterated for the number a neuron multiplies by; బరువు means physical weight and is understood."
+    },
+    {
+      "en": "bias",
+      "target": "పక్షపాతం",
+      "note": "The social meaning (fairness). For the number added inside a neuron, use బయాస్ (see \"bias (in a neuron)\")."
+    },
+    {
+      "en": "bias (in a neuron)",
+      "target": "బయాస్",
+      "note": "Transliterated; పక్షపాతం would read as prejudice here."
+    },
+    {
+      "en": "convolution",
+      "target": "కన్వల్యూషన్",
+      "note": "Transliterate."
+    },
+    {
+      "en": "filter",
+      "target": "ఫిల్టర్",
+      "note": "Transliterated, as commonly used; వడపోత is also understood."
+    },
+    {
+      "en": "pixel",
+      "target": "పిక్సెల్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "computer vision",
+      "target": "కంప్యూటర్ విజన్",
+      "note": "Transliterated; కంప్యూటర్ దృష్టి is the formal phrase."
+    },
+    {
+      "en": "natural language processing",
+      "target": "సహజ భాషా ప్రాసెసింగ్",
+      "note": "Natural language is సహజ భాష; ప్రాసెసింగ్ is what people say."
+    },
+    {
+      "en": "token",
+      "target": "టోకెన్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "embedding",
+      "target": "ఎంబెడ్డింగ్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "vector",
+      "target": "వెక్టర్",
+      "note": "Transliterated; సదిశ is the school maths word."
+    },
+    {
+      "en": "expert system",
+      "target": "నిపుణ వ్యవస్థ",
+      "note": "Expert is నిపుణుడు; వ్యవస్థ is system."
+    },
+    {
+      "en": "rule",
+      "target": "నియమం",
+      "note": "Everyday word; రూల్ is also said."
+    },
+    {
+      "en": "knowledge base",
+      "target": "జ్ఞాన భాండాగారం",
+      "note": "Knowledge store; నాలెడ్జ్ బేస్ is also said, so use it after the bracket if learners prefer."
+    },
+    {
+      "en": "symbolic AI",
+      "target": "సింబాలిక్ ఏఐ",
+      "note": "Transliterated; ప్రతీకాత్మక ఏఐ is the formal phrase."
+    },
+    {
+      "en": "Turing test",
+      "target": "ట్యూరింగ్ పరీక్ష",
+      "note": "Turing is ట్యూరింగ్; పరీక్ష is test."
+    },
+    {
+      "en": "fairness",
+      "target": "నిష్పాక్షికత",
+      "note": "Fairness as even-handedness; న్యాయబద్ధత is a close alternative."
+    },
+    {
+      "en": "responsible AI",
+      "target": "బాధ్యతాయుత ఏఐ",
+      "note": "Responsible AI."
+    },
+    {
+      "en": "quiz",
+      "target": "క్విజ్",
+      "note": "Transliterated, as commonly used; ప్రశ్నోత్తరాలు is also understood."
+    },
+    {
+      "en": "weighted sum",
+      "target": "భారిత మొత్తం",
+      "note": "Weighted sum; a short phrase, may need review by a maths teacher."
+    },
+    {
+      "en": "layer",
+      "target": "పొర",
+      "note": "Layer, as in layers of an onion; పొర is common for neural-network layers in Telugu."
+    },
+    {
+      "en": "pattern",
+      "target": "నమూనా",
+      "note": "Pattern; note that మోడల్ is used for model, so నమూనా here is the everyday word for pattern."
+    },
+    {
+      "en": "feature",
+      "target": "లక్షణం",
+      "note": "Feature, a measurable property; ఫీచర్ is also said."
+    },
+    {
+      "en": "feature map",
+      "target": "లక్షణాల మ్యాప్",
+      "note": "Feature map; మ్యాప్ is the everyday word."
+    },
+    {
+      "en": "attention",
+      "target": "అటెన్షన్",
+      "note": "Transliterated as a technical term; శ్రద్ధ is the everyday word and can be used in plain explanations."
+    },
+    {
+      "en": "self-attention",
+      "target": "సెల్ఫ్ అటెన్షన్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "fire (a neuron)",
+      "target": "ప్రేరేపితమవడం",
+      "note": "e.g. న్యూరాన్ ప్రేరేపితమవుతుంది."
+    },
+    {
+      "en": "inference engine",
+      "target": "అనుమాన ఇంజిన్",
+      "note": "Inference engine; ఇంజిన్ is the everyday word."
+    },
+    {
+      "en": "working memory",
+      "target": "వర్కింగ్ మెమరీ",
+      "note": "Transliterated; పని జ్ఞాపకం is the formal phrase."
+    },
+    {
+      "en": "inheritance",
+      "target": "వారసత్వం",
+      "note": "Inheritance, as in family inheritance; used the same way in programming."
+    },
+    {
+      "en": "fairness audit",
+      "target": "న్యాయబద్ధత ఆడిట్",
+      "note": "Fairness audit."
+    },
+    {
+      "en": "audit",
+      "target": "ఆడిట్",
+      "note": "Transliterated, as commonly used; తనిఖీ is also understood."
+    },
+    {
+      "en": "four-fifths rule",
+      "target": "నాలుగు వంతుల ఐదు నియమం",
+      "note": "Four-fifths rule; the literal reading is four parts of five. Review for clarity."
+    },
+    {
+      "en": "human oversight",
+      "target": "మానవ పర్యవేక్షణ",
+      "note": "Human oversight."
+    },
+    {
+      "en": "dot product",
+      "target": "డాట్ ప్రోడక్ట్",
+      "note": "Transliterated; బిందు లబ్ధం is the school maths term."
+    },
+    {
+      "en": "forward chaining",
+      "target": "ఫార్వర్డ్ చైనింగ్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "backward chaining",
+      "target": "బ్యాక్‌వర్డ్ చైనింగ్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "fact",
+      "target": "వాస్తవం",
+      "note": "A fact stored in a knowledge base; plural వాస్తవాలు."
+    },
+    {
+      "en": "sensor",
+      "target": "సెన్సార్",
+      "note": "Transliterated, as commonly used."
+    },
+    {
+      "en": "ontology",
+      "target": "ఆంటాలజీ",
+      "note": "Transliterate."
+    },
+    {
+      "en": "knowledge graph",
+      "target": "నాలెడ్జ్ గ్రాఫ్",
+      "note": "Transliterated, as commonly used."
+    },
+    {
+      "en": "narrow AI",
+      "target": "నారో ఏఐ",
+      "note": "Transliterated; సంకుచిత ఏఐ is the formal phrase."
+    },
+    {
+      "en": "general AI",
+      "target": "జనరల్ ఏఐ",
+      "note": "Transliterated."
+    },
+    {
+      "en": "decision boundary",
+      "target": "నిర్ణయ సరిహద్దు",
+      "note": "Decision boundary."
+    },
+    {
+      "en": "label",
+      "target": "లేబుల్",
+      "note": "Transliterated, as commonly used."
+    },
+    {
+      "en": "parameter",
+      "target": "పారామీటర్",
+      "note": "Transliterated; పరామితి is the school maths word."
+    },
+    {
+      "en": "input",
+      "target": "ఇన్‌పుట్",
+      "note": "Transliterated. Output is అవుట్‌పుట్."
+    },
+    {
+      "en": "activation function",
+      "target": "యాక్టివేషన్ ఫంక్షన్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "learning rate",
+      "target": "లెర్నింగ్ రేట్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "backpropagation",
+      "target": "బ్యాక్‌ప్రొపగేషన్",
+      "note": "Transliterate."
+    },
+    {
+      "en": "training data",
+      "target": "ట్రైనింగ్ డేటా",
+      "note": "Transliterated; శిక్షణ డేటా is also fine."
+    },
+    {
+      "en": "edge (in an image)",
+      "target": "అంచు",
+      "note": "Edge in an image."
+    },
+    {
+      "en": "grid",
+      "target": "గ్రిడ్",
+      "note": "Transliterated; చట్రం is the formal word."
+    },
+    {
+      "en": "transformer",
+      "target": "ట్రాన్స్‌ఫార్మర్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "language model",
+      "target": "లాంగ్వేజ్ మోడల్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "large language model",
+      "target": "లార్జ్ లాంగ్వేజ్ మోడల్",
+      "note": "Transliterated; the abbreviation ఎల్ఎల్ఎం is heard."
+    },
+    {
+      "en": "hallucination",
+      "target": "భ్రాంతి",
+      "note": "When an AI states something false with confidence; హాలూసినేషన్ is also said."
+    },
+    {
+      "en": "selection rate",
+      "target": "ఎంపిక రేటు",
+      "note": "Selection rate."
+    },
+    {
+      "en": "disparate impact ratio",
+      "target": "అసమాన ప్రభావ నిష్పత్తి",
+      "note": "Disparate impact ratio."
+    },
+    {
+      "en": "human in the loop",
+      "target": "నిర్ణయంలో మనిషి",
+      "note": "Human in the loop."
+    },
+    {
+      "en": "transparency",
+      "target": "పారదర్శకత",
+      "note": "Transparency."
+    },
+    {
+      "en": "program / programmer",
+      "target": "ప్రోగ్రామ్ / ప్రోగ్రామర్",
+      "note": "Transliterated, as commonly used."
+    },
+    {
+      "en": "software",
+      "target": "సాఫ్ట్‌వేర్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "chatbot / chat assistant",
+      "target": "చాట్‌బాట్ / చాట్ సహాయకుడు",
+      "note": "Chatbot is said as is; సహాయకుడు is assistant."
+    },
+    {
+      "en": "AI winter",
+      "target": "ఏఐ శీతాకాలం",
+      "note": "AI winter."
+    },
+    {
+      "en": "rule-based AI",
+      "target": "నియమ ఆధారిత ఏఐ",
+      "note": "Rule-based AI."
+    },
+    {
+      "en": "if-then rule",
+      "target": "‘ఇలా అయితే’ నియమం",
+      "note": "If-then rule, as a natural spoken phrase."
+    },
+    {
+      "en": "production rule",
+      "target": "ప్రొడక్షన్ రూల్",
+      "note": "Transliterated, as a technical term."
+    },
+    {
+      "en": "fire (a rule)",
+      "target": "అమలవడం",
+      "note": "Rules అమలవుతాయి; neurons ప్రేరేపితమవుతాయి."
+    },
+    {
+      "en": "knowledge representation",
+      "target": "జ్ఞాన ప్రాతినిధ్యం",
+      "note": "Knowledge representation; review for clarity."
+    },
+    {
+      "en": "semantic network",
+      "target": "సెమాంటిక్ నెట్‌వర్క్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "sub-goal",
+      "target": "ఉప లక్ష్యం",
+      "note": "Sub-goal."
+    },
+    {
+      "en": "decision tree",
+      "target": "డెసిషన్ ట్రీ",
+      "note": "Transliterated; నిర్ణయ వృక్షం is the formal phrase."
+    },
+    {
+      "en": "triple",
+      "target": "ట్రిపుల్",
+      "note": "Transliterated; త్రికం is the formal word."
+    },
+    {
+      "en": "supervised learning",
+      "target": "పర్యవేక్షిత అభ్యసనం",
+      "note": "Supervised learning; the formal phrase, as సూపర్వైజ్డ్ లెర్నింగ్ is also heard."
+    },
+    {
+      "en": "labelled data",
+      "target": "లేబుల్ ఉన్న డేటా",
+      "note": "Labelled data."
+    },
+    {
+      "en": "test data",
+      "target": "టెస్ట్ డేటా",
+      "note": "Transliterated; పరీక్ష డేటా is also fine."
+    },
+    {
+      "en": "accuracy",
+      "target": "కచ్చితత్వం",
+      "note": "Accuracy."
+    },
+    {
+      "en": "loss",
+      "target": "నష్టం",
+      "note": "Loss in training; the number the model tries to reduce."
+    },
+    {
+      "en": "error",
+      "target": "పొరపాటు",
+      "note": "Error; తప్పు is also said."
+    },
+    {
+      "en": "classification",
+      "target": "వర్గీకరణ",
+      "note": "Classification."
+    },
+    {
+      "en": "regression",
+      "target": "రిగ్రెషన్",
+      "note": "Transliterate."
+    },
+    {
+      "en": "overfitting",
+      "target": "ఓవర్‌ఫిట్టింగ్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "epoch",
+      "target": "ఎపాక్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "hidden layer",
+      "target": "దాచిన పొర",
+      "note": "Hidden layer."
+    },
+    {
+      "en": "gradient descent",
+      "target": "గ్రేడియంట్ డిసెంట్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "step function",
+      "target": "స్టెప్ ఫంక్షన్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "linearly separable",
+      "target": "సరళరేఖతో వేరుచేయగల",
+      "note": "Linearly separable."
+    },
+    {
+      "en": "probability",
+      "target": "సంభావ్యత",
+      "note": "Probability, the school maths word."
+    },
+    {
+      "en": "convolutional neural network (CNN)",
+      "target": "కన్వల్యూషనల్ న్యూరల్ నెట్‌వర్క్ (సీఎన్ఎన్)",
+      "note": "Transliterated."
+    },
+    {
+      "en": "kernel",
+      "target": "కెర్నల్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "channel",
+      "target": "ఛానల్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "stride",
+      "target": "స్ట్రైడ్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "padding",
+      "target": "ప్యాడింగ్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "pooling",
+      "target": "పూలింగ్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "image classification",
+      "target": "చిత్ర వర్గీకరణ",
+      "note": "Image classification."
+    },
+    {
+      "en": "object detection",
+      "target": "వస్తువుల గుర్తింపు",
+      "note": "Object detection."
+    },
+    {
+      "en": "optical character recognition (OCR)",
+      "target": "ఆప్టికల్ క్యారెక్టర్ రికగ్నిషన్ (ఓసీఆర్)",
+      "note": "Transliterated."
+    },
+    {
+      "en": "tokenisation",
+      "target": "టోకెనైజేషన్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "vocabulary",
+      "target": "పదకోశం",
+      "note": "Vocabulary, the set of words a model knows."
+    },
+    {
+      "en": "bag of words",
+      "target": "బ్యాగ్ ఆఫ్ వర్డ్స్",
+      "note": "Transliterated; పదాల సంచి is a literal alternative."
+    },
+    {
+      "en": "cosine similarity",
+      "target": "కొసైన్ సారూప్యత",
+      "note": "Cosine is కొసైన్; సారూప్యత is similarity."
+    },
+    {
+      "en": "context window",
+      "target": "కాంటెక్స్ట్ విండో",
+      "note": "Transliterated; the sliding window in images is a different idea."
+    },
+    {
+      "en": "pre-training / fine-tuning",
+      "target": "ప్రీ-ట్రైనింగ్ / ఫైన్-ట్యూనింగ్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "sentiment analysis",
+      "target": "భావ విశ్లేషణ",
+      "note": "Sentiment analysis."
+    },
+    {
+      "en": "machine translation",
+      "target": "యంత్ర అనువాదం",
+      "note": "Machine translation."
+    },
+    {
+      "en": "algorithmic bias",
+      "target": "అల్గారిథమిక్ పక్షపాతం",
+      "note": "Algorithmic bias."
+    },
+    {
+      "en": "proxy (variable)",
+      "target": "ప్రాక్సీ (చరరాశి)",
+      "note": "Transliterated; చరరాశి is the school maths word for variable."
+    },
+    {
+      "en": "feedback loop",
+      "target": "ఫీడ్‌బ్యాక్ లూప్",
+      "note": "Transliterated, as commonly used."
+    },
+    {
+      "en": "demographic parity",
+      "target": "జనాభా సమానత్వం",
+      "note": "Demographic parity."
+    },
+    {
+      "en": "true positive rate",
+      "target": "నిజమైన పాజిటివ్ రేటు",
+      "note": "True positive rate."
+    },
+    {
+      "en": "calibration",
+      "target": "క్యాలిబ్రేషన్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "black box",
+      "target": "బ్లాక్ బాక్స్",
+      "note": "Transliterated, as commonly used."
+    },
+    {
+      "en": "explainability",
+      "target": "వివరణాత్మకత",
+      "note": "Explainability."
+    },
+    {
+      "en": "accountability",
+      "target": "జవాబుదారీతనం",
+      "note": "Accountability."
+    },
+    {
+      "en": "model card",
+      "target": "మోడల్ కార్డ్",
+      "note": "Transliterated."
+    },
+    {
+      "en": "privacy",
+      "target": "గోప్యత",
+      "note": "Privacy."
+    },
+    {
+      "en": "counterfactual explanation",
+      "target": "ప్రత్యామ్నాయ పరిస్థితి వివరణ",
+      "note": "Counterfactual explanation; coined, the weakest choice, watch user feedback."
+    }
+  ]
+}
