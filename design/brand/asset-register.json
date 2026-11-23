@@ -1182,11 +1182,11 @@
       "releaseFiles": [
         {
           "path": "videos/chip-dog-learning.webm",
-          "sha256": "41b2289347fa0131ed1bb02b9b5b9ff10f20a7d6f1552120e4531770a3589444"
+          "sha256": "d07e1d8eff369c12305ba9b620be5a3990578337a4442b6724e8c27fe66b65d8"
         },
         {
           "path": "videos/chip-dog-learning.mp4",
-          "sha256": "324bda383a3949b8f87b837d71417c966e7d574573dedfe051c1975354510001"
+          "sha256": "53fa689df390237d8a8a13386e1d295be83fb8182eb280747bdff74e136f40b1"
         },
         {
           "path": "videos/chip-dog-learning-poster.jpg",
@@ -1195,7 +1195,7 @@
       ],
       "purpose": "kids lesson 1 60fps concept clip: Chip sees dog photos, finds shared legs, nose and tail, and recognises a new spotted dog",
       "sourceMaster": "design/brand/source/videos/chip-dog-learning.webm",
-      "sourceSha256": "41b2289347fa0131ed1bb02b9b5b9ff10f20a7d6f1552120e4531770a3589444",
+      "sourceSha256": "d07e1d8eff369c12305ba9b620be5a3990578337a4442b6724e8c27fe66b65d8",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],
@@ -1219,25 +1219,25 @@
       "id": "clip-chip-rule-robot-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/chip-rule-robot.webm",
-          "sha256": "997a800582f5fa0ee5fcd14afdd022e1cb806febf96a41ea6ae01c891d92357b"
+          "sha256": "241a3b5ae18868b0825206c4014d1c13fa1e9623e00ae79252e358b4485131b1"
         },
         {
           "path": "videos/chip-rule-robot.mp4",
-          "sha256": "fc380e0a19163ca93689ac06f93af346c5b202c82892b81e17843af5440bfe4d"
+          "sha256": "ce73fb3ad2bab2ffaee6f4a7b646821fe8cdcdb0fe305cad6a759d2015b7c79b"
         },
         {
           "path": "videos/chip-rule-robot-poster.jpg",
-          "sha256": "e9201cdc5152304dba79775c47385988426b90fd867b0965e7482972bb6f3179"
+          "sha256": "cb2844891dcac683064f459639a432180893043b33983a1f1ee76d4cc1e64db2"
         }
       ],
-      "purpose": "kids lesson 2 60fps concept clip: chip checking recipe rulebook clues to deduce bird and duck",
+      "purpose": "kids lesson 2 60fps concept clip: a picture rulebook turns clues (feather, song, water) into bird, then duck; the duck swims out of the bush",
       "sourceMaster": "design/brand/source/videos/chip-rule-robot.webm",
-      "sourceSha256": "997a800582f5fa0ee5fcd14afdd022e1cb806febf96a41ea6ae01c891d92357b",
+      "sourceSha256": "241a3b5ae18868b0825206c4014d1c13fa1e9623e00ae79252e358b4485131b1",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],

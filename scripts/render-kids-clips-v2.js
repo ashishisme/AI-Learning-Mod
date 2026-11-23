@@ -417,9 +417,122 @@ function renderChipDogLearningFrame(ctx, f, totalFrames, W, H, FPS, easeOutBack)
   }
   if (t >= 13.2) kConfetti(ctx, t - 13.2, W, H)
 }
+// Lesson 2 Kids: Chip's picture rulebook works out "bird", then "duck". Cues 0, 3.5, 6.5, 9.8, 13.0.
+function renderChipRuleRobotFrame(ctx, f, totalFrames, W, H, FPS, easeOutBack) {
+  const t = f / FPS
+  const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v))
+  const INK = '#1F2937'
+  const lerp = (a, b, u) => a + (b - a) * u
+
+  // ---------- icons ----------
+  const icon = {
+    feather: (x, y, s) => { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.rotate(-0.6); ctx.fillStyle = '#26A69A'; ctx.strokeStyle = INK; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(0, -18); ctx.quadraticCurveTo(12, -4, 0, 16); ctx.quadraticCurveTo(-12, -4, 0, -18); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, -14); ctx.lineTo(0, 22); ctx.stroke(); ctx.restore() },
+    note: (x, y, s) => { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.fillStyle = '#7E57C2'; ctx.strokeStyle = '#7E57C2'; ctx.lineWidth = 4; ctx.beginPath(); ctx.ellipse(-5, 10, 8, 6, -0.4, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.moveTo(2, 9); ctx.lineTo(2, -16); ctx.quadraticCurveTo(12, -10, 12, -2); ctx.stroke(); ctx.restore() },
+    bird: (x, y, s) => { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.fillStyle = '#42A5F5'; ctx.strokeStyle = INK; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.ellipse(0, 3, 16, 12, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.arc(12, -8, 8, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#FFA726'; ctx.beginPath(); ctx.moveTo(19, -9); ctx.lineTo(27, -6); ctx.lineTo(19, -4); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#1E88E5'; ctx.beginPath(); ctx.ellipse(-3, 2, 9, 5, -0.4, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(14, -10, 1.8, 0, Math.PI * 2); ctx.fill(); ctx.restore() },
+    water: (x, y, s) => { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.strokeStyle = '#1E88E5'; ctx.lineWidth = 4; ctx.lineCap = 'round'; for (const dy of [-7, 5]) { ctx.beginPath(); ctx.moveTo(-18, dy); for (let i = 0; i <= 6; i++) ctx.lineTo(-18 + i * 6, dy + (i % 2 ? -4 : 4)); ctx.stroke() } ctx.restore() },
+    duck: (x, y, s) => { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.fillStyle = '#FFD54F'; ctx.strokeStyle = INK; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.ellipse(-2, 5, 18, 11, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.arc(11, -8, 8.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#FB8C00'; ctx.beginPath(); ctx.ellipse(22, -6, 6, 3.2, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(13, -10, 1.8, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#FFCA28'; ctx.beginPath(); ctx.ellipse(-4, 3, 9, 5, -0.3, 0, Math.PI * 2); ctx.fill(); ctx.restore() },
+  }
+  const arrow = (x, y) => { ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x - 10, y); ctx.lineTo(x + 8, y); ctx.moveTo(x + 2, y - 6); ctx.lineTo(x + 8, y); ctx.lineTo(x + 2, y + 6); ctx.stroke() }
+  const plus = (x, y) => { ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x - 6, y); ctx.lineTo(x + 6, y); ctx.moveTo(x, y - 6); ctx.lineTo(x, y + 6); ctx.stroke() }
+  const disc = (x, y, r, fill, glow) => { ctx.save(); if (glow) { ctx.shadowColor = '#FACC15'; ctx.shadowBlur = 16 } ctx.fillStyle = fill; ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.restore() }
+
+  // ---------- scene ----------
+  const sky = ctx.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, '#8FD3F4'); sky.addColorStop(0.7, '#D8F1FB')
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H)
+  ctx.fillStyle = '#9CCC65'; ctx.beginPath(); ctx.ellipse(400, 470, 560, 150, 0, Math.PI, 0); ctx.fill()
+  ctx.fillStyle = '#7CB342'; ctx.fillRect(0, 380, W, 70)
+  ctx.fillStyle = '#4FC3F7'; ctx.strokeStyle = '#0288D1'; ctx.lineWidth = 3
+  ctx.beginPath(); ctx.ellipse(690, 392, 120, 34, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke() // pond
+  ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 2
+  for (const [px, ph] of [[650, 0], [720, 1.5]]) { ctx.beginPath(); ctx.ellipse(px, 392, 18 + Math.sin(t * 2 + ph) * 4, 4, 0, 0, Math.PI * 2); ctx.stroke() }
+
+  // the duck: hidden behind the bush until the end, then swims out
+  const duckOut = kSmooth((t - 13.8) / 1.0)
+  const drawDuckOut = () => icon.duck(lerp(690, 610, duckOut), lerp(330, 388, duckOut) + Math.sin(t * 4) * 2, 2.0)
+  if (duckOut > 0 && duckOut < 0.5) drawDuckOut()
+
+  // the bush, rustling when a clue comes out of it
+  const rustle = (t > 3.6 && t < 5.6) || (t > 9.9 && t < 11.2) ? Math.sin(t * 30) * 3 : 0
+  ctx.fillStyle = '#43A047'; ctx.strokeStyle = INK; ctx.lineWidth = 2.5
+  for (const [bx, by, r] of [[640, 330, 38], [690, 305, 46], [742, 330, 38], [690, 345, 40]]) { ctx.beginPath(); ctx.arc(bx + rustle, by, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke() }
+  ctx.fillStyle = '#66BB6A'; for (const [bx, by, r] of [[675, 292, 14], [722, 318, 11]]) { ctx.beginPath(); ctx.arc(bx + rustle, by, r, 0, Math.PI * 2); ctx.fill() }
+
+  if (duckOut >= 0.5) drawDuckOut()
+
+  // ---------- the rulebook ----------
+  const open = kSmooth((t - 0.2) / 0.7)
+  const B = { x: 385, y: 40, pw: 175, ph: 200 }
+  ctx.fillStyle = '#8D6E63'; ctx.strokeStyle = INK; ctx.lineWidth = 3
+  ctx.beginPath(); ctx.roundRect(B.x - B.pw * open - 10, B.y - 8, (B.pw * open + 10) * 2, B.ph + 16, 10); ctx.fill(); ctx.stroke() // cover
+  const pageGlow = [t > 6.6 && t < 9.8, t > 13 && t < 15]
+  for (const side of [0, 1]) {
+    const w = B.pw * open
+    const x = side ? B.x : B.x - w
+    ctx.save(); if (pageGlow[side]) { ctx.shadowColor = '#FACC15'; ctx.shadowBlur = 24 }
+    ctx.fillStyle = pageGlow[side] ? '#FFFDE7' : '#FFFFFF'; ctx.strokeStyle = INK; ctx.lineWidth = 2.5
+    ctx.beginPath(); ctx.roundRect(x, B.y, w, B.ph, 6); ctx.fill(); ctx.stroke(); ctx.restore()
+  }
+  const RULE = [
+    { cx: B.x - B.pw / 2, ins: ['feather', 'note'], out: 'bird', tick: 7.6 },
+    { cx: B.x + B.pw / 2, ins: ['bird', 'water'], out: 'duck', tick: 13.6 },
+  ]
+  if (open > 0.95) {
+    RULE.forEach((r, i) => {
+      // rule number
+      disc(r.cx, B.y + 30, 17, '#FFE082', false)
+      ctx.fillStyle = INK; ctx.font = '800 20px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(i + 1), r.cx, B.y + 31)
+      // ins (top row) and out (bottom), drawn as a little picture sum
+      const lit = pageGlow[i]
+      disc(r.cx - 40, B.y + 85, 24, lit ? '#FFF59D' : '#F5F5F5', lit); icon[r.ins[0]](r.cx - 40, B.y + 85, 0.9)
+      plus(r.cx, B.y + 85)
+      disc(r.cx + 40, B.y + 85, 24, lit ? '#FFF59D' : '#F5F5F5', lit); icon[r.ins[1]](r.cx + 40, B.y + 85, 0.9)
+      ctx.save(); ctx.translate(r.cx, B.y + 125); ctx.rotate(Math.PI / 2); arrow(0, 0); ctx.restore()
+      disc(r.cx, B.y + 163, 26, '#E3F2FD', false); icon[r.out](r.cx, B.y + 163, 1.0)
+      kBadge(ctx, r.cx + 48, B.y + 30, true, easeOutBack(clamp((t - r.tick) / 0.35)) * 0.75)
+    })
+  }
+
+  // ---------- the clue tray (what Chip knows so far) ----------
+  const TRAY = { x: 225, y: 290, w: 320, h: 66 }
+  ctx.fillStyle = '#ECEFF1'; ctx.strokeStyle = INK; ctx.lineWidth = 3
+  ctx.beginPath(); ctx.roundRect(TRAY.x, TRAY.y, TRAY.w, TRAY.h, 14); ctx.fill(); ctx.stroke()
+  const slot = (i) => ({ x: TRAY.x + 45 + i * 76, y: TRAY.y + 33 })
+  for (let i = 0; i < 4; i++) { const p = slot(i); ctx.strokeStyle = '#B0BEC5'; ctx.setLineDash([5, 5]); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(p.x, p.y, 24, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]) }
+  // clue tokens: [icon, from, t0, t1, slot]
+  const BUSH = { x: 690, y: 300 }
+  const tokens = [
+    ['feather', BUSH, 3.9, 4.8, 0],
+    ['note', BUSH, 4.6, 5.5, 1],
+    ['bird', { x: RULE[0].cx, y: B.y + 163 }, 8.0, 8.8, 2],
+    ['water', { x: 640, y: 392 }, 10.3, 11.2, 3],
+  ]
+  for (const [name, from, t0, t1, si] of tokens) {
+    if (t < t0) continue
+    const u = kSmooth((t - t0) / (t1 - t0)), to = slot(si)
+    const x = lerp(from.x, to.x, u), y = lerp(from.y, to.y, u) - Math.sin(u * Math.PI) * 60
+    const lit = (si < 2 && t > 6.6 && t < 9.8) || (si >= 2 && t > 13 && t < 15)
+    disc(x, y, 24, lit ? '#FFF59D' : '#FFFFFF', lit); icon[name](x, y, 0.9)
+  }
+  // links from the tray to the rule being checked
+  const link = (si, x, y, a) => { if (a <= 0) return; const p = slot(si); ctx.save(); ctx.globalAlpha = a; ctx.strokeStyle = '#F59E0B'; ctx.lineWidth = 3; ctx.setLineDash([7, 6]); ctx.lineDashOffset = -t * 30; ctx.beginPath(); ctx.moveTo(p.x, p.y - 24); ctx.lineTo(x, y + 24); ctx.stroke(); ctx.restore() }
+  const a1 = kSmooth((t - 6.6) / 0.4) * (1 - kSmooth((t - 9.4) / 0.4)); link(0, RULE[0].cx - 40, B.y + 85, a1); link(1, RULE[0].cx + 40, B.y + 85, a1)
+  const a2 = kSmooth((t - 13.0) / 0.4) * (1 - kSmooth((t - 14.8) / 0.4)); link(2, RULE[1].cx - 40, B.y + 85, a2); link(3, RULE[1].cx + 40, B.y + 85, a2)
+
+  // music notes and splashes coming from the hidden animal
+  if (t > 4.0 && t < 6.4) for (let i = 0; i < 3; i++) { const u = ((t - 4.0 + i * 0.5) % 1.5) / 1.5; ctx.globalAlpha = Math.min(1, 1.6 * (1 - u)); icon.note(705 + i * 18 + Math.sin(u * 6) * 6, 260 - u * 70, 0.8); ctx.globalAlpha = 1 }
+  if (t > 10.0 && t < 12.6) for (let i = 0; i < 6; i++) { const u = ((t - 10.0 + i * 0.2) % 0.9) / 0.9; ctx.fillStyle = `rgba(30,136,229,${1 - u})`; ctx.beginPath(); ctx.arc(640 + Math.cos(i) * 30 * u, 385 - Math.sin(u * Math.PI) * 40 - i * 2, 4, 0, Math.PI * 2); ctx.fill() }
+
+  // ---------- Chip ----------
+  const pose = t >= 14.6 ? 'cheer' : (t > 6.6 && t < 9.8) || (t > 13 && t < 14.6) ? 'point' : 'wave'
+  drawChipAvatar(ctx, 92, 268, 1.15, pose, t)
+  const wonder = (t > 3.7 && t < 6.5) || (t > 10 && t < 13)
+  if (wonder) kBubble(ctx, 118, 150, easeOutBack(clamp(((t > 9 ? t - 10 : t - 3.7)) / 0.35)), () => { ctx.fillStyle = '#F59E0B'; ctx.font = '800 32px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', 0, 2) })
+  if (t > 14.6) { kBubble(ctx, 118, 150, easeOutBack(clamp((t - 14.6) / 0.35)), () => icon.duck(0, 2, 1.1)); kConfetti(ctx, t - 14.6, W, H) }
+}
 
 const HELPERS = [kSmooth, kBadge, kConfetti, kRoom, kBubble].map(String).join('\n')
 const SCENES = [
+  { name: 'chip-rule-robot', fn: renderChipRuleRobotFrame, poster: 8.2 },
   { name: 'chip-dog-learning', fn: renderChipDogLearningFrame, poster: 5.4 },
   { name: 'chip-fruit-sorter', fn: renderChipFruitSorterFrame, poster: 1.75 }]
 const STILLS = [1.75, 5.5, 7.8, 12.3, 15.4] // one moment in each cue
@@ -440,8 +553,8 @@ async function main() {
       if (stills) return { stills: stills.map((s) => { renderFrame(ctx, Math.round(s * FPS), TOTAL, W, H, FPS, easeOutBack); return canvas.toDataURL('image/png') }) }
       const stream = canvas.captureStream(FPS)
       const rec = (mime, bps) => { const r = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: bps }); const c = []; r.ondataavailable = (e) => e.data.size && c.push(e.data); r.start(100); return { r, c, mime } }
-      const recs = [rec('video/webm;codecs=vp9', 310_000)]
-      if (MediaRecorder.isTypeSupported('video/mp4;codecs=avc1')) recs.push(rec('video/mp4;codecs=avc1', 310_000))
+      const recs = [rec('video/webm;codecs=vp9', 270_000)]
+      if (MediaRecorder.isTypeSupported('video/mp4;codecs=avc1')) recs.push(rec('video/mp4;codecs=avc1', 270_000))
       let poster = null
       for (let f = 0; f < TOTAL; f++) {
         renderFrame(ctx, f, TOTAL, W, H, FPS, easeOutBack)
