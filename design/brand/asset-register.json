@@ -1513,25 +1513,25 @@
       "id": "clip-plain-linear-classifier-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/plain-linear-classifier.webm",
-          "sha256": "bbdd0c5de69d8c3439bdefde4a174400926659cc71f164953b332d6a2c8c866d"
+          "sha256": "e1d97fd0376600b38db39b3378ab2ef407681de60d527919e73019253e3f38a3"
         },
         {
           "path": "videos/plain-linear-classifier.mp4",
-          "sha256": "d9c45a7f511d9a154a3e0c9aa92bef46391e62e3b30fb8663d8959e68541f814"
+          "sha256": "570b05823cdd3ca32f0beb1916353633c27b8b5f30d91e9c3f8d540ebd527fd7"
         },
         {
           "path": "videos/plain-linear-classifier-poster.jpg",
-          "sha256": "d04fd6132aa2551ec470b830aa9526ae06b732523d2865ea1b895113d0d3bfbc"
+          "sha256": "9334ccb08aaec44decd24157d9b2ca90346592d309dd94ec0f7d6c8ba2ce12d3"
         }
       ],
-      "purpose": "plain english lesson 3 60fps concept clip: customer churn risk boundary learning separating accounts with iterative line fitting",
+      "purpose": "Plain English lesson 3 clip, calm adult style: trial line corrected step by step",
       "sourceMaster": "design/brand/source/videos/plain-linear-classifier.webm",
-      "sourceSha256": "bbdd0c5de69d8c3439bdefde4a174400926659cc71f164953b332d6a2c8c866d",
+      "sourceSha256": "e1d97fd0376600b38db39b3378ab2ef407681de60d527919e73019253e3f38a3",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],

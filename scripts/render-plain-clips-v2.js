@@ -242,9 +242,77 @@ function renderPlainDecisionTreeFrame(ctx, f, totalFrames, W, H, FPS) {
   }
 }
 
+// Lesson 3: a trial line between loyal and at-risk customers, corrected step by step.
+function renderPlainLinearClassifierFrame(ctx, f, totalFrames, W, H, FPS) {
+  const t = f / FPS
+  pBg(ctx, W, H)
+  pPanel(ctx, 120, 30, 560, 390)
+  const X0 = 180, X1 = 640, Y0 = 380, Y1 = 60
+  const px = (u) => lerp(X0, X1, u), py = (v) => lerp(Y0, Y1, v)
+  // axes: engagement (pulse) to the right, tenure (calendar) upward
+  ctx.strokeStyle = C.muted; ctx.lineWidth = 2
+  ctx.beginPath(); ctx.moveTo(X0, Y1); ctx.lineTo(X0, Y0); ctx.lineTo(X1, Y0); ctx.stroke()
+  ctx.strokeStyle = C.navy; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(X1 - 40, Y0 + 20); ctx.lineTo(X1 - 30, Y0 + 20); ctx.lineTo(X1 - 25, Y0 + 11); ctx.lineTo(X1 - 19, Y0 + 28); ctx.lineTo(X1 - 14, Y0 + 20); ctx.lineTo(X1 - 4, Y0 + 20); ctx.stroke()
+  ctx.strokeStyle = C.navy; ctx.strokeRect(X0 - 38, Y1, 22, 20); ctx.fillStyle = C.navy; ctx.fillRect(X0 - 38, Y1, 22, 6)
+  // line: through (cx, cy) at angle a (normalised, y up); loyal side is where n·(p-c) > 0
+  const iters = [{ cx: 0.5, cy: 0.72, a: 0 }, { cx: 0.5, cy: 0.64, a: -0.3 }, { cx: 0.5, cy: 0.56, a: -0.58 }, { cx: 0.5, cy: 0.5, a: -0.79 }]
+  const k = clamp((t - 9.9) / 2.7) * 3, ki = Math.min(2, Math.floor(k)), kv = sm(k - ki)
+  const L = { cx: lerp(iters[ki].cx, iters[ki + 1].cx, kv), cy: lerp(iters[ki].cy, iters[ki + 1].cy, kv), a: lerp(iters[ki].a, iters[ki + 1].a, kv) }
+  if (t < 9.9) Object.assign(L, iters[0])
+  const side = (u, v) => -Math.sin(L.a) * (u - L.cx) + Math.cos(L.a) * (v - L.cy)
+  // step 5: shade the at-risk side
+  const shade = sm((t - 13.1) / 0.6)
+  if (shade > 0) {
+    ctx.save(); ctx.beginPath(); ctx.rect(X0, Y1, X1 - X0, Y0 - Y1); ctx.clip()
+    const d = [Math.cos(L.a), Math.sin(L.a)], nrm = [-Math.sin(L.a), Math.cos(L.a)]
+    ctx.beginPath()
+    for (const [s1, s2] of [[-2, 0], [2, 0], [2, -2], [-2, -2]]) { const u = L.cx + d[0] * s1 + nrm[0] * s2, v = L.cy + d[1] * s1 + nrm[1] * s2; ctx.lineTo(px(u), py(v)) }
+    ctx.fillStyle = `rgba(231,111,81,${0.12 * shade})`; ctx.fill(); ctx.restore()
+  }
+  // accounts
+  const pts = []
+  for (let i = 0; i < 30; i++) {
+    const loyal = i % 2 === 0
+    const r = 0.12 + rnd(i) * 0.36, th = rnd(i + 40) * Math.PI / 2
+    const u = loyal ? 0.92 - r * Math.cos(th) : 0.08 + r * Math.cos(th)
+    const v = loyal ? 0.92 - r * Math.sin(th) : 0.08 + r * Math.sin(th)
+    pts.push({ u, v, loyal, t0: 0.3 + i * 0.09 })
+  }
+  // step 2: the trial line
+  const draw = t < 3.6 ? 0 : sm((t - 3.6) / 1.2)
+  for (const p of pts) {
+    const s = sm((t - p.t0) / 0.3)
+    if (s <= 0) continue
+    const x = px(p.u), y = py(p.v)
+    const wrong = draw >= 1 && (side(p.u, p.v) > 0) !== p.loyal
+    if (wrong && t > 6.6) { const pulse = 0.5 + 0.5 * Math.sin(t * 7); ctx.strokeStyle = C.warn; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x, y, 12 + 3 * pulse, 0, Math.PI * 2); ctx.stroke() }
+    ctx.fillStyle = p.loyal ? C.good : C.bad; ctx.beginPath(); ctx.arc(x, y, 6.5 * s, 0, Math.PI * 2); ctx.fill()
+    if (shade > 0 && !p.loyal) { const r = sm((t - 13.6 - p.u) / 0.4); if (r > 0) { ctx.strokeStyle = C.warn; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, 6 + 5 * r, 0, Math.PI * 2); ctx.stroke() } }
+  }
+  if (draw > 0) {
+    ctx.save(); ctx.beginPath(); ctx.rect(X0, Y1, X1 - X0, Y0 - Y1); ctx.clip()
+    const d = [Math.cos(L.a), Math.sin(L.a)], len = 1.2 * draw
+    ctx.strokeStyle = C.navy; ctx.lineWidth = 3.5; ctx.setLineDash(t < 9.9 ? [10, 8] : [])
+    ctx.beginPath(); ctx.moveTo(px(L.cx - d[0] * len), py(L.cy - d[1] * len)); ctx.lineTo(px(L.cx + d[0] * len), py(L.cy + d[1] * len)); ctx.stroke()
+    ctx.setLineDash([]); ctx.restore()
+    // step 3: the errors push on the line (arrows at the pivot)
+    const push = sm((t - 7.4) / 0.5) * (1 - sm((t - 12.6) / 0.5))
+    if (push > 0) {
+      ctx.save(); ctx.globalAlpha = push; ctx.translate(px(L.cx), py(L.cy)); ctx.strokeStyle = C.warn; ctx.lineWidth = 3
+      ctx.beginPath(); ctx.arc(0, 0, 34, -2.6, -1.5); ctx.stroke()
+      ctx.beginPath(); ctx.moveTo(Math.cos(-1.5) * 34 - 8, Math.sin(-1.5) * 34 - 4); ctx.lineTo(Math.cos(-1.5) * 34, Math.sin(-1.5) * 34); ctx.lineTo(Math.cos(-1.5) * 34 - 6, Math.sin(-1.5) * 34 + 8); ctx.stroke()
+      ctx.fillStyle = C.navy; ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI * 2); ctx.fill(); ctx.restore()
+    }
+  }
+  // step 5: the team steps in
+  const team = sm((t - 14.0) / 0.6)
+  if (team > 0) { ctx.save(); ctx.globalAlpha = team; pPerson(ctx, 730, 330, 1, C.navy); pPerson(ctx, 760, 345, 0.8, C.good); ctx.restore() }
+}
+
 const SCENES = [
   { name: 'plain-rules-vs-learning', fn: renderPlainRulesVsLearningFrame, poster: 12.5 },
-  { name: 'plain-decision-tree', fn: renderPlainDecisionTreeFrame, poster: 11.8 }]
+  { name: 'plain-decision-tree', fn: renderPlainDecisionTreeFrame, poster: 11.8 },
+  { name: 'plain-linear-classifier', fn: renderPlainLinearClassifierFrame, poster: 8.4 }]
 const STILLS = [2.2, 5.8, 8.6, 12.3, 15.6]
 
 async function main() {
