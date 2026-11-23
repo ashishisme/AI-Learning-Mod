@@ -69,7 +69,7 @@ The state for any agent continuing this work. Commands run from the repo root. N
   - the lesson 5 examples adapted for Marathi.
 - [X] T014 Dry run and its cost, then the owner's yes, then recording. Rerun until 0 failed.
 - [X] T015 Owner rsync, then check the manifest hash.
-- [ ] T016 Switch `mr` to approved with beta, then run the gates:
+- [X] T016 Switch `mr` to approved with beta, then run the gates: Done: live in v0.20.0 (2026-11-23).
   - `go vet ./...` and `go test ./...`;
   - `go run ./cmd/ingest -verify` with audio;
   - `go run ./cmd/assetcheck`;
