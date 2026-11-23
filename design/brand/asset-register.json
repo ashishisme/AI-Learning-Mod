@@ -1345,25 +1345,25 @@
       "id": "clip-chip-word-blocks-video",
       "status": "approved",
       "trademarkScreen": "clear",
-      "creator": "rendered 60fps canvas micro-video (2026-11-14)",
+      "creator": "rendered 60fps canvas micro-video (2026-11-14; redrawn 2026-11-23, scripts/render-kids-clips-v2.js)",
       "rightsEvidence": "original work for AI Foundations Coach, no third-party source",
       "releaseFiles": [
         {
           "path": "videos/chip-word-blocks.webm",
-          "sha256": "db45104acf578f46544ce039bffa5b6b00270dd552d21fec9c0cee522defa34f"
+          "sha256": "b06d102e5b4c126d13da7e0f40a17256da9a815c5f93259e5d177f4aad779452"
         },
         {
           "path": "videos/chip-word-blocks.mp4",
-          "sha256": "6b875c6de0a63c12c4c8e3409f9557dcf025da7b695084d70046aee2a4b738ce"
+          "sha256": "fb404a722f6be2bd94ad6d8d90599be96b3f40d2c7fcfd8ec38c99110893b646"
         },
         {
           "path": "videos/chip-word-blocks-poster.jpg",
-          "sha256": "3271cc67b767e8d54700ef6a30665cdfc0763f06eb34efdd61d27115adb28f58"
+          "sha256": "4aa96a04fda6433ad1e90facc73a83b3b641b55a8fd6a0c51aa32f75ea6fb057"
         }
       ],
-      "purpose": "kids lesson 5 60fps concept clip: toy word blocks with chip shining attention flashlight between puppy and it",
+      "purpose": "kids lesson 5 60fps concept clip: picture blocks show king - boy + girl = queen; a picture word train where Chip's light links the ? carriage (it) to the puppy",
       "sourceMaster": "design/brand/source/videos/chip-word-blocks.webm",
-      "sourceSha256": "db45104acf578f46544ce039bffa5b6b00270dd552d21fec9c0cee522defa34f",
+      "sourceSha256": "b06d102e5b4c126d13da7e0f40a17256da9a815c5f93259e5d177f4aad779452",
       "usageLocation": [
         "web/src/components/VideoClipPlayer.tsx"
       ],

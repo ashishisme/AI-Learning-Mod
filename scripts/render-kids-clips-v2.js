@@ -651,9 +651,162 @@ function renderChipMagnifyingGlassFrame(ctx, f, totalFrames, W, H, FPS, easeOutB
   drawChipAvatar(ctx, 90, 285, 1.15, pose, t)
   if (t >= 14.3) { kBubble(ctx, 118, 165, easeOutBack(clamp((t - 14.3) / 0.35)), () => drawCat(0, 8, 0.24, 0, 0)); kConfetti(ctx, t - 14.3, W, H) }
 }
+// Lesson 5 Kids: word blocks (king - boy + girl = queen), then a word train where "it" points to the puppy.
+// No words in the frame: people pictures on the blocks, picture carriages on the train, a "?" carriage for "it".
+// Cues 0, 3.5, 6.5, 9.8, 13.0.
+function renderChipWordBlocksFrame(ctx, f, totalFrames, W, H, FPS, easeOutBack) {
+  const t = f / FPS
+  const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v))
+  const INK = '#1F2937'
+  const lerp = (a, b, u) => a + (b - a) * u
+
+  // ---------- pictures ----------
+  const person = (x, y, s, o) => {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'
+    ctx.fillStyle = o.shirt; ctx.beginPath(); ctx.moveTo(-22, 34); ctx.quadraticCurveTo(-22, 6, 0, 6); ctx.quadraticCurveTo(22, 6, 22, 34); ctx.closePath(); ctx.fill(); ctx.stroke()
+    if (o.pigtails) { ctx.fillStyle = o.hair; for (const d of [-1, 1]) { ctx.beginPath(); ctx.arc(d * 17, -12, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke() } }
+    ctx.fillStyle = '#F2C29B'; ctx.beginPath(); ctx.arc(0, -12, 15, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = o.hair; ctx.beginPath(); ctx.arc(0, -15, 15, Math.PI * 1.05, Math.PI * 1.95); ctx.closePath(); ctx.fill()
+    ctx.fillStyle = INK; for (const d of [-1, 1]) { ctx.beginPath(); ctx.arc(d * 5, -11, 1.8, 0, Math.PI * 2); ctx.fill() }
+    ctx.beginPath(); ctx.arc(0, -6, 4, 0.2, Math.PI - 0.2); ctx.stroke()
+    if (o.crown) { ctx.fillStyle = '#FFD54F'; ctx.beginPath(); ctx.moveTo(-13, -26); ctx.lineTo(-13, -40); ctx.lineTo(-6, -32); ctx.lineTo(0, -43); ctx.lineTo(6, -32); ctx.lineTo(13, -40); ctx.lineTo(13, -26); ctx.closePath(); ctx.fill(); ctx.stroke() }
+    ctx.restore()
+  }
+  const PEOPLE = {
+    king: { shirt: '#7E57C2', hair: '#5D4037', crown: true, block: '#D1C4E9' },
+    boy: { shirt: '#1E88E5', hair: '#4E342E', block: '#BBDEFB' },
+    girl: { shirt: '#EC407A', hair: '#3E2723', pigtails: true, block: '#F8BBD0' },
+    queen: { shirt: '#EC407A', hair: '#3E2723', pigtails: true, crown: true, block: '#FFE082' },
+  }
+  const block = (x, y, s, who, glow) => {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s)
+    if (glow) { ctx.shadowColor = glow; ctx.shadowBlur = 22 }
+    ctx.fillStyle = '#00000022'; ctx.beginPath(); ctx.roundRect(-40, -34, 88, 88, 12); ctx.fill()
+    ctx.fillStyle = PEOPLE[who].block; ctx.strokeStyle = INK; ctx.lineWidth = 3
+    ctx.beginPath(); ctx.roundRect(-45, -45, 90, 90, 12); ctx.fill(); ctx.stroke(); ctx.restore()
+    person(x, y + 4 * s, s * 1.1, PEOPLE[who])
+  }
+  const sign = (x, y, kind, s) => {
+    if (s <= 0) return
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.strokeStyle = INK; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath()
+    if (kind === '-') { ctx.moveTo(-12, 0); ctx.lineTo(12, 0) }
+    if (kind === '+') { ctx.moveTo(-12, 0); ctx.lineTo(12, 0); ctx.moveTo(0, -12); ctx.lineTo(0, 12) }
+    if (kind === '=') { ctx.moveTo(-12, -7); ctx.lineTo(12, -7); ctx.moveTo(-12, 7); ctx.lineTo(12, 7) }
+    ctx.stroke(); ctx.restore()
+  }
+  const puppy = (x, y, s) => {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.strokeStyle = INK; ctx.lineWidth = 2.5
+    ctx.fillStyle = '#8D6E63'; for (const d of [-1, 1]) { ctx.beginPath(); ctx.ellipse(d * 15, -2, 7, 13, d * 0.3, 0, Math.PI * 2); ctx.fill(); ctx.stroke() }
+    ctx.fillStyle = '#D7A86E'; ctx.beginPath(); ctx.arc(0, 0, 15, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = INK; for (const d of [-1, 1]) { ctx.beginPath(); ctx.arc(d * 5, -3, 2, 0, Math.PI * 2); ctx.fill() }
+    ctx.beginPath(); ctx.ellipse(0, 4, 4, 3, 0, 0, Math.PI * 2); ctx.fill()
+    ctx.fillStyle = '#EF5350'; ctx.beginPath(); ctx.ellipse(0, 11, 3, 4, 0, 0, Math.PI * 2); ctx.fill()
+    ctx.restore()
+  }
+  const tail = (x, y, s) => { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.strokeStyle = '#8D6E63'; ctx.lineWidth = 7; ctx.lineCap = 'round'; const w = Math.sin(t * 12) * 0.4; ctx.rotate(w); ctx.beginPath(); ctx.moveTo(-4, 14); ctx.quadraticCurveTo(10, 0, 2, -14); ctx.stroke(); ctx.restore(); ctx.strokeStyle = '#90A4AE'; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; for (const d of [-1, 1]) { ctx.beginPath(); ctx.arc(x, y, 20 * s, d > 0 ? -0.6 : Math.PI - 0.6 + 0.0, d > 0 ? 0.2 : Math.PI + 0.2); ctx.stroke() } }
+  const smiley = (x, y, s) => { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.fillStyle = '#FDD835'; ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(0, 0, 16, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = INK; for (const d of [-1, 1]) { ctx.beginPath(); ctx.arc(d * 5, -4, 2, 0, Math.PI * 2); ctx.fill() } ctx.beginPath(); ctx.arc(0, 1, 8, 0.2, Math.PI - 0.2); ctx.stroke(); ctx.restore() }
+  const bars = (x, y, s) => { ctx.fillStyle = '#B0BEC5'; ctx.beginPath(); ctx.roundRect(x - 18 * s, y - 8 * s, 36 * s, 6 * s, 3); ctx.fill(); ctx.beginPath(); ctx.roundRect(x - 18 * s, y + 3 * s, 24 * s, 6 * s, 3); ctx.fill() }
+  const qmark = (x, y, s) => { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.fillStyle = '#FB8C00'; ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(0, 0, 17, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#FFFFFF'; ctx.font = '800 24px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', 0, 1); ctx.restore() }
+
+  // ---------- room and mat ----------
+  kRoom(ctx, W, H)
+  ctx.fillStyle = '#4DB6AC'; ctx.strokeStyle = INK; ctx.lineWidth = 3
+  ctx.beginPath(); ctx.ellipse(440, 398, 330, 40, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
+  ctx.strokeStyle = '#80CBC4'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(440, 398, 290, 28, 0, 0, Math.PI * 2); ctx.stroke()
+
+  // ---------- step 1 and 2: the blocks ----------
+  const ROW = { y: 96, king: 205, minus: 287, boy: 360, plus: 442, girl: 515, eq: 597, queen: 680 }
+  const MESS = { king: [250, 300, -0.2], boy: [390, 320, 0.15], girl: [530, 296, -0.1] }
+  const toRow = kSmooth((t - 3.6) / 0.9)
+  const up = kSmooth((t - 6.5) / 0.6) // step 3: the sum moves up and shrinks to make room for the train
+  const rowS = lerp(1, 0.62, up), rowDy = lerp(0, -40, up)
+  const rowX = (x) => lerp(x, 440 + (x - 440) * 0.62, up)
+  ;['king', 'boy', 'girl'].forEach((who, i) => {
+    const drop = easeOutBack(clamp((t - 0.2 - i * 0.35) / 0.5))
+    if (drop <= 0) return
+    const [mx, my, rot] = MESS[who]
+    const x = lerp(mx, rowX(ROW[who]), toRow), y = lerp(my - (1 - drop) * 160, ROW.y + rowDy, toRow)
+    ctx.save(); ctx.translate(x, y); ctx.rotate(rot * (1 - toRow)); ctx.translate(-x, -y)
+    const fade = who === 'boy' && t > 4.9 && t < 6.5 ? 1 : 0 // "take away boy": the boy block dims
+    ctx.globalAlpha = 1 - 0.55 * fade * kSmooth((t - 4.9) / 0.4)
+    block(x, y, rowS * (who === 'king' ? 1 : 1), who); ctx.restore()
+  })
+  sign(rowX(ROW.minus), ROW.y + rowDy, '-', easeOutBack(clamp((t - 4.6) / 0.3)) * rowS)
+  sign(rowX(ROW.plus), ROW.y + rowDy, '+', easeOutBack(clamp((t - 5.1) / 0.3)) * rowS)
+  sign(rowX(ROW.eq), ROW.y + rowDy, '=', easeOutBack(clamp((t - 5.5) / 0.3)) * rowS)
+  const qs = easeOutBack(clamp((t - 5.8) / 0.45))
+  if (t > 0.6) { // the empty slot, then the queen
+    ctx.save(); ctx.strokeStyle = '#90A4AE'; ctx.setLineDash([8, 6]); ctx.lineWidth = 3
+    const x = rowX(ROW.queen), y = ROW.y + rowDy
+    if (qs < 1 && toRow > 0.5) { ctx.beginPath(); ctx.roundRect(x - 45 * rowS, y - 45 * rowS, 90 * rowS, 90 * rowS, 12); ctx.stroke() }
+    ctx.restore()
+    if (qs > 0) block(x, y, rowS * qs, 'queen', t < 6.6 ? '#FFD54F' : null)
+  }
+
+  // ---------- step 3: the word train ----------
+  const CARS = ['bars', 'puppy', 'tail', 'bars', 'it', 'bars', 'smiley']
+  const arrive = kSmooth((t - 6.7) / 1.7)
+  const trainX = lerp(900, 140, arrive)
+  const TY = 300
+  if (t > 6.6) {
+    ctx.strokeStyle = '#6D4C41'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(0, TY + 44); ctx.lineTo(W, TY + 44); ctx.stroke()
+    ctx.strokeStyle = '#8D6E63'; ctx.lineWidth = 3; for (let x = 10; x < W; x += 26) { ctx.beginPath(); ctx.moveTo(x, TY + 40); ctx.lineTo(x + 10, TY + 50); ctx.stroke() }
+    // engine (leading, on the left)
+    const ex = trainX
+    ctx.fillStyle = '#E53935'; ctx.strokeStyle = INK; ctx.lineWidth = 3
+    ctx.beginPath(); ctx.roundRect(ex, TY - 22, 70, 56, 8); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = '#FFCDD2'; ctx.beginPath(); ctx.roundRect(ex + 36, TY - 14, 24, 20, 4); ctx.fill(); ctx.stroke()
+    ctx.fillStyle = '#424242'; ctx.beginPath(); ctx.roundRect(ex + 10, TY - 44, 16, 24, 3); ctx.fill(); ctx.stroke()
+    if (arrive < 1) for (let i = 0; i < 3; i++) { const u = ((t * 1.5 + i / 3) % 1); ctx.fillStyle = `rgba(207,216,220,${1 - u})`; ctx.beginPath(); ctx.arc(ex + 18 + u * 30, TY - 52 - u * 30, 8 + u * 10, 0, Math.PI * 2); ctx.fill() }
+    const wheels = (x, w) => { for (const wx of [x + 14, x + w - 14]) { ctx.fillStyle = '#37474F'; ctx.beginPath(); ctx.arc(wx, TY + 38, 9, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#B0BEC5'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(wx, TY + 38); ctx.lineTo(wx + Math.cos(-trainX / 9) * 8, TY + 38 + Math.sin(-trainX / 9) * 8); ctx.stroke() } }
+    wheels(ex, 70)
+    const flip = kSmooth((t - 13.0) / 0.5) // step 5: the "?" turns into the puppy
+    CARS.forEach((c, i) => {
+      const x = ex + 84 + i * 74, cx = x + 33
+      const glow = (c === 'puppy' && t > 11.6) || (c === 'it' && t > 13) ? '#22C55E' : null
+      ctx.save(); if (glow) { ctx.shadowColor = glow; ctx.shadowBlur = 20 }
+      ctx.fillStyle = ['#FFF59D', '#C5E1A5', '#B3E5FC', '#F8BBD0'][i % 4]; ctx.strokeStyle = INK; ctx.lineWidth = 3
+      ctx.beginPath(); ctx.roundRect(x, TY - 14, 66, 48, 7); ctx.fill(); ctx.stroke(); ctx.restore()
+      ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x - 8, TY + 20); ctx.lineTo(x, TY + 20); ctx.stroke()
+      wheels(x, 66)
+      if (c === 'bars') bars(cx, TY + 10, 1)
+      if (c === 'puppy') puppy(cx, TY + 10, 1)
+      if (c === 'tail') tail(cx, TY + 10, 1)
+      if (c === 'smiley') smiley(cx, TY + 10, 1)
+      if (c === 'it') { if (flip < 0.5) qmark(cx, TY + 10, 1 - flip * 2 > 0 ? 1 : 0) ; ctx.save(); ctx.translate(cx, TY + 10); ctx.scale(flip < 0.5 ? 1 - flip * 2 : (flip - 0.5) * 2, 1); ctx.translate(-cx, -(TY + 10)); if (flip >= 0.5) puppy(cx, TY + 10, 1); ctx.restore() }
+    })
+    // ---------- step 4: Chip's light from "it" to "puppy" ----------
+    const itX = ex + 84 + 4 * 74 + 33, pupX = ex + 84 + 1 * 74 + 33
+    const beam = kSmooth((t - 10.4) / 1.2)
+    if (t > 9.9) {
+      // the torch beam from Chip onto the "?" car
+      const on = kSmooth((t - 9.9) / 0.4)
+      ctx.save(); ctx.globalAlpha = 0.7 * on; ctx.fillStyle = "#FFF176"
+      ctx.beginPath(); ctx.moveTo(150, 250); ctx.lineTo(itX - 30, TY - 20); ctx.lineTo(itX + 30, TY - 20); ctx.closePath(); ctx.fill(); ctx.restore()
+      // the arc of light from "it" back to "puppy"
+      if (beam > 0) {
+        ctx.save(); ctx.strokeStyle = '#FBC02D'; ctx.lineWidth = 10; ctx.lineCap = 'round'; ctx.shadowColor = '#FFEB3B'; ctx.shadowBlur = 18
+        ctx.beginPath()
+        const N = 40
+        for (let k = 0; k <= N * beam; k++) { const u = k / N; const x = lerp(itX, pupX, u), y = TY - 24 - Math.sin(u * Math.PI) * 80; k ? ctx.lineTo(x, y) : ctx.moveTo(x, y) }
+        ctx.stroke(); ctx.restore()
+      }
+    }
+    if (t > 13.5) kBadge(ctx, itX + 30, TY - 26, true, easeOutBack(clamp((t - 13.5) / 0.35)) * 0.8)
+  }
+
+  // ---------- Chip ----------
+  const pose = t >= 13.6 ? 'cheer' : t >= 9.8 ? 'point' : 'wave'
+  drawChipAvatar(ctx, 90, 250, 1.1, pose, t)
+  if (t > 9.8 && t < 13.6) { // the torch in Chip's hand
+    ctx.save(); ctx.translate(140, 255); ctx.rotate(0.35); ctx.fillStyle = '#546E7A'; ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.roundRect(-14, -8, 30, 16, 4); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#FFF59D'; ctx.beginPath(); ctx.roundRect(14, -10, 8, 20, 3); ctx.fill(); ctx.stroke(); ctx.restore()
+  }
+  if (t >= 13.6) { kBubble(ctx, 118, 140, easeOutBack(clamp((t - 13.6) / 0.35)), () => puppy(0, 2, 1.2)); kConfetti(ctx, t - 13.6, W, H) }
+}
 
 const HELPERS = [kSmooth, kBadge, kConfetti, kRoom, kBubble].map(String).join('\n')
 const SCENES = [
+  { name: 'chip-word-blocks', fn: renderChipWordBlocksFrame, poster: 6.2, bps: 235_000 },
   { name: 'chip-magnifying-glass', fn: renderChipMagnifyingGlassFrame, poster: 5.0 },
   { name: 'chip-rule-robot', fn: renderChipRuleRobotFrame, poster: 8.2 },
   { name: 'chip-dog-learning', fn: renderChipDogLearningFrame, poster: 5.4 },
@@ -667,7 +820,7 @@ async function main() {
   const only = process.argv.find((a) => a.startsWith('--only='))?.slice(7)
   for (const scene of SCENES.filter((s) => !only || s.name === only)) {
     const page = await browser.newPage()
-    const result = await page.evaluate(async ({ fn, chipFn, helpers, stills, posterAt }) => {
+    const result = await page.evaluate(async ({ fn, chipFn, helpers, stills, posterAt, bps }) => {
       const W = 800, H = 450, FPS = 60, TOTAL = 16 * FPS
       const easeOutBack = (t) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2) }
       const renderFrame = new Function('ctx', 'f', 'totalFrames', 'W', 'H', 'FPS', 'easeOutBack', `const drawChipAvatar = ${chipFn};\n${helpers}\nreturn (${fn})(ctx, f, totalFrames, W, H, FPS, easeOutBack);`)
@@ -676,8 +829,8 @@ async function main() {
       if (stills) return { stills: stills.map((s) => { renderFrame(ctx, Math.round(s * FPS), TOTAL, W, H, FPS, easeOutBack); return canvas.toDataURL('image/png') }) }
       const stream = canvas.captureStream(FPS)
       const rec = (mime, bps) => { const r = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: bps }); const c = []; r.ondataavailable = (e) => e.data.size && c.push(e.data); r.start(100); return { r, c, mime } }
-      const recs = [rec('video/webm;codecs=vp9', 270_000)]
-      if (MediaRecorder.isTypeSupported('video/mp4;codecs=avc1')) recs.push(rec('video/mp4;codecs=avc1', 270_000))
+      const recs = [rec('video/webm;codecs=vp9', bps)]
+      if (MediaRecorder.isTypeSupported('video/mp4;codecs=avc1')) recs.push(rec('video/mp4;codecs=avc1', bps))
       let poster = null
       for (let f = 0; f < TOTAL; f++) {
         renderFrame(ctx, f, TOTAL, W, H, FPS, easeOutBack)
@@ -687,7 +840,7 @@ async function main() {
       const out = {}
       for (const { r, c, mime } of recs) { await new Promise((res) => { r.onstop = res; r.stop() }); out[mime.startsWith('video/webm') ? 'webm' : 'mp4'] = Array.from(new Uint8Array(await new Blob(c).arrayBuffer())) }
       return { ...out, poster }
-    }, { fn: scene.fn.toString(), chipFn, helpers: HELPERS, stills: stillsDir ? STILLS : null, posterAt: scene.poster })
+    }, { fn: scene.fn.toString(), chipFn, helpers: HELPERS, stills: stillsDir ? STILLS : null, posterAt: scene.poster, bps: scene.bps || 270_000 })
     await page.close()
     if (stillsDir) {
       fs.mkdirSync(stillsDir, { recursive: true })
